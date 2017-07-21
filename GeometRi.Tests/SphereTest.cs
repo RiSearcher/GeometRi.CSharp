@@ -1,0 +1,93 @@
+﻿using System;
+using static System.Math;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using GeometRi;
+
+namespace GeometRi_Tests
+{
+    [TestClass]
+    public class SphereTest
+    {
+        //===============================================================
+        // Sphere tests
+        //===============================================================
+
+        [TestMethod()]
+        public void SphereEqualTest()
+        {
+            Sphere s1 = new Sphere(new Point3d(0, 0, 0), 5);
+            Sphere s2 = new Sphere(new Point3d(0, 0, 0), 6);
+            Assert.IsTrue(s1 != s2);
+
+            s1 = new Sphere(new Point3d(0, 0, 0), 5);
+            s2 = new Sphere(new Point3d(1, 0, 0), 5);
+            Assert.IsTrue(s1 != s2);
+
+            s1 = new Sphere(new Point3d(0, 0, 0), 5);
+            s2 = new Sphere(new Point3d(0, 0, 0), 5);
+            Assert.IsTrue(s1 == s2);
+        }
+
+        [TestMethod()]
+        public void SphereIntersectionWithLineTest()
+        {
+            Line3d l = new Line3d(new Point3d(5, 0, -6), new Vector3d(1, 0, 0));
+            Sphere s = new Sphere(new Point3d(0, 0, 0), 5);
+
+            Assert.IsTrue(s.IntersectionWith(l) == null);
+
+            l.Point = new Point3d(5, 0, -5);
+            Assert.IsTrue((Point3d)s.IntersectionWith(l) == new Point3d(0, 0, -5));
+
+            l.Point = new Point3d(0, 0, 0);
+            l.Direction = new Vector3d(1, 0, 0);
+            Assert.IsTrue((Segment3d)s.IntersectionWith(l) == new Segment3d(new Point3d(-5, 0, 0), new Point3d(5, 0, 0)));
+
+            l.Direction = new Vector3d(1, 3, 4);
+            Assert.IsTrue(((Segment3d)s.IntersectionWith(l)).Length == 10);
+        }
+
+        [TestMethod()]
+        public void SphereIntersectionWithPlaneTest()
+        {
+            Sphere s = new Sphere(new Point3d(1, -1, 3), 3);
+            Plane3d p = new Plane3d(1, 4, 5, 6);
+            Circle3d c = (Circle3d)s.IntersectionWith(p);
+            Assert.IsTrue(Abs(c.R - 1.13) < 0.005);
+            Assert.IsTrue(c.Center.DistanceTo(new Point3d(0.57, -2.71, 0.86)) < 0.01);
+        }
+
+        [TestMethod()]
+        public void SphereIntersectionWithSphereTest()
+        {
+            Sphere s1 = new Sphere(new Point3d(-2, 2, 4), 5);
+            Sphere s2 = new Sphere(new Point3d(3, 7, 3), 5);
+            Circle3d c1 = (Circle3d)s1.IntersectionWith(s2);
+            Assert.IsTrue(Abs(c1.R - 3.5) < GeometRi3D.Tolerance);
+            Assert.IsTrue(c1.Center == new Point3d(0.5, 4.5, 3.5));
+
+            Circle3d c2 = (Circle3d)s2.IntersectionWith(s1);
+            Assert.IsTrue(c1 == c2);
+        }
+
+        [TestMethod()]
+        public void SphereProjectionToPlaneTest()
+        {
+            Sphere s = new Sphere(new Point3d(-2, -2, -2), 5);
+            Plane3d p = new Plane3d(new Point3d(1, 1, 1), new Vector3d(1, 1, 1));
+            Circle3d c = s.ProjectionTo(p);
+            Circle3d res = new Circle3d(new Point3d(1, 1, 1), 5, new Vector3d(-1, -1, -1));
+            Assert.AreEqual(c, res);
+        }
+
+        [TestMethod()]
+        public void SphereProjectionToLineTest()
+        {
+            Sphere s = new Sphere(new Point3d(-4, -3, -2), 5);
+            Line3d l = new Line3d(new Point3d(0, 0, 0), new Vector3d(4, 3, 0));
+            Segment3d c = s.ProjectionTo(l);
+            Segment3d res = new Segment3d(new Point3d(0, 0, 0), new Point3d(-8, -6, 0));
+            Assert.AreEqual(c, res);
+        }
+    }
+}

@@ -1,0 +1,38 @@
+﻿using System;
+using static System.Math;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using GeometRi;
+
+namespace GeometRi_Tests
+{
+    [TestClass]
+    public class OtherTest
+    {
+        //===============================================================
+        // Other tests
+        //===============================================================
+
+        [TestMethod()]
+        public void ToleranceTest()
+        {
+            Plane3d s1 = new Plane3d(new Point3d(0, 0, 1), new Vector3d(0, 1, 1));
+            Plane3d s2 = new Plane3d(-5, 2, 4, 1);
+            Plane3d s3 = new Plane3d(2, -3, 2, 4);
+            Assert.IsTrue((Point3d)s1.IntersectionWith(s2, s3) == (Point3d)s1.IntersectionWith((Line3d)s2.IntersectionWith(s3)));
+            GeometRi3D.Tolerance = 0;
+            Assert.IsFalse((Point3d)s1.IntersectionWith(s2, s3) == (Point3d)s1.IntersectionWith((Line3d)s2.IntersectionWith(s3)));
+            GeometRi3D.Tolerance = 1E-12;
+        }
+
+        [TestMethod()]
+        public void CoordSystemTest()
+        {
+            Coord3d c1 = new Coord3d(new Point3d(), new[] { 2.0, 0.0, 0.0 }, new[] { 1.0, 1.0, 0.0 });
+            Assert.IsTrue(c1.Axes == Matrix3d.Identity());
+
+            c1 = new Coord3d(new Point3d(), new Vector3d(2, 0, 0), new Vector3d(0, 0, 5));
+            c1.RotateDeg(new Vector3d(1, 0, 0), -90);
+            Assert.IsTrue(c1.Axes == Matrix3d.Identity());
+        }
+    }
+}

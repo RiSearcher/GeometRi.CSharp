@@ -1,0 +1,361 @@
+﻿using System;
+using static System.Math;
+
+namespace GeometRi
+{
+    public class Line3d
+    {
+
+        private Point3d _point;
+        private Vector3d _dir;
+
+        #region "Constructors"
+        /// <summary>
+        /// Create default line.
+        /// </summary>
+        public Line3d()
+        {
+            _point = new Point3d();
+            _dir = new Vector3d(1, 0, 0);
+        }
+
+        /// <summary>
+        /// Create line by point and dirction.
+        /// </summary>
+        /// <param name="p">Point on the line.</param>
+        /// <param name="v">Direction vector.</param>
+        public Line3d(Point3d p, Vector3d v)
+        {
+            _point = p.Copy();
+            _dir = v.Copy();
+        }
+
+        /// <summary>
+        /// Create line by two points.
+        /// </summary>
+        /// <param name="p1">First point.</param>
+        /// <param name="p2">Second point.</param>
+        public Line3d(Point3d p1, Point3d p2)
+        {
+            _point = p1.Copy();
+            _dir = new Vector3d(p1, p2);
+        }
+        #endregion
+
+        /// <summary>
+        /// Creates copy of the object
+        /// </summary>
+        public Line3d Copy()
+        {
+            return new Line3d(_point, _dir);
+        }
+
+        /// <summary>
+        /// Base point of the line
+        /// </summary>
+        /// <returns></returns>
+        public Point3d Point
+        {
+            get { return _point.Copy(); }
+            set { _point = value.Copy(); }
+        }
+
+        /// <summary>
+        /// Direction vector of the line
+        /// </summary>
+        /// <returns></returns>
+        public Vector3d Direction
+        {
+            get { return _dir.Copy(); }
+            set { _dir = value.Copy(); }
+        }
+
+        #region "DistanceTo"
+        /// <summary>
+        /// Shortest distance between line and point
+        /// </summary>
+        public double DistanceTo(Point3d p)
+        {
+            return p.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Shortest distance between line and ray
+        /// </summary>
+        public double DistanceTo(Ray3d r)
+        {
+            return r.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Shortest distance between line and segment
+        /// </summary>
+        public double DistanceTo(Segment3d s)
+        {
+            return s.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Shortest distance between two lines
+        /// </summary>
+        public virtual double DistanceTo(Line3d l)
+        {
+            Vector3d r1 = this.Point.ToVector;
+            Vector3d r2 = l.Point.ToVector;
+            Vector3d s1 = this.Direction;
+            Vector3d s2 = l.Direction;
+            if (s1.Cross(s2).Norm > GeometRi3D.Tolerance)
+            {
+                // Crossing lines
+                return Abs((r2 - r1) * s1.Cross(s2)) / s1.Cross(s2).Norm;
+            }
+            else
+            {
+                // Parallel lines
+                return (r2 - r1).Cross(s1).Norm / s1.Norm;
+            }
+        }
+        #endregion
+
+
+        /// <summary>
+        /// Point on the perpendicular to the second line
+        /// </summary>
+        public virtual Point3d PerpendicularTo(Line3d l)
+        {
+            Vector3d r1 = this.Point.ToVector;
+            Vector3d r2 = l.Point.ToVector;
+            Vector3d s1 = this.Direction;
+            Vector3d s2 = l.Direction;
+            if (s1.Cross(s2).Norm > GeometRi3D.Tolerance)
+            {
+                r1 = r2 + (r2 - r1) * s1.Cross(s1.Cross(s2)) / (s1 * s2.Cross(s1.Cross(s2))) * s2;
+                return r1.ToPoint;
+            }
+            else
+            {
+                throw new Exception("Lines are parallel");
+            }
+        }
+
+        /// <summary>
+        /// Get intersection of line with plane.
+        /// Returns object of type 'Nothing', 'Point3d' or 'Line3d'.
+        /// </summary>
+        public virtual object IntersectionWith(Plane3d s)
+        {
+            Vector3d r1 = this.Point.ToVector;
+            Vector3d s1 = this.Direction;
+            Vector3d n2 = s.Normal;
+            if (Abs(s1 * n2) < GeometRi3D.Tolerance)
+            {
+                // Line and plane are parallel
+                if (this.Point.BelongsTo(s))
+                {
+                    // Line lies in the plane
+                    return this;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                // Intersection point
+                s.SetCoord(r1.Coord);
+                r1 = r1 - ((r1 * n2) + s.D) / (s1 * n2) * s1;
+                return r1.ToPoint;
+            }
+        }
+
+        /// <summary>
+        /// Get intersection of line with sphere.
+        /// Returns object of type 'Nothing', 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Sphere s)
+        {
+            return s.IntersectionWith(this);
+        }
+
+        /// <summary>
+        /// Get the orthogonal projection of a line to the plane.
+        /// Return object of type 'Line3d' or 'Point3d'
+        /// </summary>
+        public virtual object ProjectionTo(Plane3d s)
+        {
+            Vector3d n1 = s.Normal;
+            Vector3d n2 = this.Direction.Cross(n1);
+            if (n2.Norm < GeometRi3D.Tolerance)
+            {
+                // Line is perpendicular to the plane
+                return this.Point.ProjectionTo(s);
+            }
+            else
+            {
+                return new Line3d(this.Point.ProjectionTo(s), n1.Cross(n2));
+            }
+        }
+
+        #region "AngleTo"
+        /// <summary>
+        /// Smalest angle between two lines in radians (0 &lt; angle &lt; Pi/2)
+        /// </summary>
+        public double AngleTo(Line3d l)
+        {
+            double ang = this.Direction.AngleTo(l);
+            if (ang <= PI / 2)
+            {
+                return ang;
+            }
+            else
+            {
+                return PI - ang;
+            }
+        }
+        /// <summary>
+        /// Smalest angle between two lines in degrees (0 &lt; angle &lt; 90)
+        /// </summary>
+        public double AngleToDeg(Line3d l)
+        {
+            return AngleTo(l) * 180 / PI;
+        }
+
+        /// <summary>
+        /// Smallest angle between line and plane in radians (0 &lt; angle &lt; Pi/2)
+        /// </summary>
+        public double AngleTo(Plane3d s)
+        {
+            double ang = Asin(this.Direction.Dot(s.Normal) / this.Direction.Norm / s.Normal.Norm);
+            return Abs(ang);
+        }
+        /// <summary>
+        /// Smallest angle line and plane in degrees (0 &lt; angle &lt; 90)
+        /// </summary>
+        public double AngleToDeg(Plane3d s)
+        {
+            return AngleTo(s) * 180 / PI;
+        }
+        #endregion
+
+
+        #region "TranslateRotateReflect"
+        /// <summary>
+        /// Translate line by a vector
+        /// </summary>
+        public virtual Line3d Translate(Vector3d v)
+        {
+            Line3d l = this.Copy();
+            l.Point = l.Point.Translate(v);
+            return l;
+        }
+
+        /// <summary>
+        /// Rotate line by a given rotation matrix
+        /// </summary>
+        public virtual Line3d Rotate(Matrix3d m)
+        {
+            Line3d l = this.Copy();
+            l.Point = l.Point.Rotate(m);
+            l.Direction = l.Direction.Rotate(m);
+            return l;
+        }
+
+        /// <summary>
+        /// Rotate line by a given rotation matrix around point 'p' as a rotation center
+        /// </summary>
+        public virtual Line3d Rotate(Matrix3d m, Point3d p)
+        {
+            Line3d l = this.Copy();
+            l.Point = l.Point.Rotate(m, p);
+            l.Direction = l.Direction.Rotate(m);
+            return l;
+        }
+
+        /// <summary>
+        /// Reflect line in given point
+        /// </summary>
+        public virtual Line3d ReflectIn(Point3d p)
+        {
+            return new Line3d(this.Point.ReflectIn(p), this.Direction.ReflectIn(p));
+        }
+
+        /// <summary>
+        /// Reflect line in given line
+        /// </summary>
+        public virtual Line3d ReflectIn(Line3d l)
+        {
+            return new Line3d(this.Point.ReflectIn(l), this.Direction.ReflectIn(l));
+        }
+
+        /// <summary>
+        /// Reflect line in given plane
+        /// </summary>
+        public virtual Line3d ReflectIn(Plane3d s)
+        {
+            return new Line3d(this.Point.ReflectIn(s), this.Direction.ReflectIn(s));
+        }
+        #endregion
+
+        /// <summary>
+        /// Determines whether two objects are equal.
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
+            {
+                return false;
+            }
+            Line3d l = (Line3d)obj;
+            return this.Point.BelongsTo(l) && this.Direction.IsParallelTo(l.Direction);
+        }
+
+        /// <summary>
+        /// Returns the hascode for the object.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return GeometRi3D.HashFunction(_point.GetHashCode(), _dir.GetHashCode());
+        }
+
+        /// <summary>
+        /// String representation of an object in global coordinate system.
+        /// </summary>
+        public override String ToString()
+        {
+            return ToString(Coord3d.GlobalCS);
+        }
+
+        /// <summary>
+        /// String representation of an object in reference coordinate system.
+        /// </summary>
+        public String ToString(Coord3d coord)
+        {
+            System.Text.StringBuilder str = new System.Text.StringBuilder();
+            string nl = System.Environment.NewLine;
+
+            if (coord == null) { coord = Coord3d.GlobalCS; }
+            Point3d P = _point.ConvertTo(coord);
+            Vector3d dir = _dir.ConvertTo(coord);
+
+            str.Append("Line:" + nl);
+            str.Append(string.Format("Point  -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", P.X, P.Y, P.Z) + nl);
+            str.Append(string.Format("Direction -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", dir.X, dir.Y, dir.Z));
+            return str.ToString();
+        }
+
+        // Operators overloads
+        //-----------------------------------------------------------------
+        public static bool operator ==(Line3d l1, Line3d l2)
+        {
+            return l1.Equals(l2);
+        }
+        public static bool operator !=(Line3d l1, Line3d l2)
+        {
+            return !l1.Equals(l2);
+        }
+
+    }
+}
+
+

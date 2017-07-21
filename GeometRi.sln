@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi", "GeometRi\GeometRi.csproj", "{F73E450B-8F34-4B6B-8BF3-B7A17D9F52C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi.Example", "GeometRi.Example\GeometRi.Example.csproj", "{3D086E96-C1D2-42DB-9EED-300C3A9BBAA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi.Tests", "GeometRi.Tests\GeometRi.Tests.csproj", "{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F73E450B-8F34-4B6B-8BF3-B7A17D9F52C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F73E450B-8F34-4B6B-8BF3-B7A17D9F52C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F73E450B-8F34-4B6B-8BF3-B7A17D9F52C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F73E450B-8F34-4B6B-8BF3-B7A17D9F52C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D086E96-C1D2-42DB-9EED-300C3A9BBAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D086E96-C1D2-42DB-9EED-300C3A9BBAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D086E96-C1D2-42DB-9EED-300C3A9BBAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D086E96-C1D2-42DB-9EED-300C3A9BBAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
