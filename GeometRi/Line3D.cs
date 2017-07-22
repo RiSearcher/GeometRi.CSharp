@@ -140,7 +140,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of line with plane.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Line3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Line3d'.
         /// </summary>
         public virtual object IntersectionWith(Plane3d s)
         {
@@ -171,7 +171,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of line with sphere.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Segment3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
         public object IntersectionWith(Sphere s)
         {
@@ -311,7 +311,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

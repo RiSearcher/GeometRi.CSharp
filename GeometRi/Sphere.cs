@@ -145,10 +145,10 @@ namespace GeometRi
         }
         #endregion
 
-#region "Intersections"
+        #region "Intersections"
         /// <summary>
         /// Get intersection of line with sphere.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Segment3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
         public object IntersectionWith(Line3d l)
         {
@@ -175,7 +175,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of plane with sphere.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Circle3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Circle3d'.
         /// </summary>
         public object IntersectionWith(Plane3d s)
         {
@@ -209,7 +209,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of two spheres.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Circle3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Circle3d'.
         /// </summary>
         public object IntersectionWith(Sphere s)
         {
@@ -338,7 +338,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

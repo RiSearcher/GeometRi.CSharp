@@ -174,7 +174,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of ray with plane.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Ray3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Ray3d'.
         /// </summary>
         public object IntersectionWith(Plane3d s)
         {
@@ -318,7 +318,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

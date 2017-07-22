@@ -20,19 +20,19 @@ namespace GeometRi
                 }
             }
         }
-        public Matrix3d(Vector3d r1, Vector3d r2, Vector3d r3)
+        public Matrix3d(Vector3d row1, Vector3d row2, Vector3d row3)
         {
             val = new double[3, 3];
-            Row1 = r1;
-            Row2 = r2;
-            Row3 = r3;
+            Row1 = row1;
+            Row2 = row2;
+            Row3 = row3;
         }
-        public Matrix3d(double[] v1, double[] v2, double[] v3)
+        public Matrix3d(double[] row1, double[] row2, double[] row3)
         {
             val = new double[3, 3];
-            Row1 = new Vector3d(v1);
-            Row2 = new Vector3d(v2);
-            Row3 = new Vector3d(v3);
+            Row1 = new Vector3d(row1);
+            Row2 = new Vector3d(row2);
+            Row3 = new Vector3d(row3);
         }
 
         public static Matrix3d Identity()
@@ -127,8 +127,6 @@ namespace GeometRi
         {
             get
             {
-                //return this.val[0, 0] * (this.val[1, 1) * this.val[2, 2) - this.val[1, 2) * this.val[2, 1)) - this.val[0, 1) * (this.val[1, 0) * this.val[2, 2) - this.val[1, 2) * this.val[2, 0)) + this.val[0, 2) * (this.val[1, 0) * this.val[2, 1) - this.val[1, 1) * this.val[2, 0));
-
                 double k11 = this.val[2, 2] * this.val[1, 1] - this.val[2, 1] * this.val[1, 2];
                 double k12 = this.val[2, 1] * this.val[0, 2] - this.val[2, 2] * this.val[0, 1];
                 double k13 = this.val[1, 2] * this.val[0, 1] - this.val[1, 1] * this.val[0, 2];
@@ -137,6 +135,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Elementwise max norm of the matrix
+        /// </summary>
         public double MaxNorm
         {
             get
@@ -294,6 +295,11 @@ namespace GeometRi
             return T;
         }
 
+        /// <summary>
+        /// Defines counterclockwise rotation around axis
+        /// </summary>
+        /// <param name="axis">Rotation axis</param>
+        /// <param name="alpha">Angle of rotation (radians)</param>
         public static Matrix3d RotationMatrix(Vector3d axis, double alpha)
         {
             Matrix3d R = new Matrix3d();
@@ -330,7 +336,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

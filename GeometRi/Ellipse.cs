@@ -159,7 +159,7 @@ namespace GeometRi
 
         /// <summary>
         /// Intersection of ellipse with plane.
-        /// Returns object of type 'Nothing', 'Ellipse', 'Point3d' or 'Segment3d'.
+        /// Returns 'null' (no intersection) or object of type 'Ellipse', 'Point3d' or 'Segment3d'.
         /// </summary>
         public object IntersectionWith(Plane3d s)
         {
@@ -304,12 +304,13 @@ namespace GeometRi
             }
             else
             {
-                return this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.B, e.B) && e.MajorSemiaxis.IsParallelTo(this.MajorSemiaxis) && e.MinorSemiaxis.IsParallelTo(this.MinorSemiaxis);
+                return this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.B, e.B) && 
+                       e.MajorSemiaxis.IsParallelTo(this.MajorSemiaxis) && e.MinorSemiaxis.IsParallelTo(this.MinorSemiaxis);
             }
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

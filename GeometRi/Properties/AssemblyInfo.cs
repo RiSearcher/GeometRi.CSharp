@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GeometRi")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("GeomtRi is a simple and lightweight 3D geometry library for .Net")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("GeometRi")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright (c) 2017 Sergey Tarasov")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

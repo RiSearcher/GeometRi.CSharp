@@ -409,7 +409,9 @@ namespace GeometRi
             }
             Triangle t = (Triangle)obj;
 
-            if ((this.A == t.A || this.A == t.B || this.A == t.C) && (this.B == t.A || this.B == t.B || this.B == t.C) && (this.C == t.A || this.C == t.B || this.C == t.C))
+            if ((this.A == t.A || this.A == t.B || this.A == t.C) && 
+                (this.B == t.A || this.B == t.B || this.B == t.C) && 
+                (this.C == t.A || this.C == t.B || this.C == t.C))
             {
                 return true;
             }
@@ -420,7 +422,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

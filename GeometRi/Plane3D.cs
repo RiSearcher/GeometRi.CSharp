@@ -161,7 +161,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of line with plane.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Line3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Line3d'.
         /// </summary>
         public object IntersectionWith(Line3d l)
         {
@@ -190,7 +190,7 @@ namespace GeometRi
 
         /// <summary>
         /// Finds the common intersection of three planes.
-        /// Return object of type 'Nothing', 'Point3d', 'Line3d' or 'Plane3d'
+        /// Return 'null' (no common intersection) or object of type 'Point3d', 'Line3d' or 'Plane3d'
         /// </summary>
         public object IntersectionWith(Plane3d s2, Plane3d s3)
         {
@@ -244,7 +244,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of two planes.
-        /// Returns object of type 'Nothing', 'Line3d' or 'Plane3d'.
+        /// Returns 'null' (no intersection) or object of type 'Line3d' or 'Plane3d'.
         /// </summary>
         public object IntersectionWith(Plane3d s2)
         {
@@ -287,7 +287,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of plane with sphere.
-        /// Returns object of type 'Nothing', 'Point3d' or 'Circle3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Circle3d'.
         /// </summary>
         public object IntersectionWith(Sphere s)
         {
@@ -296,7 +296,7 @@ namespace GeometRi
 
         /// <summary>
         /// Intersection of circle with plane.
-        /// Returns object of type 'Nothing', 'Circle3d', 'Point3d' or 'Segment3d'.
+        /// Returns 'null' (no intersection) or object of type 'Circle3d', 'Point3d' or 'Segment3d'.
         /// </summary>
         public object IntersectionWith(Circle3d c)
         {
@@ -425,7 +425,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

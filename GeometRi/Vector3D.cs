@@ -268,7 +268,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Convert vector to local coordinate system.
+        /// Convert vector to reference coordinate system.
         /// </summary>
         public Vector3d ConvertTo(Coord3d coord)
         {
@@ -478,11 +478,13 @@ namespace GeometRi
             Vector3d v = (Vector3d)obj;
             if ((this._coord != v.Coord))
                 v = v.ConvertTo(_coord);
-            return Abs(this.X - v.X) < GeometRi3D.Tolerance && Abs(this.Y - v.Y) < GeometRi3D.Tolerance && Abs(this.Y - v.Y) < GeometRi3D.Tolerance;
+            return Abs(this.X - v.X) < GeometRi3D.Tolerance && 
+                   Abs(this.Y - v.Y) < GeometRi3D.Tolerance && 
+                   Abs(this.Z - v.Z) < GeometRi3D.Tolerance;
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {

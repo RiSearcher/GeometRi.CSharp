@@ -109,7 +109,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Convert point to local coordinate system
+        /// Convert point to reference coordinate system
         /// </summary>
         public Point3d ConvertTo(Coord3d coord)
         {
@@ -142,7 +142,7 @@ namespace GeometRi
             return p;
         }
         /// <summary>
-        /// Convert point from current local coordinate system to global coordinate system
+        /// Convert point to global coordinate system
         /// </summary>
         /// <returns></returns>
         public Point3d ConvertToGlobal()
@@ -500,7 +500,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns the hascode for the object.
+        /// Returns the hashcode for the object.
         /// </summary>
         public override int GetHashCode()
         {
