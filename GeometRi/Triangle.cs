@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace GeometRi
 {
-    public class Triangle
+    public class Triangle : IPlanarObject
     {
 
         private Point3d _a;
@@ -121,6 +121,16 @@ namespace GeometRi
                 Vector3d v2 = new Vector3d(_a, _c);
                 return 0.5 * v1.Cross(v2).Norm;
             }
+        }
+
+        public Vector3d Normal
+        {
+            get { return new Vector3d(A, B).Cross(new Vector3d(A, C)); }
+        }
+
+        public bool IsOriented
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -345,6 +355,56 @@ namespace GeometRi
         public bool IsAcute
         {
             get { return GeometRi3D.Smaller(Angle_A, PI / 2) && GeometRi3D.Smaller(Angle_B, PI / 2) && GeometRi3D.Smaller(Angle_C, PI / 2); }
+        }
+        #endregion
+
+        #region "ParallelMethods"
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(ILinearObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(ILinearObject obj)
+        {
+            return !this.Normal.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(ILinearObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsNotParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(IPlanarObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Normal);
         }
         #endregion
 

@@ -34,5 +34,23 @@ namespace GeometRi_Tests
             c1.RotateDeg(new Vector3d(1, 0, 0), -90);
             Assert.IsTrue(c1.Axes == Matrix3d.Identity());
         }
+
+        [TestMethod()]
+        public void IsParallelToTest()
+        {
+            Vector3d v = new Vector3d(1, 0, 0);
+            Line3d l = new Line3d(new Point3d(), v);
+            Ray3d r = new Ray3d(new Point3d(), v.OrthogonalVector);
+            Circle3d c = new Circle3d(new Point3d(), 5, v);
+
+            Assert.IsTrue(v.IsParallelTo(l));
+            Assert.IsTrue(l.IsNotParallelTo(r));
+            Assert.IsTrue(r.IsOrthogonalTo(v));
+            Assert.IsTrue(c.IsOrthogonalTo(l));
+            Assert.IsTrue(r.IsParallelTo(c));
+            Assert.IsTrue(c.IsParallelTo(Coord3d.GlobalCS.YZ_plane));
+            Assert.IsTrue(c.IsOrthogonalTo(Coord3d.GlobalCS.XZ_plane));
+            Assert.IsTrue(Coord3d.GlobalCS.YZ_plane.IsOrthogonalTo(v));
+        }
     }
 }

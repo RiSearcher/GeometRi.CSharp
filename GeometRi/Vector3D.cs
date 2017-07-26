@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace GeometRi
 {
-    public class Vector3d
+    public class Vector3d : ILinearObject
     {
 
         private double[] val;
@@ -134,6 +134,78 @@ namespace GeometRi
             get { return _coord; }
         }
 
+        // ILinearObject interface implementation
+        public Vector3d Direction
+        {
+            get { return this.Copy();  }
+        }
+
+        public bool IsOriented
+        {
+            get {  return true;  }
+        }
+        //////////////////////////////////////////
+
+        #region "ParallelMethods"
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(ILinearObject obj)
+        {
+            Vector3d v = obj.Direction;
+            if ((this._coord != v._coord))
+                v = v.ConvertTo(this._coord);
+            return GeometRi3D.AlmostEqual(this.Cross(v).Norm, 0.0);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(ILinearObject obj)
+        {
+            Vector3d v = obj.Direction;
+            if ((this._coord != v._coord))
+                v = v.ConvertTo(this._coord);
+            return GeometRi3D.Greater(this.Cross(v).Norm, 0.0);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(ILinearObject obj)
+        {
+            Vector3d v = obj.Direction;
+            if ((this._coord != v._coord))
+                v = v.ConvertTo(this._coord);
+            return GeometRi3D.AlmostEqual(Abs(this * v), 0.0);
+        }
+
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(IPlanarObject obj)
+        {
+            return this.Direction.IsOrthogonalTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(IPlanarObject obj)
+        {
+            return ! this.Direction.IsOrthogonalTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(IPlanarObject obj)
+        {
+            return this.Direction.IsParallelTo(obj.Normal);
+        }
+        #endregion
+
+
         /// <summary>
         /// Point, represented by vector starting in origin
         /// </summary>
@@ -167,36 +239,6 @@ namespace GeometRi
             val[0] = val[0] * tmp;
             val[1] = val[1] * tmp;
             val[2] = val[2] * tmp;
-        }
-
-        /// <summary>
-        /// Check if two vectors are parallel
-        /// </summary>
-        public bool IsParallelTo(Vector3d v)
-        {
-            if ((this._coord != v._coord))
-                v = v.ConvertTo(this._coord);
-            return this.Cross(v).Norm < GeometRi3D.Tolerance;
-        }
-
-        /// <summary>
-        /// Check if two vectors are NOT parallel
-        /// </summary>
-        public bool IsNotParallelTo(Vector3d v)
-        {
-            if ((this._coord != v._coord))
-                v = v.ConvertTo(this._coord);
-            return this.Cross(v).Norm >= GeometRi3D.Tolerance;
-        }
-
-        /// <summary>
-        /// Check if two vectors are orthogonal
-        /// </summary>
-        public bool IsOrthogonalTo(Vector3d v)
-        {
-            if ((this._coord != v._coord))
-                v = v.ConvertTo(this._coord);
-            return Abs(this * v) < GeometRi3D.Tolerance;
         }
 
         public Vector3d Add(double a)

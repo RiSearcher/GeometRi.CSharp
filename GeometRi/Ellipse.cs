@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace GeometRi
 {
-    public class Ellipse
+    public class Ellipse : IPlanarObject
     {
 
         private Point3d _point;
@@ -57,6 +57,11 @@ namespace GeometRi
         public Vector3d Normal
         {
             get { return _v1.Cross(_v2); }
+        }
+
+        public bool IsOriented
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -124,6 +129,56 @@ namespace GeometRi
                 double h = Math.Pow((a - b), 2) / Math.Pow((a + b), 2);
                 return PI * (a + b) * (1 + 3 * h / (10 + Sqrt(4 - 3 * h)));
             }
+        }
+        #endregion
+
+        #region "ParallelMethods"
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(ILinearObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(ILinearObject obj)
+        {
+            return !this.Normal.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(ILinearObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsNotParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(IPlanarObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Normal);
         }
         #endregion
 

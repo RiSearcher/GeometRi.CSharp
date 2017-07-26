@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace GeometRi
 {
-    public class Ray3d
+    public class Ray3d : ILinearObject
     {
 
         private Point3d _point;
@@ -47,6 +47,61 @@ namespace GeometRi
             get { return _dir.Copy(); }
             set { _dir = value.Copy(); }
         }
+
+        public bool IsOriented
+        {
+            get { return false; }
+        }
+
+        #region "ParallelMethods"
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(ILinearObject obj)
+        {
+            return this.Direction.IsParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(ILinearObject obj)
+        {
+            return this.Direction.IsNotParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(ILinearObject obj)
+        {
+            return this.Direction.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(IPlanarObject obj)
+        {
+            return this.Direction.IsOrthogonalTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(IPlanarObject obj)
+        {
+            return !this.Direction.IsOrthogonalTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(IPlanarObject obj)
+        {
+            return this.Direction.IsParallelTo(obj.Normal);
+        }
+        #endregion
 
         /// <summary>
         /// Convert ray to line

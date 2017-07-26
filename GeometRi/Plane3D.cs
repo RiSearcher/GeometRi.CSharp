@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace GeometRi
 {
-    public class Plane3d
+    public class Plane3d : IPlanarObject
     {
 
         private Point3d _point;
@@ -112,6 +112,11 @@ namespace GeometRi
             set { _normal = value.Copy(); }
         }
 
+        public bool IsOriented
+        {
+            get { return false; }
+        }
+
         /// <summary>
         /// Set reference coordinate system for general plane equation
         /// </summary>
@@ -157,7 +162,55 @@ namespace GeometRi
             }
         }
 
+        #region "ParallelMethods"
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(ILinearObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Direction);
+        }
 
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(ILinearObject obj)
+        {
+            return ! this.Normal.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(ILinearObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsNotParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(IPlanarObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Normal);
+        }
+        #endregion
 
         /// <summary>
         /// Get intersection of line with plane.

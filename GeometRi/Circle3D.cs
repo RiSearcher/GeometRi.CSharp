@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace GeometRi
 {
-    public class Circle3d
+    public class Circle3d : IPlanarObject
     {
 
         private Point3d _point;
@@ -78,8 +78,13 @@ namespace GeometRi
         /// </summary>
         public Vector3d Normal
         {
-            get { return _normal; }
-            set { _normal = value; }
+            get { return _normal.Copy(); }
+            set { _normal = value.Copy(); }
+        }
+
+        public bool IsOriented
+        {
+            get { return false; }
         }
 
         public double Perimeter
@@ -101,6 +106,56 @@ namespace GeometRi
                 return new Ellipse(_point, v1, v2);
             }
         }
+
+        #region "ParallelMethods"
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(ILinearObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(ILinearObject obj)
+        {
+            return !this.Normal.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(ILinearObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(IPlanarObject obj)
+        {
+            return this.Normal.IsNotParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(IPlanarObject obj)
+        {
+            return this.Normal.IsOrthogonalTo(obj.Normal);
+        }
+        #endregion
 
         /// <summary>
         /// Returns point on circle for given parameter 't' (0 &lt;= t &lt; 2Pi)

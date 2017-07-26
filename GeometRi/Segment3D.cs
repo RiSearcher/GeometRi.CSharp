@@ -55,6 +55,70 @@ namespace GeometRi
             get { return new Line3d(_p1, _p2); }
         }
 
+        /// <summary>
+        /// Direction vector of the segment
+        /// </summary>
+        /// <returns></returns>
+        public Vector3d Direction
+        {
+            get { return this.ToVector; }
+        }
+
+        public bool IsOriented
+        {
+            get { return false; }
+        }
+
+        #region "ParallelMethods"
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(ILinearObject obj)
+        {
+            return this.Direction.IsParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(ILinearObject obj)
+        {
+            return this.Direction.IsNotParallelTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(ILinearObject obj)
+        {
+            return this.Direction.IsOrthogonalTo(obj.Direction);
+        }
+
+        /// <summary>
+        /// Check if two objects are parallel
+        /// </summary>
+        public bool IsParallelTo(IPlanarObject obj)
+        {
+            return this.Direction.IsOrthogonalTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are NOT parallel
+        /// </summary>
+        public bool IsNotParallelTo(IPlanarObject obj)
+        {
+            return !this.Direction.IsOrthogonalTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are orthogonal
+        /// </summary>
+        public bool IsOrthogonalTo(IPlanarObject obj)
+        {
+            return this.Direction.IsParallelTo(obj.Normal);
+        }
+        #endregion
+
         #region "DistanceTo"
         /// <summary>
         /// Returns shortest distance from segment to the point
