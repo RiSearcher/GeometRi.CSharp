@@ -1,4 +1,5 @@
 ﻿using System;
+using static System.Math;
 
 namespace GeometRi
 {
@@ -94,12 +95,66 @@ namespace GeometRi
             return (n1 << 4) ^ (n1 >> 28) ^ n4;
         }
 
+        #region "CalcAngle"
+        static internal double GetAngle(ILinearObject obj1, ILinearObject obj2)
+        {
+            if (obj1.IsOriented && obj2.IsOriented)
+            {
+                return Acos(obj1.Direction.Dot(obj2.Direction) / obj1.Direction.Norm / obj2.Direction.Norm);
+            }
+            else
+            {
+                // return smalest angle
+                double ang = GetAngle(obj1.Direction, obj2.Direction);
+                if (ang <= PI / 2)
+                {
+                    return ang;
+                }
+                else
+                {
+                    return PI - ang;
+                }
+            }
+        }
 
+        static internal double GetAngle(ILinearObject obj1, IPlanarObject obj2)
+        {
+            if (obj1.IsOriented && obj2.IsOriented)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                double ang = Asin(obj1.Direction.Dot(obj2.Normal) / obj1.Direction.Norm / obj2.Normal.Norm);
+                return Abs(ang);
+            }
+        }
+
+        static internal double GetAngle(IPlanarObject obj1, ILinearObject obj2)
+        {
+            return GetAngle(obj2, obj1);
+        }
+
+        static internal double GetAngle(IPlanarObject obj1, IPlanarObject obj2)
+        {
+            if (obj1.IsOriented && obj2.IsOriented)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                // return smalest angle
+                double ang = GetAngle(obj1.Normal, obj2.Normal);
+                if (ang <= PI / 2)
+                {
+                    return ang;
+                }
+                else
+                {
+                    return PI - ang;
+                }
+            }
+        }
+        #endregion
     }
 }
-
-
-
-
-
-

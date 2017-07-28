@@ -285,21 +285,37 @@ namespace GeometRi
             }
         }
 
+        #region "AngleTo"
         /// <summary>
-        /// Angle between ray and plane in radians (0 &lt; angle &lt; Pi/2)
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
         /// </summary>
-        public double AngleTo(Plane3d s)
+        public double AngleTo(ILinearObject obj)
         {
-            double ang = Asin(this.Direction.Dot(s.Normal) / this.Direction.Norm / s.Normal.Norm);
-            return Abs(ang);
+            return GeometRi3D.GetAngle(this, obj);
         }
         /// <summary>
-        /// Angle between ray and plane in degrees (0 &lt; angle &lt; 90)
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
         /// </summary>
-        public double AngleToDeg(Plane3d s)
+        public double AngleToDeg(ILinearObject obj)
         {
-            return AngleTo(s) * 180 / PI;
+            return AngleTo(obj) * 180 / PI;
         }
+
+        /// <summary>
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
+        /// </summary>
+        public double AngleTo(IPlanarObject obj)
+        {
+            return GeometRi3D.GetAngle(this, obj);
+        }
+        /// <summary>
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
+        /// </summary>
+        public double AngleToDeg(IPlanarObject obj)
+        {
+            return AngleTo(obj) * 180 / PI;
+        }
+        #endregion
 
         #region "TranslateRotateReflect"
         /// <summary>

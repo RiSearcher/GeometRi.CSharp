@@ -283,6 +283,38 @@ namespace GeometRi
 
         }
 
+        #region "AngleTo"
+        /// <summary>
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
+        /// </summary>
+        public double AngleTo(ILinearObject obj)
+        {
+            return GeometRi3D.GetAngle(this, obj);
+        }
+        /// <summary>
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
+        /// </summary>
+        public double AngleToDeg(ILinearObject obj)
+        {
+            return AngleTo(obj) * 180 / PI;
+        }
+
+        /// <summary>
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
+        /// </summary>
+        public double AngleTo(IPlanarObject obj)
+        {
+            return GeometRi3D.GetAngle(this, obj);
+        }
+        /// <summary>
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
+        /// </summary>
+        public double AngleToDeg(IPlanarObject obj)
+        {
+            return AngleTo(obj) * 180 / PI;
+        }
+        #endregion
+
         #region "TranslateRotateReflect"
         /// <summary>
         /// Translate ellipse by a vector

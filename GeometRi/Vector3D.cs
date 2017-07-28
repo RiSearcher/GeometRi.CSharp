@@ -344,97 +344,33 @@ namespace GeometRi
 
         #region "AngleTo"
         /// <summary>
-        /// Angle between two vectors in radians (0 &lt; angle &lt; Pi)
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
         /// </summary>
-        public double AngleTo(Vector3d v)
+        public double AngleTo(ILinearObject obj)
         {
-            if ((this._coord != v._coord))
-                v = v.ConvertTo(this._coord);
-            return Acos(this.Dot(v) / this.Norm / v.Norm);
+            return GeometRi3D.GetAngle(this, obj);
         }
         /// <summary>
-        /// Angle between two vectors in degrees (0 &lt; angle &lt; 180)
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
         /// </summary>
-        public double AngleToDeg(Vector3d v)
+        public double AngleToDeg(ILinearObject obj)
         {
-            return AngleTo(v) * 180 / PI;
+            return AngleTo(obj) * 180 / PI;
         }
 
         /// <summary>
-        /// Angle between vector and ray in radians (0 &lt; angle &lt; Pi)
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
         /// </summary>
-        public double AngleTo(Ray3d r)
+        public double AngleTo(IPlanarObject obj)
         {
-            return this.AngleTo(r.Direction);
+            return GeometRi3D.GetAngle(this, obj);
         }
         /// <summary>
-        /// Angle between vector and ray in degrees (0 &lt; angle &lt; 180)
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
         /// </summary>
-        public double AngleToDeg(Ray3d r)
+        public double AngleToDeg(IPlanarObject obj)
         {
-            return this.AngleTo(r.Direction) * 180 / PI;
-        }
-
-        /// <summary>
-        /// Smalest angle between vector and line in radians (0 &lt; angle &lt; Pi/2)
-        /// </summary>
-        public double AngleTo(Line3d l)
-        {
-            double ang = this.AngleTo(l.Direction);
-            if (ang <= PI / 2)
-            {
-                return ang;
-            }
-            else
-            {
-                return PI - ang;
-            }
-        }
-        /// <summary>
-        /// Smalest angle between vector and line in degrees (0 &lt; angle &lt; 90)
-        /// </summary>
-        public double AngleToDeg(Line3d l)
-        {
-            return AngleTo(l) * 180 / PI;
-        }
-
-        /// <summary>
-        /// Smalest angle between vector and segment in radians (0 &lt; angle &lt; Pi/2)
-        /// </summary>
-        public double AngleTo(Segment3d s)
-        {
-            double ang = this.AngleTo(s.ToVector);
-            if (ang <= PI / 2)
-            {
-                return ang;
-            }
-            else
-            {
-                return PI - ang;
-            }
-        }
-        /// <summary>
-        /// Smalest angle between vector and segment in degrees (0 &lt; angle &lt; 90)
-        /// </summary>
-        public double AngleToDeg(Segment3d s)
-        {
-            return AngleTo(s) * 180 / PI;
-        }
-
-        /// <summary>
-        /// Smalest angle between vector and plane in radians (0 &lt; angle &lt; Pi/2)
-        /// </summary>
-        public double AngleTo(Plane3d s)
-        {
-            double ang = Asin(this.Dot(s.Normal) / this.Norm / s.Normal.Norm);
-            return Abs(ang);
-        }
-        /// <summary>
-        /// Smalest angle between vector and plane in degrees (0 &lt; angle &lt; 90)
-        /// </summary>
-        public double AngleToDeg(Plane3d s)
-        {
-            return AngleTo(s) * 180 / PI;
+            return AngleTo(obj) * 180 / PI;
         }
         #endregion
 

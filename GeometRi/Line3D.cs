@@ -254,42 +254,33 @@ namespace GeometRi
 
         #region "AngleTo"
         /// <summary>
-        /// Smalest angle between two lines in radians (0 &lt; angle &lt; Pi/2)
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
         /// </summary>
-        public double AngleTo(Line3d l)
+        public double AngleTo(ILinearObject obj)
         {
-            double ang = this.Direction.AngleTo(l);
-            if (ang <= PI / 2)
-            {
-                return ang;
-            }
-            else
-            {
-                return PI - ang;
-            }
+            return GeometRi3D.GetAngle(this, obj);
         }
         /// <summary>
-        /// Smalest angle between two lines in degrees (0 &lt; angle &lt; 90)
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
         /// </summary>
-        public double AngleToDeg(Line3d l)
+        public double AngleToDeg(ILinearObject obj)
         {
-            return AngleTo(l) * 180 / PI;
+            return AngleTo(obj) * 180 / PI;
         }
 
         /// <summary>
-        /// Smallest angle between line and plane in radians (0 &lt; angle &lt; Pi/2)
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
         /// </summary>
-        public double AngleTo(Plane3d s)
+        public double AngleTo(IPlanarObject obj)
         {
-            double ang = Asin(this.Direction.Dot(s.Normal) / this.Direction.Norm / s.Normal.Norm);
-            return Abs(ang);
+            return GeometRi3D.GetAngle(this, obj);
         }
         /// <summary>
-        /// Smallest angle line and plane in degrees (0 &lt; angle &lt; 90)
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
         /// </summary>
-        public double AngleToDeg(Plane3d s)
+        public double AngleToDeg(IPlanarObject obj)
         {
-            return AngleTo(s) * 180 / PI;
+            return AngleTo(obj) * 180 / PI;
         }
         #endregion
 

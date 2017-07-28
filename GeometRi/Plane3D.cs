@@ -359,56 +359,33 @@ namespace GeometRi
 
         #region "AngleTo"
         /// <summary>
-        /// Angle between vector and plane in radians (0 &lt; angle &lt; Pi/2)
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
         /// </summary>
-        public double AngleTo(Vector3d v)
+        public double AngleTo(ILinearObject obj)
         {
-            return Abs(PI / 2 - this.Normal.AngleTo(v));
+            return GeometRi3D.GetAngle(this, obj);
         }
         /// <summary>
-        /// Angle between vector and plane in degrees (0 &lt; angle &lt; 90)
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
         /// </summary>
-        public double AngleToDeg(Vector3d v)
+        public double AngleToDeg(ILinearObject obj)
         {
-            return Abs(90.0 - this.Normal.AngleToDeg(v));
-        }
-
-        /// <summary>
-        /// Angle between line and plane in radians (0 &lt; angle &lt; Pi/2)
-        /// </summary>
-        public double AngleTo(Line3d l)
-        {
-            return Abs(PI / 2 - this.Normal.AngleTo(l.Direction));
-        }
-        /// <summary>
-        /// Angle between line and plane in degrees (0 &lt; angle &lt; 90)
-        /// </summary>
-        public double AngleToDeg(Line3d l)
-        {
-            return Abs(90.0 - this.Normal.AngleToDeg(l.Direction));
+            return AngleTo(obj) * 180 / PI;
         }
 
         /// <summary>
-        /// Angle between two planes in radians (0 &lt; angle &lt; Pi/2)
+        /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
         /// </summary>
-        public double AngleTo(Plane3d s)
+        public double AngleTo(IPlanarObject obj)
         {
-            double ang = this.Normal.AngleTo(s.Normal);
-            if (ang <= PI / 2)
-            {
-                return ang;
-            }
-            else
-            {
-                return PI - ang;
-            }
+            return GeometRi3D.GetAngle(this, obj);
         }
         /// <summary>
-        /// Angle between two planes in degrees (0 &lt; angle &lt; 90)
+        /// Angle between two objects in degrees (0 &lt; angle &lt; 180)
         /// </summary>
-        public double AngleToDeg(Plane3d s)
+        public double AngleToDeg(IPlanarObject obj)
         {
-            return AngleTo(s) * 180 / PI;
+            return AngleTo(obj) * 180 / PI;
         }
         #endregion
 
