@@ -52,5 +52,24 @@ namespace GeometRi_Tests
             Assert.IsTrue(c.IsOrthogonalTo(Coord3d.GlobalCS.XZ_plane));
             Assert.IsTrue(Coord3d.GlobalCS.YZ_plane.IsOrthogonalTo(v));
         }
+
+        [TestMethod()]
+        public void AngleToTest()
+        {
+            // Larger tolerance value is needed for these tests
+            double def_tol = GeometRi3D.Tolerance;
+            GeometRi3D.Tolerance = 1e-7;
+
+            Vector3d v = new Vector3d(-1, 1, 0);
+            Line3d l = new Line3d(new Point3d(), -v);
+            Ray3d r = new Ray3d(new Point3d(), v.OrthogonalVector);
+            Circle3d c = new Circle3d(new Point3d(), 5, v);
+
+            Assert.IsTrue(Abs(l.AngleTo(v)) <= GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(r.AngleTo(l) - PI / 2) <= GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(c.AngleTo(v) - PI / 2) <= GeometRi3D.Tolerance);
+
+            GeometRi3D.Tolerance = def_tol;
+        }
     }
 }
