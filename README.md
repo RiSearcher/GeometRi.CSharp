@@ -94,15 +94,15 @@ the vector will be defined in the same coordinate system as the first operand.
 * __ConvertToGlobal__ - convert vector to global coordinate system
 * __Normalize__ - normalize the current vector
 * __Normalized__ - return normalized vector
-* __IsParallelTo__ - check if two vectors are parallel
-* __IsNotParallelTo__ - check if two vectors are NOT parallel
-* __IsOrthogonalTo__ - check if two vectors are orthogonal
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Add__ - overloaded, add number or vector
 * __Subtract__ - oveloaded, subtract number or vector
 * __Mult__ - overloaded, multiply by number or vector
 * __Dot__ - dot product of two vectors
-* __AngleTo__ - angle between vector and other vector, line, plane, ray or segment
-* __AngleToDeg__ - angle between vector and other vector, line, plane, ray or segment (in degrees)
 * __ProjectionTo__ - return projection of the current vector to the second vector
 * __Rotate__ - rotate vector around origin
 * __Reflect__ - reflect vector in point, line or plane
@@ -121,8 +121,11 @@ Represent infinite line  in 3D space and is defined by any point lying on the li
 * __PerpendicularTo__ - point on the perpendicular to the second line
 * __IntersectionWith__ - intersection of line with plane or sphere
 * __ProjectionTo__ - orthogonal projection of a line to the plane
-* __AngleTo__ - angle between line and other line or plane
-* __AngleToDeg__ - angle between line and other line or plane (in degrees)
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate line by vector
 * __Rotate__ - rotate line around origin or other point
 * __Reflect__ - reflect line in point, line or plane
@@ -142,8 +145,11 @@ Represent ray in 3D space and is defined by starting point and direction vector.
 * __PerpendicularTo__ - point on the perpendicular to the line
 * __IntersectionWith__ - intersection of ray with plane
 * __ProjectionTo__ - orthogonal projection of ray to the plane
-* __AngleTo__ - angle between ray and plane
-* __AngleToDeg__ - angle between ray and plane (in degrees)
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate ray by vector
 * __Rotate__ - rotate ray around origin or other point
 * __Reflect__ - reflect ray in point, line or plane
@@ -165,8 +171,11 @@ Represent a line segment in 3D space and is defined by two points.
 * __DistanceTo__ - shortest distance to point, line, ray, plane or other segment
 * __IntersectionWith__ - intersection of segment with plane
 * __ProjectionTo__ - orthogonal projection of segment to the line or plane
-* __AngleTo__ - angle between segment and plane
-* __AngleToDeg__ - angle between segment and plane (in degrees)
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate segment by vector
 * __Rotate__ - rotate segment around origin or other point
 * __Reflect__ - reflect segment in point, line or plane
@@ -186,8 +195,11 @@ or by point and two vectors in the plane.
 * __Copy__ - Creates copy of the object
 * __SetCoord__ - set reference coordinate system for general plane equation
 * __IntersectionWith__ - intersection of plane with line, plane, sphere, circle or two other planes
-* __AngleTo__ - angle between plane and vector, line or plane
-* __AngleToDeg__ - angle between plane and vector, line or plane (in degrees)
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate plane by vector
 * __Rotate__ - rotate plane around origin or other point
 * __Reflect__ - reflect plane in point, line or plane
@@ -229,6 +241,11 @@ Defines a circle in 3D space. Implements common translation, rotation and reflec
 * __ParametricForm__ - return point on circle for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of circle to plane
 * __IntersectionWith__ - intersection of circle with plane
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate circle by vector
 * __Rotate__ - rotate circle around origin or other point
 * __Reflect__ - reflect circle in point, line or plane
@@ -256,6 +273,11 @@ Defines an ellipse in 3D space, represented by center point and two vectors, for
 * __ParametricForm__ - return point on ellipse for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of ellipse to plane
 * __IntersectionWith__ - intersection of ellipse with plane
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate ellipse by vector
 * __Rotate__ - rotate ellipse around origin or other point
 * __Reflect__ - reflect ellipse in point, line or plane
@@ -289,6 +311,11 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 * __IsAcute__ - check if all angles are less than 90 degrees
 ### Methods
 * __Copy__ - Creates copy of the object
+* __IsParallelTo__ - check if two objects are parallel
+* __IsNotParallelTo__ - check if two objects are NOT parallel
+* __IsOrthogonalTo__ - check if two objects are orthogonal
+* __AngleTo__ - angle between two objects
+* __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate triangle by vector
 * __Rotate__ - rotate triangle around origin or other point
 * __Reflect__ - reflect triangle in point, line or plane
