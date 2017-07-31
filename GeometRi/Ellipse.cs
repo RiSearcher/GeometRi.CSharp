@@ -12,7 +12,7 @@ namespace GeometRi
 
         public Ellipse(Point3d Center, Vector3d semiaxis_a, Vector3d semiaxis_b)
         {
-            if ((!semiaxis_a.IsOrthogonalTo(semiaxis_b)))
+            if (!semiaxis_a.IsOrthogonalTo(semiaxis_b))
             {
                 throw new Exception("Semiaxes are not orthogonal");
             }

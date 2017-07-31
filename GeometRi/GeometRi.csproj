@@ -45,6 +45,7 @@
     <Compile Include="Circle3D.cs" />
     <Compile Include="Coord3D.cs" />
     <Compile Include="Ellipse.cs" />
+    <Compile Include="Ellipsoid.cs" />
     <Compile Include="GeometRi3D.cs" />
     <Compile Include="Interface.cs" />
     <Compile Include="Line3D.cs" />
