@@ -44,6 +44,15 @@ namespace GeometRi
             return I;
         }
 
+        public static Matrix3d DiagonalMatrix(double a11, double a22, double a33)
+        {
+            Matrix3d D = new Matrix3d();
+            D[0, 0] = a11;
+            D[1, 1] = a22;
+            D[2, 2] = a33;
+            return D;
+        }
+
         /// <summary>
         /// Creates copy of the object
         /// </summary>

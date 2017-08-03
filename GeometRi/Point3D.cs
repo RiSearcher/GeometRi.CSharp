@@ -399,6 +399,16 @@ namespace GeometRi
             return GeometRi3D.AlmostEqual(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
         }
 
+        /// <summary>
+        /// Check if point is inside ellipsoid
+        /// </summary>
+        public bool IsInside(Ellipsoid e)
+        {
+            Coord3d lc = new Coord3d(e.Center, e.SemiaxisA, e.SemiaxisB);
+            Point3d p = this.ConvertTo(lc);
+            return GeometRi3D.Smaller(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
+        }
+
 
         /// <summary>
         /// Check if point is inside circle

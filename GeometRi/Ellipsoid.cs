@@ -220,8 +220,112 @@ namespace GeometRi
         /// Intersection of ellipsoid with plane.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Ellipse'.
         /// </summary>
-        public object IntersectionWith(Plane3d s)
+        public object IntersectionWith(Plane3d plane)
         {
+            // Solution 1:
+            // Peter Paul Klein 
+            // On the Ellipsoid and Plane Intersection Equation
+            // Applied Mathematics, 2012, 3, 1634-1640 (DOI:10.4236/am.2012.311226)
+
+            // Solution 2:
+            // Sebahattin Bektas
+            // Intersection of an Ellipsoid and a Plane
+            // International Journal of Research in Engineering and Applied Sciences, VOLUME 6, ISSUE 6 (June, 2016)
+
+            Coord3d lc = new Coord3d(_point, _v1, _v2, "LC1");
+            plane.SetCoord(lc);
+            double Ax, Ay, Az, Ad;
+            double a, b, c;
+            if (Abs(plane.C) >= Abs(plane.A) && Abs(plane.C) >= Abs(plane.B))
+            {
+                a = this.A; b = this.B; c = this.C;
+            }
+            else
+            {
+                lc = new Coord3d(_point, _v2, _v3, "LC2");
+                plane.SetCoord(lc);
+                if (Abs(plane.C) >= Abs(plane.A) && Abs(plane.C) >= Abs(plane.B))
+                {
+                    a = this.B; b = this.C; c = this.A;
+                }
+                else
+                {
+                    lc = new Coord3d(_point, _v3, _v1,"L3");
+                    plane.SetCoord(lc);
+                    a = this.C; b = this.A; c = this.B;
+                }
+            }
+
+            Ax = plane.A; Ay = plane.B; Az = plane.C; Ad = plane.D;
+            double tmp = (Az * Az * c * c);
+            double AA = 1.0 / (a * a) + Ax * Ax / tmp;
+            double BB = 2.0 * Ax * Ay / tmp;
+            double CC = 1.0 / (b * b) + Ay * Ay / tmp;
+            double DD = 2.0 * Ax * Ad / tmp;
+            double EE = 2.0 * Ay * Ad / tmp;
+            double FF = Ad * Ad / tmp - 1.0;
+
+            double det = 4.0 * AA * CC - BB * BB;
+            if (GeometRi3D.AlmostEqual(det, 0))
+            {
+                return null;
+            }
+            double X0 = (BB * EE - 2 * CC * DD) / det;
+            double Y0 = (BB * DD - 2 * AA * EE) / det;
+            double Z0 = -(Ax * X0 + Ay * Y0 + Ad) / Az;
+
+            Point3d P0 = new Point3d(X0, Y0, Z0, lc);
+            if (P0.BelongsTo(this))
+            {
+                // the plane is tangent to ellipsoid
+                return P0;
+            }
+            else if (P0.IsInside(this))
+            {
+                Vector3d q = P0.ToVector.ConvertTo(lc);
+                Matrix3d D1 = Matrix3d.DiagonalMatrix(1 / a, 1 / b, 1 / c);
+                Vector3d r = plane.Normal.ConvertTo(lc).OrthogonalVector.Normalized;
+                Vector3d s = plane.Normal.ConvertTo(lc).Cross(r).Normalized;
+
+                double omega = 0;
+                double qq, qr, qs, rr, ss, rs;
+                if (!GeometRi3D.AlmostEqual((D1*r)*(D1*s),0))
+                {
+                    rr = (D1 * r) * (D1 * r);
+                    rs = (D1 * r) * (D1 * s);
+                    ss = (D1 * s) * (D1 * s);
+                    if (GeometRi3D.AlmostEqual(rr-ss, 0))
+                    {
+                        omega = PI / 4;
+                    }
+                    else
+                    {
+                        omega = 0.5 * Atan(2.0 * rs / (rr - ss));
+                    }
+                    Vector3d rprim = Cos(omega) * r + Sin(omega) * s;
+                    Vector3d sprim = -Sin(omega) * r + Cos(omega) * s;
+                    r = rprim;
+                    s = sprim;
+                }
+
+                qq = (D1 * q) * (D1 * q);
+                qr = (D1 * q) * (D1 * r);
+                qs = (D1 * q) * (D1 * s);
+                rr = (D1 * r) * (D1 * r);
+                ss = (D1 * s) * (D1 * s);
+
+                double d = qq - qr * qr / rr - qs * qs / ss;
+                AA = Sqrt((1 - d) / rr);
+                BB = Sqrt((1 - d) / ss);
+
+                return new Ellipse(P0, AA * r, BB * s);
+
+            }
+            else
+            {
+                return null;
+            }
+
             throw new NotImplementedException();
         }
 

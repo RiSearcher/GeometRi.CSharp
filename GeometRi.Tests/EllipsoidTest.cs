@@ -26,5 +26,29 @@ namespace GeometRi_Tests
             Assert.IsTrue(s.P1.BelongsTo(e));
             Assert.IsTrue(s.P2.BelongsTo(e));
         }
+
+        [TestMethod()]
+        public void EllipsoidIntersectionWithPlaneTest()
+        {
+            Point3d p = new Point3d(0, 0, 0);
+            Vector3d v1 = new Vector3d(5, 0, 0);
+            Vector3d v2 = new Vector3d(0, 4, 0);
+            Vector3d v3 = new Vector3d(0, 0, 3);
+            Ellipsoid e = new Ellipsoid(p, v1, v2, v3);
+
+            Plane3d s = new Plane3d(1, 2, 3, 4);
+
+            Ellipse res = (Ellipse)e.IntersectionWith(s);
+
+            Assert.IsTrue(res.Center.IsInside(e));
+            Assert.IsTrue(res.Center.Translate(res.MajorSemiaxis).BelongsTo(e));
+            Assert.IsTrue(res.Center.Translate(res.MinorSemiaxis).BelongsTo(e));
+            Assert.IsTrue(res.Center.Translate(-res.MajorSemiaxis).BelongsTo(e));
+            Assert.IsTrue(res.Center.Translate(-res.MinorSemiaxis).BelongsTo(e));
+            Assert.IsTrue(res.ParametricForm(0.01).BelongsTo(e));
+            Assert.IsTrue(res.ParametricForm(0.11).BelongsTo(e));
+            Assert.IsTrue(res.ParametricForm(0.55).BelongsTo(e));
+            Assert.IsTrue(res.ParametricForm(0.876).BelongsTo(e));
+        }
     }
 }
