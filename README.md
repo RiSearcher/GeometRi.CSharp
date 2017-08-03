@@ -284,6 +284,24 @@ Defines an ellipse in 3D space, represented by center point and two vectors, for
 * __Equals__ - check if two ellipses are equals
 * __ToString__ - string representation of ellipse in global or local coordinate system
 
+## Ellipsoid
+
+Defines an ellipsoid in 3D space using center point and three mutually orthogonal vectors.
+### Properties
+* __Center__ - center of the ellipsoid
+* __SemiaxisA/B/C__ - semiaxes of the ellipsoid
+* __A/B/C__ - length of the semiaxes of the ellipsoid
+* __Area__ - approximate area of the approximate
+* __Volume__ - volume of the approximate
+### Methods
+* __Copy__ - Creates copy of the object
+* __IntersectionWith__ - intersection of ellipsoid with line or plane
+* __Translate__ - translate ellipsoid by vector
+* __Rotate__ - rotate ellipsoid around origin or other point
+* __Reflect__ - reflect ellipsoid in point, line or plane
+* __Equals__ - check if two ellipsoids are equals
+* __ToString__ - string representation of ellipsoid in global or local coordinate system
+
 ## Triangle
 
 Defines a triangle n 3D space. Implements common translation, rotation and reflection methods. Calculates most of the standard
