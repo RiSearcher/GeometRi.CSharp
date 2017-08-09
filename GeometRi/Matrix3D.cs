@@ -225,7 +225,7 @@ namespace GeometRi
         }
         public Vector3d Mult(Vector3d a)
         {
-            Vector3d b = new Vector3d(0, 0, 0);
+            Vector3d b = new Vector3d(0, 0, 0, a.Coord);
             b[0] = this.val[0, 0] * a[0] + this.val[0, 1] * a[1] + this.val[0, 2] * a[2];
             b[1] = this.val[1, 0] * a[0] + this.val[1, 1] * a[1] + this.val[1, 2] * a[2];
             b[2] = this.val[2, 0] * a[0] + this.val[2, 1] * a[1] + this.val[2, 2] * a[2];

@@ -146,6 +146,27 @@ namespace GeometRi
         #endregion
 
         /// <summary>
+        /// Orthogonal projection of ellipsoid to line.
+        /// </summary>
+        public Segment3d ProjectionTo(Line3d l)
+        {
+            //Stephen B. Pope "Algorithms for Ellipsoids"
+            // https://tcg.mae.cornell.edu/pubs/Pope_FDA_08.pdf
+
+            Coord3d lc = new Coord3d(_point, _v1, _v2);
+            Point3d x0 = l.Point.ConvertTo(lc);
+            Vector3d v = l.Direction.ConvertTo(lc);
+
+            Matrix3d L_T = Matrix3d.DiagonalMatrix(this.A, this.B, this.C);
+            Vector3d c = new Vector3d(0.0, 0.0, 0.0, lc);
+            double s0 = v * (c - x0.ToVector) / (v * v);
+            Vector3d w = L_T * v / (v * v);
+            Point3d P1 = x0.Translate((s0 + w.Norm) * v);
+            Point3d P2 = x0.Translate((s0 - w.Norm) * v);
+            return new Segment3d(P1, P2);
+        }
+
+        /// <summary>
         /// Intersection of ellipsoid with line.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
@@ -250,7 +271,7 @@ namespace GeometRi
                 }
                 else
                 {
-                    lc = new Coord3d(_point, _v3, _v1,"L3");
+                    lc = new Coord3d(_point, _v3, _v1, "LC3");
                     plane.SetCoord(lc);
                     a = this.C; b = this.A; c = this.B;
                 }
@@ -326,7 +347,6 @@ namespace GeometRi
                 return null;
             }
 
-            throw new NotImplementedException();
         }
 
         #region "TranslateRotateReflect"

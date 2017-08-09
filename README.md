@@ -295,6 +295,7 @@ Defines an ellipsoid in 3D space using center point and three mutually orthogona
 * __Volume__ - volume of the approximate
 ### Methods
 * __Copy__ - Creates copy of the object
+* __ProjectionTo__ - orthogonal projection of ellipsoid to line
 * __IntersectionWith__ - intersection of ellipsoid with line or plane
 * __Translate__ - translate ellipsoid by vector
 * __Rotate__ - rotate ellipsoid around origin or other point
@@ -375,6 +376,9 @@ any number of local coordinate systems can be defined by users.
 * __RotationMatrix__ - rotation around given axis
 * __Equals__ - check if two matrix are equals
 * __ToString__ - string representation of matrix
+### Static methods
+* __Identity__ - creates new identity matrix
+* __DiagonalMatrix__ - creates diagonal matrix
 
 ## GeometRi3D
 

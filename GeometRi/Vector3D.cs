@@ -508,6 +508,10 @@ namespace GeometRi
         {
             return v.Mult(a);
         }
+        public static Vector3d operator /(Vector3d v, double a)
+        {
+            return v.Mult(1.0/a);
+        }
         public static Vector3d operator *(double a, Vector3d v)
         {
             return v.Mult(a);
