@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// General 3x3 matrix class.
+    /// </summary>
     public class Matrix3d
     {
 

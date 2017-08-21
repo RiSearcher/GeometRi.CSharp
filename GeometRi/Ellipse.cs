@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Ellipse in 3D space, defined by center point and two orthogonal vectors, major and minor semiaxes.
+    /// </summary>
     public class Ellipse : IPlanarObject
     {
 

@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Circle in 3D space defined by center point, radius and normal vector.
+    /// </summary>
     public class Circle3d : IPlanarObject
     {
 

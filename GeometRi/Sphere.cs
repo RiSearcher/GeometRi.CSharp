@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Sphere object defined by center point and radius.
+    /// </summary>
     public class Sphere
     {
 

@@ -27,7 +27,7 @@ Install-Package GeometRi
 * __Point3d__ and __Vector3d__ are two base classes, representing points and vectors in 3D space.
 Objects of type Point3d or Vector3d can be defined in global or in local coordinate systems.
 
-* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__ and __Triangle__
+* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__ and __Triangle__
 are compound classes, which are defined in terms of points and vectors.
 
 * __Coord3d__ and __Matrix3d__ are auxiliary classes.
@@ -56,8 +56,8 @@ By default all points are defined in global coordinate system.
 * __Scale__ - scale point by given number
 * __DistanceTo__ - shortest distance from point to point, line, plane, ray or segment
 * __ProjectionTo__ - orthogonal projection of point to line, plane or sphere
-* __BelongsTo__ - check if point belongs to line, ray, segment, plane, circle, ellipse or sphere surface
-* __IsInside__ - check if point is inside circle or sphere
+* __BelongsTo__ - check if point belongs to line, ray, segment, plane, circle, ellipse, ellipsoid or sphere surface
+* __IsInside__ - check if point is inside circle, ellipse, ellipsoid or sphere
 * __Translate__ - translate point by vector
 * __Rotate__ - rotate point around origin or other point
 * __Reflect__ - reflect point in point, line or plane
@@ -111,7 +111,7 @@ the vector will be defined in the same coordinate system as the first operand.
 
 ## Line3d 
 
-Represent infinite line  in 3D space and is defined by any point lying on the line and a direction vector.
+Infinite line  in 3D space and defined by any point lying on the line and a direction vector.
 ### Properties
 * __Point__ - base point of the line
 * __Direction__ - direction vector of the line
@@ -119,7 +119,7 @@ Represent infinite line  in 3D space and is defined by any point lying on the li
 * __Copy__ - Creates copy of the object
 * __DistanceTo__ - shortest distance to point, line, ray or segment
 * __PerpendicularTo__ - point on the perpendicular to the second line
-* __IntersectionWith__ - intersection of line with plane or sphere
+* __IntersectionWith__ - intersection of line with plane, ellipsoid or sphere
 * __ProjectionTo__ - orthogonal projection of a line to the plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -184,7 +184,7 @@ Represent a line segment in 3D space and is defined by two points.
 
 ## Plane3d
 
-Defined by arbutrary point on the plane and a normal vector. 
+3D plane defined by arbutrary point on the plane and a normal vector. 
 Optionally can be defined by coefficients in general equation of plane (Ax + By + Cz + D = 0), by three points
 or by point and two vectors in the plane.
 ### Properties
@@ -194,7 +194,7 @@ or by point and two vectors in the plane.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __SetCoord__ - set reference coordinate system for general plane equation
-* __IntersectionWith__ - intersection of plane with line, plane, sphere, circle or two other planes
+* __IntersectionWith__ - intersection of plane with line, plane, sphere, ellipsoid, circle or two other planes
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
@@ -228,7 +228,7 @@ common translation, rotation and reflection methods.
 
 ## Circle3d
 
-Defines a circle in 3D space. Implements common translation, rotation and reflection methods.
+Defines a circle in 3D space by center point, radius and normal vector.
 ### Properties
 * __Center__ - center of the circle
 * __R__ - radius of the circle
@@ -254,7 +254,7 @@ Defines a circle in 3D space. Implements common translation, rotation and reflec
 
 ## Ellipse
 
-Defines an ellipse in 3D space, represented by center point and two vectors, for major and minor semiaxes.
+Ellipse in 3D space, defined by center point and two orthogonal vectors, major and minor semiaxes.
 ### Properties
 * __Center__ - center of the ellipse
 * __MajorSemiaxis__ - major semiaxis of the ellipse
@@ -286,7 +286,7 @@ Defines an ellipse in 3D space, represented by center point and two vectors, for
 
 ## Ellipsoid
 
-Defines an ellipsoid in 3D space using center point and three mutually orthogonal vectors.
+Ellipsoid object defined by center point and three mutually orthogonal vectors.
 ### Properties
 * __Center__ - center of the ellipsoid
 * __SemiaxisA/B/C__ - semiaxes of the ellipsoid

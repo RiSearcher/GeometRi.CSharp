@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Line segment in 3D space defined by two end points.
+    /// </summary>
     public class Segment3d : ILinearObject
     {
 

@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Infinite line  in 3D space and defined by any point lying on the line and a direction vector.
+    /// </summary>
     public class Line3d : ILinearObject
     {
 

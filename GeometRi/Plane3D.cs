@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// 3D plane defined by point and a normal vector.
+    /// </summary>
     public class Plane3d : IPlanarObject
     {
 

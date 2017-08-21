@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Ray in 3D space defined by point and direction vector.
+    /// </summary>
     public class Ray3d : ILinearObject
     {
 
