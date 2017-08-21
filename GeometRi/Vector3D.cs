@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Vector in 3D space defined in global or local reference frame.
+    /// </summary>
     public class Vector3d : ILinearObject
     {
 

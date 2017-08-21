@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Point in 3D space defined in global or local reference frame.
+    /// </summary>
     public class Point3d
     {
 

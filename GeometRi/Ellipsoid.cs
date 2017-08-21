@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Ellipsoid object defined by center point and three mutually orthogonal vectors.
+    /// </summary>
     public class Ellipsoid
     {
 

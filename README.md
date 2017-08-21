@@ -111,7 +111,7 @@ the vector will be defined in the same coordinate system as the first operand.
 
 ## Line3d 
 
-Represent infinite line  in 3D space and is defined by any point lying on the line and a direction vector.
+Infinite line  in 3D space and defined by any point lying on the line and a direction vector.
 ### Properties
 * __Point__ - base point of the line
 * __Direction__ - direction vector of the line
@@ -184,7 +184,7 @@ Represent a line segment in 3D space and is defined by two points.
 
 ## Plane3d
 
-Defined by arbutrary point on the plane and a normal vector. 
+3D plane defined by arbutrary point on the plane and a normal vector. 
 Optionally can be defined by coefficients in general equation of plane (Ax + By + Cz + D = 0), by three points
 or by point and two vectors in the plane.
 ### Properties
@@ -228,7 +228,7 @@ common translation, rotation and reflection methods.
 
 ## Circle3d
 
-Defines a circle in 3D space. Implements common translation, rotation and reflection methods.
+Defines a circle in 3D space by center point, radius and normal vector.
 ### Properties
 * __Center__ - center of the circle
 * __R__ - radius of the circle
@@ -254,7 +254,7 @@ Defines a circle in 3D space. Implements common translation, rotation and reflec
 
 ## Ellipse
 
-Defines an ellipse in 3D space, represented by center point and two vectors, for major and minor semiaxes.
+Ellipse in 3D space, defined by center point and two orthogonal vectors, major and minor semiaxes.
 ### Properties
 * __Center__ - center of the ellipse
 * __MajorSemiaxis__ - major semiaxis of the ellipse
@@ -286,7 +286,7 @@ Defines an ellipse in 3D space, represented by center point and two vectors, for
 
 ## Ellipsoid
 
-Defines an ellipsoid in 3D space using center point and three mutually orthogonal vectors.
+Ellipsoid object defined by center point and three mutually orthogonal vectors.
 ### Properties
 * __Center__ - center of the ellipsoid
 * __SemiaxisA/B/C__ - semiaxes of the ellipsoid

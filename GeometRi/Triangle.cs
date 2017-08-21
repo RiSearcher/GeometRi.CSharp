@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Triangle in 3D space defined by three points.
+    /// </summary>
     public class Triangle : IPlanarObject
     {
 

@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Cartesian coordinate system defined by origin and transformation matrix (in row format).
+    /// </summary>
     public class Coord3d
     {
 
@@ -37,7 +40,7 @@ namespace GeometRi
         /// Create coordinate system by origin and transformation matrix.
         /// </summary>
         /// <param name="p">Origin of the coordinate system.</param>
-        /// <param name="m">Transformation matrix.</param>
+        /// <param name="m">Transformation matrix (in row format).</param>
         /// <param name="name">Name of the coordinate system.</param>
         public Coord3d(Point3d p, Matrix3d m, string name = "")
         {

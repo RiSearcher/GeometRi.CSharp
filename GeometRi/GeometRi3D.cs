@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Abstract class. Implements global tolerance property and tolerance based equality methods.
+    /// </summary>
     public abstract class GeometRi3D
     {
 
