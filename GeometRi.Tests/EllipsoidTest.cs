@@ -91,8 +91,8 @@ namespace GeometRi_Tests
 
             if (obj.GetType() == typeof(Point3d))
             {
-                Point3d pres = (Point3d)obj;
-                if (pres.BelongsTo(e)) {
+                p = (Point3d)obj;
+                if (p.BelongsTo(e)) {
                     Assert.IsTrue(true);
                 }
                 else

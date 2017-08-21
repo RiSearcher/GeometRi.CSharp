@@ -27,7 +27,7 @@ Install-Package GeometRi
 * __Point3d__ and __Vector3d__ are two base classes, representing points and vectors in 3D space.
 Objects of type Point3d or Vector3d can be defined in global or in local coordinate systems.
 
-* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__ and __Triangle__
+* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__ and __Triangle__
 are compound classes, which are defined in terms of points and vectors.
 
 * __Coord3d__ and __Matrix3d__ are auxiliary classes.
@@ -56,8 +56,8 @@ By default all points are defined in global coordinate system.
 * __Scale__ - scale point by given number
 * __DistanceTo__ - shortest distance from point to point, line, plane, ray or segment
 * __ProjectionTo__ - orthogonal projection of point to line, plane or sphere
-* __BelongsTo__ - check if point belongs to line, ray, segment, plane, circle, ellipse or sphere surface
-* __IsInside__ - check if point is inside circle or sphere
+* __BelongsTo__ - check if point belongs to line, ray, segment, plane, circle, ellipse, ellipsoid or sphere surface
+* __IsInside__ - check if point is inside circle, ellipse, ellipsoid or sphere
 * __Translate__ - translate point by vector
 * __Rotate__ - rotate point around origin or other point
 * __Reflect__ - reflect point in point, line or plane
@@ -119,7 +119,7 @@ Represent infinite line  in 3D space and is defined by any point lying on the li
 * __Copy__ - Creates copy of the object
 * __DistanceTo__ - shortest distance to point, line, ray or segment
 * __PerpendicularTo__ - point on the perpendicular to the second line
-* __IntersectionWith__ - intersection of line with plane or sphere
+* __IntersectionWith__ - intersection of line with plane, ellipsoid or sphere
 * __ProjectionTo__ - orthogonal projection of a line to the plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -194,7 +194,7 @@ or by point and two vectors in the plane.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __SetCoord__ - set reference coordinate system for general plane equation
-* __IntersectionWith__ - intersection of plane with line, plane, sphere, circle or two other planes
+* __IntersectionWith__ - intersection of plane with line, plane, sphere, ellipsoid, circle or two other planes
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal

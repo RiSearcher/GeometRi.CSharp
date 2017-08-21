@@ -16,14 +16,7 @@ namespace GeometRi
             this.val[0] = 0.0;
             this.val[1] = 0.0;
             this.val[2] = 0.0;
-            if (coord != null)
-            {
-                _coord = coord;
-            }
-            else
-            {
-                _coord = Coord3d.GlobalCS;
-            }
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
         public Vector3d(double X, double Y, double Z, Coord3d coord = null)
         {
@@ -31,14 +24,7 @@ namespace GeometRi
             this.val[0] = X;
             this.val[1] = Y;
             this.val[2] = Z;
-            if (coord != null)
-            {
-                _coord = coord;
-            }
-            else
-            {
-                _coord = Coord3d.GlobalCS;
-            }
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
         public Vector3d(Point3d p)
         {
@@ -66,14 +52,7 @@ namespace GeometRi
             this.val[0] = a[0];
             this.val[1] = a[1];
             this.val[2] = a[2];
-            if (coord != null)
-            {
-                _coord = coord;
-            }
-            else
-            {
-                _coord = Coord3d.GlobalCS;
-            }
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
         #endregion
 

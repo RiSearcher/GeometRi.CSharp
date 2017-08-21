@@ -52,7 +52,9 @@
     <Compile Include="Matrix3D.cs" />
     <Compile Include="Plane3D.cs" />
     <Compile Include="Point3D.cs" />
+    <Compile Include="Quaternion.cs" />
     <Compile Include="Ray3D.cs" />
+    <Compile Include="Rotation.cs" />
     <Compile Include="Segment3D.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="Triangle.cs" />

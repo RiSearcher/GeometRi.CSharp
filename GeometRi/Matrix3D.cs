@@ -145,6 +145,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Trace of the matrix
+        /// </summary>
+        public double Trace
+        {
+            get { return val[0, 0] + val[1, 1] + val[2, 2]; }
+
+        }
+
+        /// <summary>
         /// Elementwise max norm of the matrix
         /// </summary>
         public double MaxNorm

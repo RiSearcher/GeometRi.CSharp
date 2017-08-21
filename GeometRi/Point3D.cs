@@ -416,7 +416,30 @@ namespace GeometRi
         /// <returns>True, if the point is inside circle</returns>
         public bool IsInside(Circle3d c)
         {
-            return this.DistanceTo(c.Center) < c.R - GeometRi3D.Tolerance && c.Normal.IsOrthogonalTo(new Vector3d(c.Center, this));
+            if (this.BelongsTo(new Plane3d(c.Center, c.Normal)))
+            {
+                return GeometRi3D.Smaller(this.DistanceTo(c.Center), c.R);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if point is inside ellipse
+        /// </summary>
+        /// <returns>True, if the point is inside ellipse</returns>
+        public bool IsInside(Ellipse e)
+        {
+            if (this.BelongsTo(new Plane3d(e.Center, e.MajorSemiaxis, e.MinorSemiaxis)))
+            {
+                return GeometRi3D.Smaller(this.DistanceTo(e.F1) + this.DistanceTo(e.F2), 2 * e.A);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
