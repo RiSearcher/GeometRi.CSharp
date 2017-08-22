@@ -3,6 +3,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Unit quaternion (W + X*i + Y*j + Z*k).
+    /// </summary>
     public class Quaternion
     {
 
@@ -144,6 +147,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Square of the norm of a quaternion
+        /// </summary>
+        public double SquareNorm
+        {
+            get { return (_w * _w + _x * _x + _y * _y + _z * _z); }
+        }
+
+        /// <summary>
         /// Conjugate of a quaternion
         /// </summary>
         public Quaternion Conjugate
@@ -223,6 +234,32 @@ namespace GeometRi
             _z = _z * tmp;
         }
 
+        public Quaternion Add(Quaternion q)
+        {
+            if ((this._coord != q._coord))
+                q = q.ConvertTo(this._coord);
+
+            Quaternion m = new Quaternion(this.Coord);
+            m.W = _w + q.W;
+            m.X = _x + q.X;
+            m.Y = _y + q.Y;
+            m.Z = _z + q.Z;
+            return m;
+        }
+
+        public Quaternion Subtract(Quaternion q)
+        {
+            if ((this._coord != q._coord))
+                q = q.ConvertTo(this._coord);
+
+            Quaternion m = new Quaternion(this.Coord);
+            m.W = _w - q.W;
+            m.X = _x - q.X;
+            m.Y = _y - q.Y;
+            m.Z = _z - q.Z;
+            return m;
+        }
+
         public Quaternion Mult (Quaternion q)
         {
             if ((this._coord != q._coord))
@@ -238,12 +275,32 @@ namespace GeometRi
 
         }
 
+        public Quaternion Scale(double a)
+        {
+            return new Quaternion(_w*a, _x*a, _y*a, _z*a, this.Coord);
+        }
+
+        public Quaternion Inverse()
+        {
+            return this.Conjugate.Scale(1.0 / this.SquareNorm);
+        }
+
         /// <summary>
         /// Convert quaternion to global coordinate system.
         /// </summary>
         public Quaternion ConvertToGlobal()
         {
-            throw new NotImplementedException();
+            if (_coord == null || object.ReferenceEquals(_coord, Coord3d.GlobalCS))
+            {
+                return this.Copy();
+            }
+            else
+            {
+                Vector3d axis = this.Axis;
+                double angle = this.Angle;
+                axis = axis.ConvertToGlobal();
+                return new Quaternion(axis, angle);
+            }
         }
 
         /// <summary>
@@ -251,7 +308,10 @@ namespace GeometRi
         /// </summary>
         public Quaternion ConvertTo(Coord3d coord)
         {
-            throw new NotImplementedException();
+            Vector3d axis = this.Axis;
+            double angle = this.Angle;
+            axis = axis.ConvertTo(coord);
+            return new Quaternion(axis, angle);
         }
 
         /// <summary>
@@ -274,6 +334,86 @@ namespace GeometRi
             m[2, 1] = 2 * (_y * _z + _w * _x);
             m[2, 2] = 1 - 2 * (_x * _x - _y * _y);
             return m;
+        }
+
+        /// <summary>
+        /// Determines whether two objects are equal.
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
+            {
+                return false;
+            }
+            Quaternion q = (Quaternion)obj;
+            return (this- q).Norm <= GeometRi3D.Tolerance;
+        }
+
+        /// <summary>
+        /// Returns the hashcode for the object.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return GeometRi3D.HashFunction(_w.GetHashCode(), _x.GetHashCode(), _y.GetHashCode(), _z.GetHashCode());
+        }
+
+        /// <summary>
+        /// String representation of an object in global coordinate system.
+        /// </summary>
+        public override String ToString()
+        {
+            return ToString(Coord3d.GlobalCS);
+        }
+        
+        /// <summary>
+                /// String representation of an object in reference coordinate system.
+                /// </summary>
+        public string ToString(Coord3d coord)
+        {
+            if (coord == null) { coord = Coord3d.GlobalCS; }
+            Quaternion q = this.ConvertTo(coord);
+            return string.Format("Quaternion -> ({0,10:g5}, {1,10:g5}, {2,10:g5}, {2,10:g5})", q.W, q.X, q.Y, q.Z);
+        }
+
+        // Operators overloads
+        //-----------------------------------------------------------------
+        public static Quaternion operator +(Quaternion q1, Quaternion q2)
+        {
+            return q1.Add(q2);
+        }
+
+        public static Quaternion operator -(Quaternion q1, Quaternion q2)
+        {
+            return q1.Subtract(q2);
+        }
+
+        public static Quaternion operator *(Quaternion q1, Quaternion q2)
+        {
+            return q1.Mult(q2);
+        }
+
+        public static Quaternion operator *(Quaternion q1, double a)
+        {
+            return q1.Scale(a);
+        }
+
+        public static Quaternion operator /(Quaternion q1, double a)
+        {
+            return q1.Scale(1.0/a);
+        }
+
+        public static Quaternion operator *(double a, Quaternion q1)
+        {
+            return q1.Scale(a);
+        }
+
+        public static bool operator ==(Quaternion q1, Quaternion q2)
+        {
+            return q1.Equals(q2);
+        }
+        public static bool operator !=(Quaternion q1, Quaternion q2)
+        {
+            return !q1.Equals(q2);
         }
 
     }

@@ -313,7 +313,7 @@ namespace GeometRi
         {
             if (_coord == null || object.ReferenceEquals(_coord, Coord3d.GlobalCS))
             {
-                return this;
+                return this.Copy();
             }
             else
             {

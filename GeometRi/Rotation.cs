@@ -4,6 +4,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Rotation action in 3D space defined in global or local reference frame (internally represented by rotation matrix).
+    /// </summary>
     public class Rotation
     {
         private Matrix3d _r;
@@ -142,7 +145,17 @@ namespace GeometRi
         /// </summary>
         public Rotation ConvertToGlobal()
         {
-            throw new NotImplementedException();
+            if (_coord == null || object.ReferenceEquals(_coord, Coord3d.GlobalCS))
+            {
+                return this.Copy();
+            }
+            else
+            {
+                Vector3d axis = this.Axis;
+                double angle = this.Angle;
+                axis = axis.ConvertToGlobal();
+                return new Rotation(axis, angle);
+            }
         }
 
         /// <summary>
@@ -150,7 +163,10 @@ namespace GeometRi
         /// </summary>
         public Rotation ConvertTo(Coord3d coord)
         {
-            throw new NotImplementedException();
+            Vector3d axis = this.Axis;
+            double angle = this.Angle;
+            axis = axis.ConvertTo(coord);
+            return new Rotation(axis, angle);
         }
 
 
@@ -172,9 +188,9 @@ namespace GeometRi
         /// </summary>
         public override int GetHashCode()
         {
-            return GeometRi3D.HashFunction(this.RotationMatrix.Row1.GetHashCode(), 
-                                           this.RotationMatrix.Row2.GetHashCode(), 
-                                           this.RotationMatrix.Row3.GetHashCode());
+            return GeometRi3D.HashFunction(_r.Row1.GetHashCode(), 
+                                           _r.Row2.GetHashCode(), 
+                                           _r.Row3.GetHashCode());
         }
 
         /// <summary>
