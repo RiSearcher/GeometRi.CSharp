@@ -351,6 +351,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of plane with ellispoid.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Ellipse'.
+        /// </summary>
+        public object IntersectionWith(Ellipsoid e)
+        {
+            return e.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Intersection of circle with plane.
         /// Returns 'null' (no intersection) or object of type 'Circle3d', 'Point3d' or 'Segment3d'.
         /// </summary>
