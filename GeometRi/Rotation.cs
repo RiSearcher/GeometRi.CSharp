@@ -42,6 +42,7 @@ namespace GeometRi
             double c = Cos(alpha);
             double s = Sin(alpha);
 
+            _r = new Matrix3d();
             _r[0, 0] = c + v.X * v.X * (1 - c);
             _r[0, 1] = v.X * v.Y * (1 - c) - v.Z * s;
             _r[0, 2] = v.X * v.Z * (1 - c) + v.Y * s;
@@ -128,7 +129,10 @@ namespace GeometRi
 
         public double Angle
         {
-            get { return Acos((_r.Trace-1)/2); }
+            // To avoid singularities convert to quaternion first.
+            // Another way:
+            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
+            get { return this.Quaternion.Angle; }
         }
 
         /// <summary>

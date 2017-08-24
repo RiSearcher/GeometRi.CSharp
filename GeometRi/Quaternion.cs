@@ -47,7 +47,7 @@ namespace GeometRi
             _coord = axis.Coord;
         }
 
-        public Quaternion(Matrix3d m, Coord3d coord)
+        public Quaternion(Matrix3d m, Coord3d coord = null)
         {
             if (!m.IsOrthogonal)
             {
@@ -57,30 +57,30 @@ namespace GeometRi
             if (tr > 0)
             {
                 _w = 0.5 * Sqrt(tr + 1);
-                _x = (m[1, 2] - m[2, 1]) / (4 * _w);
-                _y = (m[2, 0] - m[0, 2]) / (4 * _w);
-                _y = (m[0, 1] - m[1, 0]) / (4 * _w);
+                _x = -(m[1, 2] - m[2, 1]) / (4 * _w);
+                _y = -(m[2, 0] - m[0, 2]) / (4 * _w);
+                _z = -(m[0, 1] - m[1, 0]) / (4 * _w);
             } else if (m[0, 0] >= m[1, 1] && m[0, 0] >= m[2, 2])
             {
                 _x = Sqrt(m[0, 0] - m[1, 1] - m[2, 2] + 1) / 2;
-                _w = (m[1, 2] - m[2, 1]) / (4 * _x);
+                _w = -(m[1, 2] - m[2, 1]) / (4 * _x);
                 _y = (m[0, 1] + m[1, 0]) / (4 * _x);
                 _z = (m[0, 2] + m[2, 0]) / (4 * _x);
             } else if (m[1, 1] >= m[0, 0] && m[1, 1] >= m[2, 2])
             {
                 _y = Sqrt(m[1, 1] - m[0, 0] - m[2, 2] + 1) / 2;
-                _w = (m[2, 0] - m[0, 2]) / (4 * _y);
+                _w = -(m[2, 0] - m[0, 2]) / (4 * _y);
                 _x = (m[0, 1] + m[1, 0]) / (4 * _y);
                 _z = (m[1, 2] + m[2, 1]) / (4 * _y);
             } else
             {
                 _z = Sqrt(m[2, 2] - m[0, 0] - m[1, 1] + 1) / 2;
-                _w = (m[0, 1] - m[1, 0]) / (4 * _z);
+                _w = -(m[0, 1] - m[1, 0]) / (4 * _z);
                 _x = (m[0, 2] + m[2, 0]) / (4 * _z);
                 _y = (m[1, 2] + m[2, 1]) / (4 * _z);
             }
 
-            _coord = coord;
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
         #endregion
 
@@ -177,11 +177,11 @@ namespace GeometRi
             {
                 if (GeometRi3D.AlmostEqual(Abs(_w), 1.0))
                 {
-                    return new Vector3d(1, 0 ,0, _coord);
+                    return new Vector3d(_x, _y , _z, _coord);
                 }
                 else
                 {
-                    double tmp =  1.0 / Sqrt(1 - 2 * Acos(_w));
+                    double tmp =  1.0 / Sqrt(1 - _w*_w);
                     return new Vector3d(_x, _y, _z, _coord).Mult(tmp);
                 }
             }
@@ -194,6 +194,7 @@ namespace GeometRi
         {
             get
             {
+                this.Normalize();
                 if (GeometRi3D.AlmostEqual(Abs(_w),1.0))
                 {
                     return 0.0;
@@ -308,6 +309,10 @@ namespace GeometRi
         /// </summary>
         public Quaternion ConvertTo(Coord3d coord)
         {
+            if (_coord == null || object.ReferenceEquals(_coord, Coord3d.GlobalCS))
+            {
+                return this.Copy();
+            }
             Vector3d axis = this.Axis;
             double angle = this.Angle;
             axis = axis.ConvertTo(coord);
@@ -322,17 +327,17 @@ namespace GeometRi
             Matrix3d m = new Matrix3d();
             this.Normalize();
 
-            m[0, 0] = 1 - 2 * (_y * _y - _z * _z);
+            m[0, 0] = 1 - 2 * (_y * _y + _z * _z);
             m[0, 1] = 2 * (_x * _y - _w * _z);
             m[0, 2] = 2 * (_x * _z + _w * _y);
 
             m[1, 0] = 2 * (_x * _y + _w * _z);
-            m[1, 1] = 1 - 2 * (_x * _x - _z * _z);
+            m[1, 1] = 1 - 2 * (_x * _x + _z * _z);
             m[1, 2] = 2 * (_y * _z - _w * _x);
 
             m[2, 0] = 2 * (_x * _z - _w * _y);
             m[2, 1] = 2 * (_y * _z + _w * _x);
-            m[2, 2] = 1 - 2 * (_x * _x - _y * _y);
+            m[2, 2] = 1 - 2 * (_x * _x + _y * _y);
             return m;
         }
 
@@ -372,7 +377,7 @@ namespace GeometRi
         {
             if (coord == null) { coord = Coord3d.GlobalCS; }
             Quaternion q = this.ConvertTo(coord);
-            return string.Format("Quaternion -> ({0,10:g5}, {1,10:g5}, {2,10:g5}, {2,10:g5})", q.W, q.X, q.Y, q.Z);
+            return string.Format("Quaternion -> ({0,10:g5}, {1,10:g5}, {2,10:g5}, {3,10:g5})", q.W, q.X, q.Y, q.Z);
         }
 
         // Operators overloads
