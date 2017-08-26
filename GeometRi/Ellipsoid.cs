@@ -364,6 +364,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate ellipsoid by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public Ellipsoid Rotate(Matrix3d m)
         {
             return new Ellipsoid(this.Center.Rotate(m), _v1.Rotate(m), _v2.Rotate(m), _v3.Rotate(m));
@@ -372,9 +373,18 @@ namespace GeometRi
         /// <summary>
         /// Rotate ellipsoid by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public Ellipsoid Rotate(Matrix3d m, Point3d p)
         {
             return new Ellipsoid(this.Center.Rotate(m, p), _v1.Rotate(m), _v2.Rotate(m), _v3.Rotate(m));
+        }
+
+        /// <summary>
+        /// Rotate ellipsoid around point 'p' as a rotation center
+        /// </summary>
+        public Ellipsoid Rotate(Rotation r, Point3d p)
+        {
+            return new Ellipsoid(this.Center.Rotate(r, p), _v1.Rotate(r), _v2.Rotate(r), _v3.Rotate(r));
         }
 
         /// <summary>

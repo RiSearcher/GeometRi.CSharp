@@ -334,23 +334,27 @@ namespace GeometRi
         /// <summary>
         /// Rotate ray by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public Ray3d Rotate(Matrix3d m)
         {
-            Ray3d l = this.Copy();
-            l.Point = l.Point.Rotate(m);
-            l.Direction = l.Direction.Rotate(m);
-            return l;
+            return new Ray3d(this.Point.Rotate(m), this.Direction.Rotate(m));
         }
 
         /// <summary>
         /// Rotate ray by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public Ray3d Rotate(Matrix3d m, Point3d p)
         {
-            Ray3d l = this.Copy();
-            l.Point = l.Point.Rotate(m, p);
-            l.Direction = l.Direction.Rotate(m);
-            return l;
+            return new Ray3d(this.Point.Rotate(m, p), this.Direction.Rotate(m));
+        }
+
+        /// <summary>
+        /// Rotate ray around point 'p' as a rotation center
+        /// </summary>
+        public Ray3d Rotate(Rotation r, Point3d p)
+        {
+            return new Ray3d(this.Point.Rotate(r, p), this.Direction.Rotate(r));
         }
 
         /// <summary>

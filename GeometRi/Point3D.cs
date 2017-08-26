@@ -468,6 +468,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate point by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public Point3d Rotate(Matrix3d m)
         {
             return m * this;
@@ -476,11 +477,31 @@ namespace GeometRi
         /// <summary>
         /// Rotate point by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public Point3d Rotate(Matrix3d m, Point3d p)
         {
-            if ((this._coord != p.Coord))
+            if (this._coord != p.Coord)
                 p = p.ConvertTo(this._coord);
             return m * (this - p) + p;
+        }
+
+        /// <summary>
+        /// Rotate object around origin in object's reference coordinate system.
+        /// </summary>
+        public Point3d Rotate(Rotation r)
+        {
+            if (this._coord != r.Coord) r = r.ConvertTo(this._coord);
+            return r.RotationMatrix * this;
+        }
+
+        /// <summary>
+        /// Rotate point around point 'p' as a rotation center.
+        /// </summary>
+        public Point3d Rotate(Rotation r, Point3d p)
+        {
+            if (this._coord != r.Coord) r = r.ConvertTo(this._coord);
+            if (this._coord != p.Coord) p = p.ConvertTo(this._coord);
+            return r.RotationMatrix * (this - p) + p;
         }
 
         /// <summary>

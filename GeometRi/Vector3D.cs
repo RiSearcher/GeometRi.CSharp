@@ -392,9 +392,19 @@ namespace GeometRi
         /// <summary>
         /// Rotate vector by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r)")]
         public Vector3d Rotate(Matrix3d m)
         {
             return m * this;
+        }
+
+        /// <summary>
+        /// Rotate vector
+        /// </summary>
+        public Vector3d Rotate(Rotation r)
+        {
+            if (this._coord != r.Coord) r = r.ConvertTo(this._coord);
+            return r.RotationMatrix * this;
         }
 
         /// <summary>

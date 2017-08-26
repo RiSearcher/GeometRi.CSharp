@@ -414,6 +414,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate plane by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public Plane3d Rotate(Matrix3d m)
         {
             return new Plane3d(this.Point.Rotate(m), this.Normal.Rotate(m));
@@ -422,9 +423,18 @@ namespace GeometRi
         /// <summary>
         /// Rotate plane by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public Plane3d Rotate(Matrix3d m, Point3d p)
         {
             return new Plane3d(this.Point.Rotate(m, p), this.Normal.Rotate(m));
+        }
+
+        /// <summary>
+        /// Rotate plane around point 'p' as a rotation center
+        /// </summary>
+        public Plane3d Rotate(Rotation r, Point3d p)
+        {
+            return new Plane3d(this.Point.Rotate(r, p), this.Normal.Rotate(r));
         }
 
         /// <summary>

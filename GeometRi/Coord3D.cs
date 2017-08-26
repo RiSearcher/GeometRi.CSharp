@@ -226,6 +226,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Rotate coordinate system
+        /// </summary>
+        public void Rotate(Rotation r)
+        {
+            _axes = _axes * r.ConvertToGlobal().RotationMatrix.Transpose();
+        }
+
+        /// <summary>
         /// Rotate coordinate system around rotation axis
         /// </summary>
         /// <param name="axis">Rotation axis</param>

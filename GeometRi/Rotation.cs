@@ -145,6 +145,24 @@ namespace GeometRi
         #endregion
 
         /// <summary>
+        /// Multiply rotation matrix by vector.
+        /// <para>The rotation matrix is first transformed into reference coordinate system of vector.</para>
+        /// </summary>
+        public Vector3d Mult(Vector3d v)
+        {
+            return this.ConvertTo(v.Coord).RotationMatrix * v;
+        }
+
+        /// <summary>
+        /// Multiply rotation matrix by point.
+        /// <para>The rotation matrix is first transformed into reference coordinate system of point.</para>
+        /// </summary>
+        public Point3d Mult(Point3d p)
+        {
+            return this.ConvertTo(p.Coord).RotationMatrix * p;
+        }
+
+        /// <summary>
         /// Convert rotation object to global coordinate system.
         /// </summary>
         public Rotation ConvertToGlobal()
@@ -167,10 +185,16 @@ namespace GeometRi
         /// </summary>
         public Rotation ConvertTo(Coord3d coord)
         {
-            Vector3d axis = this.Axis;
-            double angle = this.Angle;
-            axis = axis.ConvertTo(coord);
-            return new Rotation(axis, angle);
+            if (this._coord == coord)
+            {
+                return this.Copy();
+            } else
+            {
+                Vector3d axis = this.Axis;
+                double angle = this.Angle;
+                axis = axis.ConvertTo(coord);
+                return new Rotation(axis, angle);
+            }
         }
 
 
@@ -218,6 +242,24 @@ namespace GeometRi
         public static bool operator !=(Rotation m1, Rotation m2)
         {
             return !m1.Equals(m2);
+        }
+
+        /// <summary>
+        /// Multiply rotation matrix by vector.
+        /// <para>The rotation matrix is first transformed into reference coordinate system of vector.</para>
+        /// </summary>
+        public static Vector3d operator *(Rotation r, Vector3d v)
+        {
+            return r.Mult(v);
+        }
+
+        /// <summary>
+        /// Multiply rotation matrix by point.
+        /// <para>The rotation matrix is first transformed into reference coordinate system of point.</para>
+        /// </summary>
+        public static Point3d operator *(Rotation r, Point3d p)
+        {
+            return r.Mult(p);
         }
     }
 }

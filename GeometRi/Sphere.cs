@@ -288,6 +288,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate sphere by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public Sphere Rotate(Matrix3d m)
         {
             return new Sphere(this.Center.Rotate(m), this.R);
@@ -296,9 +297,18 @@ namespace GeometRi
         /// <summary>
         /// Rotate sphere by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public Sphere Rotate(Matrix3d m, Point3d p)
         {
             return new Sphere(this.Center.Rotate(m, p), this.R);
+        }
+
+        /// <summary>
+        /// Rotate sphere around point 'p' as a rotation center
+        /// </summary>
+        public Sphere Rotate(Rotation r, Point3d p)
+        {
+            return new Sphere(this.Center.Rotate(r, p), this.R);
         }
 
         /// <summary>

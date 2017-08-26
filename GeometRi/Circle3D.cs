@@ -275,6 +275,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate circle by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public Circle3d Rotate(Matrix3d m)
         {
             return new Circle3d(this.Center.Rotate(m), this.R, this.Normal.Rotate(m));
@@ -283,9 +284,18 @@ namespace GeometRi
         /// <summary>
         /// Rotate circle by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public Circle3d Rotate(Matrix3d m, Point3d p)
         {
             return new Circle3d(this.Center.Rotate(m, p), this.R, this.Normal.Rotate(m));
+        }
+
+        /// <summary>
+        /// Rotate circle around point 'p' as a rotation center
+        /// </summary>
+        public Circle3d Rotate(Rotation r, Point3d p)
+        {
+            return new Circle3d(this.Center.Rotate(r, p), this.R, this.Normal.Rotate(r));
         }
 
         /// <summary>

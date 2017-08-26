@@ -311,6 +311,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate line by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public virtual Line3d Rotate(Matrix3d m)
         {
             Line3d l = this.Copy();
@@ -322,12 +323,21 @@ namespace GeometRi
         /// <summary>
         /// Rotate line by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public virtual Line3d Rotate(Matrix3d m, Point3d p)
         {
             Line3d l = this.Copy();
             l.Point = l.Point.Rotate(m, p);
             l.Direction = l.Direction.Rotate(m);
             return l;
+        }
+
+        /// <summary>
+        /// Rotate line around point 'p' as a rotation center.
+        /// </summary>
+        public virtual Line3d Rotate(Rotation r, Point3d p)
+        {
+            return new Line3d(this.Point.Rotate(r, p), this.Direction.Rotate(r));
         }
 
         /// <summary>

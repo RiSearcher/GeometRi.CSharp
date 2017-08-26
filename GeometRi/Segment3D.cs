@@ -431,6 +431,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate segment by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public virtual Segment3d Rotate(Matrix3d m)
         {
             return new Segment3d(P1.Rotate(m), P2.Rotate(m));
@@ -439,9 +440,18 @@ namespace GeometRi
         /// <summary>
         /// Rotate segment by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public virtual Segment3d Rotate(Matrix3d m, Point3d p)
         {
             return new Segment3d(P1.Rotate(m, p), P2.Rotate(m, p));
+        }
+
+        /// <summary>
+        /// Rotate segment around point 'p' as a rotation center
+        /// </summary>
+        public virtual Segment3d Rotate(Rotation r, Point3d p)
+        {
+            return new Segment3d(P1.Rotate(r, p), P2.Rotate(r, p));
         }
 
         /// <summary>

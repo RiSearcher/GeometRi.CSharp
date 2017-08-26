@@ -455,6 +455,7 @@ namespace GeometRi
         /// <summary>
         /// Rotate triangle by a given rotation matrix
         /// </summary>
+        [System.Obsolete("use Rotation object and specify rotation center: this.Rotate(Rotation r, Point3d p)")]
         public Triangle Rotate(Matrix3d m)
         {
             return new Triangle(_a.Rotate(m), _b.Rotate(m), _c.Rotate(m));
@@ -463,9 +464,18 @@ namespace GeometRi
         /// <summary>
         /// Rotate triangle by a given rotation matrix around point 'p' as a rotation center
         /// </summary>
+        [System.Obsolete("use Rotation object: this.Rotate(Rotation r, Point3d p)")]
         public Triangle Rotate(Matrix3d m, Point3d p)
         {
             return new Triangle(_a.Rotate(m, p), _b.Rotate(m, p), _c.Rotate(m, p));
+        }
+
+        /// <summary>
+        /// Rotate triangle around point 'p' as a rotation center
+        /// </summary>
+        public Triangle Rotate(Rotation r, Point3d p)
+        {
+            return new Triangle(_a.Rotate(r, p), _b.Rotate(r, p), _c.Rotate(r, p));
         }
 
         /// <summary>
