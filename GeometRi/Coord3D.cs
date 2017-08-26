@@ -230,7 +230,7 @@ namespace GeometRi
         /// </summary>
         public void Rotate(Rotation r)
         {
-            _axes = _axes * r.ConvertToGlobal().RotationMatrix.Transpose();
+            _axes = _axes * r.ConvertToGlobal().ToRotationMatrix.Transpose();
         }
 
         /// <summary>

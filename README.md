@@ -30,7 +30,7 @@ Objects of type Point3d or Vector3d can be defined in global or in local coordin
 * __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__ and __Triangle__
 are compound classes, which are defined in terms of points and vectors.
 
-* __Coord3d__ and __Matrix3d__ are auxiliary classes.
+* __Coord3d__, __Rotation__, __Quaternion__ and __Matrix3d__ are auxiliary classes.
 
 * __GeometRi3d__ is an abstract class, which defines some common functionality, for example global tolerance property (GeometRi3d.Tolerance)
 used in proximity operations by other classes. Implements tolerance based equality methods: AlmostEqual(double, double), NotEqual(double,double),
@@ -379,6 +379,45 @@ any number of local coordinate systems can be defined by users.
 ### Static methods
 * __Identity__ - creates new identity matrix
 * __DiagonalMatrix__ - creates diagonal matrix
+
+## Quaternion
+Unit quaternion (W + X*i + Y*j + Z*k)
+### Properties
+* __W/X/Y/Z__ - components of quaternion in reference coordinate system
+* __Coord__ - reference coordinate system
+* __Norm__ - norm of a quaternion
+* __SquareNorm__ - square of the norm of a quaternion
+* __Conjugate__ - conjugate of a quaternion
+* __ToAxis__ - axis of rotation in reference coordinate system
+* __ToAngle__ - angle of rotation in reference coordinate system
+* __Normalized__ - return normalized quaternion
+### Methods
+* __Copy__ - Creates copy of the object
+* __ConvertTo__ - convert quaternion to local coordinate system
+* __ConvertToGlobal__ - convert quaternion to global coordinate system
+* __Normalize__ - normalize the current quaternion
+* __Add/Subtract/Mult__ - arithmetic operations
+* __Scale__ - scale quaternion by number
+* __Inverse__ - inverse quaternion
+* __ToRotationMatrix__ - convert to rotation matrix
+* __Equals__ - check if two quaternions are equals
+* __ToString__ - string representation of quaternion in global or local coordinate system
+
+## Rotation
+Rotation in 3D space defined in global or local reference frame (internally represented by rotation matrix)
+### Properties
+* __Coord__ - reference coordinate system
+* __ToAxis__ - axis of rotation in reference coordinate system
+* __ToAngle__ - angle of rotation in reference coordinate system
+* __ToRotationMatrix__ - rotation matrix
+* __ToQuaternion__ - convert to quaternion
+### Methods
+* __Copy__ - Creates copy of the object
+* __ConvertTo__ - convert quaternion to local coordinate system
+* __ConvertToGlobal__ - convert quaternion to global coordinate system
+* __Mult__ - apply rotation to point or vector
+* __Equals__ - check if two quaternions are equals
+* __ToString__ - string representation of quaternion in global or local coordinate system
 
 ## GeometRi3D
 

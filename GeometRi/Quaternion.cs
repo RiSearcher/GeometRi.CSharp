@@ -169,9 +169,9 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Get axis of rotation in current reference coordinate system.
+        /// Get axis of rotation in reference coordinate system.
         /// </summary>
-        public Vector3d Axis
+        public Vector3d ToAxis
         {
             get
             {
@@ -188,9 +188,9 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Get rotation angle in current reference coordinate system.
+        /// Get rotation angle in reference coordinate system.
         /// </summary>
-        public double Angle
+        public double ToAngle
         {
             get
             {
@@ -297,8 +297,8 @@ namespace GeometRi
             }
             else
             {
-                Vector3d axis = this.Axis;
-                double angle = this.Angle;
+                Vector3d axis = this.ToAxis;
+                double angle = this.ToAngle;
                 axis = axis.ConvertToGlobal();
                 return new Quaternion(axis, angle);
             }
@@ -313,8 +313,8 @@ namespace GeometRi
             {
                 return this.Copy();
             }
-            Vector3d axis = this.Axis;
-            double angle = this.Angle;
+            Vector3d axis = this.ToAxis;
+            double angle = this.ToAngle;
             axis = axis.ConvertTo(coord);
             return new Quaternion(axis, angle);
         }
@@ -322,7 +322,7 @@ namespace GeometRi
         /// <summary>
         /// Returns rotation matrix (in current reference coordinate system).
         /// </summary>
-        public Matrix3d RotationMatrix()
+        public Matrix3d ToRotationMatrix()
         {
             Matrix3d m = new Matrix3d();
             this.Normalize();

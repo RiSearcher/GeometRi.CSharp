@@ -16,7 +16,7 @@ namespace GeometRi.Tests
 
             Rotation r = new Rotation(v, angle);
 
-            Assert.AreEqual(Matrix3d.RotationMatrix(v, angle), r.RotationMatrix);
+            Assert.AreEqual(Matrix3d.RotationMatrix(v, angle), r.ToRotationMatrix);
         }
 
         [TestMethod]
@@ -27,8 +27,8 @@ namespace GeometRi.Tests
 
             Quaternion q = new Quaternion(v, angle);
 
-            Assert.IsTrue(q.Axis.IsParallelTo(v));
-            Assert.IsTrue(GeometRi3D.AlmostEqual(q.Angle, angle));
+            Assert.IsTrue(q.ToAxis.IsParallelTo(v));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(q.ToAngle, angle));
         }
 
         [TestMethod]
@@ -39,8 +39,8 @@ namespace GeometRi.Tests
 
             Rotation r = new Rotation(v, angle);
 
-            Assert.IsTrue(r.Axis.IsParallelTo(v));
-            Assert.IsTrue(GeometRi3D.AlmostEqual(r.Angle, angle));
+            Assert.IsTrue(r.ToAxis.IsParallelTo(v));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(r.ToAngle, angle));
         }
 
         [TestMethod]
@@ -48,23 +48,23 @@ namespace GeometRi.Tests
         {
             Quaternion q = new Quaternion(0.5, 0.5, 100.5, 0.5);
             Rotation r = new Rotation(q);
-            Assert.AreEqual(r.Quaternion, q);
+            Assert.AreEqual(r.ToQuaternion, q);
 
             q = new Quaternion(1.0 / Sqrt(3), 1.0 / Sqrt(3), 1.0 / Sqrt(3), 0.0);
             r = new Rotation(q);
-            Assert.AreEqual(r.Quaternion, q);
+            Assert.AreEqual(r.ToQuaternion, q);
 
             q = new Quaternion(0.5, 0.5, 0.5, 0.5);
             r = new Rotation(q);
-            Assert.AreEqual(r.Quaternion, q);
+            Assert.AreEqual(r.ToQuaternion, q);
 
             q = new Quaternion(0.0, 1.0 / Sqrt(3), 1.0 / Sqrt(3), 1.0 / Sqrt(3));
             r = new Rotation(q);
-            Assert.AreEqual(r.Quaternion, q);
+            Assert.AreEqual(r.ToQuaternion, q);
 
             q = new Quaternion(1.0, 0.0, 0.0, 0.0);
             r = new Rotation(q);
-            Assert.AreEqual(r.Quaternion, q);
+            Assert.AreEqual(r.ToQuaternion, q);
         }
 
     }

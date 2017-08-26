@@ -404,7 +404,7 @@ namespace GeometRi
         public Vector3d Rotate(Rotation r)
         {
             if (this._coord != r.Coord) r = r.ConvertTo(this._coord);
-            return r.RotationMatrix * this;
+            return r.ToRotationMatrix * this;
         }
 
         /// <summary>

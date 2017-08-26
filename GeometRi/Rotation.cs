@@ -5,7 +5,7 @@ using static System.Math;
 namespace GeometRi
 {
     /// <summary>
-    /// Rotation action in 3D space defined in global or local reference frame (internally represented by rotation matrix).
+    /// Rotation in 3D space defined in global or local reference frame (internally represented by rotation matrix).
     /// </summary>
     public class Rotation
     {
@@ -27,7 +27,7 @@ namespace GeometRi
 
         public Rotation(Quaternion q)
         {
-            _r = q.RotationMatrix();
+            _r = q.ToRotationMatrix();
             _coord = q.Coord;
         }
 
@@ -83,21 +83,21 @@ namespace GeometRi
         }
 
         #region "Properties"
-        public Matrix3d RotationMatrix
+        public Matrix3d ToRotationMatrix
         {
             get { return this._r; }
         }
 
-        public Quaternion Quaternion
+        public Quaternion ToQuaternion
         {
             get { return new Quaternion(_r, _coord); }
         }
 
-        public Vector3d Axis
+        public Vector3d ToAxis
         {
             get
             {
-                double angle = this.Angle;
+                double angle = this.ToAngle;
                 if (GeometRi3D.AlmostEqual(angle,0.0))
                 {
                     return new Vector3d(1, 0, 0, _coord);
@@ -127,12 +127,12 @@ namespace GeometRi
             }
         }
 
-        public double Angle
+        public double ToAngle
         {
             // To avoid singularities convert to quaternion first.
             // Another way:
             // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
-            get { return this.Quaternion.Angle; }
+            get { return this.ToQuaternion.ToAngle; }
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d Mult(Vector3d v)
         {
-            return this.ConvertTo(v.Coord).RotationMatrix * v;
+            return this.ConvertTo(v.Coord).ToRotationMatrix * v;
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace GeometRi
         /// </summary>
         public Point3d Mult(Point3d p)
         {
-            return this.ConvertTo(p.Coord).RotationMatrix * p;
+            return this.ConvertTo(p.Coord).ToRotationMatrix * p;
         }
 
         /// <summary>
@@ -173,8 +173,8 @@ namespace GeometRi
             }
             else
             {
-                Vector3d axis = this.Axis;
-                double angle = this.Angle;
+                Vector3d axis = this.ToAxis;
+                double angle = this.ToAngle;
                 axis = axis.ConvertToGlobal();
                 return new Rotation(axis, angle);
             }
@@ -190,8 +190,8 @@ namespace GeometRi
                 return this.Copy();
             } else
             {
-                Vector3d axis = this.Axis;
-                double angle = this.Angle;
+                Vector3d axis = this.ToAxis;
+                double angle = this.ToAngle;
                 axis = axis.ConvertTo(coord);
                 return new Rotation(axis, angle);
             }
@@ -208,7 +208,7 @@ namespace GeometRi
                 return false;
             }
             Matrix3d m = (Matrix3d)obj;
-            return (this.RotationMatrix - m).MaxNorm < GeometRi3D.Tolerance;
+            return (this.ToRotationMatrix - m).MaxNorm < GeometRi3D.Tolerance;
         }
 
         /// <summary>

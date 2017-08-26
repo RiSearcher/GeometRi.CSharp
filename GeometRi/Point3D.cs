@@ -491,7 +491,7 @@ namespace GeometRi
         public Point3d Rotate(Rotation r)
         {
             if (this._coord != r.Coord) r = r.ConvertTo(this._coord);
-            return r.RotationMatrix * this;
+            return r.ToRotationMatrix * this;
         }
 
         /// <summary>
@@ -501,7 +501,7 @@ namespace GeometRi
         {
             if (this._coord != r.Coord) r = r.ConvertTo(this._coord);
             if (this._coord != p.Coord) p = p.ConvertTo(this._coord);
-            return r.RotationMatrix * (this - p) + p;
+            return r.ToRotationMatrix * (this - p) + p;
         }
 
         /// <summary>
