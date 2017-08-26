@@ -207,8 +207,8 @@ namespace GeometRi
             {
                 return false;
             }
-            Matrix3d m = (Matrix3d)obj;
-            return (this.ToRotationMatrix - m).MaxNorm < GeometRi3D.Tolerance;
+            Rotation r = (Rotation)obj;
+            return (this.ToRotationMatrix - r.ToRotationMatrix).MaxNorm < GeometRi3D.Tolerance;
         }
 
         /// <summary>

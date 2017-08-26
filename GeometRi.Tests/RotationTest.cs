@@ -20,6 +20,38 @@ namespace GeometRi.Tests
         }
 
         [TestMethod]
+        public void InverseRotationTest()
+        {
+            // Inverse axis and negative angle should produce the same rotation
+            Vector3d v = new Vector3d(4, 111, 6);
+            double angle = 0.0515;
+
+            Rotation r1 = new Rotation(v, angle);
+            Rotation r2 = new Rotation(-v, -angle);
+            Assert.AreEqual(r1, r2);
+
+            Quaternion q1 = new Quaternion(v, angle);
+            Quaternion q2 = new Quaternion(-v, -angle);
+            Assert.AreEqual(q1, q2);
+        }
+
+        [TestMethod]
+        public void PI_RotationTest()
+        {
+            // +PI and -PI should produce the same rotation
+            Vector3d v = new Vector3d(4, 111, 6);
+
+            Rotation r1 = new Rotation(v, PI);
+            Rotation r2 = new Rotation(v, -PI);
+            Assert.AreEqual(r1, r2);
+
+            Quaternion q1 = new Quaternion(v, PI);
+            Quaternion q2 = new Quaternion(v, -PI);
+            // For such rotation quaternion representation is not unique!!!
+            Assert.IsTrue(q1 == q2 || q1 == q2.Conjugate);
+        }
+
+        [TestMethod]
         public void AxisToFromQuaternionTest()
         {
             Vector3d v = new Vector3d(4, 111, 6);
