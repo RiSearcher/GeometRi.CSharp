@@ -1,9 +1,8 @@
 # GeometRi
-## Simple and lightweight computational geometry library for .Net
+### Simple and lightweight computational geometry library for .Net
 
-GeomtRi is a simple and lightweight 3D geometry library for .Net.
-Its main purpose is manipulations with basic
-geometrical primitives, such as point, line, plane, segment in 3D space:
+Main purpose of the GeometRi library is manipulations with basic
+geometrical primitives, such as point, line, plane, sphere, triangle in 3D space:
 translation and rotation operations, distance calculation, intersections,
 orthogonal projections of one object into another, etc. The objects can be defined
 in global or in one of the local coordinate systems and converted form one coordinate
@@ -15,6 +14,25 @@ will be caried out implicitly when necessary.
 
 The main goal was simplisity and readability of the code, therefore speed and robustness was not a priority.
 Global tolerance property is used for proximity checking, not an exact robust algorithms.
+
+* [Installation](https://github.com/RiSearcher/GeometRi.CSharp#installation)
+* [Classes](https://github.com/RiSearcher/GeometRi.CSharp#classes)
+    * [Point3d](https://github.com/RiSearcher/GeometRi.CSharp#point3d)
+    * [Vector3d](https://github.com/RiSearcher/GeometRi.CSharp#vector3d)
+    * [Line3d](https://github.com/RiSearcher/GeometRi.CSharp#line3d)
+    * [Ray3d](https://github.com/RiSearcher/GeometRi.CSharp#ray3d)
+    * [Segment3d](https://github.com/RiSearcher/GeometRi.CSharp#segment3d)
+    * [Plane3d](https://github.com/RiSearcher/GeometRi.CSharp#plane3d)
+    * [Sphere](https://github.com/RiSearcher/GeometRi.CSharp#sphere)
+    * [Circle3d](https://github.com/RiSearcher/GeometRi.CSharp#circle3d)
+    * [Ellipse](https://github.com/RiSearcher/GeometRi.CSharp#ellipse)
+    * [Ellipsoid](https://github.com/RiSearcher/GeometRi.CSharp#ellipsoid)
+    * [Triangle](https://github.com/RiSearcher/GeometRi.CSharp#triangle)
+    * [Coord3d](https://github.com/RiSearcher/GeometRi.CSharp#coord3d)
+    * [Matrix3d](https://github.com/RiSearcher/GeometRi.CSharp#matrix3d)
+    * [Quaternion](https://github.com/RiSearcher/GeometRi.CSharp#quaternion)
+    * [Rotation](https://github.com/RiSearcher/GeometRi.CSharp#rotation)
+    * [GeometRi3D](https://github.com/RiSearcher/GeometRi.CSharp#geometri3d)
 
 ## Installation
 Use NuGet to install library. Search for __GeometRi__ in NuGet package manager or type in the Package Manager Console:
@@ -416,8 +434,8 @@ Rotation in 3D space defined in global or local reference frame (internally repr
 * __ConvertTo__ - convert quaternion to local coordinate system
 * __ConvertToGlobal__ - convert quaternion to global coordinate system
 * __Mult__ - apply rotation to point or vector
-* __Equals__ - check if two quaternions are equals
-* __ToString__ - string representation of quaternion in global or local coordinate system
+* __Equals__ - check if two rotations are equals
+* __ToString__ - string representation of rotation in global or local coordinate system
 
 ## GeometRi3D
 
