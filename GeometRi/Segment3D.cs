@@ -12,6 +12,9 @@ namespace GeometRi
         private Point3d _p1;
         private Point3d _p2;
 
+        /// <summary>
+        /// Initializes line segment using two points.
+        /// </summary>
         public Segment3d(Point3d p1, Point3d p2)
         {
             _p1 = p1.Copy();

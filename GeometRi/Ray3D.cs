@@ -12,11 +12,18 @@ namespace GeometRi
         private Point3d _point;
         private Vector3d _dir;
 
+        /// <summary>
+        /// Default constructor, initializes ray starting from origin and aligned with X-axis (in global coordinate system).
+        /// </summary>
         public Ray3d()
         {
             _point = new Point3d();
             _dir = new Vector3d(1, 0, 0);
         }
+
+        /// <summary>
+        /// Initializes ray using starting point and direction.
+        /// </summary>
         public Ray3d(Point3d p, Vector3d v)
         {
             _point = p.Copy();

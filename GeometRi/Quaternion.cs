@@ -13,18 +13,30 @@ namespace GeometRi
         private Coord3d _coord;
 
         #region "Constructors"
+        /// <summary>
+        /// Default constructor, initializes quaternion with zero rotation (1,0,0,0).
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Quaternion(Coord3d coord = null)
         {
-            _w = 0; _x = 0; _y = 0; _z = 0;
+            _w = 1; _x = 0; _y = 0; _z = 0;
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
+        /// <summary>
+        /// Initializes quaternion.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Quaternion(double w, double x, double y, double z, Coord3d coord = null)
         {
             _w = w; _x = x; _y = y; _z = z;
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
+        /// <summary>
+        /// Initializes quaternion using double array.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Quaternion(double[] q, Coord3d coord = null)
         {
             if (q.GetUpperBound(0) < 3)
@@ -36,6 +48,9 @@ namespace GeometRi
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
+        /// <summary>
+        /// Initializes quaternion using axis of rotation and angle.
+        /// </summary>
         public Quaternion(Vector3d axis, double angle)
         {
             Vector3d v = axis.Normalized;
@@ -47,6 +62,11 @@ namespace GeometRi
             _coord = axis.Coord;
         }
 
+        /// <summary>
+        /// Initializes quaternion using rotation matrix.
+        /// </summary>
+        /// <param name="m">Rotation matrix.</param>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Quaternion(Matrix3d m, Coord3d coord = null)
         {
             if (!m.IsOrthogonal)

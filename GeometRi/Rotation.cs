@@ -13,18 +13,31 @@ namespace GeometRi
         private Coord3d _coord;
 
         #region "Constructors"
+        /// <summary>
+        /// Default constructor, initializes identity matrix.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Rotation(Coord3d coord = null)
         {
             _r = Matrix3d.Identity();
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
+        /// <summary>
+        /// Initializes rotation using rotation matrix.
+        /// </summary>
+        /// <param name="m">Rotation matrix.</param>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Rotation(Matrix3d m, Coord3d coord = null)
         {
             _r = m.Copy();
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
+        /// <summary>
+        /// Initializes rotation using quaternion.
+        /// </summary>
+        /// <param name="q"></param>
         public Rotation(Quaternion q)
         {
             _r = q.ToRotationMatrix();
@@ -32,10 +45,10 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Defines counterclockwise rotation around axis
+        /// Initializes rotation using axis and angle of rotation.
         /// </summary>
         /// <param name="axis">Rotation axis</param>
-        /// <param name="alpha">Angle of rotation (radians)</param>
+        /// <param name="alpha">Angle of rotation (counterclockwise, radians)</param>
         public Rotation(Vector3d axis, double alpha)
         {
             Vector3d v = axis.Normalized;

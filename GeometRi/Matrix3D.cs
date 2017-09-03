@@ -12,6 +12,9 @@ namespace GeometRi
 
         private double[,] val;
 
+        /// <summary>
+        /// Default constructor, intializes zero matrix.
+        /// </summary>
         public Matrix3d()
         {
             val = new double[3, 3];

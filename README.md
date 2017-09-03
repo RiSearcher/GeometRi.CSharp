@@ -431,8 +431,8 @@ Rotation in 3D space defined in global or local reference frame (internally repr
 * __ToQuaternion__ - convert to quaternion
 ### Methods
 * __Copy__ - Creates copy of the object
-* __ConvertTo__ - convert quaternion to local coordinate system
-* __ConvertToGlobal__ - convert quaternion to global coordinate system
+* __ConvertTo__ - convert rotation to local coordinate system
+* __ConvertToGlobal__ - convert rotation to global coordinate system
 * __Mult__ - apply rotation to point or vector
 * __Equals__ - check if two rotations are equals
 * __ToString__ - string representation of rotation in global or local coordinate system

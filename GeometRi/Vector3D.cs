@@ -13,6 +13,10 @@ namespace GeometRi
         private Coord3d _coord;
 
         #region "Constructors"
+        /// <summary>
+        /// Default constructor, initializes zero vector.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Vector3d(Coord3d coord = null)
         {
             this.val = new double[3];
@@ -21,6 +25,11 @@ namespace GeometRi
             this.val[2] = 0.0;
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
+
+        /// <summary>
+        /// Initializes vector object using components in reference coordinate system.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Vector3d(double X, double Y, double Z, Coord3d coord = null)
         {
             this.val = new double[3];
@@ -29,6 +38,10 @@ namespace GeometRi
             this.val[2] = Z;
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
+
+        /// <summary>
+        /// Initializes vector objct as radius vector of a point.
+        /// </summary>
         public Vector3d(Point3d p)
         {
             this.val = new double[3];
@@ -37,6 +50,12 @@ namespace GeometRi
             this.val[2] = p.Z;
             _coord = p.Coord;
         }
+
+        /// <summary>
+        /// Initializes vector object using two points in reference coordinate system of the first point.
+        /// </summary>
+        /// <param name="p1">Start point.</param>
+        /// <param name="p2">End point.</param>
         public Vector3d(Point3d p1, Point3d p2)
         {
             if (p1.Coord != p2.Coord)
@@ -47,6 +66,11 @@ namespace GeometRi
             this.val[2] = p2.Z - p1.Z;
             _coord = p1.Coord;
         }
+
+        /// <summary>
+        /// Initializes vector using double array.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Vector3d(double[] a, Coord3d coord = null)
         {
             if (a.GetUpperBound(0) < 2)

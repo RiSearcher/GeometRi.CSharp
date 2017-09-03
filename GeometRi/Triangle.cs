@@ -13,6 +13,9 @@ namespace GeometRi
         private Point3d _b;
         private Point3d _c;
 
+        /// <summary>
+        /// Initializes triangle object using three points.
+        /// </summary>
         public Triangle(Point3d A, Point3d B, Point3d C)
         {
             if (Point3d.CollinearPoints(A, B, C))

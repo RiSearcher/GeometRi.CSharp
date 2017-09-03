@@ -14,7 +14,7 @@ namespace GeometRi
 
         #region "Constructors"
         /// <summary>
-        /// Create default line.
+        /// Default constructor, initializes line aligned with X-axis in global coordinate system.
         /// </summary>
         public Line3d()
         {
@@ -23,7 +23,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create line by point and dirction.
+        /// Initializes line using point and direction.
         /// </summary>
         /// <param name="p">Point on the line.</param>
         /// <param name="v">Direction vector.</param>
@@ -34,7 +34,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create line by two points.
+        /// Initializes line using two points.
         /// </summary>
         /// <param name="p1">First point.</param>
         /// <param name="p2">Second point.</param>

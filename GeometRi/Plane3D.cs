@@ -15,7 +15,7 @@ namespace GeometRi
 
         #region "Constructors"
         /// <summary>
-        /// Create default XY plane
+        /// Default constructor, initializes XY plane in global cordinate system.
         /// </summary>
         public Plane3d()
         {
@@ -24,7 +24,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create plane using general equation in 3D space: A*x+B*y+C*z+D=0.
+        /// Initializes plane using general equation in 3D space: A*x+B*y+C*z+D=0.
         /// </summary>
         /// <param name="a">Parameter "A" in general plane equation.</param>
         /// <param name="b">Parameter "B" in general plane equation.</param>
@@ -53,7 +53,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create plane by three points.
+        /// Initializes plane using three points.
         /// </summary>
         /// <param name="p1">First point.</param>
         /// <param name="p2">Second point.</param>
@@ -67,7 +67,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create plane by point and two vectors lying in the plane.
+        /// Initializes plane using point and two vectors lying in the plane.
         /// </summary>
         public Plane3d(Point3d p1, Vector3d v1, Vector3d v2)
         {
@@ -76,7 +76,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create plane by point and normal vector.
+        /// Initializes plane using point and normal vector.
         /// </summary>
         /// <param name="p1"></param>
         /// <param name="v1"></param>

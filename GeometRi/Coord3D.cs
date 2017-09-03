@@ -18,7 +18,7 @@ namespace GeometRi
 
 #region "Constructors"
         /// <summary>
-        /// Create default coordinate system.
+        /// Initializes default coordinate system.
         /// </summary>
         /// <param name="name">Name of the coordinate system.</param>
         public Coord3d(string name = "")
@@ -37,7 +37,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create coordinate system by origin and transformation matrix.
+        /// Initializes coordinate system using origin point  and transformation matrix.
         /// </summary>
         /// <param name="p">Origin of the coordinate system.</param>
         /// <param name="m">Transformation matrix (in row format).</param>
@@ -63,7 +63,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create coordinate system by point and two vectors.
+        /// Initializes coordinate system using origin point and two vectors.
         /// </summary>
         /// <param name="p">Origin of the coordinate system.</param>
         /// <param name="v1">Vector oriented along the X axis.</param>
@@ -94,7 +94,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Create coordinate system by point and two vectors (as Double())
+        /// Initializes coordinate system using origin point and two double arrays.
         /// </summary>
         /// <param name="p">Origin of the coordinate system.</param>
         /// <param name="d1">Vector oriented along the X axis.</param>

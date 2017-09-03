@@ -15,35 +15,34 @@ namespace GeometRi
         private Coord3d _coord;
 
         #region "Constructors"
+        /// <summary>
+        /// Default constructor, initializes zero point.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Point3d(Coord3d coord = null)
         {
             _x = 0.0;
             _y = 0.0;
             _z = 0.0;
-            if (coord != null)
-            {
-                _coord = coord;
-            }
-            else
-            {
-                _coord = Coord3d.GlobalCS;
-            }
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
+
+        /// <summary>
+        /// Initiaizes point object using coordinates.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Point3d(double x, double y, double z, Coord3d coord = null)
         {
             _x = x;
             _y = y;
             _z = z;
-            if (coord != null)
-            {
-                _coord = coord;
-            }
-            else
-            {
-                _coord = Coord3d.GlobalCS;
-            }
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
+        /// <summary>
+        /// Initiaizes point object using double array.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Point3d(double[] a, Coord3d coord = null)
         {
             if (a.GetUpperBound(0) < 2)
@@ -51,14 +50,7 @@ namespace GeometRi
             _x = a[0];
             _y = a[1];
             _z = a[2];
-            if (coord != null)
-            {
-                _coord = coord;
-            }
-            else
-            {
-                _coord = Coord3d.GlobalCS;
-            }
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
         #endregion
 

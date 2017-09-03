@@ -14,53 +14,60 @@ namespace GeometRi
         private Vector3d _v2;
         private Vector3d _v3;
 
-        public Ellipsoid(Point3d Center, Vector3d semiaxis_a, Vector3d semiaxis_b, Vector3d semiaxis_c)
+        /// <summary>
+        /// Initializes ellipsoid instance using center point and three orthogonal vectors.
+        /// </summary>
+        /// <param name="Center">Center point.</param>
+        /// <param name="v1">First semiaxis.</param>
+        /// <param name="v2">Second semiaxis.</param>
+        /// <param name="v3">Third semiaxis.</param>
+        public Ellipsoid(Point3d Center, Vector3d v1, Vector3d v2, Vector3d v3)
         {
-            if (!semiaxis_a.IsOrthogonalTo(semiaxis_b) && !semiaxis_a.IsOrthogonalTo(semiaxis_c) && !semiaxis_c.IsOrthogonalTo(semiaxis_b))
+            if ( !(v1.IsOrthogonalTo(v2) && v1.IsOrthogonalTo(v3) && v3.IsOrthogonalTo(v2)) )
             {
                 throw new Exception("Semiaxes are not orthogonal");
             }
             _point = Center.Copy();
-            if (semiaxis_a.Norm >= semiaxis_b.Norm && semiaxis_a.Norm >= semiaxis_c.Norm)
+            if (v1.Norm >= v2.Norm && v1.Norm >= v3.Norm)
             {
-                _v1 = semiaxis_a.Copy();
-                if (semiaxis_b.Norm >= semiaxis_c.Norm)
+                _v1 = v1.Copy();
+                if (v2.Norm >= v3.Norm)
                 {
-                    _v2 = semiaxis_b.Copy();
-                    _v3 = semiaxis_c.Copy();
+                    _v2 = v2.Copy();
+                    _v3 = v3.Copy();
                 }
                 else
                 {
-                    _v2 = semiaxis_c.Copy();
-                    _v3 = semiaxis_b.Copy();
+                    _v2 = v3.Copy();
+                    _v3 = v2.Copy();
                 }
             }
-            else if (semiaxis_b.Norm >= semiaxis_a.Norm && semiaxis_b.Norm >= semiaxis_c.Norm)
+            else if (v2.Norm >= v1.Norm && v2.Norm >= v3.Norm)
             {
-                _v1 = semiaxis_b.Copy();
-                if (semiaxis_a.Norm >= semiaxis_c.Norm)
+                _v1 = v2.Copy();
+                if (v1.Norm >= v3.Norm)
                 {
-                    _v2 = semiaxis_a.Copy();
-                    _v3 = semiaxis_c.Copy();
+                    _v2 = v1.Copy();
+                    _v3 = v3.Copy();
                 }
                 else
                 {
-                    _v2 = semiaxis_c.Copy();
-                    _v3 = semiaxis_a.Copy();
+                    _v2 = v3.Copy();
+                    _v3 = v1.Copy();
                 }
             }
             else
             {
-                _v1 = semiaxis_c.Copy();
-                if (semiaxis_a.Norm >= semiaxis_b.Norm)
+                _v1 = v3.Copy();
+                if (v1.Norm >= v2.Norm)
                 {
-                    _v2 = semiaxis_a.Copy();
-                    _v3 = semiaxis_b.Copy();
+                    _v2 = v1.Copy();
+                    _v3 = v2.Copy();
                 }
                 else
                 {
-                    _v2 = semiaxis_b.Copy();
-                    _v3 = semiaxis_a.Copy();
+                    _v2 = v2.Copy();
+                    _v3 = v1.Copy();
                 }
             }
         }

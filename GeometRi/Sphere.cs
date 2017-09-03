@@ -12,6 +12,9 @@ namespace GeometRi
         private Point3d _point;
         private double _r;
 
+        /// <summary>
+        /// Initializes sphere using center point and radius.
+        /// </summary>
         public Sphere(Point3d P, double R)
         {
             _point = P.Copy();

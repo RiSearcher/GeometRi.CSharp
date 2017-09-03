@@ -13,6 +13,9 @@ namespace GeometRi
         private double _r;
         private Vector3d _normal;
 
+        /// <summary>
+        /// Initializes circle instance using center point, radius and normal vector.
+        /// </summary>
         public Circle3d(Point3d Center, double Radius, Vector3d Normal)
         {
             _point = Center.Copy();
@@ -20,7 +23,9 @@ namespace GeometRi
             _normal = Normal.Copy();
         }
 
-
+        /// <summary>
+        /// Initializes circle passing through three points.
+        /// </summary>
         public Circle3d(Point3d p1, Point3d p2, Point3d p3)
         {
             Vector3d v1 = new Vector3d(p1, p2);
@@ -45,7 +50,7 @@ namespace GeometRi
             //_point = (new Point3d(X, Y, 0, CS)).ConvertTo(p1.Coord);
             _point = new Point3d(X, Y, 0, CS);
             _point = _point.ConvertTo(p1.Coord);
-            _r = Sqrt(Math.Pow((X - a1.X), 2) + Math.Pow((Y - a1.Y), 2));
+            _r = Sqrt((X - a1.X)*(X - a1.X) + (Y - a1.Y)*(Y - a1.Y));
             _normal = v1.Cross(v2);
 
         }

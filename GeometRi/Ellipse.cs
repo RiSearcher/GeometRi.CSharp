@@ -13,22 +13,28 @@ namespace GeometRi
         private Vector3d _v1;
         private Vector3d _v2;
 
-        public Ellipse(Point3d Center, Vector3d semiaxis_a, Vector3d semiaxis_b)
+        /// <summary>
+        /// Initializes ellipse instance using center point and two orthogonal vectors.
+        /// </summary>
+        /// <param name="Center">Center point.</param>
+        /// <param name="v1">First semiaxis.</param>
+        /// <param name="v2">Second semiaxis.</param>
+        public Ellipse(Point3d Center, Vector3d v1, Vector3d v2)
         {
-            if (!semiaxis_a.IsOrthogonalTo(semiaxis_b))
+            if (!v1.IsOrthogonalTo(v2))
             {
                 throw new Exception("Semiaxes are not orthogonal");
             }
             _point = Center.Copy();
-            if (semiaxis_a.Norm >= semiaxis_b.Norm)
+            if (v1.Norm >= v2.Norm)
             {
-                _v1 = semiaxis_a.Copy();
-                _v2 = semiaxis_b.Copy();
+                _v1 = v1.Copy();
+                _v2 = v2.Copy();
             }
             else
             {
-                _v1 = semiaxis_b.Copy();
-                _v2 = semiaxis_a.Copy();
+                _v1 = v2.Copy();
+                _v2 = v1.Copy();
             }
 
         }
