@@ -293,15 +293,6 @@ namespace GeometRi
         //-----------------------------------------------------------------
         public static bool operator ==(Coord3d c1, Coord3d c2)
         {
-            //if (System.Object.ReferenceEquals(c1, c2))
-            //{
-            //    return true;
-            //}
-
-            //if (((object)c1 == null) || ((object)c2 == null))
-            //{
-            //    return false;
-            //}
 
             if ((object)c1 != null)
             {
