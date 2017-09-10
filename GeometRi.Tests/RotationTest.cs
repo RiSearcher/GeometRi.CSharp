@@ -99,5 +99,25 @@ namespace GeometRi.Tests
             Assert.AreEqual(r.ToQuaternion, q);
         }
 
+        [TestMethod]
+        public void FromEulerAnglesTest()
+        {
+            Rotation r = Rotation.FromEulerAngles(PI / 2, PI / 2, PI / 2, "zxy");
+            Rotation res = new Rotation(new Vector3d(1, 0, 0), PI / 2);
+            Assert.AreEqual(r, res);
+
+            r = Rotation.FromEulerAngles(PI / 2, -PI / 2, -PI / 2, "ZYZ");
+            res = new Rotation(new Vector3d(1, 0, 0), PI / 2);
+            Assert.AreEqual(r, res);
+
+            r = Rotation.FromEulerAngles(PI / 4, -PI / 2, PI / 4, "zyx");
+            res = new Rotation(new Vector3d(0, 1, 0), -PI / 2);
+            Assert.AreEqual(r, res);
+
+            r = Rotation.FromEulerAngles(PI / 4, -PI / 2, -PI / 4, "ZYX");
+            res = new Rotation(new Vector3d(0, 1, 0), -PI / 2);
+            Assert.AreEqual(r, res);
+        }
+
     }
 }

@@ -436,6 +436,8 @@ Rotation in 3D space defined in global or local reference frame (internally repr
 * __Mult__ - apply rotation to point or vector
 * __Equals__ - check if two rotations are equals
 * __ToString__ - string representation of rotation in global or local coordinate system
+### Static methods
+* __FromEulerAngles__ - creates rotation object from Euler or Tait–Bryan angles
 
 ## GeometRi3D
 

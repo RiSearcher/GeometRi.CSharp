@@ -158,6 +158,63 @@ namespace GeometRi
         #endregion
 
         /// <summary>
+        /// Creates rotation object by composing three elemental rotations, i.e. rotations about the axes of a coordinate system.
+        /// <para>Both proper Euler angles ("xyx", "zxz", etc.) or Tait–Bryan angles ("xyz", "yzx") are allowed.</para>
+        /// Extrinsic rotations (rotations in fixed frame) should be written in lower case ("xyz", zxz", etc.).
+        /// <para>Intrinsic rotations (rotations in moving frame) should be written in upper case ("XYZ", "ZXZ", etc.).</para>
+        /// </summary>
+        /// <param name="alpha">First rotation angle.</param>
+        /// <param name="beta">Second rotation angle.</param>
+        /// <param name="gamma">Third rotation angle.</param>
+        /// <param name="RotationOrder">String, representing rotation axes in the form "xyz" (extrinsic rotations, fixed frame) or "XYZ" (intrinsic rotations, moving frame).</param>
+        /// <param name="coord">Reference coordinate system, default - global coordinate system.</param>
+        /// <returns></returns>
+        public static Rotation FromEulerAngles(double alpha, double beta, double gamma, string RotationOrder, Coord3d coord = null)
+        {
+            if (string.IsNullOrEmpty(RotationOrder) || RotationOrder.Length < 3)
+            {
+                throw new ArgumentException("Invalid parameter: RotationOrder");
+            }
+
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            Vector3d v1 = CharToVector(RotationOrder[0], coord);
+            Vector3d v2 = CharToVector(RotationOrder[1], coord);
+            Vector3d v3 = CharToVector(RotationOrder[2], coord);
+
+            Rotation r1 = new Rotation(v1, alpha);
+            Rotation r2 = new Rotation(v2, beta);
+            Rotation r3 = new Rotation(v3, gamma);
+
+            if (RotationOrder[0] == 'x' || RotationOrder[0] == 'y' || RotationOrder[0] == 'z')
+            {
+                // Rotation in fixed frame
+                return r3 * r2 * r1;
+            }
+            else
+            {
+                // Rotation in moving frame
+                return r1 * r2 * r3;
+            }
+        }
+        private static Vector3d CharToVector(char c, Coord3d coord)
+        {
+            if (c == 'x' || c == 'X') return new Vector3d(1, 0, 0, coord);
+            if (c == 'y' || c == 'Y') return new Vector3d(0, 1, 0, coord);
+            if (c == 'z' || c == 'Z') return new Vector3d(0, 0, 1, coord);
+
+            throw new ArgumentException("Invalid parameter: RotationOrder");
+        }
+
+        /// <summary>
+        /// Combine two rotations.
+        /// </summary>
+        public Rotation Mult(Rotation r)
+        {
+            Matrix3d m = this.ToRotationMatrix * r.ConvertTo(this.Coord).ToRotationMatrix;
+            return new Rotation(m, this.Coord);
+        }
+
+        /// <summary>
         /// Multiply rotation matrix by vector.
         /// <para>The rotation matrix is first transformed into reference coordinate system of vector.</para>
         /// </summary>
@@ -255,6 +312,14 @@ namespace GeometRi
         public static bool operator !=(Rotation m1, Rotation m2)
         {
             return !m1.Equals(m2);
+        }
+
+        /// <summary>
+        /// Combine two rotations.
+        /// </summary>
+        public static Rotation operator *(Rotation r1, Rotation r2)
+        {
+            return r1.Mult(r2);
         }
 
         /// <summary>
