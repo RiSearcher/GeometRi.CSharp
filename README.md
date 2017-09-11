@@ -421,7 +421,7 @@ Unit quaternion (W + X*i + Y*j + Z*k)
 * __Equals__ - check if two quaternions are equals
 * __ToString__ - string representation of quaternion in global or local coordinate system
 ### Static methods
-* __SLERP__ - Spherical Linear intERPolation of two ritations
+* __SLERP__ - Spherical Linear intERPolation of two quaternions
 
 ## Rotation
 Rotation in 3D space defined in global or local reference frame (internally represented by rotation matrix)
@@ -440,7 +440,7 @@ Rotation in 3D space defined in global or local reference frame (internally repr
 * __ToString__ - string representation of rotation in global or local coordinate system
 ### Static methods
 * __FromEulerAngles__ - creates rotation object from Euler or Tait-Bryan angles
-* __SLERP__ - Spherical Linear intERPolation of two ritations
+* __SLERP__ - Spherical Linear intERPolation of two rotations
 
 ## GeometRi3D
 
