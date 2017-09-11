@@ -362,6 +362,46 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Spherical linear interpolation of two rotations.
+        /// </summary>
+        /// <param name="q1">Initial rotation</param>
+        /// <param name="q2">Final rotation</param>
+        /// <param name="t">Interpolation parameter within range [0, 1]</param>
+        public static Quaternion SLERP(Quaternion q1, Quaternion q2, double t)
+        {
+            // Algorithm from https://en.wikipedia.org/wiki/Slerp
+
+            Quaternion qq1 = q1.Copy().Normalized;
+            Quaternion qq2 = q2.Copy().Normalized;
+            if (qq2.Coord != qq1.Coord) qq2 = qq2.ConvertTo(qq1.Coord);
+
+            double dot = qq1.W * qq2.W + qq1.X * qq2.X + qq1.Y * qq2.Y + qq1.Z * qq2.Z;
+
+            const double threshold = 0.9995;
+            if (Abs(dot) > threshold)
+            {
+                // Using linear interpolation if two rotations are close
+                Quaternion res = qq1 + t * (qq2 - qq1);
+                res.Normalize();
+                return res;
+            }
+
+            //Make sure to choose shortest path
+            if (dot < 0.0)
+            {
+                qq2 = -qq2;
+                dot = -dot;
+            }
+
+            double theta_0 = Acos(dot);
+            double theta = theta_0 * t;
+
+            qq2 = qq2 - qq1 * dot;
+            qq2.Normalize();
+            return qq1 * Cos(theta) + qq2 * Sin(theta);
+        }
+
+        /// <summary>
         /// Determines whether two objects are equal.
         /// </summary>
         public override bool Equals(object obj)
@@ -430,6 +470,11 @@ namespace GeometRi
         public static Quaternion operator *(double a, Quaternion q1)
         {
             return q1.Scale(a);
+        }
+
+        public static Quaternion operator -(Quaternion q1)
+        {
+            return q1.Scale(-1.0);
         }
 
         public static bool operator ==(Quaternion q1, Quaternion q2)

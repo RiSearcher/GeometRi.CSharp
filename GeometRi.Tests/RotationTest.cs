@@ -119,5 +119,34 @@ namespace GeometRi.Tests
             Assert.AreEqual(r, res);
         }
 
+        [TestMethod]
+        public void SLERPTest()
+        {
+            // Zero rotation test
+            Quaternion q0 = new Quaternion(1, 0, 0, 0);
+            Quaternion q1 = q0;
+            Quaternion q2 = q0;
+            Assert.AreEqual(Quaternion.SLERP(q1, q2, 0.5), q0);
+
+            // Interpolate from zero to 90 degrees
+            q1 = new Quaternion(new Vector3d(1, 2, 3), PI / 2);
+            q2 = new Quaternion(new Vector3d(1, 2, 3), PI / 4);
+            Assert.AreEqual(Quaternion.SLERP(q0, q1, 0.5), q2);
+
+            // Interpolate from zero to 180 degrees
+            q1 = new Quaternion(new Vector3d(1, -2, -3), PI);
+            q2 = new Quaternion(new Vector3d(1, -2, -3), PI / 2);
+            Assert.AreEqual(Quaternion.SLERP(q0, q1, 0.5), q2);
+
+            q1 = new Quaternion(new Vector3d(1, 2, -3), 0.9832);
+            q2 = new Quaternion(new Vector3d(10, -2, 0.5), 1.8945);
+            Quaternion q_0_5 = Quaternion.SLERP(q1, q2, 0.5);
+            Quaternion q_0_25 = Quaternion.SLERP(q1, q2, 0.25);
+            Quaternion q_0_75 = Quaternion.SLERP(q1, q2, 0.75);
+            Assert.AreEqual(Quaternion.SLERP(q1, q_0_5, 0.5), q_0_25);
+            Assert.AreEqual(Quaternion.SLERP(q_0_5, q2, 0.5), q_0_75);
+
+        }
+
     }
 }

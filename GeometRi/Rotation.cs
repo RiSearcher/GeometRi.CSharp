@@ -167,7 +167,7 @@ namespace GeometRi
         /// <param name="beta">Second rotation angle.</param>
         /// <param name="gamma">Third rotation angle.</param>
         /// <param name="RotationOrder">String, representing rotation axes in the form "xyz" (extrinsic rotations, fixed frame) or "XYZ" (intrinsic rotations, moving frame).</param>
-        /// <param name="coord">Reference coordinate system, default - global coordinate system.</param>
+        /// <param name="coord">Reference coordinate system, default - Coord3d.GlobalCS.</param>
         /// <returns></returns>
         public static Rotation FromEulerAngles(double alpha, double beta, double gamma, string RotationOrder, Coord3d coord = null)
         {
@@ -203,6 +203,17 @@ namespace GeometRi
             if (c == 'z' || c == 'Z') return new Vector3d(0, 0, 1, coord);
 
             throw new ArgumentException("Invalid parameter: RotationOrder");
+        }
+
+        /// <summary>
+        /// Spherical linear interpolation of two rotations.
+        /// </summary>
+        /// <param name="r1">Initial rotation</param>
+        /// <param name="r2">Final rotation</param>
+        /// <param name="t">Interpolation parameter within range [0, 1]</param>
+        public static Rotation SLERP(Rotation r1, Rotation r2, double t)
+        {
+            return new Rotation(Quaternion.SLERP(r1.ToQuaternion, r2.ToQuaternion, t));
         }
 
         /// <summary>
