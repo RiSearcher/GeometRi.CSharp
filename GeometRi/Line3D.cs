@@ -56,7 +56,6 @@ namespace GeometRi
         /// <summary>
         /// Base point of the line
         /// </summary>
-        /// <returns></returns>
         public Point3d Point
         {
             get { return _point.Copy(); }
@@ -66,7 +65,6 @@ namespace GeometRi
         /// <summary>
         /// Direction vector of the line
         /// </summary>
-        /// <returns></returns>
         public Vector3d Direction
         {
             get { return _dir.Copy(); }

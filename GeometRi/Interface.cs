@@ -19,4 +19,13 @@ namespace GeometRi
         Vector3d Normal { get; }
         bool IsOriented { get; }
     }
+
+    /// <summary>
+    /// Interface for finite objects
+    /// </summary>
+    public interface IFiniteObject
+    {
+        Box3d BoundingBox(Coord3d coord);
+        Box3d MinimumBoundingBox { get; }
+    }
 }

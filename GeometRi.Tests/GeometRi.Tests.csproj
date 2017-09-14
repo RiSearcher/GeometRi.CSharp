@@ -66,6 +66,7 @@
     <Compile Include="TriangleTest.cs" />
     <Compile Include="EllipsoidTest.cs" />
     <Compile Include="RotationTest.cs" />
+    <Compile Include="Box3dTest.cs" />
     <Compile Include="Vector3dTest.cs" />
   </ItemGroup>
   <ItemGroup>
