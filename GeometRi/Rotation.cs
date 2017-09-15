@@ -87,6 +87,12 @@ namespace GeometRi
         //}
         #endregion
 
+        private double this[int i, int j]
+        {
+            get { return this._r[i, j]; }
+            set { this._r[i, j] = value; }
+        }
+
         /// <summary>
         /// Creates copy of the object
         /// </summary>
@@ -289,7 +295,7 @@ namespace GeometRi
                 return false;
             }
             Rotation r = (Rotation)obj;
-            return (this.ToRotationMatrix - r.ToRotationMatrix).MaxNorm < GeometRi3D.Tolerance;
+            return (this.ToRotationMatrix - r.ConvertTo(this.Coord).ToRotationMatrix).MaxNorm < GeometRi3D.Tolerance;
         }
 
         /// <summary>
@@ -303,14 +309,24 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// String representation of an object.
+        /// String representation of an object in global coordinate system.
         /// </summary>
         public override string ToString()
         {
-            string str = "Rotation: " + System.Environment.NewLine;
-            str += string.Format("Row1 -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", _r[0, 0], _r[0, 1], _r[0, 2]) + System.Environment.NewLine;
-            str += string.Format("Row2 -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", _r[1, 0], _r[1, 1], _r[1, 2]) + System.Environment.NewLine;
-            str += string.Format("Row3 -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", _r[2, 0], _r[2, 1], _r[2, 2]);
+            return ToString(Coord3d.GlobalCS);
+        }
+
+        /// <summary>
+        /// String representation of an object in reference coordinate system.
+        /// </summary>
+        public string ToString(Coord3d coord)
+        {
+            string nl = System.Environment.NewLine;
+            Rotation r = this.ConvertTo(coord);
+            string str = "Rotation (reference coord.sys. " + coord.Name + "):" + nl;
+            str += string.Format("Row1 -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", r[0, 0], r[0, 1], r[0, 2]) + nl;
+            str += string.Format("Row2 -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", r[1, 0], r[1, 1], r[1, 2]) + nl;
+            str += string.Format("Row3 -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", r[2, 0], r[2, 1], r[2, 2]);
             return str;
         }
 

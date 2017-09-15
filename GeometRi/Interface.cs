@@ -27,5 +27,6 @@ namespace GeometRi
     {
         Box3d BoundingBox(Coord3d coord);
         Box3d MinimumBoundingBox { get; }
+        Sphere BoundingSphere { get; }
     }
 }

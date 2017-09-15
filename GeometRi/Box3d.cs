@@ -171,8 +171,6 @@ namespace GeometRi
             get { return 2.0 * (_lx*_ly + _lx*_lz + _ly*_lz); }
         }
 
-
-
         #endregion
 
         #region "BoundingBox"
@@ -204,6 +202,79 @@ namespace GeometRi
 
             return new Box3d(c, 2.0 * (c.X - mx), 2.0 * (c.Y - my), 2.0 * (c.Z - mz), r);
         }
+
+        /// <summary>
+        /// Return bounding sphere.
+        /// </summary>
+        public Sphere BoundingSphere
+        {
+            get
+            {
+                double r = 0.5 * Sqrt(_lx * _lx + _ly * _ly + _lz * _lz);
+                return new Sphere(this.Center, r);
+            }
+        }
         #endregion
+
+        /// <summary>
+        /// Determines whether two objects are equal.
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
+            {
+                return false;
+            }
+            Box3d b = (Box3d)obj;
+            return this.Center == b.Center &&  _r == b.Orientation &&
+                   GeometRi3D.AlmostEqual(Lx, b.Lx) &&
+                   GeometRi3D.AlmostEqual(Ly, b.Ly) &&
+                   GeometRi3D.AlmostEqual(Lz, b.Lz);
+        }
+
+        /// <summary>
+        /// Returns the hashcode for the object.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            int hash_code = GeometRi3D.HashFunction(_lx.GetHashCode(), _ly.GetHashCode(), _lz.GetHashCode());
+            return GeometRi3D.HashFunction(_center.GetHashCode(), _r.GetHashCode(), hash_code);
+        }
+
+        /// <summary>
+        /// String representation of an object in global coordinate system.
+        /// </summary>
+        public override string ToString()
+        {
+            return ToString(Coord3d.GlobalCS);
+        }
+
+        /// <summary>
+        /// String representation of an object in reference coordinate system.
+        /// </summary>
+        public String ToString(Coord3d coord)
+        {
+            string nl = System.Environment.NewLine;
+
+            if (coord == null) { coord = Coord3d.GlobalCS; }
+            Point3d p = _center.ConvertTo(coord);
+
+            string str = string.Format("Box3d (reference coord.sys. ") + coord.Name + "):" + nl;
+            str += string.Format("Center -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p.X, p.Y, p.Z) + nl;
+            str += string.Format("Lx, Ly, Lz -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", _lx, _ly, _lz) + nl;
+            str += _r.ToString(coord);
+            return str;
+        }
+
+        // Operators overloads
+        //-----------------------------------------------------------------
+        public static bool operator ==(Box3d b1, Box3d b2)
+        {
+            return b1.Equals(b2);
+        }
+        public static bool operator !=(Box3d b1, Box3d b2)
+        {
+            return !b1.Equals(b2);
+        }
     }
 }
