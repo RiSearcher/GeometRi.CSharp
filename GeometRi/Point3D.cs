@@ -111,28 +111,11 @@ namespace GeometRi
             Point3d p = this.Copy();
 
             p = p.ConvertToGlobal();
-            if (coord == null)
-                return p;
-            if (object.ReferenceEquals(coord, Coord3d.GlobalCS))
+            if (coord == null || object.ReferenceEquals(coord, Coord3d.GlobalCS))
                 return p;
 
-
-
-            Vector3d v = default(Vector3d);
-            // If coord is cloned from GlobalCS, its Origin does not have a reference to coord.sys.
-            if (coord.Origin == new Point3d(0, 0, 0))
-            {
-                v = new Vector3d(p);
-            }
-            else
-            {
-                v = new Vector3d(coord.Origin, p);
-            }
-            p.X = v.Dot(coord.Xaxis);
-            p.Y = v.Dot(coord.Yaxis);
-            p.Z = v.Dot(coord.Zaxis);
+            p = coord.Axes * (p - coord.Origin);
             p._coord = coord;
-
 
             return p;
         }

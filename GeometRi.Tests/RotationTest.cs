@@ -64,6 +64,17 @@ namespace GeometRi.Tests
         }
 
         [TestMethod]
+        public void RotationFromCoordTest()
+        {
+            Coord3d coord = new Coord3d(new Point3d(2, 3, 1), new Vector3d(2, 1, 5), new Vector3d(1, 1, 1));
+            Rotation r = new Rotation(coord);
+
+            Assert.AreEqual(r * Coord3d.GlobalCS.Xaxis, coord.Xaxis);
+            Assert.AreEqual(r * Coord3d.GlobalCS.Yaxis, coord.Yaxis);
+            Assert.AreEqual(r * Coord3d.GlobalCS.Zaxis, coord.Zaxis);
+        }
+
+        [TestMethod]
         public void AxisToFromMatrixTest()
         {
             Vector3d v = new Vector3d(4, 111, 6);

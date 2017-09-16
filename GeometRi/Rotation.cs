@@ -14,13 +14,21 @@ namespace GeometRi
 
         #region "Constructors"
         /// <summary>
-        /// Default constructor, initializes identity matrix.
+        /// Default constructor, initializes identity matrix (zero rotation).
         /// </summary>
-        /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
-        public Rotation(Coord3d coord = null)
+        public Rotation()
         {
             _r = Matrix3d.Identity();
-            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            _coord = Coord3d.GlobalCS;
+        }
+
+        /// <summary>
+        /// Initializes rotation, equal to the rotation from global CS to 'coord'.
+        /// </summary>
+        public Rotation(Coord3d coord)
+        {
+            _r = coord.Axes.Transpose();
+            _coord = Coord3d.GlobalCS;
         }
 
         /// <summary>

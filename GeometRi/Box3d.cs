@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Arbitrary oriented 3D box, can be degenerated with one or more dimensions equal 0.
+    /// </summary>
     public class Box3d : IFiniteObject
     {
 
@@ -12,11 +15,16 @@ namespace GeometRi
         private Rotation _r;
 
         #region "Constructors"
+        /// <summary>
+        /// Default constructor, initializes unit box in the origin of the reference coordinate system aligned with coordinate axes.
+        /// </summary>
+        /// <param name="coord"></param>
         public Box3d(Coord3d coord = null)
         {
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
             _center = new Point3d(coord);
             _lx = _ly = _lz = 1.0;
-            _r = new Rotation(coord);
+            _r = new Rotation(coord.Axes.Transpose());
         }
 
         public Box3d(Point3d center, double lx, double ly, double lz, Rotation r)
@@ -252,7 +260,7 @@ namespace GeometRi
         /// <summary>
         /// String representation of an object in reference coordinate system.
         /// </summary>
-        public String ToString(Coord3d coord)
+        public string ToString(Coord3d coord)
         {
             string nl = System.Environment.NewLine;
 

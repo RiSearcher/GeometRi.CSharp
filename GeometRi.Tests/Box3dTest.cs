@@ -9,6 +9,18 @@ namespace GeometRi_Tests
     public class Box3dTest
     {
         [TestMethod]
+        public void DefaultBoxTest()
+        {
+            Rotation r = new Rotation(new Vector3d(2, 1, 5), PI / 3);
+            Coord3d coord1 = new Coord3d(new Point3d(2, 3, 1), r.ToRotationMatrix.Transpose());
+            Box3d b = new Box3d(coord1);
+
+            Assert.AreEqual(b.Center, coord1.Origin);
+            Assert.AreEqual(b.P1, new Point3d(-0.5, -0.5, -0.5, coord1));
+            Assert.AreEqual(b.P7, new Point3d(0.5, 0.5, 0.5, coord1));
+        }
+
+        [TestMethod]
         public void CornerPointsTest()
         {
             Rotation r = new Rotation();

@@ -342,7 +342,7 @@ namespace GeometRi
             else
             {
                 Vector3d v = this.Copy();
-                v = _coord.Axes.Inverse() * v;
+                v = _coord.Axes.Transpose() * v;
                 v._coord = Coord3d.GlobalCS;
                 return v;
             }

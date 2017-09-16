@@ -195,9 +195,12 @@ namespace GeometRi
         {
             get
             {
+                this.Normalize();
                 if (GeometRi3D.AlmostEqual(Abs(_w), 1.0))
                 {
-                    return new Vector3d(_x, _y , _z, _coord);
+                    // Zero rotation
+                    // For robustness, return any unit vector
+                    return new Vector3d(1, 0, 0, _coord);
                 }
                 else
                 {
