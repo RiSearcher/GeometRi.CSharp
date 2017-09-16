@@ -27,6 +27,7 @@ Global tolerance property is used for proximity checking, not an exact robust al
     * [Circle3d](https://github.com/RiSearcher/GeometRi.CSharp#circle3d)
     * [Ellipse](https://github.com/RiSearcher/GeometRi.CSharp#ellipse)
     * [Ellipsoid](https://github.com/RiSearcher/GeometRi.CSharp#ellipsoid)
+    * [Box3d](https://github.com/RiSearcher/GeometRi.CSharp#box3d)
     * [Triangle](https://github.com/RiSearcher/GeometRi.CSharp#triangle)
     * [Coord3d](https://github.com/RiSearcher/GeometRi.CSharp#coord3d)
     * [Matrix3d](https://github.com/RiSearcher/GeometRi.CSharp#matrix3d)
@@ -45,7 +46,7 @@ Install-Package GeometRi
 * __Point3d__ and __Vector3d__ are two base classes, representing points and vectors in 3D space.
 Objects of type Point3d or Vector3d can be defined in global or in local coordinate systems.
 
-* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__ and __Triangle__
+* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__, __Box3d__ and __Triangle__
 are compound classes, which are defined in terms of points and vectors.
 
 * __Coord3d__, __Rotation__, __Quaternion__ and __Matrix3d__ are auxiliary classes.
@@ -309,8 +310,8 @@ Ellipsoid object defined by center point and three mutually orthogonal vectors.
 * __Center__ - center of the ellipsoid
 * __SemiaxisA/B/C__ - semiaxes of the ellipsoid
 * __A/B/C__ - length of the semiaxes of the ellipsoid
-* __Area__ - approximate area of the approximate
-* __Volume__ - volume of the approximate
+* __Area__ - approximate surface area of the ellipsoid
+* __Volume__ - volume of the ellipsoid
 ### Methods
 * __Copy__ - Creates copy of the object
 * __ProjectionTo__ - orthogonal projection of ellipsoid to line
@@ -318,6 +319,25 @@ Ellipsoid object defined by center point and three mutually orthogonal vectors.
 * __Translate__ - translate ellipsoid by vector
 * __Rotate__ - rotate ellipsoid around origin or other point
 * __Reflect__ - reflect ellipsoid in point, line or plane
+* __Equals__ - check if two ellipsoids are equals
+* __ToString__ - string representation of ellipsoid in global or local coordinate system
+
+## Box3d
+
+Box object defined by center point, three dimensions and orientation in space.
+### Properties
+* __Center__ - center point of the box
+* __Lx/Ly/Lz__ - dimensions of the box
+* __Orientation__ - box orientation
+* __P1/P2/P3/P4/P5/P6/P7/P8__ - corner points of the box
+* __ListOfPoints__ - list of corner points of the box
+* __Area__ - area of the box
+* __Volume__ - volume of the box
+* __MinimumBoundingBox__ - minimum bounding box of the object
+* __BoundingSphere__ - bounding sphere of the object
+### Methods
+* __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __Equals__ - check if two ellipsoids are equals
 * __ToString__ - string representation of ellipsoid in global or local coordinate system
 
