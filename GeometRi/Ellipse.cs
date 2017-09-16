@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Ellipse in 3D space, defined by center point and two orthogonal vectors, major and minor semiaxes.
     /// </summary>
-    public class Ellipse : IPlanarObject
+    public class Ellipse : IPlanarObject, IFiniteObject
     {
 
         private Point3d _point;
@@ -191,6 +191,47 @@ namespace GeometRi
         }
         #endregion
 
+        #region "BoundingBox"
+        /// <summary>
+        /// Return minimum bounding box.
+        /// </summary>
+        public Box3d MinimumBoundingBox
+        {
+            get
+            {
+                Vector3d v1 = _v1.Normalized;
+                Vector3d v2 = _v2.Normalized;
+                Vector3d v3 = v1.Cross(v2).Normalized;
+                Matrix3d m = new Matrix3d(v1, v2, v3);
+                Rotation r = new Rotation(m.Transpose());
+                return new Box3d(_point, 2.0 * this.A, 2.0 * this.B, 0, r);
+            }
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// </summary>
+        public Box3d BoundingBox(Coord3d coord)
+        {
+            Line3d l1 = new Line3d(coord.Origin, coord.Xaxis);
+            Line3d l2 = new Line3d(coord.Origin, coord.Yaxis);
+            Line3d l3 = new Line3d(coord.Origin, coord.Zaxis);
+            Segment3d s1 = this.ProjectionTo(l1);
+            Segment3d s2 = this.ProjectionTo(l2);
+            Segment3d s3 = this.ProjectionTo(l3);
+            return new Box3d(_point, s1.Length, s2.Length, s3.Length, coord);
+        }
+
+        /// <summary>
+        /// Return bounding sphere.
+        /// </summary>
+        public Sphere BoundingSphere
+        {
+            get { return new Sphere(_point, this.A); }
+
+        }
+        #endregion
+
         /// <summary>
         /// Returns point on ellipse for given parameter 't' (0 &lt;= t &lt; 2Pi)
         /// </summary>
@@ -199,6 +240,28 @@ namespace GeometRi
 
             return _point + _v1.ToPoint * Cos(t) + _v2.ToPoint * Sin(t);
 
+        }
+
+        /// <summary>
+        /// Orthogonal projection of ellipsoid to line.
+        /// </summary>
+        public Segment3d ProjectionTo(Line3d l)
+        {
+            // Using algorithm for ellipsoid with third semiaxis -> 0
+            // Stephen B. Pope "Algorithms for Ellipsoids"
+            // https://tcg.mae.cornell.edu/pubs/Pope_FDA_08.pdf
+
+            Coord3d lc = new Coord3d(_point, _v1, _v2);
+            Point3d x0 = l.Point.ConvertTo(lc);
+            Vector3d v = l.Direction.ConvertTo(lc);
+
+            Matrix3d L_T = Matrix3d.DiagonalMatrix(this.A, this.B, 0);
+            Vector3d c = new Vector3d(0.0, 0.0, 0.0, lc);
+            double s0 = v * (c - x0.ToVector) / (v * v);
+            Vector3d w = L_T * v / (v * v);
+            Point3d P1 = x0.Translate((s0 + w.Norm) * v);
+            Point3d P2 = x0.Translate((s0 - w.Norm) * v);
+            return new Segment3d(P1, P2);
         }
 
         /// <summary>

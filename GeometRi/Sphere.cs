@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Sphere object defined by center point and radius.
     /// </summary>
-    public class Sphere
+    public class Sphere : IFiniteObject
     {
 
         private Point3d _point;
@@ -148,6 +148,33 @@ namespace GeometRi
             {
                 return 0;
             }
+        }
+        #endregion
+
+        #region "BoundingBox"
+        /// <summary>
+        /// Return minimum bounding box.
+        /// </summary>
+        public Box3d MinimumBoundingBox
+        {
+            get { return new Box3d(_point, _r, _r, _r); }
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// </summary>
+        public Box3d BoundingBox(Coord3d coord)
+        {
+            return new Box3d(_point, _r, _r, _r, new Rotation(coord));
+        }
+
+        /// <summary>
+        /// Return bounding sphere.
+        /// </summary>
+        public Sphere BoundingSphere
+        {
+            get { return this; }
+
         }
         #endregion
 

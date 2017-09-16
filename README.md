@@ -185,8 +185,11 @@ Represent a line segment in 3D space and is defined by two points.
 * __ToVector__ - convert segment to vector
 * __ToRay__ - convert segment to ray
 * __ToLine__ - convert segment to line
+* __MinimumBoundingBox__ - minimum bounding box of the object
+* __BoundingSphere__ - bounding sphere of the object
 ### Methods
 * __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, line, ray, plane or other segment
 * __IntersectionWith__ - intersection of segment with plane
 * __ProjectionTo__ - orthogonal projection of segment to the line or plane
@@ -234,8 +237,11 @@ common translation, rotation and reflection methods.
 * __R__ - radius of the sphere
 * __Area__ - area of the sphere
 * __Volume__ - volume of the sphere
+* __MinimumBoundingBox__ - minimum bounding box of the object
+* __BoundingSphere__ - bounding sphere of the object
 ### Methods
 * __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, line, ray, segment or plane
 * __IntersectionWith__ - intersection of sphere with line, plane or other sphere
 * __ProjectionTo__ - orthogonal projection of sphere to the line or plane
@@ -255,10 +261,13 @@ Defines a circle in 3D space by center point, radius and normal vector.
 * __Perimeter__ - perimeter of the circle
 * __Area__ - area of the circle
 * __ToEllipse__ - convert circle to equivalent ellipse
+* __MinimumBoundingBox__ - minimum bounding box of the object
+* __BoundingSphere__ - bounding sphere of the object
 ### Methods
 * __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ParametricForm__ - return point on circle for given parameter 't'
-* __ProjectionTo__ - orthogonal projection of circle to plane
+* __ProjectionTo__ - orthogonal projection of circle to plane or line
 * __IntersectionWith__ - intersection of circle with plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -287,10 +296,13 @@ Ellipse in 3D space, defined by center point and two orthogonal vectors, major a
 * __e__ - eccentricity of the ellipse
 * __Perimeter__ - approximate circumference of the ellipse
 * __Area__ - area of the ellipse
+* __MinimumBoundingBox__ - minimum bounding box of the object
+* __BoundingSphere__ - bounding sphere of the object
 ### Methods
 * __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ParametricForm__ - return point on ellipse for given parameter 't'
-* __ProjectionTo__ - orthogonal projection of ellipse to plane
+* __ProjectionTo__ - orthogonal projection of ellipse to plane or line
 * __IntersectionWith__ - intersection of ellipse with plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -312,8 +324,11 @@ Ellipsoid object defined by center point and three mutually orthogonal vectors.
 * __A/B/C__ - length of the semiaxes of the ellipsoid
 * __Area__ - approximate surface area of the ellipsoid
 * __Volume__ - volume of the ellipsoid
+* __MinimumBoundingBox__ - minimum bounding box of the object
+* __BoundingSphere__ - bounding sphere of the object
 ### Methods
 * __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ProjectionTo__ - orthogonal projection of ellipsoid to line
 * __IntersectionWith__ - intersection of ellipsoid with line or plane
 * __Translate__ - translate ellipsoid by vector
@@ -366,8 +381,12 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 * __IsRight__ - check if one angle is equal 90 degrees
 * __IsObtuse__ - check if one angle is greater than 90 degrees
 * __IsAcute__ - check if all angles are less than 90 degrees
+* __MinimumBoundingBox__ - minimum bounding box of the object
+* __BoundingSphere__ - bounding sphere of the object
 ### Methods
 * __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
+* __ProjectionTo__ - orthogonal projection of triangle to line
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal

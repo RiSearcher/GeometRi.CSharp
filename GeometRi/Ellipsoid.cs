@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Ellipsoid object defined by center point and three mutually orthogonal vectors.
     /// </summary>
-    public class Ellipsoid
+    public class Ellipsoid : IFiniteObject
     {
 
         private Point3d _point;
@@ -152,6 +152,47 @@ namespace GeometRi
                 double tmp = Pow(A * B, p) + Pow(A * C, p) + Pow(C * B, p);
                 return 4.0 * PI * Pow(tmp, 1/p);
             }
+        }
+        #endregion
+
+        #region "BoundingBox"
+        /// <summary>
+        /// Return minimum bounding box.
+        /// </summary>
+        public Box3d MinimumBoundingBox
+        {
+            get
+            {
+                Vector3d v1 = _v1.Normalized;
+                Vector3d v2 = _v2.Normalized;
+                Vector3d v3 = _v3.Normalized;
+                Matrix3d m = new Matrix3d(v1, v2, v3);
+                Rotation r = new Rotation(m.Transpose());
+                return new Box3d(_point, 2.0 * this.A, 2.0 * this.B, 2.0 * this.C, r);
+            }
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// </summary>
+        public Box3d BoundingBox(Coord3d coord)
+        {
+            Line3d l1 = new Line3d(coord.Origin, coord.Xaxis);
+            Line3d l2 = new Line3d(coord.Origin, coord.Yaxis);
+            Line3d l3 = new Line3d(coord.Origin, coord.Zaxis);
+            Segment3d s1 = this.ProjectionTo(l1);
+            Segment3d s2 = this.ProjectionTo(l2);
+            Segment3d s3 = this.ProjectionTo(l3);
+            return new Box3d(_point, s1.Length, s2.Length, s3.Length, coord);
+        }
+
+        /// <summary>
+        /// Return bounding sphere.
+        /// </summary>
+        public Sphere BoundingSphere
+        {
+            get { return new Sphere(_point, this.A); }
+
         }
         #endregion
 

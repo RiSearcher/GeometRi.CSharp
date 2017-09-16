@@ -24,7 +24,16 @@ namespace GeometRi
             coord = (coord == null) ? Coord3d.GlobalCS : coord;
             _center = new Point3d(coord);
             _lx = _ly = _lz = 1.0;
-            _r = new Rotation(coord.Axes.Transpose());
+            _r = new Rotation(coord);
+        }
+
+        public Box3d(Point3d center, double lx, double ly, double lz)
+        {
+            _center = center.Copy();
+            _lx = lx;
+            _ly = ly;
+            _lz = lz;
+            _r = new Rotation();
         }
 
         public Box3d(Point3d center, double lx, double ly, double lz, Rotation r)
@@ -34,6 +43,15 @@ namespace GeometRi
             _ly = ly;
             _lz = lz;
             _r = r.Copy();
+        }
+
+        public Box3d(Point3d center, double lx, double ly, double lz, Coord3d coord)
+        {
+            _center = center.Copy();
+            _lx = lx;
+            _ly = ly;
+            _lz = lz;
+            _r = new Rotation(coord);
         }
         #endregion
 
@@ -196,7 +214,6 @@ namespace GeometRi
         public Box3d BoundingBox(Coord3d coord)
         {
             Point3d c = _center.ConvertTo(coord);
-            Rotation r = new Rotation(coord);
             double mx = c.X;
             double my = c.Y;
             double mz = c.Z;
@@ -208,7 +225,7 @@ namespace GeometRi
                 if (p.Z < mz) mz = p.Z;
             }
 
-            return new Box3d(c, 2.0 * (c.X - mx), 2.0 * (c.Y - my), 2.0 * (c.Z - mz), r);
+            return new Box3d(c, 2.0 * (c.X - mx), 2.0 * (c.Y - my), 2.0 * (c.Z - mz), coord);
         }
 
         /// <summary>

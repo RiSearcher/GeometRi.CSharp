@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Line segment in 3D space defined by two end points.
     /// </summary>
-    public class Segment3d : ILinearObject
+    public class Segment3d : ILinearObject, IFiniteObject
     {
 
         private Point3d _p1;
@@ -317,6 +317,51 @@ namespace GeometRi
                 return Min(d1, Min(d2, d3));
 
             return Min(this.P1.DistanceTo(r.Point), this.P2.DistanceTo(r.Point));
+
+        }
+        #endregion
+
+        #region "BoundingBox"
+        /// <summary>
+        /// Return minimum bounding box.
+        /// </summary>
+        public Box3d MinimumBoundingBox
+        {
+            get
+            {
+                Vector3d v1 = new Vector3d(_p1, _p2).Normalized;
+                Vector3d v2 = v1.OrthogonalVector.Normalized;
+                Vector3d v3 = v1.Cross(v2);
+                Matrix3d m = new Matrix3d(v1, v2, v3);
+                Rotation r = new Rotation(m.Transpose());
+                return new Box3d(0.5 * (_p1 + _p2), Length, 0, 0, r);
+            }
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// </summary>
+        public Box3d BoundingBox(Coord3d coord)
+        {
+            Line3d l1 = new Line3d(coord.Origin, coord.Xaxis);
+            Line3d l2 = new Line3d(coord.Origin, coord.Yaxis);
+            Line3d l3 = new Line3d(coord.Origin, coord.Zaxis);
+            object s1 = this.ProjectionTo(l1);
+            object s2 = this.ProjectionTo(l2);
+            object s3 = this.ProjectionTo(l3);
+            double lx, ly, lz;
+            if (s1.GetType() == typeof(Segment3d)) { lx = ((Segment3d)s1).Length; } else { lx = 0.0; }
+            if (s2.GetType() == typeof(Segment3d)) { ly = ((Segment3d)s2).Length; } else { ly = 0.0; }
+            if (s3.GetType() == typeof(Segment3d)) { lz = ((Segment3d)s3).Length; } else { lz = 0.0; }
+            return new Box3d(0.5 * (_p1 + _p2), lx, ly, lz, coord);
+        }
+
+        /// <summary>
+        /// Return bounding sphere.
+        /// </summary>
+        public Sphere BoundingSphere
+        {
+            get { return new Sphere(0.5*(_p1+_p2), 0.5*Length); }
 
         }
         #endregion

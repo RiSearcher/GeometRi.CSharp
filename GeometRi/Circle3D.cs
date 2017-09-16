@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Circle in 3D space defined by center point, radius and normal vector.
     /// </summary>
-    public class Circle3d : IPlanarObject
+    public class Circle3d : IPlanarObject, IFiniteObject
     {
 
         private Point3d _point;
@@ -165,6 +165,47 @@ namespace GeometRi
         }
         #endregion
 
+        #region "BoundingBox"
+        /// <summary>
+        /// Return minimum bounding box.
+        /// </summary>
+        public Box3d MinimumBoundingBox
+        {
+            get
+            {
+                Vector3d v1 = this.Normal.OrthogonalVector.Normalized;
+                Vector3d v2 = this.Normal.Cross(v1).Normalized;
+                Vector3d v3 = this.Normal.Normalized;
+                Matrix3d m = new Matrix3d(v1, v2, v3);
+                Rotation r = new Rotation(m.Transpose());
+                return new Box3d(_point, 2.0*_r, 2.0*_r, 0, r);
+            }
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// </summary>
+        public Box3d BoundingBox(Coord3d coord)
+        {
+            Line3d l1 = new Line3d(coord.Origin, coord.Xaxis);
+            Line3d l2 = new Line3d(coord.Origin, coord.Yaxis);
+            Line3d l3 = new Line3d(coord.Origin, coord.Zaxis);
+            Segment3d s1 = this.ProjectionTo(l1);
+            Segment3d s2 = this.ProjectionTo(l2);
+            Segment3d s3 = this.ProjectionTo(l3);
+            return new Box3d(_point, s1.Length, s2.Length, s3.Length, coord);
+        }
+
+        /// <summary>
+        /// Return bounding sphere.
+        /// </summary>
+        public Sphere BoundingSphere
+        {
+            get { return new Sphere(_point, _r); }
+
+        }
+        #endregion
+
         /// <summary>
         /// Returns point on circle for given parameter 't' (0 &lt;= t &lt; 2Pi)
         /// </summary>
@@ -184,6 +225,17 @@ namespace GeometRi
         public Ellipse ProjectionTo(Plane3d s)
         {
             return this.ToEllipse.ProjectionTo(s);
+        }
+
+        /// <summary>
+        /// Orthogonal projection of the circle to line
+        /// </summary>
+        public Segment3d ProjectionTo(Line3d l)
+        {
+            double s = _r * Cos(l.AngleTo(this));
+            Vector3d v = l.Direction.Normalized;
+            Point3d p = _point.ProjectionTo(l);
+            return new Segment3d(p.Translate(-s * v), p.Translate(s * v));
         }
 
         /// <summary>

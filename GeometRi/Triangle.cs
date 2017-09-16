@@ -414,6 +414,102 @@ namespace GeometRi
         }
         #endregion
 
+        #region "BoundingBox"
+        /// <summary>
+        /// Return minimum bounding box.
+        /// </summary>
+        public Box3d MinimumBoundingBox
+        {
+            get
+            {
+                double s1, s2, s3;
+                s1 = AB * Altitude_C.Length;
+                s2 = BC * Altitude_A.Length;
+                s3 = AC * Altitude_B.Length;
+
+                if (s1 <= s2 && s1 <= s3)
+                {
+                    Vector3d v1 = new Vector3d(_a, _b);
+                    Vector3d v2 = new Vector3d(_a, _c);
+                    Coord3d coord = new Coord3d(_a, v1, v2);
+                    return this.BoundingBox(coord);
+                }
+                else if (s2 <= s3)
+                {
+                    Vector3d v1 = new Vector3d(_b, _c);
+                    Vector3d v2 = new Vector3d(_b, _a);
+                    Coord3d coord = new Coord3d(_b, v1, v2);
+                    return this.BoundingBox(coord);
+                }
+                else
+                {
+                    Vector3d v1 = new Vector3d(_a, _c);
+                    Vector3d v2 = new Vector3d(_a, _b);
+                    Coord3d coord = new Coord3d(_a, v1, v2);
+                    return this.BoundingBox(coord);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// </summary>
+        public Box3d BoundingBox(Coord3d coord)
+        {
+            Line3d l1 = new Line3d(coord.Origin, coord.Xaxis);
+            Line3d l2 = new Line3d(coord.Origin, coord.Yaxis);
+            Line3d l3 = new Line3d(coord.Origin, coord.Zaxis);
+
+            double px, py, pz, lx, ly, lz;
+            Segment3d s = this.ProjectionTo(l1);
+            px = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).X;
+            lx = s.Length;
+            s = this.ProjectionTo(l2);
+            py = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).X;
+            ly = s.Length;
+            s = this.ProjectionTo(l3);
+            pz = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).X;
+            lz = s.Length;
+
+            return new Box3d(new Point3d(px, py, pz, coord), lx, ly, lz, coord);
+        }
+
+        /// <summary>
+        /// Return bounding sphere.
+        /// </summary>
+        public Sphere BoundingSphere
+        {
+            get { return new Sphere(Circumcenter, Circumcenter.DistanceTo(_a)); }
+        }
+        #endregion
+
+        /// <summary>
+        /// Orthogonal projection of the triangle to line
+        /// </summary>
+        public Segment3d ProjectionTo(Line3d l)
+        {
+            double d12, d23, d13;
+            Point3d p1, p2, p3;
+            p1 = _a.ProjectionTo(l);
+            p2 = _b.ProjectionTo(l);
+            p3 = _c.ProjectionTo(l);
+            d12 = p1.DistanceTo(p2);
+            d13 = p1.DistanceTo(p3);
+            d23 = p2.DistanceTo(p3);
+            if (d12 >= d13 && d12 >= d23)
+            {
+                return new Segment3d(p1, p2);
+            }
+            else if (d13 >= d23)
+            {
+                return new Segment3d(p1, p3);
+            }
+            else
+            {
+                return new Segment3d(p2, p3);
+            }
+        }
+
         #region "AngleTo"
         /// <summary>
         /// Angle between two objects in radians (0 &lt; angle &lt; Pi)
