@@ -157,15 +157,16 @@ namespace GeometRi
         /// </summary>
         public Box3d MinimumBoundingBox
         {
-            get { return new Box3d(_point, _r, _r, _r); }
+            get { return new Box3d(_point, 2.0 * _r, 2.0 * _r, 2.0 * _r); }
         }
 
         /// <summary>
         /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
         /// </summary>
-        public Box3d BoundingBox(Coord3d coord)
+        public Box3d BoundingBox(Coord3d coord = null)
         {
-            return new Box3d(_point, _r, _r, _r, new Rotation(coord));
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            return new Box3d(_point, 2.0 * _r, 2.0 * _r, 2.0 * _r, new Rotation(coord));
         }
 
         /// <summary>

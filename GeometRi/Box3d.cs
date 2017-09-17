@@ -303,8 +303,9 @@ namespace GeometRi
         /// <summary>
         /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
         /// </summary>
-        public Box3d BoundingBox(Coord3d coord)
+        public Box3d BoundingBox(Coord3d coord = null)
         {
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
             Point3d c = _center.ConvertTo(coord);
             double mx = c.X;
             double my = c.Y;
@@ -312,9 +313,10 @@ namespace GeometRi
 
             foreach (Point3d p in this.ListOfPoints)
             {
-                if (p.X < mx) mx = p.X;
-                if (p.Y < my) my = p.Y;
-                if (p.Z < mz) mz = p.Z;
+                Point3d t = p.ConvertTo(coord);
+                if (t.X < mx) mx = t.X;
+                if (t.Y < my) my = t.Y;
+                if (t.Z < mz) mz = t.Z;
             }
 
             return new Box3d(c, 2.0 * (c.X - mx), 2.0 * (c.Y - my), 2.0 * (c.Z - mz), coord);

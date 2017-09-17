@@ -341,8 +341,9 @@ namespace GeometRi
         /// <summary>
         /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
         /// </summary>
-        public Box3d BoundingBox(Coord3d coord)
+        public Box3d BoundingBox(Coord3d coord = null)
         {
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
             Line3d l1 = new Line3d(coord.Origin, coord.Xaxis);
             Line3d l2 = new Line3d(coord.Origin, coord.Yaxis);
             Line3d l3 = new Line3d(coord.Origin, coord.Zaxis);
