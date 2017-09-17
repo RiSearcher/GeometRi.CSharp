@@ -343,6 +343,7 @@ Box object defined by center point, three dimensions and orientation in space.
 ### Properties
 * __Center__ - center point of the box
 * __L1/L2/L3__ - dimensions of the box
+* __V1/V2/V3__ - orientation vectors of the box
 * __Orientation__ - box orientation
 * __P1/P2/P3/P4/P5/P6/P7/P8__ - corner points of the box
 * __ListOfPoints__ - list of corner points of the box

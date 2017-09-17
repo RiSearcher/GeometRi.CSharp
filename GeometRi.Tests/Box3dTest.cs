@@ -37,5 +37,17 @@ namespace GeometRi_Tests
             Assert.AreEqual(b.P8, new Point3d(4, 4, 4));
 
         }
+
+        [TestMethod]
+        public void BoxOrientationTest()
+        {
+            Rotation r = new Rotation(new Vector3d(0, 0, 1), PI / 4);
+            Coord3d coord1 = new Coord3d(new Point3d(2, 3, 1), r.ToRotationMatrix.Transpose());
+            Box3d b = new Box3d(coord1);
+
+            Assert.AreEqual(b.V1.Normalized, new Vector3d(1, 1, 0).Normalized);
+            Assert.AreEqual(b.V2.Normalized, new Vector3d(-1, 1, 0).Normalized);
+            Assert.AreEqual(b.V3.Normalized, new Vector3d(0, 0, 1).Normalized);
+        }
     }
 }

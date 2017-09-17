@@ -121,6 +121,30 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Orientation of the first dimension of the box.
+        /// </summary>
+        public Vector3d V1
+        {
+            get { return _r.ConvertToGlobal().ToRotationMatrix.Column1; }
+        }
+
+        /// <summary>
+        /// Orientation of the second dimension of the box.
+        /// </summary>
+        public Vector3d V2
+        {
+            get { return _r.ConvertToGlobal().ToRotationMatrix.Column2; }
+        }
+
+        /// <summary>
+        /// Orientation of the third dimension of the box.
+        /// </summary>
+        public Vector3d V3
+        {
+            get { return _r.ConvertToGlobal().ToRotationMatrix.Column3; }
+        }
+
+        /// <summary>
         /// Orientation of the box, defined as rotation from axis aligned position (in global CS) to final position.
         /// </summary>
         public Rotation Orientation
