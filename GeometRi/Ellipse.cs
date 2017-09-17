@@ -243,7 +243,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Orthogonal projection of ellipsoid to line.
+        /// Orthogonal projection of ellipse to line.
         /// </summary>
         public Segment3d ProjectionTo(Line3d l)
         {

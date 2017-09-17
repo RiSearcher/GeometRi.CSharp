@@ -15,18 +15,10 @@ namespace GeometRi
         private Rotation _r;
 
         #region "Constructors"
-        /// <summary>
-        /// Default constructor, initializes unit box in the origin of the reference coordinate system aligned with coordinate axes.
-        /// </summary>
-        /// <param name="coord"></param>
-        public Box3d(Coord3d coord = null)
-        {
-            coord = (coord == null) ? Coord3d.GlobalCS : coord;
-            _center = new Point3d(coord);
-            _lx = _ly = _lz = 1.0;
-            _r = new Rotation(coord);
-        }
 
+        /// <summary>
+        /// Default constructor, initializes unit box in the origin of the global coordinate system aligned with coordinate axes.
+        /// </summary>
         public Box3d(Point3d center, double lx, double ly, double lz)
         {
             _center = center.Copy();
@@ -36,6 +28,26 @@ namespace GeometRi
             _r = new Rotation();
         }
 
+        /// <summary>
+        /// Initializes unit box in the origin of the reference coordinate system aligned with coordinate axes.
+        /// </summary>
+        /// <param name="coord">Reference coordinate system.</param>
+        public Box3d(Coord3d coord = null)
+        {
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            _center = new Point3d(coord);
+            _lx = _ly = _lz = 1.0;
+            _r = new Rotation(coord);
+        }
+
+        /// <summary>
+        /// Initializes box with specified dimensions and orientation defined by rotation object.
+        /// </summary>
+        /// <param name="center">Center point of the box.</param>
+        /// <param name="lx">First dimension.</param>
+        /// <param name="ly">Second dimension.</param>
+        /// <param name="lz">Third dimension.</param>
+        /// <param name="r">Orientation of the box, defined as rotation from axis aligned position (in global CS) to final position.</param>
         public Box3d(Point3d center, double lx, double ly, double lz, Rotation r)
         {
             _center = center.Copy();
@@ -45,6 +57,14 @@ namespace GeometRi
             _r = r.Copy();
         }
 
+        /// <summary>
+        /// Initializes axis aligned box in local coordinate system.
+        /// </summary>
+        /// <param name="center">Center point of the box.</param>
+        /// <param name="lx">First dimension.</param>
+        /// <param name="ly">Second dimension.</param>
+        /// <param name="lz">Third dimension.</param>
+        /// <param name="coord">Local coordinate system.</param>
         public Box3d(Point3d center, double lx, double ly, double lz, Coord3d coord)
         {
             _center = center.Copy();
@@ -64,36 +84,54 @@ namespace GeometRi
         }
 
         #region "Properties"
+        /// <summary>
+        /// Center point of the box.
+        /// </summary>
         public Point3d Center
         {
             get { return _center.Copy(); }
             set { _center = value.Copy(); }
         }
 
-        public double Lx
+        /// <summary>
+        /// First dimension.
+        /// </summary>
+        public double L1
         {
             get { return _lx; }
             set { _lx = value; }
         }
 
-        public double Ly
+        /// <summary>
+        /// Second dimension.
+        /// </summary>
+        public double L2
         {
             get { return _ly; }
             set { _ly = value; }
         }
 
-        public double Lz
+        /// <summary>
+        /// Third dimension.
+        /// </summary>
+        public double L3
         {
             get { return _lz; }
             set { _lz = value; }
         }
 
+        /// <summary>
+        /// Orientation of the box, defined as rotation from axis aligned position (in global CS) to final position.
+        /// </summary>
         public Rotation Orientation
         {
             get { return _r.Copy(); }
             set { _r = value.Copy(); }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P1
         {
             get
@@ -105,6 +143,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P2
         {
             get
@@ -116,6 +157,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P3
         {
             get
@@ -127,6 +171,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P4
         {
             get
@@ -138,6 +185,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P5
         {
             get
@@ -149,6 +199,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P6
         {
             get
@@ -160,6 +213,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P7
         {
             get
@@ -171,6 +227,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Corner point of the box.
+        /// </summary>
         public Point3d P8
         {
             get
@@ -182,16 +241,25 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// List of corner points.
+        /// </summary>
         public List<Point3d> ListOfPoints
         {
             get { return new List<Point3d> { P1, P2, P3, P4, P5, P6, P7, P8 }; }
         }
 
+        /// <summary>
+        /// Volume of the box.
+        /// </summary>
         public double Volume
         {
             get { return _lx * _ly * _lz; }
         }
 
+        /// <summary>
+        /// Surface area of the box.
+        /// </summary>
         public double Area
         {
             get { return 2.0 * (_lx*_ly + _lx*_lz + _ly*_lz); }
@@ -252,9 +320,9 @@ namespace GeometRi
             }
             Box3d b = (Box3d)obj;
             return this.Center == b.Center &&  _r == b.Orientation &&
-                   GeometRi3D.AlmostEqual(Lx, b.Lx) &&
-                   GeometRi3D.AlmostEqual(Ly, b.Ly) &&
-                   GeometRi3D.AlmostEqual(Lz, b.Lz);
+                   GeometRi3D.AlmostEqual(L1, b.L1) &&
+                   GeometRi3D.AlmostEqual(L2, b.L2) &&
+                   GeometRi3D.AlmostEqual(L3, b.L3);
         }
 
         /// <summary>
