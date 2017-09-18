@@ -466,10 +466,10 @@ namespace GeometRi
             px = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).X;
             lx = s.Length;
             s = this.ProjectionTo(l2);
-            py = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).X;
+            py = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).Y;
             ly = s.Length;
             s = this.ProjectionTo(l3);
-            pz = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).X;
+            pz = (0.5 * (s.P1 + s.P2)).ConvertTo(coord).Z;
             lz = s.Length;
 
             return new Box3d(new Point3d(px, py, pz, coord), lx, ly, lz, coord);
