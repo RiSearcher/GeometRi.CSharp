@@ -220,6 +220,226 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// </summary>
+        /// <param name="RotationOrder">String, representing rotation axes in the form "xyz" (extrinsic rotations, fixed frame) or "XYZ" (intrinsic rotations, moving frame).</param>
+        /// <param name="coord">Reference coordinate system, default - Coord3d.GlobalCS.</param>
+        /// <returns></returns>
+        public Vector3d ToEulerAngles(string RotationOrder, Coord3d coord = null)
+        {
+            if (string.IsNullOrEmpty(RotationOrder) || RotationOrder.Length < 3)
+            {
+                throw new ArgumentException("Invalid parameter: RotationOrder");
+            }
+
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            Rotation r = this.ConvertTo(coord);
+
+            // From https://www.geometrictools.com/Documentation/EulerAngles.pdf
+
+            double ax, ay, az;
+            if (RotationOrder == "XYZ" || RotationOrder == "zyx")
+            {
+                if (GeometRi3D.Smaller(r[0,2],1))
+                {
+                    if (GeometRi3D.Greater(r[0, 2], -1))
+                    {
+                        ay = Asin(r[0, 2]);
+                        ax = Atan2(-r[1, 2], r[2, 2]);
+                        az = Atan2(-r[0, 1], r[0, 0]);
+                    }
+                    else
+                    {
+                        ay = -PI / 2.0;
+                        ax = -Atan2(r[1, 0], r[1, 1]);
+                        az = 0;
+                    }
+                }
+                else
+                {
+                    ay = PI / 2.0;
+                    ax = Atan2(r[1, 0], r[1, 1]);
+                    az = 0;
+                }
+                if (RotationOrder == "XYZ")
+                {
+                    return new Vector3d(ax, ay, az);
+                }
+                else
+                {
+                    return new Vector3d(az, ay, ax);
+                }
+            }
+
+            if (RotationOrder == "XZY" || RotationOrder == "yzx")
+            {
+                if (GeometRi3D.Smaller(r[0, 1], 1))
+                {
+                    if (GeometRi3D.Greater(r[0, 1], -1))
+                    {
+                        az = Asin(-r[0, 1]);
+                        ax = Atan2(r[2, 1], r[1, 1]);
+                        ay = Atan2(r[0, 2], r[0, 0]);
+                    }
+                    else
+                    {
+                        az = PI / 2.0;
+                        ax = -Atan2(-r[2, 0], r[2, 2]);
+                        ay = 0;
+                    }
+                }
+                else
+                {
+                    az = -PI / 2.0;
+                    ax = Atan2(-r[2, 0], r[2, 2]);
+                    ay = 0;
+                }
+                if (RotationOrder == "XZY")
+                {
+                    return new Vector3d(ax, az, ay);
+                }
+                else
+                {
+                    return new Vector3d(ay, az, ax);
+                }
+            }
+
+            if (RotationOrder == "YXZ" || RotationOrder == "zxy")
+            {
+                if (GeometRi3D.Smaller(r[1, 2], 1))
+                {
+                    if (GeometRi3D.Greater(r[1, 2], -1))
+                    {
+                        ax = Asin(-r[1, 2]);
+                        ay = Atan2(r[0, 2], r[2, 2]);
+                        az = Atan2(r[1, 0], r[1, 1]);
+                    }
+                    else
+                    {
+                        ax = PI / 2.0;
+                        ay = -Atan2(-r[0, 2], r[0, 0]);
+                        az = 0;
+                    }
+                }
+                else
+                {
+                    ax = -PI / 2.0;
+                    ay = Atan2(-r[0, 1], r[0, 0]);
+                    az = 0;
+                }
+                if (RotationOrder == "YXZ")
+                {
+                    return new Vector3d(ay, ax, az);
+                }
+                else
+                {
+                    return new Vector3d(az, ax, ay);
+                }
+            }
+
+            if (RotationOrder == "YZX" || RotationOrder == "xzy")
+            {
+                if (GeometRi3D.Smaller(r[1, 0], 1))
+                {
+                    if (GeometRi3D.Greater(r[1, 0], -1))
+                    {
+                        az = Asin(r[1, 0]);
+                        ay = Atan2(-r[2, 0], r[0, 0]);
+                        ax = Atan2(-r[1, 2], r[1, 1]);
+                    }
+                    else
+                    {
+                        az = -PI / 2.0;
+                        ay = -Atan2(r[2, 1], r[2, 2]);
+                        ax = 0;
+                    }
+                }
+                else
+                {
+                    az = PI / 2.0;
+                    ay = Atan2(r[2, 1], r[2, 2]);
+                    ax = 0;
+                }
+                if (RotationOrder == "YZX")
+                {
+                    return new Vector3d(ay, az, ax);
+                }
+                else
+                {
+                    return new Vector3d(ax, az, ay);
+                }
+            }
+
+            if (RotationOrder == "ZXY" || RotationOrder == "yxz")
+            {
+                if (GeometRi3D.Smaller(r[2, 1], 1))
+                {
+                    if (GeometRi3D.Greater(r[2, 1], -1))
+                    {
+                        ax = Asin(r[2, 1]);
+                        az = Atan2(-r[0, 1], r[1, 1]);
+                        ay = Atan2(-r[2, 0], r[2, 2]);
+                    }
+                    else
+                    {
+                        ax = -PI / 2.0;
+                        az = -Atan2(r[0, 2], r[0, 0]);
+                        ay = 0;
+                    }
+                }
+                else
+                {
+                    ax = PI / 2.0;
+                    az = Atan2(r[0, 2], r[0, 0]);
+                    ay = 0;
+                }
+                if (RotationOrder == "ZXY")
+                {
+                    return new Vector3d(az, ax, ay);
+                }
+                else
+                {
+                    return new Vector3d(ay, ax, az);
+                }
+            }
+
+            if (RotationOrder == "ZYX" || RotationOrder == "xyz")
+            {
+                if (GeometRi3D.Smaller(r[2, 0], 1))
+                {
+                    if (GeometRi3D.Greater(r[2, 0], -1))
+                    {
+                        ay = Asin(-r[2, 0]);
+                        az = Atan2(r[1, 0], r[0, 0]);
+                        ax = Atan2(r[2, 1], r[2, 2]);
+                    }
+                    else
+                    {
+                        ay = PI / 2.0;
+                        az = -Atan2(-r[1, 2], r[1, 1]);
+                        ax = 0;
+                    }
+                }
+                else
+                {
+                    ay = -PI / 2.0;
+                    az = Atan2(-r[1, 2], r[1, 1]);
+                    ax = 0;
+                }
+                if (RotationOrder == "ZYX")
+                {
+                    return new Vector3d(az, ay, ax);
+                }
+                else
+                {
+                    return new Vector3d(ax, ay, az);
+                }
+            }
+
+
+            throw new ArgumentException("Invalid parameter: RotationOrder");
+        }
+
+        /// <summary>
         /// Spherical linear interpolation of two rotations.
         /// </summary>
         /// <param name="r1">Initial rotation</param>

@@ -159,5 +159,74 @@ namespace GeometRi.Tests
 
         }
 
+        [TestMethod]
+        public void ToEulerAnglesXYZTest()
+        {
+            double a1, a2, a3;
+            a1 = 0.43553;
+            a2 = 0.1233;
+            a3 = 1.2342354;
+            Rotation r = Rotation.FromEulerAngles(a1, a1, a3, "XYZ");
+            Vector3d res = r.ToEulerAngles("XYZ");
+            Rotation r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "XYZ");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "zyx");
+            res = r.ToEulerAngles("zyx");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "zyx");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "XZY");
+            res = r.ToEulerAngles("XZY");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "XZY");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "yzx");
+            res = r.ToEulerAngles("yzx");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "yzx");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "YXZ");
+            res = r.ToEulerAngles("YXZ");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "YXZ");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "zxy");
+            res = r.ToEulerAngles("zxy");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "zxy");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "YZX");
+            res = r.ToEulerAngles("YZX");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "YZX");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "xzy");
+            res = r.ToEulerAngles("xzy");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "xzy");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "ZXY");
+            res = r.ToEulerAngles("ZXY");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "ZXY");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "yxz");
+            res = r.ToEulerAngles("yxz");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "yxz");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "ZYX");
+            res = r.ToEulerAngles("ZYX");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "ZYX");
+            Assert.AreEqual(r, r2);
+
+            r = Rotation.FromEulerAngles(a1, a2, a3, "xyz");
+            res = r.ToEulerAngles("xyz");
+            r2 = Rotation.FromEulerAngles(res[0], res[1], res[2], "xyz");
+            Assert.AreEqual(r, r2);
+
+        }
+
     }
 }
