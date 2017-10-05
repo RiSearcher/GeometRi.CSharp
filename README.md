@@ -476,6 +476,7 @@ Rotation in 3D space defined in global or local reference frame (internally repr
 * __ConvertTo__ - convert rotation to local coordinate system
 * __ConvertToGlobal__ - convert rotation to global coordinate system
 * __Mult__ - apply rotation to point or vector
+* __ToEulerAngles__ - factor rotation matrix as product of three elemental rotations
 * __Equals__ - check if two rotations are equals
 * __ToString__ - string representation of rotation in global or local coordinate system
 ### Static methods
