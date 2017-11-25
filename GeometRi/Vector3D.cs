@@ -40,15 +40,16 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Initializes vector objct as radius vector of a point.
+        /// Initializes vector object as radius vector of a point in reference coordinate system.
         /// </summary>
-        public Vector3d(Point3d p)
+        public Vector3d(Point3d p, Coord3d coord = null)
         {
+            p = p.ConvertTo(coord);
             this.val = new double[3];
             this.val[0] = p.X;
             this.val[1] = p.Y;
             this.val[2] = p.Z;
-            _coord = p.Coord;
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
         /// <summary>

@@ -71,6 +71,7 @@ namespace GeometRi
         /// <param name="name">Name of the coordinate system.</param>
         public Coord3d(Point3d p, Vector3d v1, Vector3d v2, string name = "")
         {
+
             if (v1.IsParallelTo(v2))
             {
                 throw new Exception("Vectors are parallel");
@@ -81,6 +82,40 @@ namespace GeometRi
             v2 = v3.Cross(v1).Normalized;
 
             _origin = p.ConvertToGlobal();
+            _axes = new Matrix3d(v1, v2, v3);
+            if ((!string.IsNullOrEmpty(name)))
+            {
+                _name = name;
+            }
+            else
+            {
+                _name = "Coord " + count.ToString();
+            }
+            count += 1;
+        }
+
+        /// <summary>
+        /// Initializes coordinate system using three points.
+        /// </summary>
+        /// <param name="p1">Origin of the coordinate system.</param>
+        /// <param name="p2">Point on the X axis.</param>
+        /// <param name="p3">Point on the XY plane.</param>
+        /// <param name="name">Name of the coordinate system.</param>
+        public Coord3d(Point3d p1, Point3d p2, Point3d p3, string name = "")
+        {
+            Vector3d v1 = new Vector3d(p1, p2);
+            Vector3d v2 = new Vector3d(p1, p3);
+
+            if (v1.IsParallelTo(v2))
+            {
+                throw new Exception("Points are collinear");
+            }
+
+            v1 = v1.ConvertToGlobal().Normalized;
+            Vector3d v3 = v1.Cross(v2).Normalized;
+            v2 = v3.Cross(v1).Normalized;
+
+            _origin = p1.ConvertToGlobal();
             _axes = new Matrix3d(v1, v2, v3);
             if ((!string.IsNullOrEmpty(name)))
             {

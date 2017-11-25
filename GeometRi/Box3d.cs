@@ -335,6 +335,18 @@ namespace GeometRi
         }
         #endregion
 
+        #region "TranslateRotateReflect"
+        /// <summary>
+        /// Translate box by a vector
+        /// </summary>
+        public Box3d Translate(Vector3d v)
+        {
+            return new Box3d(_center.Translate(v), _lx, _ly, _lz);
+        }
+
+        #endregion
+
+
         /// <summary>
         /// Determines whether two objects are equal.
         /// </summary>

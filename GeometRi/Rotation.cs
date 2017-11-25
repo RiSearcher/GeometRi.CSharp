@@ -109,17 +109,26 @@ namespace GeometRi
             return new Rotation(_r, _coord);
         }
 
+        /// <summary>
+        /// Returns rotation matrix equivalent to the current rotation.
+        /// </summary>
         #region "Properties"
         public Matrix3d ToRotationMatrix
         {
             get { return this._r; }
         }
 
+        /// <summary>
+        /// Returns quaternion equivalent to the current rotation.
+        /// </summary>
         public Quaternion ToQuaternion
         {
             get { return new Quaternion(_r, _coord); }
         }
 
+        /// <summary>
+        /// Returns axis of the r0tation (use 'ToAngle' property to get angle of the rotation).
+        /// </summary>
         public Vector3d ToAxis
         {
             get
@@ -154,6 +163,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Returns angle of the rotation (use 'ToAxis' property to get axis of the rotation).
+        /// </summary>
         public double ToAngle
         {
             // To avoid singularities convert to quaternion first.

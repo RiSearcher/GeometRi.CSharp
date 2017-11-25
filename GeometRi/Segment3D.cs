@@ -176,7 +176,8 @@ namespace GeometRi
             // Algorithm by Dan Sunday
             // http://geomalgorithms.com/a07-_distance.html
 
-            double small = 1E-09;
+            double small = GeometRi3D.Tolerance;
+
 
             Vector3d u = this.ToVector;
             Vector3d v = s.ToVector;

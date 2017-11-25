@@ -100,11 +100,17 @@ namespace GeometRi
             get { return 2 * PI * _r; }
         }
 
+        /// <summary>
+        /// Area of the circle.
+        /// </summary>
         public double Area
         {
             get { return PI * Math.Pow(_r, 2); }
         }
 
+        /// <summary>
+        /// Convert circle to ellipse object.
+        /// </summary>
         public Ellipse ToEllipse
         {
             get

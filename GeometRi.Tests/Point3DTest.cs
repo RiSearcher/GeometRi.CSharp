@@ -86,6 +86,10 @@ namespace GeometRi_Tests
             Point3d p1 = new Point3d(-4, 3, 5);
             Plane3d s1 = new Plane3d(-1, 2, -2, 9);
             Assert.IsTrue(p1.ProjectionTo(s1) == new Point3d(-3, 1, 7));
+
+            Coord3d coord1 = new Coord3d(new Point3d(2, 3, 1), Matrix3d.RotationMatrix(new Vector3d(2, 1, 5), PI / 3));
+            p1 = p1.ConvertTo(coord1);
+            Assert.IsTrue(p1.ProjectionTo(s1) == new Point3d(-3, 1, 7));
         }
 
         [TestMethod()]
@@ -96,6 +100,10 @@ namespace GeometRi_Tests
             Vector3d v2 = new Vector3d(-2, 3, 4);
             Line3d l1 = new Line3d(p2, v2);
             Assert.IsTrue(p1.ProjectionTo(l1) == new Point3d(-3, 1, 7));
+
+            Coord3d coord1 = new Coord3d(new Point3d(2, 3, 1), Matrix3d.RotationMatrix(new Vector3d(2, 1, 5), PI / 3));
+            p1 = p1.ConvertTo(coord1);
+            Assert.IsTrue(p1.ProjectionTo(l1) == new Point3d(-3, 1, 7));
         }
 
         [TestMethod()]
@@ -105,6 +113,10 @@ namespace GeometRi_Tests
             Sphere s = new Sphere(p1, 2);
             Point3d p2 = new Point3d(5, 5, 5);
 
+            Assert.IsTrue(p2.ProjectionTo(s) == new Point3d(1 + 2 / Sqrt(3), 1 + 2 / Sqrt(3), 1 + 2 / Sqrt(3)));
+
+            Coord3d coord1 = new Coord3d(new Point3d(2, 3, 1), Matrix3d.RotationMatrix(new Vector3d(2, 1, 5), PI / 3));
+            p2 = p2.ConvertTo(coord1);
             Assert.IsTrue(p2.ProjectionTo(s) == new Point3d(1 + 2 / Sqrt(3), 1 + 2 / Sqrt(3), 1 + 2 / Sqrt(3)));
         }
 

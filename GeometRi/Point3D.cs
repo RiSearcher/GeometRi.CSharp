@@ -96,7 +96,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Radius vector of point
+        /// Radius vector of point (in global coordinate system)
         /// </summary>
         public Vector3d ToVector
         {
@@ -238,7 +238,7 @@ namespace GeometRi
         /// </summary>
         public Point3d ProjectionTo(Plane3d s)
         {
-            Vector3d r0 = new Vector3d(this);
+            Vector3d r0 = new Vector3d(this, _coord);
             s.SetCoord(this.Coord);
             Vector3d n = new Vector3d(s.A, s.B, s.C, _coord);
             r0 = r0 - (r0 * n + s.D) / (n * n) * n;
