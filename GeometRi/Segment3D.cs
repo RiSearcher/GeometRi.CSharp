@@ -539,7 +539,15 @@ namespace GeometRi
                 return false;
             }
             Segment3d s = (Segment3d)obj;
-            return (this.P1 == s.P1 && this.P2 == s.P2) | (this.P1 == s.P2 && this.P2 == s.P1);
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return (this.P1 == s.P1 && this.P2 == s.P2) | (this.P1 == s.P2 && this.P2 == s.P1);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         /// <summary>

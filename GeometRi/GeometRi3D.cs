@@ -10,6 +10,7 @@ namespace GeometRi
     {
 
         private static double _tolerance = 1E-12;
+        private static bool _absolute = true;
 
         /// <summary>
         /// Tolerance used for comparison operations (default 1e-12)
@@ -18,6 +19,15 @@ namespace GeometRi
         {
             get { return _tolerance; }
             set { _tolerance = value; }
+        }
+
+        /// <summary>
+        /// Flag for switching absolute (TRUE) to relative (FALSE) tolerance comparison.
+        /// </summary>
+        public static bool UseAbsoluteTolerance
+        {
+            get { return _absolute; }
+            set { _absolute = value; }
         }
 
         /// <summary>

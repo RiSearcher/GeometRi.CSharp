@@ -613,17 +613,24 @@ namespace GeometRi
                 return false;
             }
             Triangle t = (Triangle)obj;
-
-            if ((this.A == t.A || this.A == t.B || this.A == t.C) && 
-                (this.B == t.A || this.B == t.B || this.B == t.C) && 
-                (this.C == t.A || this.C == t.B || this.C == t.C))
+            if (GeometRi3D.UseAbsoluteTolerance)
             {
-                return true;
+                if ((this.A == t.A || this.A == t.B || this.A == t.C) &&
+                    (this.B == t.A || this.B == t.B || this.B == t.C) &&
+                    (this.C == t.A || this.C == t.B || this.C == t.C))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
-                return false;
+                throw new NotImplementedException();
             }
+
         }
 
         /// <summary>

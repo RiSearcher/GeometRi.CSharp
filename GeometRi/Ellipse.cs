@@ -459,24 +459,33 @@ namespace GeometRi
             }
             Ellipse e = (Ellipse)obj;
 
-            if (GeometRi3D.AlmostEqual(this.A, this.B))
+            if (GeometRi3D.UseAbsoluteTolerance)
             {
-                // Ellipse is circle
-                if (GeometRi3D.AlmostEqual(e.A, e.B))
+                if (GeometRi3D.AlmostEqual(this.A, this.B))
                 {
-                    // Second ellipse also circle
-                    return this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A) && e.Normal.IsParallelTo(this.Normal);
+                    // Ellipse is circle
+                    if (GeometRi3D.AlmostEqual(e.A, e.B))
+                    {
+                        // Second ellipse also circle
+                        return this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A) && e.Normal.IsParallelTo(this.Normal);
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
-                    return false;
+                    return this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.B, e.B) &&
+                           e.MajorSemiaxis.IsParallelTo(this.MajorSemiaxis) && e.MinorSemiaxis.IsParallelTo(this.MinorSemiaxis);
                 }
             }
             else
             {
-                return this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.B, e.B) && 
-                       e.MajorSemiaxis.IsParallelTo(this.MajorSemiaxis) && e.MinorSemiaxis.IsParallelTo(this.MinorSemiaxis);
+                throw new NotImplementedException();
             }
+
+
         }
 
         /// <summary>
