@@ -473,7 +473,15 @@ namespace GeometRi
             }
             Plane3d s = (Plane3d)obj;
 
-            return s.Point.BelongsTo(this) && s.Normal.IsParallelTo(this.Normal);
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return s.Point.BelongsTo(this) && s.Normal.IsParallelTo(this.Normal);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         /// <summary>

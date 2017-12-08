@@ -377,8 +377,16 @@ namespace GeometRi
                 return false;
             }
             Sphere s = (Sphere)obj;
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return s.Center == this.Center && Abs(s.R - this.R) <= GeometRi3D.Tolerance;
+            }
+            else
+            {
+                return this.Center.DistanceTo(s.Center) <= GeometRi3D.Tolerance * this.R && 
+                       Abs(s.R - this.R) <= GeometRi3D.Tolerance * this.R;
+            }
 
-            return s.Center == this.Center && Abs(s.R - this.R) <= GeometRi3D.Tolerance;
         }
 
         /// <summary>

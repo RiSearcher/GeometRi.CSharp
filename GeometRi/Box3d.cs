@@ -289,6 +289,14 @@ namespace GeometRi
             get { return 2.0 * (_lx*_ly + _lx*_lz + _ly*_lz); }
         }
 
+        /// <summary>
+        /// Length of the box diagonal.
+        /// </summary>
+        public double Diagonal
+        {
+            get { return Sqrt(_lx * _lx + _ly * _ly + _lz * _lz); }
+        }
+
         #endregion
 
         #region "BoundingBox"
@@ -357,10 +365,25 @@ namespace GeometRi
                 return false;
             }
             Box3d b = (Box3d)obj;
-            return this.Center == b.Center &&  _r == b.Orientation &&
-                   GeometRi3D.AlmostEqual(L1, b.L1) &&
-                   GeometRi3D.AlmostEqual(L2, b.L2) &&
-                   GeometRi3D.AlmostEqual(L3, b.L3);
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return this.Center == b.Center && _r == b.Orientation &&
+                       GeometRi3D.AlmostEqual(L1, b.L1) &&
+                       GeometRi3D.AlmostEqual(L2, b.L2) &&
+                       GeometRi3D.AlmostEqual(L3, b.L3);
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Diagonal;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.Equals(b);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+
         }
 
         /// <summary>

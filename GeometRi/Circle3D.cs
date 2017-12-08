@@ -398,7 +398,16 @@ namespace GeometRi
             }
             Circle3d c = (Circle3d)obj;
 
-            return c.Center == this.Center && Abs(c.R - this.R) <= GeometRi3D.Tolerance && c.Normal.IsParallelTo(this.Normal);
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return c.Center == this.Center && Abs(c.R - this.R) <= GeometRi3D.Tolerance && c.Normal.IsParallelTo(this.Normal);
+            }
+            else
+            {
+                return Abs(c.Center.DistanceTo(this.Center)) / this.R <= GeometRi3D.Tolerance && 
+                       Abs(c.R - this.R) / this.R  <= GeometRi3D.Tolerance && 
+                       c.Normal.IsParallelTo(this.Normal);
+            }
         }
 
         /// <summary>

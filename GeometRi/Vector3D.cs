@@ -162,7 +162,33 @@ namespace GeometRi
             Vector3d v = obj.Direction;
             if ((this._coord != v._coord))
                 v = v.ConvertTo(this._coord);
-            return GeometRi3D.AlmostEqual(this.Cross(v).Norm, 0.0);
+
+            double this_norm = this.Norm;
+            double v_norm = v.Norm;
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if (GeometRi3D.Greater(this_norm, 0.0) && GeometRi3D.Greater(v_norm, 0.0))
+                {
+                    return GeometRi3D.AlmostEqual(this.Cross(v).Norm, 0.0);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (this_norm > 0.0 && v_norm > 0.0)
+                {
+                    return GeometRi3D.AlmostEqual(this.Cross(v).Norm / (this_norm * v_norm), 0.0);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            
         }
 
         /// <summary>
@@ -170,10 +196,7 @@ namespace GeometRi
         /// </summary>
         public bool IsNotParallelTo(ILinearObject obj)
         {
-            Vector3d v = obj.Direction;
-            if ((this._coord != v._coord))
-                v = v.ConvertTo(this._coord);
-            return GeometRi3D.Greater(this.Cross(v).Norm, 0.0);
+            return ! this.IsParallelTo(obj);
         }
 
         /// <summary>
@@ -184,7 +207,32 @@ namespace GeometRi
             Vector3d v = obj.Direction;
             if ((this._coord != v._coord))
                 v = v.ConvertTo(this._coord);
-            return GeometRi3D.AlmostEqual(Abs(this * v), 0.0);
+
+            double this_norm = this.Norm;
+            double v_norm = v.Norm;
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if (GeometRi3D.Greater(this_norm, 0.0) && GeometRi3D.Greater(v_norm, 0.0))
+                {
+                    return GeometRi3D.AlmostEqual(Abs(this * v), 0.0);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (this_norm > 0.0 && v_norm > 0.0)
+                {
+                    return GeometRi3D.AlmostEqual(Abs(this * v) / (this_norm * v_norm), 0.0);
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         /// <summary>
@@ -473,9 +521,16 @@ namespace GeometRi
             Vector3d v = (Vector3d)obj;
             if ((this._coord != v.Coord))
                 v = v.ConvertTo(_coord);
-            return Abs(this.X - v.X) < GeometRi3D.Tolerance && 
-                   Abs(this.Y - v.Y) < GeometRi3D.Tolerance && 
-                   Abs(this.Z - v.Z) < GeometRi3D.Tolerance;
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return Abs(this.X - v.X) + Abs(this.Y - v.Y) + Abs(this.Z - v.Z) < GeometRi3D.Tolerance;
+            }
+            else
+            {
+                return (Abs(this.X - v.X) + Abs(this.Y - v.Y) + Abs(this.Z - v.Z)) / this.Norm < GeometRi3D.Tolerance;
+            }
+
         }
 
         /// <summary>
