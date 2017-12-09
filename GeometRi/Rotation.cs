@@ -766,7 +766,15 @@ namespace GeometRi
                 return false;
             }
             Rotation r = (Rotation)obj;
-            return (this.ToRotationMatrix - r.ConvertTo(this.Coord).ToRotationMatrix).MaxNorm < GeometRi3D.Tolerance;
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return (this.ToRotationMatrix - r.ConvertTo(this.Coord).ToRotationMatrix).MaxNorm < GeometRi3D.Tolerance;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         /// <summary>

@@ -323,7 +323,14 @@ namespace GeometRi
         public bool BelongsTo(Plane3d s)
         {
             s.SetCoord(this.Coord);
-            return Abs(s.A * X + s.B * Y + s.C * Z + s.D) < GeometRi3D.Tolerance;
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return Abs(s.A * X + s.B * Y + s.C * Z + s.D) < GeometRi3D.Tolerance;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -332,7 +339,14 @@ namespace GeometRi
         /// <returns>True, if the point belongs to the circle</returns>
         public bool BelongsTo(Circle3d c)
         {
-            return GeometRi3D.AlmostEqual(this.DistanceTo(c.Center), c.R) && c.Normal.IsOrthogonalTo(new Vector3d(c.Center, this));
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return GeometRi3D.AlmostEqual(this.DistanceTo(c.Center), c.R) && c.Normal.IsOrthogonalTo(new Vector3d(c.Center, this));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -343,13 +357,13 @@ namespace GeometRi
         {
             if (this.BelongsTo(new Plane3d(e.Center, e.MajorSemiaxis, e.MinorSemiaxis)))
             {
-                if ((GeometRi3D.AlmostEqual(this.DistanceTo(e.F1) + this.DistanceTo(e.F2), 2 * e.A)))
+                if (GeometRi3D.UseAbsoluteTolerance)
                 {
-                    return true;
+                    return GeometRi3D.AlmostEqual(this.DistanceTo(e.F1) + this.DistanceTo(e.F2), 2 * e.A);
                 }
                 else
                 {
-                    return false;
+                    throw new NotImplementedException();
                 }
             }
             else
@@ -364,7 +378,14 @@ namespace GeometRi
         /// <returns>True, if the point belongs to the sphere surface</returns>
         public bool BelongsTo(Sphere s)
         {
-            return GeometRi3D.AlmostEqual(this.DistanceTo(s.Center), s.R);
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return GeometRi3D.AlmostEqual(this.DistanceTo(s.Center), s.R);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -374,7 +395,14 @@ namespace GeometRi
         {
             Coord3d lc = new Coord3d(e.Center,e.SemiaxisA, e.SemiaxisB);
             Point3d p = this.ConvertTo(lc);
-            return GeometRi3D.AlmostEqual(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return GeometRi3D.AlmostEqual(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -384,7 +412,14 @@ namespace GeometRi
         {
             Coord3d lc = new Coord3d(e.Center, e.SemiaxisA, e.SemiaxisB);
             Point3d p = this.ConvertTo(lc);
-            return GeometRi3D.Smaller(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return GeometRi3D.Smaller(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
 
@@ -396,7 +431,14 @@ namespace GeometRi
         {
             if (this.BelongsTo(new Plane3d(c.Center, c.Normal)))
             {
-                return GeometRi3D.Smaller(this.DistanceTo(c.Center), c.R);
+                if (GeometRi3D.UseAbsoluteTolerance)
+                {
+                    return GeometRi3D.Smaller(this.DistanceTo(c.Center), c.R);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
             else
             {
@@ -412,7 +454,14 @@ namespace GeometRi
         {
             if (this.BelongsTo(new Plane3d(e.Center, e.MajorSemiaxis, e.MinorSemiaxis)))
             {
-                return GeometRi3D.Smaller(this.DistanceTo(e.F1) + this.DistanceTo(e.F2), 2 * e.A);
+                if (GeometRi3D.UseAbsoluteTolerance)
+                {
+                    return GeometRi3D.Smaller(this.DistanceTo(e.F1) + this.DistanceTo(e.F2), 2 * e.A);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
             else
             {
@@ -426,7 +475,14 @@ namespace GeometRi
         /// <returns>True, if the point is inside sphere</returns>
         public bool IsInside(Sphere s)
         {
-            return this.DistanceTo(s.Center) < s.R - GeometRi3D.Tolerance;
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return this.DistanceTo(s.Center) < s.R - GeometRi3D.Tolerance;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #region "TranslateRotateReflect"
@@ -536,9 +592,16 @@ namespace GeometRi
                 return false;
             }
             Point3d p = (Point3d)obj;
-            if ((this._coord != p.Coord))
-                p = p.ConvertTo(_coord);
-            return this.DistanceTo(p) < GeometRi3D.Tolerance;
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return this.DistanceTo(p) < GeometRi3D.Tolerance;
+            }
+            else
+            {
+                return this.DistanceTo(p) < GeometRi3D.Tolerance * this.DistanceTo(_coord.Origin);
+            }
+            
         }
 
         /// <summary>

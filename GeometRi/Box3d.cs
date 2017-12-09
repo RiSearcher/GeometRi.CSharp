@@ -357,10 +357,19 @@ namespace GeometRi
                 return false;
             }
             Box3d b = (Box3d)obj;
-            return this.Center == b.Center &&  _r == b.Orientation &&
-                   GeometRi3D.AlmostEqual(L1, b.L1) &&
-                   GeometRi3D.AlmostEqual(L2, b.L2) &&
-                   GeometRi3D.AlmostEqual(L3, b.L3);
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return this.Center == b.Center && _r == b.Orientation &&
+                       GeometRi3D.AlmostEqual(L1, b.L1) &&
+                       GeometRi3D.AlmostEqual(L2, b.L2) &&
+                       GeometRi3D.AlmostEqual(L3, b.L3);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         /// <summary>

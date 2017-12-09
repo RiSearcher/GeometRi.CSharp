@@ -373,7 +373,16 @@ namespace GeometRi
                 return false;
             }
             Line3d l = (Line3d)obj;
-            return this.Point.BelongsTo(l) && this.Direction.IsParallelTo(l.Direction);
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return this.Point.BelongsTo(l) && this.Direction.IsParallelTo(l.Direction);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         /// <summary>

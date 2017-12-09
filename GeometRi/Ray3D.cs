@@ -399,7 +399,16 @@ namespace GeometRi
                 return false;
             }
             Ray3d r = (Ray3d)obj;
-            return this.Point == r.Point && Abs(this.Direction.Normalized * r.Direction.Normalized - 1) < GeometRi3D.Tolerance;
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return this.Point == r.Point && Abs(this.Direction.Normalized * r.Direction.Normalized - 1) < GeometRi3D.Tolerance;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         /// <summary>

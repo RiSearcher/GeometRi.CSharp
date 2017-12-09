@@ -356,7 +356,15 @@ namespace GeometRi
                 return false;
             }
             Matrix3d m = (Matrix3d)obj;
-            return (this - m).MaxNorm < GeometRi3D.Tolerance;
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return (this - m).MaxNorm < GeometRi3D.Tolerance;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
         }
 
         /// <summary>
