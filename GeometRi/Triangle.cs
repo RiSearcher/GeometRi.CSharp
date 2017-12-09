@@ -615,20 +615,21 @@ namespace GeometRi
             Triangle t = (Triangle)obj;
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                if ((this.A == t.A || this.A == t.B || this.A == t.C) &&
-                    (this.B == t.A || this.B == t.B || this.B == t.C) &&
-                    (this.C == t.A || this.C == t.B || this.C == t.C))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return ((this.A == t.A || this.A == t.B || this.A == t.C) &&
+                        (this.B == t.A || this.B == t.B || this.B == t.C) &&
+                        (this.C == t.A || this.C == t.B || this.C == t.C));
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Perimeter;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = ((this.A == t.A || this.A == t.B || this.A == t.C) &&
+                               (this.B == t.A || this.B == t.B || this.B == t.C) &&
+                               (this.C == t.A || this.C == t.B || this.C == t.C));
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
 
         }

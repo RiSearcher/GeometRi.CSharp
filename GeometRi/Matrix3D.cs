@@ -362,7 +362,7 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                return (this - m).MaxNorm / this.MaxNorm < GeometRi3D.Tolerance;
             }
 
         }

@@ -482,7 +482,37 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * e.MajorSemiaxis.Norm;
+                GeometRi3D.UseAbsoluteTolerance = true;
+
+                if (GeometRi3D.AlmostEqual(this.A, this.B))
+                {
+                    // Ellipse is circle
+                    if (GeometRi3D.AlmostEqual(e.A, e.B))
+                    {
+                        // Second ellipse also circle
+                        bool res1 = this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A);
+                        GeometRi3D.UseAbsoluteTolerance = false;
+                        GeometRi3D.Tolerance = tol;
+                        bool res2 = e.Normal.IsParallelTo(this.Normal);
+                        return res1 && res2;
+                    }
+                    else
+                    {
+                        GeometRi3D.UseAbsoluteTolerance = false;
+                        GeometRi3D.Tolerance = tol;
+                        return false;
+                    }
+                }
+                else
+                {
+                    bool res1 = this.Center == e.Center && GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.B, e.B);
+                    GeometRi3D.UseAbsoluteTolerance = false;
+                    GeometRi3D.Tolerance = tol;
+                    bool res2 = e.MajorSemiaxis.IsParallelTo(this.MajorSemiaxis) && e.MinorSemiaxis.IsParallelTo(this.MinorSemiaxis);
+                    return res1 && res2;
+                }
             }
 
 
