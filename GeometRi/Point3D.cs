@@ -329,7 +329,15 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double d = this.DistanceTo(this._coord.Origin);
+                if (d > 0.0)
+                {
+                    return Abs(s.A * X + s.B * Y + s.C * Z + s.D) / d < GeometRi3D.Tolerance;
+                }
+                else
+                {
+                    return Abs(s.A * X + s.B * Y + s.C * Z + s.D) < GeometRi3D.Tolerance;
+                }
             }
         }
 
@@ -341,11 +349,12 @@ namespace GeometRi
         {
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                return GeometRi3D.AlmostEqual(this.DistanceTo(c.Center), c.R) && c.Normal.IsOrthogonalTo(new Vector3d(c.Center, this));
+                return GeometRi3D.AlmostEqual(this.DistanceTo(c.Center), c.R) && c.Normal.Normalized.IsOrthogonalTo(new Vector3d(c.Center, this));
             }
             else
             {
-                throw new NotImplementedException();
+                return GeometRi3D.AlmostEqual( (this.DistanceTo(c.Center)-c.R)/c.R, 0.0) && 
+                       c.Normal.Normalized.IsOrthogonalTo(new Vector3d(c.Center, this));
             }
         }
 
@@ -355,20 +364,26 @@ namespace GeometRi
         /// <returns>True, if the point belongs to the ellipse</returns>
         public bool BelongsTo(Ellipse e)
         {
-            if (this.BelongsTo(new Plane3d(e.Center, e.MajorSemiaxis, e.MinorSemiaxis)))
+            if (GeometRi3D.UseAbsoluteTolerance)
             {
-                if (GeometRi3D.UseAbsoluteTolerance)
+                if (this.BelongsTo(new Plane3d(e.Center, e.MajorSemiaxis, e.MinorSemiaxis)))
                 {
                     return GeometRi3D.AlmostEqual(this.DistanceTo(e.F1) + this.DistanceTo(e.F2), 2 * e.A);
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return false;
                 }
             }
             else
             {
-                return false;
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * e.MajorSemiaxis.Norm;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.BelongsTo(e);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
         }
 
@@ -384,7 +399,7 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                return GeometRi3D.AlmostEqual((this.DistanceTo(s.Center) - s.R) / s.R, 0.0);
             }
         }
 
@@ -401,7 +416,13 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * e.SemiaxisA.Norm;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.BelongsTo(e);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
         }
 
@@ -418,7 +439,13 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * e.SemiaxisA.Norm;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.IsInside(e);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
         }
 
@@ -429,20 +456,26 @@ namespace GeometRi
         /// <returns>True, if the point is inside circle</returns>
         public bool IsInside(Circle3d c)
         {
-            if (this.BelongsTo(new Plane3d(c.Center, c.Normal)))
+            if (GeometRi3D.UseAbsoluteTolerance)
             {
-                if (GeometRi3D.UseAbsoluteTolerance)
+                if (this.BelongsTo(new Plane3d(c.Center, c.Normal)))
                 {
                     return GeometRi3D.Smaller(this.DistanceTo(c.Center), c.R);
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return false;
                 }
             }
             else
             {
-                return false;
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * c.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.IsInside(c);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
         }
 
@@ -452,20 +485,25 @@ namespace GeometRi
         /// <returns>True, if the point is inside ellipse</returns>
         public bool IsInside(Ellipse e)
         {
-            if (this.BelongsTo(new Plane3d(e.Center, e.MajorSemiaxis, e.MinorSemiaxis)))
+            if (GeometRi3D.UseAbsoluteTolerance)
             {
-                if (GeometRi3D.UseAbsoluteTolerance)
+                if (this.BelongsTo(new Plane3d(e.Center, e.MajorSemiaxis, e.MinorSemiaxis)))
                 {
                     return GeometRi3D.Smaller(this.DistanceTo(e.F1) + this.DistanceTo(e.F2), 2 * e.A);
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return false;
                 }
-            }
-            else
+            } else
             {
-                return false;
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * e.MajorSemiaxis.Norm;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.IsInside(e);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
         }
 
@@ -481,7 +519,7 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                return Abs(this.DistanceTo(s.Center) - s.R) / s.R  < GeometRi3D.Tolerance;
             }
         }
 

@@ -772,7 +772,7 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                return (this.ToRotationMatrix - r.ConvertTo(this.Coord).ToRotationMatrix).MaxNorm / this.ToRotationMatrix.MaxNorm < GeometRi3D.Tolerance;
             }
 
         }

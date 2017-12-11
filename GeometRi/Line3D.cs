@@ -380,9 +380,15 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Point.DistanceTo(this.Point.Coord.Origin);
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool res1 = this.Point.BelongsTo(l);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                bool res2 = this.Direction.IsParallelTo(l.Direction);
+                return res1 && res2;
             }
-
         }
 
         /// <summary>

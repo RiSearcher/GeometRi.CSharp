@@ -406,9 +406,15 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Point.DistanceTo(this.Point.Coord.Origin);
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool res1 = this.Point == r.Point;
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                bool res2 = Abs(this.Direction.Normalized * r.Direction.Normalized - 1) < GeometRi3D.Tolerance;
+                return res1 && res2;
             }
-
         }
 
         /// <summary>

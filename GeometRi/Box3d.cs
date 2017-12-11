@@ -289,6 +289,14 @@ namespace GeometRi
             get { return 2.0 * (_lx*_ly + _lx*_lz + _ly*_lz); }
         }
 
+        /// <summary>
+        /// Length of the box diagonal.
+        /// </summary>
+        public double Diagonal
+        {
+            get { return Sqrt(_lx * _lx + _ly * _ly + _lz * _lz); }
+        }
+
         #endregion
 
         #region "BoundingBox"
@@ -367,7 +375,13 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Diagonal;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.Equals(b);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
 
         }

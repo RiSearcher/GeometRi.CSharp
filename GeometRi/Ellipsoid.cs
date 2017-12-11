@@ -516,7 +516,67 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * e.SemiaxisA.Norm;
+                GeometRi3D.UseAbsoluteTolerance = true;
+
+                if (this.Center != e.Center)
+                {
+                    GeometRi3D.UseAbsoluteTolerance = false;
+                    GeometRi3D.Tolerance = tol;
+                    return false;
+                }
+
+                if (GeometRi3D.AlmostEqual(this.A, this.B) && GeometRi3D.AlmostEqual(this.A, this.C))
+                {
+                    // Ellipsoid is sphere
+                    if (GeometRi3D.AlmostEqual(e.A, e.B) && GeometRi3D.AlmostEqual(e.A, e.C))
+                    {
+                        // Second ellipsoid also sphere
+                        bool res =  GeometRi3D.AlmostEqual(this.A, e.A);
+                        GeometRi3D.UseAbsoluteTolerance = false;
+                        GeometRi3D.Tolerance = tol;
+                        return res;
+                    }
+                    else
+                    {
+                        GeometRi3D.UseAbsoluteTolerance = false;
+                        GeometRi3D.Tolerance = tol;
+                        return false;
+                    }
+                }
+                else if (GeometRi3D.AlmostEqual(this.A, this.B) && GeometRi3D.AlmostEqual(e.A, e.B))
+                {
+                    bool res1 = GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.C, e.C);
+                    GeometRi3D.UseAbsoluteTolerance = false;
+                    GeometRi3D.Tolerance = tol;
+                    bool res2 = e.SemiaxisC.IsParallelTo(this.SemiaxisC);
+                    return res1 && res2;
+                }
+                else if (GeometRi3D.AlmostEqual(this.A, this.C) && GeometRi3D.AlmostEqual(e.A, e.C))
+                {
+                    bool res1 = GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.B, e.B);
+                    GeometRi3D.UseAbsoluteTolerance = false;
+                    GeometRi3D.Tolerance = tol;
+                    bool res2 = e.SemiaxisB.IsParallelTo(this.SemiaxisB);
+                    return res1 && res2;
+                }
+                else if (GeometRi3D.AlmostEqual(this.C, this.B) && GeometRi3D.AlmostEqual(e.C, e.B))
+                {
+                    bool res1 = GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.C, e.C);
+                    GeometRi3D.UseAbsoluteTolerance = false;
+                    GeometRi3D.Tolerance = tol;
+                    bool res2 = e.SemiaxisA.IsParallelTo(this.SemiaxisA);
+                    return res1 && res2;
+                }
+                else
+                {
+                    bool res1 = GeometRi3D.AlmostEqual(this.A, e.A) && GeometRi3D.AlmostEqual(this.B, e.B) && GeometRi3D.AlmostEqual(this.C, e.C);
+                    GeometRi3D.UseAbsoluteTolerance = false;
+                    GeometRi3D.Tolerance = tol;
+                    bool res2 = e.SemiaxisA.IsParallelTo(this.SemiaxisA) && e.SemiaxisB.IsParallelTo(this.SemiaxisB) && e.SemiaxisC.IsParallelTo(this.SemiaxisC);
+                    return res1 && res2;
+                }
             }
 
 

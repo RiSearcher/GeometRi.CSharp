@@ -414,15 +414,8 @@ namespace GeometRi
                 return false;
             }
             Quaternion q = (Quaternion)obj;
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                return (this - q).Norm <= GeometRi3D.Tolerance;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
+            // No check for absolute tolerance since this is unit quaternion
+            return (this - q).Norm <= GeometRi3D.Tolerance;
         }
 
         /// <summary>

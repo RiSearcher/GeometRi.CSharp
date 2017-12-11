@@ -404,9 +404,10 @@ namespace GeometRi
             }
             else
             {
-                throw new NotImplementedException();
+                return Abs(c.Center.DistanceTo(this.Center)) / this.R <= GeometRi3D.Tolerance && 
+                       Abs(c.R - this.R) / this.R  <= GeometRi3D.Tolerance && 
+                       c.Normal.IsParallelTo(this.Normal);
             }
-
         }
 
         /// <summary>
