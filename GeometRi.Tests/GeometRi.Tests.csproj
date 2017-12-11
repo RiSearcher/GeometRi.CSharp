@@ -69,6 +69,7 @@
     <Compile Include="Box3dTest.cs" />
     <Compile Include="QuaternionTest.cs" />
     <Compile Include="BoundingBoxTest.cs" />
+    <Compile Include="RelativeToleranceTest.cs" />
     <Compile Include="Vector3dTest.cs" />
   </ItemGroup>
   <ItemGroup>
