@@ -381,7 +381,16 @@ namespace GeometRi
             else
             {
                 double tol = GeometRi3D.Tolerance;
-                GeometRi3D.Tolerance = tol * this.Point.DistanceTo(this.Point.Coord.Origin);
+                if (this.Point == l.Point)
+                {
+                    // Both lines have the same reference point
+                    // Use distance to Origin
+                    GeometRi3D.Tolerance = tol * this.Point.DistanceTo(new Point3d(0,0,0));
+                } else
+                {
+                    // Use max of distance to origin or distance between two points
+                    GeometRi3D.Tolerance = tol * Math.Max(this.Point.DistanceTo(new Point3d(0, 0, 0)), this.Point.DistanceTo(l.Point));
+                }
                 GeometRi3D.UseAbsoluteTolerance = true;
                 bool res1 = this.Point.BelongsTo(l);
                 GeometRi3D.UseAbsoluteTolerance = false;
