@@ -343,6 +343,38 @@ namespace GeometRi
         }
         #endregion
 
+        internal int _PointLocation(Point3d p)
+        {
+            Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);
+            p = p.ConvertTo(coord);
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if ( (Abs(p.X)-L1/2) <= GeometRi3D.Tolerance && (Abs(p.Y) - L2 / 2) <= GeometRi3D.Tolerance && (Abs(p.Z) - L3 / 2) <= GeometRi3D.Tolerance )
+                {
+                    if ( (Abs(p.X) - L1 / 2) < -GeometRi3D.Tolerance && (Abs(p.Y) - L2 / 2) < -GeometRi3D.Tolerance && (Abs(p.Z) - L3 / 2) < -GeometRi3D.Tolerance)
+                    {
+                        return 1; // Point is strictly inside box
+                    } else
+                    {
+                        return 0; // Point is on boundary
+                    }
+                } else
+                {
+                    return -1; // Point is outside
+                }
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Diagonal;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+        }
+
         #region "TranslateRotateReflect"
         /// <summary>
         /// Translate box by a vector

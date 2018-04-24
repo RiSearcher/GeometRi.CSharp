@@ -426,6 +426,30 @@ namespace GeometRi
             }
         }
 
+        public bool BelongsTo(Box3d box)
+        {
+            if (box._PointLocation(this) >= 0) { return true; } 
+            return false;
+        }
+
+        public bool IsInside(Box3d box)
+        {
+            if (box._PointLocation(this) == 1) { return true; }
+            return false;
+        }
+
+        public bool IsOutside(Box3d box)
+        {
+            if (box._PointLocation(this) == -1) { return true; }
+            return false;
+        }
+
+        public bool IsOnBoundary(Box3d box)
+        {
+            if (box._PointLocation(this) == 0) { return true; }
+            return false;
+        }
+
         /// <summary>
         /// Check if point is inside ellipsoid
         /// </summary>
