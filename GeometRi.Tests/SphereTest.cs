@@ -89,5 +89,65 @@ namespace GeometRi_Tests
             Segment3d res = new Segment3d(new Point3d(0, 0, 0), new Point3d(-8, -6, 0));
             Assert.AreEqual(c, res);
         }
+
+        [TestMethod]
+        public void PointInSphereTest()
+        {
+            Point3d p = new Point3d(1, 1, 1);
+            Sphere s = new Sphere(p, 5);
+
+            p = new Point3d(2, 2, 2);  // Point inside
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsTrue(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6, 1);  // Point on surface
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6.005, 1);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+        }
+
+        [TestMethod]
+        public void PointInSphereRelativeTest()
+        {
+            Point3d p = new Point3d(1, 1, 1);
+            Sphere s = new Sphere(p, 5);
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            p = new Point3d(1, 5.9, 1);  // Point inside
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsTrue(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6.04, 1);  // Point on surface
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6.06, 1);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
     }
 }

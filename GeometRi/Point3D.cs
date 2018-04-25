@@ -388,22 +388,6 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Check if point belongs to the sphere surface
-        /// </summary>
-        /// <returns>True, if the point belongs to the sphere surface</returns>
-        public bool BelongsTo(Sphere s)
-        {
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                return GeometRi3D.AlmostEqual(this.DistanceTo(s.Center), s.R);
-            }
-            else
-            {
-                return GeometRi3D.AlmostEqual((this.DistanceTo(s.Center) - s.R) / s.R, 0.0);
-            }
-        }
-
-        /// <summary>
         /// Check if point belongs to the ellipsoid surface
         /// </summary>
         public bool BelongsTo(Ellipsoid e)
@@ -425,6 +409,9 @@ namespace GeometRi
                 return result;
             }
         }
+
+        // =========================================================================
+        #region "Point location"
 
         public bool BelongsTo(Box3d box)
         {
@@ -449,6 +436,32 @@ namespace GeometRi
             if (box._PointLocation(this) == 0) { return true; }
             return false;
         }
+
+        public bool BelongsTo(Sphere s)
+        {
+            if (s._PointLocation(this) >= 0) { return true; }
+            return false;
+        }
+
+        public bool IsInside(Sphere s)
+        {
+            if (s._PointLocation(this) == 1) { return true; }
+            return false;
+        }
+
+        public bool IsOutside(Sphere s)
+        {
+            if (s._PointLocation(this) == -1) { return true; }
+            return false;
+        }
+
+        public bool IsOnBoundary(Sphere s)
+        {
+            if (s._PointLocation(this) == 0) { return true; }
+            return false;
+        }
+        #endregion
+        // =========================================================================
 
         /// <summary>
         /// Check if point is inside ellipsoid
@@ -528,22 +541,6 @@ namespace GeometRi
                 GeometRi3D.UseAbsoluteTolerance = false;
                 GeometRi3D.Tolerance = tol;
                 return result;
-            }
-        }
-
-        /// <summary>
-        /// Check if point is inside sphere
-        /// </summary>
-        /// <returns>True, if the point is inside sphere</returns>
-        public bool IsInside(Sphere s)
-        {
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                return this.DistanceTo(s.Center) < s.R - GeometRi3D.Tolerance;
-            }
-            else
-            {
-                return Abs(this.DistanceTo(s.Center) - s.R) / s.R  < GeometRi3D.Tolerance;
             }
         }
 

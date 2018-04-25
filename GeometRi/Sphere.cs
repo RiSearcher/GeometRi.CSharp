@@ -307,7 +307,40 @@ namespace GeometRi
             return new Segment3d(p.Translate(this.R * l.Direction.Normalized), p.Translate(-this.R * l.Direction.Normalized));
         }
 
-#region "TranslateRotateReflect"
+        internal int _PointLocation(Point3d p)
+        {
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if (p.DistanceTo(this.Center) - this.R <= GeometRi3D.Tolerance )
+                {
+                    if (p.DistanceTo(this.Center) - this.R < -GeometRi3D.Tolerance )
+                    {
+                        return 1; // Point is strictly inside box
+                    }
+                    else
+                    {
+                        return 0; // Point is on boundary
+                    }
+                }
+                else
+                {
+                    return -1; // Point is outside
+                }
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+        }
+
+        #region "TranslateRotateReflect"
         /// <summary>
         /// Translate sphere by a vector
         /// </summary>
