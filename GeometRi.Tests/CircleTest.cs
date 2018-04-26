@@ -91,5 +91,36 @@ namespace GeometRi_Tests
             p = c.ParametricForm(2.7122).ProjectionTo(s);
             Assert.IsTrue(p.BelongsTo(c.ProjectionTo(s)));
         }
+
+        [TestMethod]
+        public void PointInCircleTest()
+        {
+            Point3d p = new Point3d(1, 1, 0);
+            Circle3d s = new Circle3d(p, 5, new Vector3d(0,0,1));
+
+            p = new Point3d(2, 2, 0);  // Point inside
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsTrue(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6, 0);  // Point on boundary
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6.005, 0);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 2, 0.01);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+        }
     }
 }

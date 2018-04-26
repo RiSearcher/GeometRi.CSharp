@@ -341,22 +341,6 @@ namespace GeometRi
             }
         }
 
-        /// <summary>
-        /// Check if point belongs to the circle
-        /// </summary>
-        /// <returns>True, if the point belongs to the circle</returns>
-        public bool BelongsTo(Circle3d c)
-        {
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                return GeometRi3D.AlmostEqual(this.DistanceTo(c.Center), c.R) && c.Normal.Normalized.IsOrthogonalTo(new Vector3d(c.Center, this));
-            }
-            else
-            {
-                return GeometRi3D.AlmostEqual( (this.DistanceTo(c.Center)-c.R)/c.R, 0.0) && 
-                       c.Normal.Normalized.IsOrthogonalTo(new Vector3d(c.Center, this));
-            }
-        }
 
         /// <summary>
         /// Check if point belongs to the ellipse
@@ -417,36 +401,6 @@ namespace GeometRi
         #endregion
         // =========================================================================
 
-
-
-        /// <summary>
-        /// Check if point is inside circle
-        /// </summary>
-        /// <returns>True, if the point is inside circle</returns>
-        public bool IsInside(Circle3d c)
-        {
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                if (this.BelongsTo(new Plane3d(c.Center, c.Normal)))
-                {
-                    return GeometRi3D.Smaller(this.DistanceTo(c.Center), c.R);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                double tol = GeometRi3D.Tolerance;
-                GeometRi3D.Tolerance = tol * c.R;
-                GeometRi3D.UseAbsoluteTolerance = true;
-                bool result = this.IsInside(c);
-                GeometRi3D.UseAbsoluteTolerance = false;
-                GeometRi3D.Tolerance = tol;
-                return result;
-            }
-        }
 
         /// <summary>
         /// Check if point is inside ellipse

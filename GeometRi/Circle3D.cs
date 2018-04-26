@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Circle in 3D space defined by center point, radius and normal vector.
     /// </summary>
-    public class Circle3d : IPlanarObject, IFiniteObject
+    public class Circle3d : FiniteObject, IPlanarObject, IFiniteObject
     {
 
         private Point3d _point;
@@ -293,6 +293,43 @@ namespace GeometRi
                 }
             }
 
+        }
+
+
+        internal override int _PointLocation(Point3d p)
+        {
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if (p.BelongsTo(new Plane3d(this.Center, this.Normal)))
+                {
+                    if ( GeometRi3D.Smaller(p.DistanceTo(this.Center), this.R))
+                    {
+                        return 1; // Point is strictly inside
+                    }
+                    else if (GeometRi3D.AlmostEqual(p.DistanceTo(this.Center), this.R) )
+                    {
+                        return 0; // Point is on boundary
+                    }
+                    else
+                    {
+                        return -1; // Point is outside
+                    }
+                }
+                else
+                {
+                    return -1; // Point is outside
+                }
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
         }
 
         #region "AngleTo"
