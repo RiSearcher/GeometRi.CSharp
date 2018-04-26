@@ -7,7 +7,7 @@ namespace GeometRi
     /// <summary>
     /// Arbitrary oriented 3D box, can be degenerated with one or more dimensions equal 0.
     /// </summary>
-    public class Box3d : IFiniteObject
+    public class Box3d : FiniteObject, IFiniteObject
     {
 
         private Point3d _center;
@@ -343,7 +343,7 @@ namespace GeometRi
         }
         #endregion
 
-        internal int _PointLocation(Point3d p)
+        internal override int _PointLocation(Point3d p)
         {
             Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);
             p = p.ConvertTo(coord);

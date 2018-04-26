@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractClass.cs" />
     <Compile Include="Box3D.cs" />
     <Compile Include="Circle3D.cs" />
     <Compile Include="Coord3D.cs" />

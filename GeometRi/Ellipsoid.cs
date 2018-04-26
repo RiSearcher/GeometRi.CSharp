@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Ellipsoid object defined by center point and three mutually orthogonal vectors.
     /// </summary>
-    public class Ellipsoid : IFiniteObject
+    public class Ellipsoid : FiniteObject, IFiniteObject
     {
 
         private Point3d _point;
@@ -348,10 +348,10 @@ namespace GeometRi
             double Z0 = -(Ax * X0 + Ay * Y0 + Ad) / Az;
 
             Point3d P0 = new Point3d(X0, Y0, Z0, lc);
-            if (P0.BelongsTo(this))
-            {
-                // the plane is tangent to ellipsoid
-                return P0;
+            if (P0.IsOnBoundary(this))
+                {
+                    // the plane is tangent to ellipsoid
+                    return P0;
             }
             else if (P0.IsInside(this))
             {
@@ -399,6 +399,39 @@ namespace GeometRi
                 return null;
             }
 
+        }
+
+        internal override int _PointLocation(Point3d p)
+        // Should be rewritten!!!
+        {
+
+            Coord3d lc = new Coord3d(this.Center, this.SemiaxisA, this.SemiaxisB);
+            p = p.ConvertTo(lc);
+
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if (GeometRi3D.AlmostEqual(p.X * p.X / this.A / this.A + p.Y * p.Y / this.B / this.B + p.Z * p.Z / this.C / this.C, 1.0))
+                {
+                    return 0; // Point is on boundary
+                }
+                if (GeometRi3D.Smaller(p.X * p.X / this.A / this.A + p.Y * p.Y / this.B / this.B + p.Z * p.Z / this.C / this.C, 1.0))
+                {
+                    return 1; // Point is strictly inside box
+                }
+
+                return -1; // Point is outside
+
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.A;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
         }
 
         #region "TranslateRotateReflect"

@@ -106,5 +106,30 @@ namespace GeometRi_Tests
             }
 
         }
+
+        [TestMethod]
+        public void PointInEllipsoidTest()
+        {
+            Point3d p = new Point3d(1, 1, 1);
+            Ellipsoid s = new Ellipsoid(p, new Vector3d(3,0,0), new Vector3d(0, 5, 0), new Vector3d(0, 0, 2));
+
+            p = new Point3d(2, 2, 2);  // Point inside
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsTrue(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6, 1);  // Point on surface
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6.005, 1);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+        }
     }
 }

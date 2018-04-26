@@ -387,104 +387,36 @@ namespace GeometRi
             }
         }
 
-        /// <summary>
-        /// Check if point belongs to the ellipsoid surface
-        /// </summary>
-        public bool BelongsTo(Ellipsoid e)
-        {
-            Coord3d lc = new Coord3d(e.Center,e.SemiaxisA, e.SemiaxisB);
-            Point3d p = this.ConvertTo(lc);
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                return GeometRi3D.AlmostEqual(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
-            }
-            else
-            {
-                double tol = GeometRi3D.Tolerance;
-                GeometRi3D.Tolerance = tol * e.SemiaxisA.Norm;
-                GeometRi3D.UseAbsoluteTolerance = true;
-                bool result = this.BelongsTo(e);
-                GeometRi3D.UseAbsoluteTolerance = false;
-                GeometRi3D.Tolerance = tol;
-                return result;
-            }
-        }
-
         // =========================================================================
         #region "Point location"
 
-        public bool BelongsTo(Box3d box)
+        public bool BelongsTo(FiniteObject obj)
         {
-            if (box._PointLocation(this) >= 0) { return true; } 
+            if (obj._PointLocation(this) >= 0) { return true; }
             return false;
         }
 
-        public bool IsInside(Box3d box)
+        public bool IsInside(FiniteObject obj)
         {
-            if (box._PointLocation(this) == 1) { return true; }
+            if (obj._PointLocation(this) == 1) { return true; }
             return false;
         }
 
-        public bool IsOutside(Box3d box)
+        public bool IsOutside(FiniteObject obj)
         {
-            if (box._PointLocation(this) == -1) { return true; }
+            if (obj._PointLocation(this) == -1) { return true; }
             return false;
         }
 
-        public bool IsOnBoundary(Box3d box)
+        public bool IsOnBoundary(FiniteObject obj)
         {
-            if (box._PointLocation(this) == 0) { return true; }
+            if (obj._PointLocation(this) == 0) { return true; }
             return false;
         }
 
-        public bool BelongsTo(Sphere s)
-        {
-            if (s._PointLocation(this) >= 0) { return true; }
-            return false;
-        }
-
-        public bool IsInside(Sphere s)
-        {
-            if (s._PointLocation(this) == 1) { return true; }
-            return false;
-        }
-
-        public bool IsOutside(Sphere s)
-        {
-            if (s._PointLocation(this) == -1) { return true; }
-            return false;
-        }
-
-        public bool IsOnBoundary(Sphere s)
-        {
-            if (s._PointLocation(this) == 0) { return true; }
-            return false;
-        }
         #endregion
         // =========================================================================
 
-        /// <summary>
-        /// Check if point is inside ellipsoid
-        /// </summary>
-        public bool IsInside(Ellipsoid e)
-        {
-            Coord3d lc = new Coord3d(e.Center, e.SemiaxisA, e.SemiaxisB);
-            Point3d p = this.ConvertTo(lc);
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                return GeometRi3D.Smaller(p.X * p.X / e.A / e.A + p.Y * p.Y / e.B / e.B + p.Z * p.Z / e.C / e.C, 1.0);
-            }
-            else
-            {
-                double tol = GeometRi3D.Tolerance;
-                GeometRi3D.Tolerance = tol * e.SemiaxisA.Norm;
-                GeometRi3D.UseAbsoluteTolerance = true;
-                bool result = this.IsInside(e);
-                GeometRi3D.UseAbsoluteTolerance = false;
-                GeometRi3D.Tolerance = tol;
-                return result;
-            }
-        }
 
 
         /// <summary>

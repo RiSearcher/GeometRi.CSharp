@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Sphere object defined by center point and radius.
     /// </summary>
-    public class Sphere : IFiniteObject
+    public class Sphere : FiniteObject, IFiniteObject
     {
 
         private Point3d _point;
@@ -307,7 +307,7 @@ namespace GeometRi
             return new Segment3d(p.Translate(this.R * l.Direction.Normalized), p.Translate(-this.R * l.Direction.Normalized));
         }
 
-        internal int _PointLocation(Point3d p)
+        internal override int _PointLocation(Point3d p)
         {
 
             if (GeometRi3D.UseAbsoluteTolerance)
