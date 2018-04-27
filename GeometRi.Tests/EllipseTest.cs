@@ -52,5 +52,36 @@ namespace GeometRi_Tests
             Segment3d res = new Segment3d(new Point3d(-0.0440003630169716, 5.99963698302842, 0), new Point3d(-0.0559994119835347, -5.99941198353467, 0));
             Assert.AreEqual(e.IntersectionWith(s), res);
         }
+
+        [TestMethod]
+        public void PointInEllipseTest()
+        {
+            Point3d p = new Point3d(1, 1, 0);
+            Ellipse s = new Ellipse(p, new Vector3d(10, 0, 0), new Vector3d(0, 5, 0));
+
+            p = new Point3d(2, 2, 0);  // Point inside
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsTrue(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6, 0);  // Point on boundary
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6.005, 0);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 2, 0.01);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+        }
     }
 }
