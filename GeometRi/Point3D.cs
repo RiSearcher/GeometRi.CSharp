@@ -308,15 +308,6 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Check if point belongs to the segment
-        /// </summary>
-        /// <returns>True, if the point belongs to the segment</returns>
-        public bool BelongsTo(Segment3d s)
-        {
-            return this.BelongsTo(s.ToRay) && this.BelongsTo(new Ray3d(s.P2, new Vector3d(s.P2, s.P1)));
-        }
-
-        /// <summary>
         /// Check if point belongs to the plane
         /// </summary>
         /// <returns>True, if the point belongs to the plane</returns>

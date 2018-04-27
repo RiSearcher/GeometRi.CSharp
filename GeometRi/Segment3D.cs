@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Line segment in 3D space defined by two end points.
     /// </summary>
-    public class Segment3d : ILinearObject, IFiniteObject
+    public class Segment3d : FiniteObject, ILinearObject, IFiniteObject
     {
 
         private Point3d _p1;
@@ -285,8 +285,11 @@ namespace GeometRi
         public double DistanceTo(Ray3d r)
         {
 
-            if (this.ToVector.IsParallelTo(r.Direction))
-                return this.ToLine.DistanceTo(r.ToLine);
+
+            Point3d p1 = this.ToLine.PerpendicularTo(r.ToLine);
+            bool b1 = p1.BelongsTo(r);
+            Point3d p2 = r.ToLine.PerpendicularTo(this.ToLine);
+            bool b2= p2.BelongsTo(this);
 
             if (this.ToLine.PerpendicularTo(r.ToLine).BelongsTo(r) && r.ToLine.PerpendicularTo(this.ToLine).BelongsTo(this))
             {
@@ -434,6 +437,44 @@ namespace GeometRi
             else
             {
                 return new Segment3d(this.P1.ProjectionTo(s), this.P2.ProjectionTo(s));
+            }
+        }
+
+        internal override int _PointLocation(Point3d p)
+        {
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                Point3d proj = p.ProjectionTo(this.ToLine);
+                if (GeometRi3D.AlmostEqual(p.DistanceTo(proj),0))
+                {
+                    if (GeometRi3D.AlmostEqual(p.DistanceTo(this.P1), 0) || GeometRi3D.AlmostEqual(p.DistanceTo(this.P2), 0))
+                    {
+                        return 0; // Point is on boundary
+                    }
+                    else if (Abs(new Vector3d(proj, this.P1).AngleTo(new Vector3d(proj, this.P2))) < 2e-8)
+                    // Need to decrease accuracy due to Acos calculations
+                    {
+                        return -1; // Point is outside
+                    }
+                    else
+                    {
+                        return 1; // // Point is strictly inside
+                    }
+                }
+                else
+                {
+                    return -1; // Point is outside
+                }
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Length;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
         }
 
