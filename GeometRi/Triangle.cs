@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Triangle in 3D space defined by three points.
     /// </summary>
-    public class Triangle : IPlanarObject
+    public class Triangle : FiniteObject, IPlanarObject
     {
 
         private Point3d _a;
@@ -508,6 +508,50 @@ namespace GeometRi
             else
             {
                 return new Segment3d(p2, p3);
+            }
+        }
+
+        internal override int _PointLocation(Point3d p)
+        {
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                Plane3d s = new Plane3d(this.A, this.Normal);
+                Point3d proj = p.ProjectionTo(s);
+                if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
+                {
+                    if (p.BelongsTo(new Segment3d(_a,_b)) || p.BelongsTo(new Segment3d(_a, _b)) || p.BelongsTo(new Segment3d(_a, _b)))
+                    {
+                        return 0; // Point is on boundary
+                    }
+                    else
+                    {
+                        double area = this.Area;
+                        double alpha = new Vector3d(proj, _b).Cross(new Vector3d(proj, _c)).Norm / (2 * area);
+                        double beta = new Vector3d(proj, _c).Cross(new Vector3d(proj, _a)).Norm / (2 * area);
+                        double gamma = 1 - alpha - beta;
+                        if ( 0 < alpha && alpha < 1 && 0 < beta && beta < 1 && 0 < gamma && gamma < 1 )
+                        {
+                            return 1; // Point is strictly inside
+                        } else
+                        {
+                            return -1;
+                        }
+                    }
+                }
+                else
+                {
+                    return -1; // Point is outside
+                }
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * (AB+BC+AC) / 3;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
             }
         }
 
