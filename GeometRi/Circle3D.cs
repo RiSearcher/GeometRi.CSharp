@@ -300,7 +300,9 @@ namespace GeometRi
         {
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                if (p.BelongsTo(new Plane3d(this.Center, this.Normal)))
+                Plane3d s = new Plane3d(this.Center, this.Normal);
+                Point3d proj = p.ProjectionTo(s);
+                if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
                 {
                     if ( GeometRi3D.Smaller(p.DistanceTo(this.Center), this.R))
                     {

@@ -83,5 +83,45 @@ namespace GeometRi_Tests
             Assert.IsTrue(p.IsOutside(s));
             Assert.IsFalse(p.IsOnBoundary(s));
         }
+
+        [TestMethod]
+        public void PointInEllipseRelativeTest()
+        {
+            Point3d p = new Point3d(1, 1, 0);
+            Ellipse s = new Ellipse(p, new Vector3d(10, 0, 0), new Vector3d(0, 5, 0));
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            p = new Point3d(2, 2, 0.1);  // Point inside
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsTrue(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6, 0);  // Point on boundary
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 6.2, 0);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(1, 2, 0.2);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
     }
 }
