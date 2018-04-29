@@ -197,7 +197,7 @@ namespace GeometRi
         public double DistanceTo(Plane3d s)
         {
             s.SetCoord(this.Coord);
-            return Abs(X * s.A + Y * s.B + Z * s.C + s.D) / Sqrt(Math.Pow(s.A, 2) + Math.Pow(s.B, 2) + Math.Pow(s.C, 2));
+            return Abs(X * s.A + Y * s.B + Z * s.C + s.D) / Sqrt(s.A * s.A + s.B * s.B + s.C * s.C);
         }
 
         /// <summary>
@@ -316,18 +316,18 @@ namespace GeometRi
             s.SetCoord(this.Coord);
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                return Abs(s.A * X + s.B * Y + s.C * Z + s.D) < GeometRi3D.Tolerance;
+                return Abs(s.A * X + s.B * Y + s.C * Z + s.D) / Sqrt(s.A*s.A + s.B * s.B + s.C * s.C) < GeometRi3D.Tolerance;
             }
             else
             {
                 double d = this.DistanceTo(this._coord.Origin);
                 if (d > 0.0)
                 {
-                    return Abs(s.A * X + s.B * Y + s.C * Z + s.D) / d < GeometRi3D.Tolerance;
+                    return Abs(s.A * X + s.B * Y + s.C * Z + s.D) / Sqrt(s.A * s.A + s.B * s.B + s.C * s.C) / d < GeometRi3D.Tolerance;
                 }
                 else
                 {
-                    return Abs(s.A * X + s.B * Y + s.C * Z + s.D) < GeometRi3D.Tolerance;
+                    return Abs(s.A * X + s.B * Y + s.C * Z + s.D) / Sqrt(s.A * s.A + s.B * s.B + s.C * s.C) < GeometRi3D.Tolerance;
                 }
             }
         }

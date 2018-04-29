@@ -136,6 +136,25 @@ namespace GeometRi_Tests
             Plane3d s1 = new Plane3d(-1, 2, -2, 9);
             Point3d p1 = s1.Point;
             Assert.IsTrue(p1.BelongsTo(s1));
+
+            s1 = new Plane3d(new Point3d(0,0,10), new Vector3d(0,0,1));
+            p1 = new Point3d(0, 0, 10);
+            Assert.IsTrue(p1.BelongsTo(s1));
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            s1 = new Plane3d(new Point3d(0, 0, 10), new Vector3d(0, 0, 100));
+            p1 = new Point3d(0, 0, 10.05);
+            Assert.IsTrue(p1.BelongsTo(s1));
+            p1 = new Point3d(0, 0, 10.15);
+            Assert.IsFalse(p1.BelongsTo(s1));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
         }
 
         [TestMethod()]
