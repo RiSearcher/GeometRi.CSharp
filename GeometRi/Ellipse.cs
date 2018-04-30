@@ -364,13 +364,13 @@ namespace GeometRi
                 Point3d proj = p.ProjectionTo(s);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
                 {
-                    if (GeometRi3D.Smaller(p.DistanceTo(this.F1) + p.DistanceTo(this.F2), 2 * this.A))
-                    {
-                        return 1; // Point is strictly inside
-                    }
-                    else if (GeometRi3D.AlmostEqual(p.DistanceTo(this.F1) + p.DistanceTo(this.F2), 2 * this.A))
+                    if (GeometRi3D.AlmostEqual(p.DistanceTo(this.ClosestPoint(proj)), 0))
                     {
                         return 0; // Point is on boundary
+                    }
+                    else if (GeometRi3D.Smaller(proj.DistanceTo(this.F1) + proj.DistanceTo(this.F2), 2 * this.A))
+                    {
+                        return 1; // Point is strictly inside
                     }
                     else
                     {
@@ -392,6 +392,46 @@ namespace GeometRi
                 GeometRi3D.Tolerance = tol;
                 return result;
             }
+        }
+
+        public Point3d ClosestPoint(Point3d p)
+        {
+
+            // Algorithm by Dr. Robert Nurnberg
+            // http://wwwf.imperial.ac.uk/~rn/distance2ellipse.pdf
+            // Does not work for interior points
+
+            Coord3d local_coord = new Coord3d(this.Center, this._v1, this._v2);
+            p = p.ConvertTo(local_coord);
+
+            if (GeometRi3D.AlmostEqual(p.X, 0) && GeometRi3D.AlmostEqual(p.Y, 0))
+            {
+                // Center point, choose any minor-axis
+                return new Point3d(0, this.B, 0, local_coord);
+            }
+
+            double theta = Atan2(this.A * p.Y, this.B * p.X);
+            int iter = 0;
+            int max_iter = 100;
+            Point3d n0 = p.Copy();
+
+            while (iter < max_iter)
+            {
+                iter += 1;
+                double f = (A * A - B * B) * Cos(theta) * Sin(theta) - p.X * A * Sin(theta) + p.Y * B * Cos(theta);
+                double f_prim = (A * A - B * B) * (Cos(theta) * Cos(theta) - Sin(theta) * Sin(theta))
+                                - p.X * A * Cos(theta) - p.Y * B * Sin(theta);
+                theta = theta - f / f_prim;
+                Point3d n = new Point3d(A * Cos(theta), B * Sin(theta), 0, local_coord);
+
+                if (n0.DistanceTo(n) < GeometRi3D.Tolerance)
+                {
+                    return n;
+                }
+                n0 = n.Copy();
+            }
+
+            return n0;
         }
 
         #region "AngleTo"

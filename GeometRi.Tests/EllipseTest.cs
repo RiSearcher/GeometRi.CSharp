@@ -123,5 +123,43 @@ namespace GeometRi_Tests
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
+
+        [TestMethod()]
+        public void ClosestPointTest()
+        {
+            Point3d p = new Point3d(0, 0, 0);
+            Vector3d v1 = new Vector3d(10, 0, 0);
+            Vector3d v2 = new Vector3d(0, 5, 0);
+            Ellipse e = new Ellipse(p, v1, v2);
+
+            p = new Point3d(11, 0, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(10, 0, 0));
+
+            p = new Point3d(-11, 0, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(-10, 0, 0));
+
+            p = new Point3d(0, 6, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(0, 5, 0));
+
+            p = new Point3d(0, -6, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(0, -5, 0));
+
+            p = new Point3d(0, 0, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(0, 5, 0));
+
+            p = new Point3d(0, 0, 0);
+            v1 = new Vector3d(10, 0, 0);
+            v2 = new Vector3d(0, 10, 0);
+            e = new Ellipse(p, v1, v2);
+
+            p = new Point3d(11, 11, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(Sqrt(50), Sqrt(50), 0));
+
+            p = new Point3d(-11, 11, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(-Sqrt(50), Sqrt(50), 0));
+
+            p = new Point3d(-11, -11, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(-Sqrt(50), -Sqrt(50), 0));
+        }
     }
 }
