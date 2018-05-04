@@ -434,6 +434,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Calculates the point on the ellipsoid's boundary closest to given point.
+        /// </summary>
         public Point3d ClosestPoint(Point3d p)
         {
 

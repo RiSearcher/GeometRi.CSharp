@@ -266,10 +266,9 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Check if point belongs to the line
+        /// <para>Test if point is located in the epsilon neighborhood of the line.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
         /// </summary>
-        /// <param name="l"></param>
-        /// <returns>True, if the point belongs to the line</returns>
         public bool BelongsTo(Line3d l)
         {
             if (this == l.Point)
@@ -283,10 +282,9 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Check if point belongs to the ray
+        /// <para>Test if point is located in the epsilon neighborhood of the ray.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
         /// </summary>
-        /// <param name="l"></param>
-        /// <returns>True, if the point belongs to the ray</returns>
         public bool BelongsTo(Ray3d l)
         {
             if (this == l.Point)
@@ -306,9 +304,9 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Check if point belongs to the plane
+        /// <para>Test if point is located in the epsilon neighborhood of the plane.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
         /// </summary>
-        /// <returns>True, if the point belongs to the plane</returns>
         public bool BelongsTo(Plane3d s)
         {
             s.SetCoord(this.Coord);
@@ -336,24 +334,44 @@ namespace GeometRi
         // =========================================================================
         #region "Point location"
 
+        /// <summary>
+        /// <para>Test if point is located in the epsilon neighborhood of the object.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
+        /// <para>For relative tolerance tests a fraction of the typical object's dimension is used to define epsilon neighborhood.</para>
+        /// </summary>
         public bool BelongsTo(FiniteObject obj)
         {
             if (obj._PointLocation(this) >= 0) { return true; }
             return false;
         }
 
+        /// <summary>
+        /// <para>Test if point is located strictly inside (not in the epsilon neighborhood of the boundary) of the object.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
+        /// <para>For relative tolerance tests a fraction of the typical object's dimension is used to define epsilon neighborhood.</para>
+        /// </summary>
         public bool IsInside(FiniteObject obj)
         {
             if (obj._PointLocation(this) == 1) { return true; }
             return false;
         }
 
+        /// <summary>
+        /// <para>Test if point is located outside of the epsilon neighborhood of the object.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
+        /// <para>For relative tolerance tests a fraction of the typical object's dimension is used to define epsilon neighborhood.</para>
+        /// </summary>        
         public bool IsOutside(FiniteObject obj)
         {
             if (obj._PointLocation(this) == -1) { return true; }
             return false;
         }
 
+        /// <summary>
+        /// <para>Test if point is located in the epsilon neighborhood of the object's boundary.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
+        /// <para>For relative tolerance tests a fraction of the typical object's dimension is used to define epsilon neighborhood.</para>
+        /// </summary>
         public bool IsOnBoundary(FiniteObject obj)
         {
             if (obj._PointLocation(this) == 0) { return true; }

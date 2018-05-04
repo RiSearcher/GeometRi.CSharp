@@ -75,8 +75,10 @@ By default all points are defined in global coordinate system.
 * __Scale__ - scale point by given number
 * __DistanceTo__ - shortest distance from point to point, line, plane, ray or segment
 * __ProjectionTo__ - orthogonal projection of point to line, plane or sphere
-* __BelongsTo__ - check if point belongs to line, ray, segment, plane, circle, ellipse, ellipsoid or sphere surface
-* __IsInside__ - check if point is inside circle, ellipse, ellipsoid or sphere
+* __BelongsTo__ - test if point is located in the epsilon neighborhood of the object
+* __IsInside__ - test if point is located strictly inside (not in the epsilon neighborhood of the boundary) of the object
+* __IsOutside__ - test if point is located outside of the epsilon neighborhood of the object
+* __IsOnBoundary__ - test if point is located in the epsilon neighborhood of the object's boundary
 * __Translate__ - translate point by vector
 * __Rotate__ - rotate point around origin or other point
 * __Reflect__ - reflect point in point, line or plane
@@ -304,6 +306,7 @@ Ellipse in 3D space, defined by center point and two orthogonal vectors, major a
 * __ParametricForm__ - return point on ellipse for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of ellipse to plane or line
 * __IntersectionWith__ - intersection of ellipse with plane
+* __ClosestPoint__ - calculates the point on the ellipse's boundary closest to given point
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
@@ -331,6 +334,7 @@ Ellipsoid object defined by center point and three mutually orthogonal vectors.
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ProjectionTo__ - orthogonal projection of ellipsoid to line
 * __IntersectionWith__ - intersection of ellipsoid with line or plane
+* __ClosestPoint__ - calculates the point on the ellipsoid's boundary closest to given point
 * __Translate__ - translate ellipsoid by vector
 * __Rotate__ - rotate ellipsoid around origin or other point
 * __Reflect__ - reflect ellipsoid in point, line or plane
