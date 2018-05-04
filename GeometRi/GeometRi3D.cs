@@ -113,7 +113,15 @@ namespace GeometRi
         {
             if (obj1.IsOriented && obj2.IsOriented)
             {
-                return Acos(obj1.Direction.Dot(obj2.Direction) / obj1.Direction.Norm / obj2.Direction.Norm);
+                double tmp = obj1.Direction.Dot(obj2.Direction) / obj1.Direction.Norm / obj2.Direction.Norm;
+                if (tmp > 1)
+                {
+                    tmp = 1;
+                } else if (tmp < -1)
+                {
+                    tmp = -1;
+                }
+                return Acos(tmp);
             }
             else
             {
@@ -138,7 +146,16 @@ namespace GeometRi
             }
             else
             {
-                double ang = Asin(obj1.Direction.Dot(obj2.Normal) / obj1.Direction.Norm / obj2.Normal.Norm);
+                double tmp = obj1.Direction.Dot(obj2.Normal) / obj1.Direction.Norm / obj2.Normal.Norm;
+                if (tmp > 1)
+                {
+                    tmp = 1;
+                }
+                else if (tmp < -1)
+                {
+                    tmp = -1;
+                }
+                double ang = Asin(tmp);
                 return Abs(ang);
             }
         }

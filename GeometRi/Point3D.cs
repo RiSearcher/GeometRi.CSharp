@@ -278,7 +278,7 @@ namespace GeometRi
             }
             else
             {
-                return l.Direction.IsParallelTo(new Vector3d(this, l.Point));
+                return this.DistanceTo(l) <= GeometRi3D.Tolerance;
             }
         }
 
@@ -293,18 +293,16 @@ namespace GeometRi
             {
                 return true;
             }
-            else
+
+            if (this.DistanceTo(l.ToLine) <= GeometRi3D.Tolerance)
             {
-                Vector3d v = new Vector3d(l.Point, this);
-                if (l.Direction.Normalized == v.Normalized)
+                Point3d proj = this.ProjectionTo(l.ToLine);
+                if (new Vector3d(l.Point, proj).AngleTo(l.Direction) < PI / 4)
                 {
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
             }
+            return false;
         }
 
         /// <summary>
