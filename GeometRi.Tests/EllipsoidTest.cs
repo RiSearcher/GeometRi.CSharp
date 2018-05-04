@@ -131,5 +131,54 @@ namespace GeometRi_Tests
             Assert.IsTrue(p.IsOutside(s));
             Assert.IsFalse(p.IsOnBoundary(s));
         }
+
+        [TestMethod()]
+        public void ClosestPointTest()
+        {
+            Point3d p = new Point3d(0, 0, 0);
+            Vector3d v1 = new Vector3d(10, 0, 0);
+            Vector3d v2 = new Vector3d(0, 5, 0);
+            Vector3d v3 = new Vector3d(0, 0, 3);
+            Ellipsoid e = new Ellipsoid(p, v1, v2, v3);
+
+            p = new Point3d(11, 0, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(10, 0, 0));
+
+            p = new Point3d(-11, 0, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(-10, 0, 0));
+
+            p = new Point3d(0, 6, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(0, 5, 0));
+
+            p = new Point3d(0, -6, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(0, -5, 0));
+
+            p = new Point3d(0, 0, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(0, 3, 0));
+
+            p = new Point3d(0, 0, 0);
+            v1 = new Vector3d(10, 0, 0);
+            v2 = new Vector3d(0, 10, 0);
+            v3 = new Vector3d(0, 0, 10);
+            e = new Ellipsoid(p, v1, v2, v3);
+
+            p = new Point3d(11, 11, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(Sqrt(50), Sqrt(50), 0));
+
+            p = new Point3d(-11, 11, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(-Sqrt(50), Sqrt(50), 0));
+
+            p = new Point3d(-11, -11, 0);
+            Assert.AreEqual(e.ClosestPoint(p), new Point3d(-Sqrt(50), -Sqrt(50), 0));
+
+            p = new Point3d(-6, -6, 6);
+            double dist = Sqrt(3 * 6 * 6) - 10;
+            Assert.IsTrue(Abs(e.ClosestPoint(p).DistanceTo(p) - dist) <= GeometRi3D.Tolerance);
+
+            // Internal point
+            p = new Point3d(-5, -5, 5);
+            dist = Abs(Sqrt(3 * 5 * 5) - 10);
+            Assert.IsTrue(Abs(e.ClosestPoint(p).DistanceTo(p) - dist) <= GeometRi3D.Tolerance);
+        }
     }
 }

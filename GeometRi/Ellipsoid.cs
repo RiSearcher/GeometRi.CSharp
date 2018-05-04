@@ -402,7 +402,6 @@ namespace GeometRi
         }
 
         internal override int _PointLocation(Point3d p)
-        // Should be rewritten!!!
         {
 
             Coord3d lc = new Coord3d(this.Center, this.SemiaxisA, this.SemiaxisB);
@@ -410,11 +409,12 @@ namespace GeometRi
 
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                if (GeometRi3D.AlmostEqual(p.X * p.X / this.A / this.A + p.Y * p.Y / this.B / this.B + p.Z * p.Z / this.C / this.C, 1.0))
+                double dist = this.ClosestPoint(p).DistanceTo(p);
+                if (GeometRi3D.AlmostEqual(dist, 0))
                 {
                     return 0; // Point is on boundary
                 }
-                if (GeometRi3D.Smaller(p.X * p.X / this.A / this.A + p.Y * p.Y / this.B / this.B + p.Z * p.Z / this.C / this.C, 1.0))
+                if (GeometRi3D.Smaller(p.X * p.X / (A*A) + p.Y * p.Y / (B*B) + p.Z * p.Z / (C*C), 1.0))
                 {
                     return 1; // Point is strictly inside box
                 }
@@ -432,6 +432,66 @@ namespace GeometRi
                 GeometRi3D.Tolerance = tol;
                 return result;
             }
+        }
+
+        public Point3d ClosestPoint(Point3d p)
+        {
+
+            // Algorithm by Dr. Robert Nurnberg
+            // http://wwwf.imperial.ac.uk/~rn/distance2ellipse.pdf
+
+            Coord3d local_coord = new Coord3d(this.Center, this._v1, this._v2);
+            p = p.ConvertTo(local_coord);
+
+            if (GeometRi3D.AlmostEqual(p.X, 0) && GeometRi3D.AlmostEqual(p.Y, 0))
+            {
+                // Center point, choose any minor-axis
+                return new Point3d(0, C, 0, local_coord);
+            }
+
+            double theta = Atan2(A * p.Y, B * p.X);
+            double phi = Atan2(p.Z, C * Sqrt((p.X*p.X)/(A*A) + (p.Y*p.Y)/(B*B)));
+            int iter = 0;
+            int max_iter = 100;
+            Point3d n0 = p.Copy();
+
+            while (iter < max_iter)
+            {
+                iter += 1;
+                double ct = Cos(theta);
+                double st = Sin(theta);
+                double cp = Cos(phi);
+                double sp = Sin(phi);
+
+                double F1 = (A * A - B * B) * ct * st * cp - p.X * A * st + p.Y * B * ct;
+                double F2 = (A * A * ct * ct + B * B * st * st - C * C) * sp * cp - p.X * A * sp * ct - p.Y * B * sp * st + p.Z * C * cp;
+
+                double a11 = (A * A - B * B) * (ct * ct - st * st) * cp - p.X * A * ct - p.Y * B * st;
+                double a12 = -(A * A - B * B) * ct * st * sp;
+                double a21 = -2.0 * (A * A - B * B) * ct * st * cp * sp + p.X * A * sp * st - p.Y * B * sp * ct;
+                double a22 = (A * A * ct * ct + B * B * st * st - C * C) * (cp * cp - sp * sp) - p.X * A * cp * ct - p.Y * B * cp * st - p.Z * C * sp;
+
+                double det = a11 * a22 - a12 * a21;
+                if (det == 0) { throw new Exception("Zero determinant"); }
+                // Calc reverse matrix B[ij] = A[ij]^-1
+                double b11 = a22 / det;
+                double b12 = -a12 / det;
+                double b21 = -a21 / det;
+                double b22 = a11 / det;
+
+                theta = theta - (b11 * F1 + b12 * F2);
+                phi = phi - (b21 * F1 + b22 * F2);
+
+                Point3d n = new Point3d(A * Cos(phi)*Cos(theta), B * Cos(phi)*Sin(theta), C*Sin(phi), local_coord);
+
+                if (n0.DistanceTo(n) < GeometRi3D.Tolerance)
+                {
+                    return n;
+                }
+                n0 = n.Copy();
+            }
+
+            return n0;
         }
 
         #region "TranslateRotateReflect"
