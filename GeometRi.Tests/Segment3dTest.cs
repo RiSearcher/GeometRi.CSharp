@@ -88,6 +88,40 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void SegmentIntersectionWithLineTest()
+        {
+            Line3d l = new Line3d(new Point3d(), new Vector3d(1, 0, 0));
+            Segment3d s = new Segment3d(new Point3d(-2, -3, 1), new Point3d(-5, 6, 1));
+            Assert.IsTrue(s.IntersectionWith(l) == null);
+
+            s = new Segment3d(new Point3d(1, 1, 0), new Point3d(1, 5, 0));
+            Assert.IsTrue(s.IntersectionWith(l) == null);
+
+            s = new Segment3d(new Point3d(5, 0, 0), new Point3d(10, 0, 0));
+            Assert.IsTrue((Segment3d)s.IntersectionWith(l) == s);
+
+            s = new Segment3d(new Point3d(5, 0, 0), new Point3d(10, 10, 10));
+            Assert.IsTrue((Point3d)s.IntersectionWith(l) == new Point3d(5, 0, 0));
+
+            s = new Segment3d(new Point3d(5, -1, 0), new Point3d(7, 1, 0));
+            Assert.IsTrue((Point3d)s.IntersectionWith(l) == new Point3d(6, 0, 0));
+        }
+
+        [TestMethod()]
+        public void SegmentBelongsToLineTest()
+        {
+            Line3d l = new Line3d(new Point3d(), new Vector3d(1, 0, 0));
+            Segment3d r = new Segment3d(new Point3d(5, 0, 0), new Point3d(10, 0, 0));
+            Assert.IsTrue(r.BelongsTo(l));
+
+            r = new Segment3d(new Point3d(5, 0, 0), new Point3d(5, 5, 5));
+            Assert.IsFalse(r.BelongsTo(l));
+
+            r = new Segment3d(new Point3d(-5, -6, 0), new Point3d(-2, -2, 0));
+            Assert.IsFalse(r.BelongsTo(l));
+        }
+
+        [TestMethod()]
         public void SegmentDistanceToSegmentTest()
         {
             Segment3d s1 = new Segment3d(new Point3d(-5, 0, 0), new Point3d(5, 0, 0));

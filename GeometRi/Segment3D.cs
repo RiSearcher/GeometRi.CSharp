@@ -325,6 +325,29 @@ namespace GeometRi
         }
         #endregion
 
+        /// <summary>
+        /// <para>Test if segment is located in the epsilon neighborhood of the line.</para>
+        /// <para>Epsilon neighborhood is defined by a GeometRi3D.Tolerance property.</para>
+        /// <para>For relative tolerance tests a fraction of the segment's length is used to define epsilon neighborhood.</para>
+        /// </summary>
+        public bool BelongsTo(Line3d l)
+        {
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return _p1.BelongsTo(l) && _p2.BelongsTo(l);
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Length;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.BelongsTo(l);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+        }
+
         #region "BoundingBox"
         /// <summary>
         /// Return minimum bounding box.
@@ -404,6 +427,27 @@ namespace GeometRi
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Get intersection of segment with line.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Line3d l)
+        {
+
+            if (this.BelongsTo(l)) { return this.Copy(); }
+
+            Point3d p = l.PerpendicularTo(this.ToLine);
+            if (p.BelongsTo(this) && p.BelongsTo(l))
+            {
+                return p;
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         /// <summary>
