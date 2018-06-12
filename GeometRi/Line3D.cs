@@ -195,6 +195,29 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of line with other line.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Line3d'.
+        /// </summary>
+        public object IntersectionWith(Line3d l)
+        {
+
+            if (l.IsParallelTo(this) && l.Point.BelongsTo(this))
+            {
+                return this.Copy();
+            }
+
+            Point3d p = l.PerpendicularTo(this);
+            if (p.BelongsTo(l))
+            {
+                return p;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get intersection of line with plane.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Line3d'.
         /// </summary>

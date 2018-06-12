@@ -52,6 +52,21 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void LineIntersectionWithLineTest()
+        {
+            Line3d l1 = new Line3d(new Point3d(), new Vector3d(1, 0, 0));
+            Line3d l2 = new Line3d(new Point3d(8,0,0), new Vector3d(-5, 0, 0));
+            Assert.IsTrue((Line3d)l1.IntersectionWith(l2) == l1);
+
+            l2 = new Line3d(new Point3d(5, 5, 0), new Vector3d(1, -1, 0));
+            Assert.IsTrue((Point3d)l1.IntersectionWith(l2) == new Point3d(10,0,0));
+
+            l2 = new Line3d(new Point3d(5, 5, 1), new Vector3d(1, -1, 0));
+            Assert.IsTrue((Object)l1.IntersectionWith(l2) == null);
+
+        }
+
+        [TestMethod()]
         public void LineIntersectionWithPlaneTest()
         {
             Point3d p1 = new Point3d(1, -5, -1);
