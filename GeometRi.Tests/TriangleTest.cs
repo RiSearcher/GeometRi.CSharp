@@ -195,5 +195,29 @@ namespace GeometRi_Tests
             GeometRi3D.Tolerance = tol;
         }
 
+
+        [TestMethod()]
+        public void TriangleIntersectionWithLineTest()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(14, 0, 0);
+            Point3d p3 = new Point3d(4, 12, 0);
+
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Line3d l = new Line3d(new Point3d(), new Vector3d(1, 0, 0));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1,p2));
+
+            l = new Line3d(new Point3d(), new Vector3d(1, -1, 0));
+            Assert.IsTrue((Point3d)t.IntersectionWith(l) == p1);
+
+            l = new Line3d(new Point3d(1,1,1), new Vector3d(0, 0, 1));
+            Assert.IsTrue((Point3d)t.IntersectionWith(l) == new Point3d(1,1,0));
+
+            l = new Line3d(new Point3d(-10, -10, 1), new Vector3d(0, 0, 1));
+            Assert.IsNull(t.IntersectionWith(l));
+
+        }
+
     }
 }

@@ -32,7 +32,7 @@ namespace GeometRi
         /// </summary>
         public Triangle Copy()
         {
-            return new Triangle(_a,_b,_c);
+            return new Triangle(_a, _b, _c);
         }
 
         #region "Properties"
@@ -509,6 +509,63 @@ namespace GeometRi
             {
                 return new Segment3d(p2, p3);
             }
+        }
+
+        /// <summary>
+        /// Get intersection of line with triangle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public Object IntersectionWith(Line3d l)
+        {
+            Plane3d s = new Plane3d(this.A, this.Normal);
+
+            object obj = l.IntersectionWith(s);
+            if (obj == null)
+            { 
+                return null;
+            }
+            else
+            {
+                if (obj.GetType() == typeof(Line3d))
+                {
+                    Segment3d sAB = new Segment3d(A, B);
+                    Segment3d sBC = new Segment3d(B, C);
+                    Segment3d sAC = new Segment3d(A, C);
+
+                    if (sAB.BelongsTo(l)) { return sAB; }
+                    if (sBC.BelongsTo(l)) { return sBC; }
+                    if (sAC.BelongsTo(l)) { return sAC; }
+
+                    Point3d pAB = (Point3d)sAB.IntersectionWith(l);
+                    Point3d pBC = (Point3d)sBC.IntersectionWith(l);
+                    Point3d pAC = (Point3d)sAC.IntersectionWith(l);
+
+                    if (pAB == pBC) { return pAB; }
+                    if (pAB == pAC) { return pAB; }
+                    if (pAC == pBC) { return pAC; }
+
+                    if (pAB.BelongsTo(sAB) && pBC.BelongsTo(sBC)) { return new Segment3d(pAB, pBC); }
+                    if (pAB.BelongsTo(sAB) && pAC.BelongsTo(sAC)) { return new Segment3d(pAB, pAC); }
+                    if (pAC.BelongsTo(sAC) && pBC.BelongsTo(sBC)) { return new Segment3d(pAC, pBC); }
+
+                    return null;
+
+                }
+                else
+                {
+                    // result of intersection is point
+                    Point3d p = (Point3d)obj;
+                    if (p.BelongsTo(this))
+                    {
+                        return p;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+
         }
 
         internal override int _PointLocation(Point3d p)
