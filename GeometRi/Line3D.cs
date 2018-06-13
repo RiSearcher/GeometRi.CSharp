@@ -190,7 +190,10 @@ namespace GeometRi
             }
             else
             {
-                throw new Exception("Lines are parallel");
+                // Lineas are parallel
+                // return any point
+                return l.Point;
+                //throw new Exception("Lines are parallel");
             }
         }
 

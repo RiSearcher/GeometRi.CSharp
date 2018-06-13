@@ -515,7 +515,7 @@ namespace GeometRi
         /// Get intersection of line with triangle.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
-        public Object IntersectionWith(Line3d l)
+        public object IntersectionWith(Line3d l)
         {
             Plane3d s = new Plane3d(this.A, this.Normal);
 
@@ -532,6 +532,7 @@ namespace GeometRi
                     Segment3d sBC = new Segment3d(B, C);
                     Segment3d sAC = new Segment3d(A, C);
 
+                    // Line coinsides with one side, return segment
                     if (sAB.BelongsTo(l)) { return sAB; }
                     if (sBC.BelongsTo(l)) { return sBC; }
                     if (sAC.BelongsTo(l)) { return sAC; }
@@ -540,14 +541,26 @@ namespace GeometRi
                     Point3d pBC = (Point3d)sBC.IntersectionWith(l);
                     Point3d pAC = (Point3d)sAC.IntersectionWith(l);
 
-                    if (pAB == pBC) { return pAB; }
-                    if (pAB == pAC) { return pAB; }
-                    if (pAC == pBC) { return pAC; }
+                    bool bAB = (object.ReferenceEquals(null, pAB)) ? false : pAB.BelongsTo(sAB);
+                    bool bAC = (object.ReferenceEquals(null, pAC)) ? false : pAC.BelongsTo(sAC);
+                    bool bBC = (object.ReferenceEquals(null, pBC)) ? false : pBC.BelongsTo(sBC);
 
-                    if (pAB.BelongsTo(sAB) && pBC.BelongsTo(sBC)) { return new Segment3d(pAB, pBC); }
-                    if (pAB.BelongsTo(sAB) && pAC.BelongsTo(sAC)) { return new Segment3d(pAB, pAC); }
-                    if (pAC.BelongsTo(sAC) && pBC.BelongsTo(sBC)) { return new Segment3d(pAC, pBC); }
+                    // Line crosses one corner, return point
+                    if (bAB && bBC && pAB==pBC && !bAC) { return pAB; }
+                    if (bAB && bAC && pAB==pAC && !bBC) { return pAB; }
+                    if (bAC && bBC && pAC==pBC && !bAB) { return pAC; }
 
+                    // Line crosses two sides, return segment
+                    if (bAB && bBC && !bAC) { return new Segment3d(pAB, pBC); }
+                    if (bAB && bAC && !bBC) { return new Segment3d(pAB, pAC); }
+                    if (bAC && bBC && !bAB) { return new Segment3d(pAC, pBC); }
+
+                    // Line crosses one corner and one side, return segment
+                    if (pAB == pBC && bAC) { return new Segment3d(pAB, pAC); }
+                    if (pAB == pAC && bBC) { return new Segment3d(pAB, pBC); }
+                    if (pAC == pBC && bAB) { return new Segment3d(pAB, pAC); }
+
+                    //else
                     return null;
 
                 }
