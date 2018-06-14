@@ -323,12 +323,12 @@ namespace GeometRi
                 // Find the common point for two planes by intersecting with third plane
                 // (using the 'most orthogonal' plane)
                 // This part needs to be rewritten
-                if (Abs(v.X) > Abs(v.Y) && Abs(v.X) > Abs(v.Z))
+                if (Abs(v.X) >= Abs(v.Y) && Abs(v.X) >= Abs(v.Z))
                 {
                     Point3d p = (Point3d)this.IntersectionWith(s2, Coord3d.GlobalCS.YZ_plane);
                     return new Line3d(p, v);
                 }
-                else if (Abs(v.Y) > Abs(v.X) && Abs(v.Y) > Abs(v.Z))
+                else if (Abs(v.Y) >= Abs(v.X) && Abs(v.Y) >= Abs(v.Z))
                 {
                     Point3d p = (Point3d)this.IntersectionWith(s2, Coord3d.GlobalCS.XZ_plane);
                     return new Line3d(p, v);
