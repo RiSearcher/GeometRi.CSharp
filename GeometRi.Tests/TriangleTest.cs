@@ -207,7 +207,7 @@ namespace GeometRi_Tests
 
             // Line coinsides with one side
             Line3d l = new Line3d(new Point3d(), new Vector3d(1, 0, 0));
-            Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1,p2));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1, p2));
 
             // Line crosses one corner
             l = new Line3d(new Point3d(), new Vector3d(1, -1, 0));
@@ -215,15 +215,15 @@ namespace GeometRi_Tests
 
             // Line crosses one corner and one side
             l = new Line3d(new Point3d(), new Vector3d(1, 1, 0));
-            Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1, new Point3d(3,3,0)));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1, new Point3d(3, 3, 0)));
 
             // Line crosses two sides
-            l = new Line3d(new Point3d(0,3,0), new Vector3d(1, -1, 0));
+            l = new Line3d(new Point3d(0, 3, 0), new Vector3d(1, -1, 0));
             Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(new Point3d(0, 3, 0), new Point3d(3, 0, 0)));
 
             // Line crosses triangle
-            l = new Line3d(new Point3d(1,1,1), new Vector3d(0, 0, 1));
-            Assert.IsTrue((Point3d)t.IntersectionWith(l) == new Point3d(1,1,0));
+            l = new Line3d(new Point3d(1, 1, 1), new Vector3d(0, 0, 1));
+            Assert.IsTrue((Point3d)t.IntersectionWith(l) == new Point3d(1, 1, 0));
 
             // Line crosses corner
             l = new Line3d(new Point3d(0, 0, 1), new Vector3d(0, 0, 1));
@@ -234,5 +234,29 @@ namespace GeometRi_Tests
 
         }
 
+        [TestMethod()]
+        public void TriangleIntersectionWithPlaneTest()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(6, 0, 0);
+            Point3d p3 = new Point3d(0, 6, 0);
+
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // Plane is parallel
+            Plane3d s = new Plane3d(new Point3d(0, 0, 1), new Vector3d(0, 0, 1));
+            //Assert.IsNull(t.IntersectionWith(s));
+
+            s = new Plane3d(new Point3d(), new Vector3d(0, 0, 1));
+            //Assert.IsTrue((Triangle)t.IntersectionWith(s) == t);
+
+            // Plane crosses triangle
+            p1 = new Point3d(0, 0, 0);
+            p2 = new Point3d(6, 0, 1);
+            p3 = new Point3d(0, 6, -1);
+
+            t = new Triangle(p1, p2, p3);
+            Assert.IsTrue((Segment3d)t.IntersectionWith(s) == new Segment3d(p1, new Point3d(3, 3, 0)));
+        }
     }
 }

@@ -581,6 +581,30 @@ namespace GeometRi
 
         }
 
+        /// <summary>
+        /// Get intersection of plane with triangle.
+        /// Returns 'null' (no intersection) or object of type 'Triangle', 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Plane3d s)
+        {
+            Plane3d st = new Plane3d(this.A, this.Normal);
+
+            if (s.IsParallelTo(st))
+            {
+                if (A.BelongsTo(s))
+                {
+                    return this.Copy();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            Line3d l = (Line3d)s.IntersectionWith(st);
+            return this.IntersectionWith(l);
+        }
+
         internal override int _PointLocation(Point3d p)
         {
             if (GeometRi3D.UseAbsoluteTolerance)
