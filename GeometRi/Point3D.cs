@@ -492,17 +492,22 @@ namespace GeometRi
             Point3d p = (Point3d)obj;
 
 
-            //Probably don't need relative comparison for direct point-to-point equality
-            //if (GeometRi3D.UseAbsoluteTolerance)
-            //{
-            //    return this.DistanceTo(p) < GeometRi3D.Tolerance;
-            //}
-            //else
-            //{
-            //    return this.DistanceTo(p) < GeometRi3D.Tolerance * this.DistanceTo(_coord.Origin);
-            //}
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return this.DistanceTo(p) < GeometRi3D.Tolerance;
+            }
+            else
+            {
+                if (this.DistanceTo(_coord.Origin) < GeometRi3D.Tolerance)
+                {
+                    return this.DistanceTo(p) < GeometRi3D.Tolerance;
+                }
+                else
+                {
+                    return this.DistanceTo(p) < GeometRi3D.Tolerance * this.DistanceTo(_coord.Origin);
+                }
+            }
 
-            return this.DistanceTo(p) <= GeometRi3D.Tolerance;
 
         }
 
