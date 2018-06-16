@@ -270,6 +270,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of line with segment.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Segment3d s)
+        {
+            return s.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a line to the plane.
         /// Return object of type 'Line3d' or 'Point3d'
         /// </summary>

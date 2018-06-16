@@ -451,6 +451,75 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of segment with other segment.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Segment3d s)
+        {
+
+            if (this == s) { return this.Copy(); }
+
+            object obj = this.ToLine.IntersectionWith(s);
+            if (obj == null) { return null; }
+
+            if (obj.GetType() == typeof(Point3d))
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(this) && p.BelongsTo(s))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else if (obj.GetType() == typeof(Segment3d))
+            {
+                // Segments are collinear
+                // Create local CS with X-axis along segment 's'
+                Vector3d v2 = s.ToVector.OrthogonalVector;
+                Coord3d cs = new Coord3d(s.P1, s.ToVector, v2);
+                double x1 = 0.0;
+                double x2 = s.Length;
+
+                double x3 = this.P1.ConvertTo(cs).X;
+                double x4 = this.P2.ConvertTo(cs).X;
+
+                if (GeometRi3D.Smaller(Max(x3, x4), x1) || GeometRi3D.Greater(Min(x3, x4), x2)) { return null; }
+
+                if (GeometRi3D.AlmostEqual(Max(x3, x4), x1)) { return new Point3d(x1, 0, 0, cs); }
+                if (GeometRi3D.AlmostEqual(Min(x3, x4), x2)) { return new Point3d(x2, 0, 0, cs); }
+
+                if (GeometRi3D.Smaller(Min(x3, x4), x1) && GeometRi3D.Greater(Max(x3, x4), x2))
+                {
+                    return s.Copy();
+                }
+
+                if (GeometRi3D.Greater(Min(x3, x4), x1) && GeometRi3D.Smaller(Max(x3, x4), x2))
+                {
+                    return this.Copy();
+                }
+
+                if (GeometRi3D.Greater(Max(x3, x4), x1))
+                {
+                    return new Segment3d(new Point3d(x1, 0, 0, cs), new Point3d(Max(x3, x4), 0, 0, cs));
+                }
+
+                if (GeometRi3D.Smaller(Min(x3, x4), x2))
+                {
+                    return new Segment3d(new Point3d(x2, 0, 0, cs), new Point3d(Min(x3, x4), 0, 0, cs));
+                }
+
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a segment to the line.
         /// Return object of type 'Segment3d' or 'Point3d'
         /// </summary>

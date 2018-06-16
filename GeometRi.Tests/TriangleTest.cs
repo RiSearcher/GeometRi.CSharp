@@ -245,10 +245,10 @@ namespace GeometRi_Tests
 
             // Plane is parallel
             Plane3d s = new Plane3d(new Point3d(0, 0, 1), new Vector3d(0, 0, 1));
-            //Assert.IsNull(t.IntersectionWith(s));
+            Assert.IsNull(t.IntersectionWith(s));
 
             s = new Plane3d(new Point3d(), new Vector3d(0, 0, 1));
-            //Assert.IsTrue((Triangle)t.IntersectionWith(s) == t);
+            Assert.IsTrue((Triangle)t.IntersectionWith(s) == t);
 
             // Plane crosses triangle
             p1 = new Point3d(0, 0, 0);
