@@ -46,11 +46,41 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Tolerance based equality check
+        /// </summary>
+        public static bool AlmostEqual(double a, double b, double tolerance)
+        {
+            if (Math.Abs(a - b) <= tolerance)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Tolerance based unequality check
         /// </summary>
         public static bool NotEqual(double a, double b)
         {
             if (Math.Abs(a - b) > _tolerance)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tolerance based unequality check
+        /// </summary>
+        public static bool NotEqual(double a, double b, double tolerance)
+        {
+            if (Math.Abs(a - b) > tolerance)
             {
                 return true;
             }
@@ -78,9 +108,39 @@ namespace GeometRi
         /// <summary>
         /// Tolerance based comparison
         /// </summary>
+        public static bool Greater(double a, double b, double tolerance)
+        {
+            if ((a - b) > tolerance)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tolerance based comparison
+        /// </summary>
         public static bool Smaller(double a, double b)
         {
             if ((a - b) < -_tolerance)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tolerance based comparison
+        /// </summary>
+        public static bool Smaller(double a, double b, double tolerance)
+        {
+            if ((a - b) < -tolerance)
             {
                 return true;
             }

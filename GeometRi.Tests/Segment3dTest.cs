@@ -154,6 +154,62 @@ namespace GeometRi_Tests
 
         }
 
+
+        [TestMethod()]
+        public void SegmentIntersectionWithSegmentRelativeTest()
+        {
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 5, 0));
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            // Coinsided segments
+            Segment3d s2 = new Segment3d(new Point3d(5, 5, 0.0), new Point3d(0, 0, 0.01));
+            Assert.IsTrue((Segment3d)s1.IntersectionWith(s2) == s1);
+
+            // Parallel segments
+            s2 = new Segment3d(new Point3d(5, 5, 1.01), new Point3d(0, 0, 1));
+            Assert.IsNull(s1.IntersectionWith(s2));
+
+            // Collinear nonintersecting segments
+            s2 = new Segment3d(new Point3d(6, 6, 0.01), new Point3d(7, 7, 0));
+            Assert.IsNull(s1.IntersectionWith(s2));
+
+            // Nonintersecting segments
+            s2 = new Segment3d(new Point3d(2, 1, 0.01), new Point3d(5, 0, 0));
+            Assert.IsNull(s1.IntersectionWith(s2));
+
+            // Touching segments
+            s2 = new Segment3d(new Point3d(2, 2, 0.01), new Point3d(5, 0, 0));
+            Assert.IsTrue((Point3d)s1.IntersectionWith(s2) == new Point3d(2, 2, 0));
+
+            // Intersecting at one end
+            s2 = new Segment3d(new Point3d(3, 4, 0), new Point3d(0, 0, 0.001));
+            Assert.IsTrue((Point3d)s1.IntersectionWith(s2) == new Point3d(0, 0, 0));
+
+            // Intersecting at the middle
+            s2 = new Segment3d(new Point3d(2, 4, 0.01), new Point3d(4, 2, 0));
+            Assert.IsTrue((Point3d)s1.IntersectionWith(s2) == new Point3d(3, 3, 0));
+
+            // Overlaping segments, s1 > s2
+            s2 = new Segment3d(new Point3d(2, 2, 0.01), new Point3d(3, 3, 0));
+            Assert.IsTrue((Segment3d)s1.IntersectionWith(s2) == new Segment3d(new Point3d(2, 2, 0), new Point3d(3, 3, 0)));
+
+            // Overlaping segments, s2 > s1
+            s2 = new Segment3d(new Point3d(-2, -2, 0.01), new Point3d(7, 7, 0));
+            Assert.IsTrue((Segment3d)s1.IntersectionWith(s2) == new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 5, 0)));
+
+            // Partly overlaping segments
+            s2 = new Segment3d(new Point3d(3, 3, 0.01), new Point3d(-2, -2, 0));
+            Assert.IsTrue((Segment3d)s1.IntersectionWith(s2) == new Segment3d(new Point3d(0, 0, 0), new Point3d(3, 3, 0)));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
         [TestMethod()]
         public void SegmentBelongsToLineTest()
         {

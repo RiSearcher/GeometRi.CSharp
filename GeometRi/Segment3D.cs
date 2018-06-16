@@ -486,27 +486,33 @@ namespace GeometRi
                 double x3 = this.P1.ConvertTo(cs).X;
                 double x4 = this.P2.ConvertTo(cs).X;
 
-                if (GeometRi3D.Smaller(Max(x3, x4), x1) || GeometRi3D.Greater(Min(x3, x4), x2)) { return null; }
+                double tol = GeometRi3D.Tolerance;
+                if (!GeometRi3D.UseAbsoluteTolerance)
+                {
+                    tol = GeometRi3D.Tolerance * Max(this.Length, s.Length);
+                }
 
-                if (GeometRi3D.AlmostEqual(Max(x3, x4), x1)) { return new Point3d(x1, 0, 0, cs); }
-                if (GeometRi3D.AlmostEqual(Min(x3, x4), x2)) { return new Point3d(x2, 0, 0, cs); }
+                if (GeometRi3D.Smaller(Max(x3, x4), x1, tol) || GeometRi3D.Greater(Min(x3, x4), x2, tol)) { return null; }
 
-                if (GeometRi3D.Smaller(Min(x3, x4), x1) && GeometRi3D.Greater(Max(x3, x4), x2))
+                if (GeometRi3D.AlmostEqual(Max(x3, x4), x1, tol)) { return new Point3d(x1, 0, 0, cs); }
+                if (GeometRi3D.AlmostEqual(Min(x3, x4), x2, tol)) { return new Point3d(x2, 0, 0, cs); }
+
+                if (GeometRi3D.Smaller(Min(x3, x4), x1, tol) && GeometRi3D.Greater(Max(x3, x4), x2, tol))
                 {
                     return s.Copy();
                 }
 
-                if (GeometRi3D.Greater(Min(x3, x4), x1) && GeometRi3D.Smaller(Max(x3, x4), x2))
+                if (GeometRi3D.Greater(Min(x3, x4), x1, tol) && GeometRi3D.Smaller(Max(x3, x4), x2, tol))
                 {
                     return this.Copy();
                 }
 
-                if (GeometRi3D.Greater(Max(x3, x4), x1))
+                if (GeometRi3D.Greater(Max(x3, x4), x1, tol))
                 {
                     return new Segment3d(new Point3d(x1, 0, 0, cs), new Point3d(Max(x3, x4), 0, 0, cs));
                 }
 
-                if (GeometRi3D.Smaller(Min(x3, x4), x2))
+                if (GeometRi3D.Smaller(Min(x3, x4), x2, tol))
                 {
                     return new Segment3d(new Point3d(x2, 0, 0, cs), new Point3d(Min(x3, x4), 0, 0, cs));
                 }
