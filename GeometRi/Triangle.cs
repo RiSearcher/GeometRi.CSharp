@@ -517,6 +517,20 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Line3d l)
         {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Max(AB, Max(BC, AC));
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(l);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
             Plane3d s = new Plane3d(this.A, this.Normal);
 
             object obj = l.IntersectionWith(s);
@@ -587,6 +601,20 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Plane3d s)
         {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Max(AB, Max(BC, AC));
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
             Plane3d st = new Plane3d(this.A, this.Normal);
 
             if (s.IsParallelTo(st))

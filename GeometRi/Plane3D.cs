@@ -368,6 +368,14 @@ namespace GeometRi
             return c.IntersectionWith(this);
         }
 
+        /// <summary>
+        /// Intersection of triangle with plane.
+        /// Returns 'null' (no intersection) or object of type 'Triangle', 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Triangle t)
+        {
+            return t.IntersectionWith(this);
+        }
 
         #region "AngleTo"
         /// <summary>

@@ -235,6 +235,35 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void TriangleIntersectionWithLineRelativeTest()
+        {
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(6, 0, 0);
+            Point3d p3 = new Point3d(0, 6, 0);
+
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // Line coinsides with one side
+            Line3d l = new Line3d(new Point3d(0, 0, 0.01), new Vector3d(1, 0, 0));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1, p2));
+
+            // Line crosses one corner and one side
+            l = new Line3d(new Point3d(), new Vector3d(1, 1, 0.001));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1, new Point3d(3, 3, 0)));
+
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
+        [TestMethod()]
         public void TriangleIntersectionWithPlaneTest()
         {
             Point3d p1 = new Point3d(0, 0, 0);
@@ -257,6 +286,37 @@ namespace GeometRi_Tests
 
             t = new Triangle(p1, p2, p3);
             Assert.IsTrue((Segment3d)t.IntersectionWith(s) == new Segment3d(p1, new Point3d(3, 3, 0)));
+        }
+
+        [TestMethod()]
+        public void TriangleIntersectionWithPlaneRelativeTest()
+        {
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(6, 0, 0);
+            Point3d p3 = new Point3d(0, 6, 0);
+
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Plane3d s = new Plane3d(new Point3d(), new Vector3d(0.001, 0, 1));
+            Assert.IsTrue((Triangle)t.IntersectionWith(s) == t);
+
+            // Plane crosses triangle
+            p1 = new Point3d(0, 0, 0);
+            p2 = new Point3d(6, 0.01, 1);
+            p3 = new Point3d(0, 6, -1);
+
+            t = new Triangle(p1, p2, p3);
+            Assert.IsTrue((Segment3d)t.IntersectionWith(s) == new Segment3d(p1, new Point3d(3, 3, 0)));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
         }
     }
 }

@@ -279,6 +279,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of line with triangle.
+        /// Returns 'null' (no intersection) or object of type 'Triangle', 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Triangle  t)
+        {
+            return t.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a line to the plane.
         /// Return object of type 'Line3d' or 'Point3d'
         /// </summary>

@@ -477,6 +477,15 @@ namespace GeometRi
             else if (obj.GetType() == typeof(Segment3d))
             {
                 // Segments are collinear
+
+                // Relative tolerance check ================================
+                double tol = GeometRi3D.Tolerance;
+                if (!GeometRi3D.UseAbsoluteTolerance)
+                {
+                    tol = GeometRi3D.Tolerance * Max(this.Length, s.Length);
+                }
+                //==========================================================
+
                 // Create local CS with X-axis along segment 's'
                 Vector3d v2 = s.ToVector.OrthogonalVector;
                 Coord3d cs = new Coord3d(s.P1, s.ToVector, v2);
@@ -486,11 +495,7 @@ namespace GeometRi
                 double x3 = this.P1.ConvertTo(cs).X;
                 double x4 = this.P2.ConvertTo(cs).X;
 
-                double tol = GeometRi3D.Tolerance;
-                if (!GeometRi3D.UseAbsoluteTolerance)
-                {
-                    tol = GeometRi3D.Tolerance * Max(this.Length, s.Length);
-                }
+
 
                 if (GeometRi3D.Smaller(Max(x3, x4), x1, tol) || GeometRi3D.Greater(Min(x3, x4), x2, tol)) { return null; }
 
