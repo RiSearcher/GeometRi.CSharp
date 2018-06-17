@@ -318,5 +318,30 @@ namespace GeometRi_Tests
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
+
+        [TestMethod()]
+        public void TriangleIntersectionWithSegmentRelativeTest()
+        {
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(6, 0, 0);
+            Point3d p3 = new Point3d(0, 6, 0);
+
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Segment3d s = new Segment3d(new Point3d(0, 0, 0.01), new Point3d(3.01, 3, 0));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(s) == s);
+
+
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
     }
 }
