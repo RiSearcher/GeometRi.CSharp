@@ -48,6 +48,33 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void SphereIntersectionWithSegmentRelativeTest()
+        {
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            Sphere s = new Sphere(new Point3d(0, 0, 0), 5);
+            Segment3d l = new Segment3d(new Point3d(10, 12, 13), new Point3d(22, 23, 24));
+            Assert.IsTrue(s.IntersectionWith(l) == null);
+
+            l = new Segment3d(new Point3d(-2, -2, -1), new Point3d(1, 2, 2));
+            Assert.IsTrue((Segment3d)s.IntersectionWith(l) == l);
+
+            l = new Segment3d(new Point3d(5.01, 0, 0), new Point3d(25, 0, 0));
+            Assert.IsTrue((Point3d)s.IntersectionWith(l) == new Point3d(5, 0, 0));
+
+            l = new Segment3d(new Point3d(0, 0, 0), new Point3d(25, 0, 0));
+            Assert.IsTrue((Segment3d)s.IntersectionWith(l) == new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0)));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
+        [TestMethod()]
         public void SphereIntersectionWithPlaneTest()
         {
             Sphere s = new Sphere(new Point3d(1, -1, 3), 3);
