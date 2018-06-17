@@ -337,7 +337,8 @@ namespace GeometRi_Tests
             Segment3d s = new Segment3d(new Point3d(0, 0, 0.01), new Point3d(3.01, 3, 0));
             Assert.IsTrue((Segment3d)t.IntersectionWith(s) == s);
 
-
+            s = new Segment3d(new Point3d(2, 2, 0.01), new Point3d(5.01, 5, 0));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(s) == new Segment3d(new Point3d(2, 2, 0), new Point3d(3, 3, 0)));
 
             // Resore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;

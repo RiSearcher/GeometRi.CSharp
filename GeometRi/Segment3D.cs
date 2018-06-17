@@ -512,12 +512,12 @@ namespace GeometRi
                     return this.Copy();
                 }
 
-                if (GeometRi3D.Greater(Max(x3, x4), x1, tol))
+                if (GeometRi3D.Smaller(Min(x3, x4), x1, tol))
                 {
                     return new Segment3d(new Point3d(x1, 0, 0, cs), new Point3d(Max(x3, x4), 0, 0, cs));
                 }
 
-                if (GeometRi3D.Smaller(Min(x3, x4), x2, tol))
+                if (GeometRi3D.Greater(Max(x3, x4), x2, tol))
                 {
                     return new Segment3d(new Point3d(x2, 0, 0, cs), new Point3d(Min(x3, x4), 0, 0, cs));
                 }
