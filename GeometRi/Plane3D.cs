@@ -224,7 +224,7 @@ namespace GeometRi
             Vector3d r1 = new Vector3d(l.Point);
             Vector3d s1 = l.Direction;
             Vector3d n2 = this.Normal;
-            if (Abs(s1 * n2) < GeometRi3D.Tolerance)
+            if (s1.IsOrthogonalTo(n2))
             {
                 // Line and plane are parallel
                 if (l.Point.BelongsTo(this))
@@ -239,6 +239,8 @@ namespace GeometRi
             }
             else
             {
+                // Intersection point
+                this.SetCoord(r1.Coord);
                 r1 = r1 - ((r1 * n2) + this.D) / (s1 * n2) * s1;
                 return r1.ToPoint;
             }

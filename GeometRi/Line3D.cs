@@ -226,29 +226,7 @@ namespace GeometRi
         /// </summary>
         public virtual object IntersectionWith(Plane3d s)
         {
-            Vector3d r1 = this.Point.ToVector;
-            Vector3d s1 = this.Direction;
-            Vector3d n2 = s.Normal;
-            if (Abs(s1 * n2) < GeometRi3D.Tolerance)
-            {
-                // Line and plane are parallel
-                if (this.Point.BelongsTo(s))
-                {
-                    // Line lies in the plane
-                    return this;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                // Intersection point
-                s.SetCoord(r1.Coord);
-                r1 = r1 - ((r1 * n2) + s.D) / (s1 * n2) * s1;
-                return r1.ToPoint;
-            }
+            return s.IntersectionWith(this);
         }
 
         /// <summary>
