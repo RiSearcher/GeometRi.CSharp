@@ -236,15 +236,24 @@ namespace GeometRi
 
             Coord3d lc = new Coord3d(_point, _v1, _v2);
             Vector3d v0 = s.Direction.ConvertTo(lc);
+            double a = A;
+            double b = B;
+            double c = C;
             if (Abs(v0.Y) > Abs(v0.X) || Abs(v0.Z) > Abs(v0.X))
             {
                 // Bad choice of X axis, try again
                 lc = new Coord3d(_point, _v2, _v3);
                 v0 = s.Direction.ConvertTo(lc);
+                a = B;
+                b = C;
+                c = A;
                 if (Abs(v0.Y) > Abs(v0.X) || Abs(v0.Z) > Abs(v0.X))
                 {
                     lc = new Coord3d(_point, _v3, _v1);
                     v0 = s.Direction.ConvertTo(lc);
+                    a = C;
+                    b = A;
+                    c = B;
                 }
             }
             // Normalize direction vector
@@ -256,14 +265,14 @@ namespace GeometRi
             double y0 = p0.Y;
             double z0 = p0.Z;
 
-            double a2b2 = A * A * B * B;
-            double a2c2 = A * A * C * C;
-            double b2c2 = B * B * C * C;
+            double a2b2 = a * a * b * b;
+            double a2c2 = a * a * c * c;
+            double b2c2 = b * b * c * c;
 
-            double det = a2b2 * C * C * (a2b2*l*l + a2c2*k*k - A*A*k*k*z0*z0 +
-                                         2*A*A*k*l*y0*z0 - A*A*l*l*y0*y0 + b2c2 - 
-                                         B*B*l*l*x0*x0 + 2*B*B*l*x0*z0 - B*B*z0*z0 -
-                                         C*C*k*k*x0*x0 + 2*C*C*k*x0*y0 - C*C*y0*y0);
+            double det = a2b2 * c * c * (a2b2 * l * l + a2c2 * k * k - a * a * k * k * z0 * z0 +
+                                         2 * a * a * k * l * y0 * z0 - a * a * l * l * y0 * y0 + b2c2 -
+                                         b * b * l * l * x0 * x0 + 2 * b * b * l * x0 * z0 - b * b * z0 * z0 -
+                                         c * c * k * k * x0 * x0 + 2 * c * c * k * x0 * y0 - c * c * y0 * y0);
 
             if (det < -GeometRi3D.Tolerance)
             {
