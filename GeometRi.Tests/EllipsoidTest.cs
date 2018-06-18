@@ -17,14 +17,53 @@ namespace GeometRi_Tests
             Vector3d v3 = new Vector3d(0, 0, 9);
             Ellipsoid e = new Ellipsoid(p, v1, v2, v3);
 
+
+            Line3d l = new Line3d(new Point3d(0, 0, 0), v1 = new Vector3d(1, 0, 0));
+            Assert.IsTrue((Segment3d)e.IntersectionWith(l) == new Segment3d(new Point3d(-4, 0, 0), new Point3d(4, 0, 0)));
+
+            l = new Line3d(new Point3d(0, 0, 0), v1 = new Vector3d(0, 1, 0));
+            Assert.IsTrue((Segment3d)e.IntersectionWith(l) == new Segment3d(new Point3d(0, -6, 0), new Point3d(0, 6, 0)));
+
+            l = new Line3d(new Point3d(0, 0, 0), v1 = new Vector3d(0, 0, 1));
+            Assert.IsTrue((Segment3d)e.IntersectionWith(l) == new Segment3d(new Point3d(0, 0, -9), new Point3d(0, 0, 9)));
+
+
             p = new Point3d(0, 2, 1);
             v1 = new Vector3d(-1, 1, 3);
-            Line3d l = new Line3d(p, v1);
+            l = new Line3d(p, v1);
 
             Segment3d s = (Segment3d)e.IntersectionWith(l);
 
             Assert.IsTrue(s.P1.BelongsTo(e));
             Assert.IsTrue(s.P2.BelongsTo(e));
+        }
+
+        [TestMethod()]
+        public void EllipsoidIntersectionWithSegmentRelativeTest()
+        {
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            Point3d p = new Point3d(0, 0, 0);
+            Vector3d v1 = new Vector3d(4, 0, 0);
+            Vector3d v2 = new Vector3d(0, 6, 0);
+            Vector3d v3 = new Vector3d(0, 0, 9);
+            Ellipsoid e = new Ellipsoid(p, v1, v2, v3);
+
+            Segment3d s = new Segment3d(new Point3d(-5, 0.01, 0), new Point3d(5, 0, 0));
+            Assert.IsTrue((Segment3d)e.IntersectionWith(s) == new Segment3d(new Point3d(-4, 0, 0), new Point3d(4, 0, 0)));
+
+            s = new Segment3d(new Point3d(0, -7, 0), new Point3d(0.01, 7, 0));
+            Assert.IsTrue((Segment3d)e.IntersectionWith(s) == new Segment3d(new Point3d(0, -6, 0), new Point3d(0, 6, 0)));
+
+            s = new Segment3d(new Point3d(0, 0, 0), new Point3d(0.01, 0, 10));
+            Assert.IsTrue((Segment3d)e.IntersectionWith(s) == new Segment3d(new Point3d(0, 0, 0), new Point3d(0, 0, 9)));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
         }
 
         [TestMethod()]

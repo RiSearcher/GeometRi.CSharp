@@ -531,6 +531,24 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of segment with sphere.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Sphere s)
+        {
+            return s.IntersectionWith(this);
+        }
+
+        /// <summary>
+        /// Get intersection of segment with ellipsoid.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Ellipsoid e)
+        {
+            return e.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a segment to the line.
         /// Return object of type 'Segment3d' or 'Point3d'
         /// </summary>

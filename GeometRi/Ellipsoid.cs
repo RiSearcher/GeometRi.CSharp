@@ -299,6 +299,50 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection of ellipsoid with segment.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Segment3d s)
+        {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.A;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            object obj = this.IntersectionWith(s.ToLine);
+
+            if (obj == null)
+            {
+                return null;
+            }
+            else if (obj.GetType() == typeof(Point3d))
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(s))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return s.IntersectionWith((Segment3d)obj);
+            }
+        }
+
+        /// <summary>
         /// Intersection of ellipsoid with plane.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Ellipse'.
         /// </summary>
