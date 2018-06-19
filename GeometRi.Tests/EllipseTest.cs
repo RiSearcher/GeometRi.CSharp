@@ -38,6 +38,22 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void EllipseIntersectionWithLineTest()
+        {
+            Point3d p = new Point3d(0, 0, 0);
+            Vector3d v1 = new Vector3d(3, 0, 0);
+            Vector3d v2 = new Vector3d(0, 2, 0);
+            Ellipse e = new Ellipse(p, v1, v2);
+
+            Line3d l = new Line3d(new Point3d(0, -2, 0), new Vector3d(1, 2, 0));
+            Segment3d res = new Segment3d(new Point3d(0, -2, 0), new Point3d(9.0/5.0, 8.0/5.0, 0));
+            Assert.AreEqual((Segment3d)e.IntersectionWith(l), res);
+
+            l = new Line3d(new Point3d(0, -2, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual((Point3d)e.IntersectionWith(l), new Point3d(0, -2, 0));
+        }
+
+        [TestMethod()]
         public void EllipseIntersectionWithPlaneTest()
         {
             Point3d p = new Point3d(0, 0, 0);

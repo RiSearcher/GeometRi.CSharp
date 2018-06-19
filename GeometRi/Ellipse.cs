@@ -286,12 +286,116 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection of ellipse with line.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Line3d l)
+        {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.A;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(l);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+
+            if (l.Direction.IsOrthogonalTo(this.Normal))
+            {
+                if (l.Point.BelongsTo(new Plane3d(this.Center, this.Normal)))
+                {
+                    // coplanar objects
+                    // Find intersection of line and ellipse (2D)
+                    // Solution from: http://www.ambrsoft.com/TrigoCalc/Circles2/Ellipse/EllipseLine.htm
+
+                    Coord3d local_coord = new Coord3d(this.Center, this._v1, this._v2);
+                    Point3d p = l.Point.ConvertTo(local_coord);
+                    Vector3d v = l.Direction.ConvertTo(local_coord);
+                    double a = this.A;
+                    double b = this.B;
+
+                    if (Abs(v.Y / v.X) > 100)
+                    {
+                        // line is almost vertical, rotate local coord
+                        local_coord = new Coord3d(this.Center, this._v2, this._v1);
+                        p = l.Point.ConvertTo(local_coord);
+                        v = l.Direction.ConvertTo(local_coord);
+                        a = this.B;
+                        b = this.A;
+                    }
+
+                    // Line equation in form: y = mx + c
+                    double m = v.Y / v.X;
+                    double c = p.Y - m * p.X;
+
+                    double amb = Math.Pow(a, 2) * Math.Pow(m, 2) + Math.Pow(b, 2);
+                    double det = amb - Math.Pow(c, 2);
+                    if (det < -GeometRi3D.Tolerance)
+                    {
+                        return null;
+                    }
+                    else if (GeometRi3D.AlmostEqual(det, 0))
+                    {
+                        double x = -Math.Pow(a, 2) * m * c / amb;
+                        double y = Math.Pow(b, 2) * c / amb;
+                        return new Point3d(x, y, 0, local_coord);
+                    }
+                    else
+                    {
+                        double x1 = (-Math.Pow(a, 2) * m * c + a * b * Sqrt(det)) / amb;
+                        double x2 = (-Math.Pow(a, 2) * m * c - a * b * Sqrt(det)) / amb;
+                        double y1 = (Math.Pow(b, 2) * c + a * b * m * Sqrt(det)) / amb;
+                        double y2 = (Math.Pow(b, 2) * c - a * b * m * Sqrt(det)) / amb;
+                        return new Segment3d(new Point3d(x1, y1, 0, local_coord), new Point3d(x2, y2, 0, local_coord));
+                    }
+
+                }
+                else
+                {
+                    // parallel objects
+                    return null;
+                }
+            }
+            else
+            {
+                // Line intersects ellipse' plane
+                Point3d p = (Point3d)l.IntersectionWith(new Plane3d(this.Center, this.Normal));
+                if (p.BelongsTo(this))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Intersection of ellipse with plane.
         /// Returns 'null' (no intersection) or object of type 'Ellipse', 'Point3d' or 'Segment3d'.
         /// </summary>
         public object IntersectionWith(Plane3d s)
         {
 
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.A;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
 
             if (this.Normal.IsParallelTo(s.Normal))
             {
@@ -309,51 +413,53 @@ namespace GeometRi
             else
             {
                 Line3d l = (Line3d)s.IntersectionWith(new Plane3d(this.Center, this.Normal));
-                Coord3d local_coord = new Coord3d(this.Center, this._v1, this._v2);
-                Point3d p = l.Point.ConvertTo(local_coord);
-                Vector3d v = l.Direction.ConvertTo(local_coord);
-                double a = this.A;
-                double b = this.B;
+                return this.IntersectionWith(l);
+            }
 
-                if (Abs(v.Y / v.X) > 100)
+        }
+
+        /// <summary>
+        /// Intersection of ellipse with segment.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Segment3d s)
+        {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.A;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            object obj = this.IntersectionWith(s.ToLine);
+
+            if (obj == null)
+            {
+                return null;
+            }
+            else if (obj.GetType() == typeof(Point3d))
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(s))
                 {
-                    // line is almost vertical, rotate local coord
-                    local_coord = new Coord3d(this.Center, this._v2, this._v1);
-                    p = l.Point.ConvertTo(local_coord);
-                    v = l.Direction.ConvertTo(local_coord);
-                    a = this.B;
-                    b = this.A;
-                }
-
-                // Find intersection of line and ellipse (2D)
-                // Solution from: http://www.ambrsoft.com/TrigoCalc/Circles2/Ellipse/EllipseLine.htm
-
-                // Line equation in form: y = mx + c
-                double m = v.Y / v.X;
-                double c = p.Y - m * p.X;
-
-                double amb = Math.Pow(a, 2) * Math.Pow(m, 2) + Math.Pow(b, 2);
-                double det = amb - Math.Pow(c, 2);
-                if (det < -GeometRi3D.Tolerance)
-                {
-                    return null;
-                }
-                else if (GeometRi3D.AlmostEqual(det, 0))
-                {
-                    double x = -Math.Pow(a, 2) * m * c / amb;
-                    double y = Math.Pow(b, 2) * c / amb;
-                    return new Point3d(x, y, 0, local_coord);
+                    return p;
                 }
                 else
                 {
-                    double x1 = (-Math.Pow(a, 2) * m * c + a * b * Sqrt(det)) / amb;
-                    double x2 = (-Math.Pow(a, 2) * m * c - a * b * Sqrt(det)) / amb;
-                    double y1 = (Math.Pow(b, 2) * c + a * b * m * Sqrt(det)) / amb;
-                    double y2 = (Math.Pow(b, 2) * c - a * b * m * Sqrt(det)) / amb;
-                    return new Segment3d(new Point3d(x1, y1, 0, local_coord), new Point3d(x2, y2, 0, local_coord));
+                    return null;
                 }
             }
-
+            else
+            {
+                return s.IntersectionWith((Segment3d)obj);
+            }
         }
 
         internal override int _PointLocation(Point3d p)

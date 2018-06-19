@@ -248,6 +248,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of line with ellipse.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Ellipse e)
+        {
+            return e.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get intersection of line with segment.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
@@ -258,7 +267,7 @@ namespace GeometRi
 
         /// <summary>
         /// Get intersection of line with triangle.
-        /// Returns 'null' (no intersection) or object of type 'Triangle', 'Point3d' or 'Segment3d'.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
         public object IntersectionWith(Triangle  t)
         {
