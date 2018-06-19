@@ -112,7 +112,7 @@ namespace GeometRi_Tests
         {
             Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 5, 0));
 
-            // Coinsided segments
+            // Coincided segments
             Segment3d s2 = new Segment3d(new Point3d(5, 5, 0), new Point3d(0, 0, 0));
             Assert.IsTrue((Segment3d)s1.IntersectionWith(s2) == s1);
 
@@ -165,7 +165,7 @@ namespace GeometRi_Tests
             GeometRi3D.Tolerance = 0.01;
             GeometRi3D.UseAbsoluteTolerance = false;
 
-            // Coinsided segments
+            // Coincided segments
             Segment3d s2 = new Segment3d(new Point3d(5, 5, 0.0), new Point3d(0, 0, 0.01));
             Assert.IsTrue((Segment3d)s1.IntersectionWith(s2) == s1);
 

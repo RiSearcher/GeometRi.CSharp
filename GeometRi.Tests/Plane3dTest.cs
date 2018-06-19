@@ -60,7 +60,7 @@ namespace GeometRi_Tests
         public void PlaneIntersectionWithTwoPlanesTest1()
         {
             // Three coplanar planes
-            // Planes do not coinside
+            // Planes do not coincide
             Plane3d s1 = new Plane3d(new Point3d(0, 0, 1), new Vector3d(1, 1, 1));
             Plane3d s2 = new Plane3d(new Point3d(2, 0, 1), new Vector3d(1, 1, 1));
             Plane3d s3 = new Plane3d(new Point3d(0, 3, 1), new Vector3d(-1, -1, -1));
@@ -72,7 +72,7 @@ namespace GeometRi_Tests
         public void PlaneIntersectionWithTwoPlanesTest2()
         {
             // Three coplanar planes
-            // Two planes are coinside
+            // Two planes are coincide
             Plane3d s1 = new Plane3d(new Point3d(0, 0, 1), new Vector3d(1, 1, 1));
             Plane3d s2 = new Plane3d(new Point3d(2, 0, 1), new Vector3d(1, 1, 1));
             Plane3d s3 = new Plane3d(new Point3d(1, 0, 0), new Vector3d(-1, -1, -1));
@@ -84,7 +84,7 @@ namespace GeometRi_Tests
         public void PlaneIntersectionWithTwoPlanesTest3()
         {
             // Three coplanar planes
-            // Three planes are coinside
+            // Three planes are coincide
             Plane3d s1 = new Plane3d(new Point3d(0, 0, 1), new Vector3d(1, 1, 1));
             Plane3d s2 = new Plane3d(new Point3d(0, 1, 0), new Vector3d(1, 1, 1));
             Plane3d s3 = new Plane3d(new Point3d(1, 0, 0), new Vector3d(-1, -1, -1));

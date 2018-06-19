@@ -140,7 +140,7 @@ Infinite line  in 3D space and defined by any point lying on the line and a dire
 * __Copy__ - Creates copy of the object
 * __DistanceTo__ - shortest distance to point, line, ray or segment
 * __PerpendicularTo__ - point on the perpendicular to the second line
-* __IntersectionWith__ - intersection of line with plane, ellipsoid or sphere
+* __IntersectionWith__ - intersection of line with plane, ellipsoid, ellipse, circle, triangle, segment or sphere
 * __ProjectionTo__ - orthogonal projection of a line to the plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -193,7 +193,7 @@ Represent a line segment in 3D space and is defined by two points.
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, line, ray, plane or other segment
-* __IntersectionWith__ - intersection of segment with plane
+* __IntersectionWith__ - intersection of segment with line, plane, ellipse, triangle, ellipsoid, sphere, circle or other segment
 * __ProjectionTo__ - orthogonal projection of segment to the line or plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -218,7 +218,7 @@ or by point and two vectors in the plane.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __SetCoord__ - set reference coordinate system for general plane equation
-* __IntersectionWith__ - intersection of plane with line, plane, sphere, ellipsoid, circle or two other planes
+* __IntersectionWith__ - intersection of plane with line, plane, segment, sphere, ellipse, ellipsoid, circle or two other planes
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
@@ -245,7 +245,7 @@ common translation, rotation and reflection methods.
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, line, ray, segment or plane
-* __IntersectionWith__ - intersection of sphere with line, plane or other sphere
+* __IntersectionWith__ - intersection of sphere with line, plane, segment or other sphere
 * __ProjectionTo__ - orthogonal projection of sphere to the line or plane
 * __Translate__ - translate sphere by vector
 * __Rotate__ - rotate sphere around origin or other point
@@ -270,7 +270,7 @@ Defines a circle in 3D space by center point, radius and normal vector.
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ParametricForm__ - return point on circle for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of circle to plane or line
-* __IntersectionWith__ - intersection of circle with plane
+* __IntersectionWith__ - intersection of circle with line, plane or segment
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
@@ -305,7 +305,7 @@ Ellipse in 3D space, defined by center point and two orthogonal vectors, major a
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ParametricForm__ - return point on ellipse for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of ellipse to plane or line
-* __IntersectionWith__ - intersection of ellipse with plane
+* __IntersectionWith__ - intersection of ellipse with line, plane or segment
 * __ClosestPoint__ - calculates the point on the ellipse's boundary closest to given point
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -333,7 +333,7 @@ Ellipsoid object defined by center point and three mutually orthogonal vectors.
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ProjectionTo__ - orthogonal projection of ellipsoid to line
-* __IntersectionWith__ - intersection of ellipsoid with line or plane
+* __IntersectionWith__ - intersection of ellipsoid with line, plane or segment
 * __ClosestPoint__ - calculates the point on the ellipsoid's boundary closest to given point
 * __Translate__ - translate ellipsoid by vector
 * __Rotate__ - rotate ellipsoid around origin or other point
@@ -391,6 +391,7 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
+* __IntersectionWith__ - intersection of triangle with line, plane or segment
 * __ProjectionTo__ - orthogonal projection of triangle to line
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel

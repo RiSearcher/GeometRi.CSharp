@@ -205,7 +205,7 @@ namespace GeometRi_Tests
 
             Triangle t = new Triangle(p1, p2, p3);
 
-            // Line coinsides with one side
+            // Line coincides with one side
             Line3d l = new Line3d(new Point3d(), new Vector3d(1, 0, 0));
             Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1, p2));
 
@@ -249,7 +249,7 @@ namespace GeometRi_Tests
 
             Triangle t = new Triangle(p1, p2, p3);
 
-            // Line coinsides with one side
+            // Line coincides with one side
             Line3d l = new Line3d(new Point3d(0, 0, 0.01), new Vector3d(1, 0, 0));
             Assert.IsTrue((Segment3d)t.IntersectionWith(l) == new Segment3d(p1, p2));
 

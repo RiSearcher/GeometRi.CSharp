@@ -546,7 +546,7 @@ namespace GeometRi
                     Segment3d sBC = new Segment3d(B, C);
                     Segment3d sAC = new Segment3d(A, C);
 
-                    // Line coinsides with one side, return segment
+                    // Line coincides with one side, return segment
                     if (sAB.BelongsTo(l)) { return sAB; }
                     if (sBC.BelongsTo(l)) { return sBC; }
                     if (sAC.BelongsTo(l)) { return sAC; }
