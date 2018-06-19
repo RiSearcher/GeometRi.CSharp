@@ -558,6 +558,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of segment with circle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Circle3d c)
+        {
+            return c.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a segment to the line.
         /// Return object of type 'Segment3d' or 'Point3d'
         /// </summary>

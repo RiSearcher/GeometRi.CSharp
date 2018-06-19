@@ -246,6 +246,26 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection of circle with line.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Line3d l)
+        {
+            Ellipse e = this.ToEllipse;
+            return e.IntersectionWith(l);
+        }
+
+        /// <summary>
+        /// Intersection of circle with segment.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Segment3d s)
+        {
+            Ellipse e = this.ToEllipse;
+            return e.IntersectionWith(s);
+        }
+
+        /// <summary>
         /// Intersection of circle with plane.
         /// Returns 'null' (no intersection) or object of type 'Circle3d', 'Point3d' or 'Segment3d'.
         /// </summary>

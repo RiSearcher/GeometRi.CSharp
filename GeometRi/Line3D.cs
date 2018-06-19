@@ -257,6 +257,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of line with circle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Circle3d c)
+        {
+            return c.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get intersection of line with segment.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
