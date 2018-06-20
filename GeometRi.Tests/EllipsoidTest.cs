@@ -34,8 +34,9 @@ namespace GeometRi_Tests
 
             Segment3d s = (Segment3d)e.IntersectionWith(l);
 
-            Assert.IsTrue(s.P1.BelongsTo(e));
-            Assert.IsTrue(s.P2.BelongsTo(e));
+            Assert.IsTrue(s.P1.IsOnBoundary(e));
+            Assert.IsTrue(s.P2.IsOnBoundary(e));
+
         }
 
         [TestMethod()]

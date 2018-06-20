@@ -26,7 +26,36 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleIntersectionWithLineTest()
+        {
+            // parallel obecjts
+            Circle3d c = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Line3d l = new Line3d(new Point3d(0, 0, 1), new Vector3d(1, 0, 0));
+            Assert.AreEqual(c.IntersectionWith(l), null);
 
+            // nonintersecting objects
+            c = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            l = new Line3d(new Point3d(10, 0, 0), new Vector3d(1, 1, 0));
+            Assert.AreEqual(c.IntersectionWith(l), null);
+
+            // intersection in one point (touching line)
+            c = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            l = new Line3d(new Point3d(5, 0, 0), new Vector3d(0, 1, 0));
+            Assert.AreEqual(c.IntersectionWith(l), new Point3d(5, 0, 0));
+
+            // intersection in one point (crossing line)
+            c = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            l = new Line3d(new Point3d(1, 1, 0), new Vector3d(0, 0, 1));
+            Assert.AreEqual(c.IntersectionWith(l), new Point3d(1, 1, 0));
+
+            // intersection in two points
+            c = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            l = new Line3d(new Point3d(0, -4, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(c.IntersectionWith(l), new Segment3d(new Point3d(-3, -4, 0), new Point3d(3, -4, 0)));
+
+        }
+
+        [TestMethod()]
         public void CircleIntersectionWithPlaneTest()
         {
             // parallel obecjts
