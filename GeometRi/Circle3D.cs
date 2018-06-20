@@ -272,6 +272,18 @@ namespace GeometRi
         public object IntersectionWith(Plane3d s)
         {
 
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
 
             if (this.Normal.IsParallelTo(s.Normal))
             {

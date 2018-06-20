@@ -187,6 +187,19 @@ namespace GeometRi
         public object IntersectionWith(Line3d l)
         {
 
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(l);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
             double d = l.Direction.Normalized * (l.Point.ToVector - this.Center.ToVector);
             double det = Math.Pow(d, 2) - Math.Pow(((l.Point.ToVector - this.Center.ToVector).Norm), 2) + Math.Pow(_r, 2);
 
@@ -259,6 +272,19 @@ namespace GeometRi
         public object IntersectionWith(Plane3d s)
         {
 
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
             s.SetCoord(this.Center.Coord);
             double d1 = s.A * this.X + s.B * this.Y + s.C * this.Z + s.D;
             double d2 = Math.Pow(s.A, 2) + Math.Pow(s.B, 2) + Math.Pow(s.C, 2);
@@ -292,6 +318,19 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Sphere s)
         {
+            
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Max(this.R, s.R);
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
 
             Point3d p = s.Center.ConvertTo(this.Center.Coord);
             double Dist = Sqrt(Math.Pow((this.X - p.X), 2) + Math.Pow((this.Y - p.Y), 2) + Math.Pow((this.Z - p.Z), 2));
