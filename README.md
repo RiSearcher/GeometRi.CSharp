@@ -43,9 +43,7 @@ Install-Package GeometRi
 ```
 
 ## Example
-### Rytz's construction using GeometRi library:
-[C#](https://dotnetfiddle.net/WqeS69)
-[VB.Net](https://dotnetfiddle.net/2c04c0)
+### Rytz's construction using GeometRi library: [C#](https://dotnetfiddle.net/WqeS69), [VB.Net](https://dotnetfiddle.net/2c04c0)
 
 ## Classes
 
