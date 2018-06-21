@@ -16,6 +16,7 @@ The main goal was simplisity and readability of the code, therefore speed and ro
 Global tolerance property is used for proximity checking, not an exact robust algorithms.
 
 * [Installation](https://github.com/RiSearcher/GeometRi.CSharp#installation)
+* [Example](https://github.com/RiSearcher/GeometRi.CSharp#example)
 * [Classes](https://github.com/RiSearcher/GeometRi.CSharp#classes)
     * [Point3d](https://github.com/RiSearcher/GeometRi.CSharp#point3d)
     * [Vector3d](https://github.com/RiSearcher/GeometRi.CSharp#vector3d)
@@ -40,6 +41,11 @@ Use NuGet to install library. Search for __GeometRi__ in NuGet package manager o
 ```
 Install-Package GeometRi
 ```
+
+## Example
+### Rytz's construction using GeometRi library:
+[C#](https://dotnetfiddle.net/WqeS69)
+[VB.Net](https://dotnetfiddle.net/2c04c0)
 
 ## Classes
 
