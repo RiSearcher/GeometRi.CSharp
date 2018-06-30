@@ -327,6 +327,121 @@ namespace GeometRi
 
         }
 
+        /// <summary>
+        /// Intersection of two circles.
+        /// Returns 'null' (no intersection) or object of type 'Circle3d', 'Point3d' or 'Segment3d'.
+        /// In 2D (coplanar circles) the segment will define two intersection points.
+        /// </summary>
+        public object IntersectionWith(Circle3d c)
+        {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Max(this.R, c.R);
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(c);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            if (this.Normal.IsParallelTo(c.Normal))
+            {
+                if (this.Center.BelongsTo(new Plane3d(c.Center, c.Normal)))
+                {
+                    // Coplanar objects
+                    // Search 2D intersection of two circles
+
+                    // Equal circles
+                    if (this.Center == c.Center && GeometRi3D.AlmostEqual(this.R, c.R))
+                    {
+                        return this.Copy();
+                    }
+
+                    double d = this.Center.DistanceTo(c.Center);
+
+                    // Separated circles
+                    if (GeometRi3D.Greater(d, this.R + c.R))
+                        return null;
+
+                    // One circle inside the other
+                    if (d < Abs(this.R - c.R) - GeometRi3D.Tolerance)
+                        return null;
+
+                    // Outer tangency
+                    if (GeometRi3D.AlmostEqual(d, this.R + c.R))
+                    {
+                        Vector3d vec = new Vector3d(this.Center, c.Center);
+                        return this.Center.Translate(this.R * vec.Normalized);
+                    }
+
+                    // Inner tangency
+                    if (Abs(Abs(this.R - c.R) - d) < GeometRi3D.Tolerance)
+                    {
+                        Vector3d vec = new Vector3d(this.Center, c.Center);
+                        if (this.R > c.R)
+                        {
+                            return this.Center.Translate(this.R * vec.Normalized);
+                        }
+                        else
+                        {
+                            return this.Center.Translate(-this.R * vec.Normalized);
+                        }
+                        
+                    }
+
+                    // intersecting circles
+                    // Create local CS with origin in circle's center
+                    Vector3d vec1 = new Vector3d(this.Center, c.Center);
+                    Vector3d vec2 = vec1.Cross(this.Normal);
+                    Coord3d local_cs = new Coord3d(this.Center, vec1, vec2);
+
+                    double x = 0.5 * (d * d - c.R * c.R + this.R * this.R) / d;
+                    double y = 0.5 * Sqrt((-d + c.R - this.R) * (-d - c.R + this.R) * (-d + c.R + this.R) * (d + c.R + this.R)) / d;
+                    Point3d p1 = new Point3d(x, y, 0, local_cs);
+                    Point3d p2 = new Point3d(x, -y, 0, local_cs);
+                    return new Segment3d(p1, p2);
+                }
+                else
+                {
+                    // parallel objects
+                    return null;
+                }
+            }
+            else
+            {
+                // Check 3D intersection
+                Plane3d plane = new Plane3d(this.Center, this.Normal);
+                object obj = plane.IntersectionWith(c);
+
+                if (obj == null)
+                {
+                    return null;
+                }
+                else if (obj.GetType() == typeof(Point3d))
+                {
+                    Point3d p = (Point3d)obj;
+                    if (p.BelongsTo(c))
+                    {
+                        return p;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    Segment3d s = (Segment3d)obj;
+                    return s.IntersectionWith(this);
+                }
+
+            }
+
+        }
 
         internal override int _PointLocation(Point3d p)
         {

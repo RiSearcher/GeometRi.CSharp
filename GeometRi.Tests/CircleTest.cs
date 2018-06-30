@@ -85,6 +85,70 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleIntersectionWithCircle2DTest()
+        {
+            // parallel obecjts
+            Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Circle3d c2 = new Circle3d(new Point3d(5, 0, 1), 5, new Vector3d(0, 0, 1));
+            Assert.AreEqual(c1.IntersectionWith(c2), null);
+
+            // Coincided circles
+            c2 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Assert.AreEqual(c1.IntersectionWith(c2), c1);
+
+            // Separated circles
+            c2 = new Circle3d(new Point3d(10, 0, 0), 2, new Vector3d(0, 0, 1));
+            Assert.AreEqual(c1.IntersectionWith(c2), null);
+
+            // Outer tangency
+            c2 = new Circle3d(new Point3d(10, 0, 0), 5, new Vector3d(0, 0, 1));
+            Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+
+            // Inner tangency 1
+            c2 = new Circle3d(new Point3d(3, 0, 0), 2, new Vector3d(0, 0, 1));
+            Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+
+            // Inner tangency 2
+            c2 = new Circle3d(new Point3d(-2, 0, 0), 7, new Vector3d(0, 0, 1));
+            Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+
+            // Intersection
+            c2 = new Circle3d(new Point3d(6, 0, 0), 5, new Vector3d(0, 0, 1));
+            Segment3d s = new Segment3d(new Point3d(3, 4, 0), new Point3d(3, -4, 0));
+            Assert.AreEqual(c1.IntersectionWith(c2), s);
+
+        }
+
+        [TestMethod()]
+        public void CircleIntersectionWithCircle3DTest()
+        {
+            // Touching circles
+            Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Circle3d c2 = new Circle3d(new Point3d(5, 0, 0), 5, new Vector3d(1, 0, 0));
+            Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+
+            // Touching circles
+            c2 = new Circle3d(new Point3d(10, 0, 0), 5, new Vector3d(0, 1, 0));
+            Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+
+            // Intersecting circles
+            c2 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 1, 0));
+            Segment3d s = new Segment3d(new Point3d(-5, 0, 0), new Point3d(5, 0, 0));
+            Assert.AreEqual(c1.IntersectionWith(c2), s);
+
+            // Intersecting circles
+            c2 = new Circle3d(new Point3d(5, 0, 0), 5, new Vector3d(0, 1, 0));
+            s = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Assert.AreEqual(c1.IntersectionWith(c2), s);
+
+            // Intersecting circles
+            c2 = new Circle3d(new Point3d(0, 0, 4), 5, new Vector3d(0, 1, 0));
+            s = new Segment3d(new Point3d(-3, 0, 0), new Point3d(3, 0, 0));
+            Assert.AreEqual(c1.IntersectionWith(c2), s);
+
+        }
+
+        [TestMethod()]
         public void CircleParametricFormTest()
         {
             Circle3d c = new Circle3d(new Point3d(5, 6, 1), 5, new Vector3d(3, 0, 1));

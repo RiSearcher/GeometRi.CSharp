@@ -274,7 +274,7 @@ Defines a circle in 3D space by center point, radius and normal vector.
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ParametricForm__ - return point on circle for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of circle to plane or line
-* __IntersectionWith__ - intersection of circle with line, plane or segment
+* __IntersectionWith__ - intersection of circle with line, plane, segment or other circle
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
