@@ -56,6 +56,24 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void TriangleExternalBisectorTest()
+        {
+            Point3d p1 = new Point3d(0, 1, 0);
+            Point3d p2 = new Point3d(1, 0, 0);
+            Point3d p3 = new Point3d(-1, 0, 0);
+            Line3d line = new Line3d(p1, new Vector3d(1, 0, 0));
+
+            Triangle t = new Triangle(p1, p2, p3);
+            Assert.AreEqual(t.ExternalBisector_A, line);
+
+            t = new Triangle(p2, p1, p3);
+            Assert.AreEqual(t.ExternalBisector_B, line);
+
+            t = new Triangle(p3, p2, p1);
+            Assert.AreEqual(t.ExternalBisector_C, line);
+        }
+
+        [TestMethod()]
         public void TriangleIncenterTest()
         {
             Point3d p1 = new Point3d(0, 0, 0);

@@ -208,6 +208,42 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// External angle bisector at the vertex A
+        /// </summary>
+        public Line3d ExternalBisector_A
+        {
+            get
+            {
+                Point3d p = _a + (_a - _b);
+                return new Triangle(_a, p, _c).Bisector_A.ToLine;
+            }
+        }
+
+        /// <summary>
+        /// External angle bisector at the vertex B
+        /// </summary>
+        public Line3d ExternalBisector_B
+        {
+            get
+            {
+                Point3d p = _b + (_b - _a);
+                return new Triangle(_b, p, _c).Bisector_A.ToLine;
+            }
+        }
+
+        /// <summary>
+        /// External angle bisector at the vertex C
+        /// </summary>
+        public Line3d ExternalBisector_C
+        {
+            get
+            {
+                Point3d p = _c + (_c - _a);
+                return new Triangle(_c, p, _b).Bisector_A.ToLine;
+            }
+        }
+
+        /// <summary>
         /// Incenter of the triangle
         /// </summary>
         public Point3d Incenter
