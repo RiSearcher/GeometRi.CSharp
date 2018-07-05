@@ -45,6 +45,78 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void RayIntersectionWithLineTest()
+        {
+            Line3d l = new Line3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            Ray3d r = new Ray3d(new Point3d(1, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(l), r);
+
+            r = new Ray3d(new Point3d(1, 0, 0), new Vector3d(1, 1, 1));
+            Assert.AreEqual(r.IntersectionWith(l), new Point3d(1, 0, 0));
+
+            r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, -1, 0));
+            Assert.AreEqual(r.IntersectionWith(l), new Point3d(2, 0, 0));
+
+            r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, -1, 1));
+            Assert.IsNull(r.IntersectionWith(l));
+        }
+
+        [TestMethod()]
+        public void RayIntersectionWithSegmentTest()
+        {
+            Segment3d s = new Segment3d(new Point3d(0, 0, 0), new Point3d(10, 0, 0));
+            Ray3d r = new Ray3d(new Point3d(-1, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(s), s);
+
+            r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(s), s);
+
+            r = new Ray3d(new Point3d(1, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(s), new Segment3d(new Point3d(1, 0, 0), new Point3d(10, 0, 0)));
+
+            r = new Ray3d(new Point3d(5, 0, 0), new Vector3d(-1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(s), new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0)));
+
+            r = new Ray3d(new Point3d(10, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(s), new Point3d(10, 0, 0));
+
+            r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(-1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(s), new Point3d(0, 0, 0));
+
+            r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, -1, 0));
+            Assert.AreEqual(r.IntersectionWith(s), new Point3d(2, 0, 0));
+
+            r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, -1, 1));
+            Assert.IsNull(r.IntersectionWith(s));
+        }
+
+        [TestMethod()]
+        public void RayIntersectionWithRayTest()
+        {
+            Ray3d r1 = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            Ray3d r2 = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r1.IntersectionWith(r2), r1);
+
+            r2 = new Ray3d(new Point3d(-1, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r1.IntersectionWith(r2), r1);
+
+            r2 = new Ray3d(new Point3d(1, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r1.IntersectionWith(r2), r2);
+
+            r2 = new Ray3d(new Point3d(0, 0, 0), new Vector3d(-1, 0, 0));
+            Assert.AreEqual(r1.IntersectionWith(r2), new Point3d(0, 0, 0));
+
+            r2 = new Ray3d(new Point3d(1, 0, 0), new Vector3d(-1, 0, 0));
+            Assert.AreEqual(r1.IntersectionWith(r2), new Segment3d(new Point3d(0, 0, 0), new Point3d(1, 0, 0)));
+
+            r2 = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, -1, 0));
+            Assert.AreEqual(r1.IntersectionWith(r2), new Point3d(2, 0, 0));
+
+            r2 = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, -1, 1));
+            Assert.IsNull(r1.IntersectionWith(r2));
+        }
+
+        [TestMethod()]
         public void RayProjectionToPlaneTest()
         {
             Plane3d s = new Plane3d(0, 0, 1, 0);

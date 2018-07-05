@@ -277,6 +277,154 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of ray with line.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Ray3d'.
+        /// </summary>
+        public object IntersectionWith(Line3d l)
+        {
+
+            if (this.Point.BelongsTo(l) && this.IsParallelTo(l))
+            {
+                return this;
+            }
+
+            object obj = this.ToLine.IntersectionWith(l);
+            if (obj == null)
+            {
+                return null;
+            }
+            else
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(this)) {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Get intersection of ray with other ray.
+        /// Returns 'null' (no intersection) or object of type 'Point3d', 'Segment3d' or 'Ray3d'.
+        /// </summary>
+        public object IntersectionWith(Ray3d r)
+        {
+
+            if (this == r)
+            {
+                return this;
+            }
+
+            if (this.Point.BelongsTo(r) && this.IsParallelTo(r))
+            {
+                if (r.Point.BelongsTo(this)) {
+                    // Two rays are collinear and opposite
+                    if (this.Point == r. Point)
+                    {
+                        return this.Point;
+                    }
+                    else
+                    {
+                        return new Segment3d(this.Point, r.Point);
+                    }
+                }
+                else
+                {
+                    return this;
+                }
+            }
+
+            if (r.Point.BelongsTo(this) && r.IsParallelTo(this))
+            {
+                return r;
+            }
+
+            object obj = this.ToLine.IntersectionWith(r.ToLine);
+            if (obj == null)
+            {
+                return null;
+            }
+            else
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(this) && p.BelongsTo(r))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Get intersection of ray with segment.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Segment3d s)
+        {
+
+            object obj = this.ToLine.IntersectionWith(s);
+            if (obj == null)
+            {
+                return null;
+            }
+            else if (obj.GetType() == typeof(Point3d))
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(this))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                Segment3d intersection = (Segment3d)obj;
+                if (intersection.P1.BelongsTo(this) && intersection.P2.BelongsTo(this))
+                {
+                    return intersection;
+                }
+                else if (intersection.P1.BelongsTo(this))
+                {
+                    if (intersection.P1 == this.Point)
+                    {
+                        return this.Point;
+                    }
+                    else
+                    {
+                        return new Segment3d(this.Point, intersection.P1);
+                    }
+                }
+                else if (intersection.P2.BelongsTo(this))
+                {
+                    if (intersection.P2 == this.Point)
+                    {
+                        return this.Point;
+                    }
+                    else
+                    {
+                        return new Segment3d(this.Point, intersection.P2);
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a ray to the plane.
         /// Return object of type 'Ray3d' or 'Point3d'
         /// </summary>
