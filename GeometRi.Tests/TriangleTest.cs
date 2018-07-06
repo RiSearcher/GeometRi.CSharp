@@ -362,5 +362,19 @@ namespace GeometRi_Tests
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
+
+        [TestMethod()]
+        public void TriangleIntersectionWithRayTest()
+        {
+
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(6, 0, 0);
+            Point3d p3 = new Point3d(0, 6, 0);
+
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Ray3d r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, 1, 0));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(r) == new Segment3d(new Point3d(1, 1, 0), new Point3d(3, 3, 0)));
+        }
     }
 }

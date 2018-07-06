@@ -75,6 +75,18 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void SphereIntersectionWithRayTest()
+        {
+
+            Sphere s = new Sphere(new Point3d(0, 0, 0), 5);
+            Ray3d r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(r.IntersectionWith(s), new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0)));
+
+            r = new Ray3d(new Point3d(0, 5, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(s.IntersectionWith(r), new Point3d(0, 5, 0));
+        }
+
+        [TestMethod()]
         public void SphereIntersectionWithPlaneTest()
         {
             Sphere s = new Sphere(new Point3d(1, -1, 3), 3);

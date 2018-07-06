@@ -56,6 +56,20 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleIntersectionWithRayTest()
+        {
+            // intersection in one point (crossing ray)
+            Circle3d c = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Ray3d r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(c.IntersectionWith(r), new Segment3d(new Point3d(5, 0, 0), new Point3d(0, 0, 0)));
+
+            // intersection in one point (touching line)
+            r = new Ray3d(new Point3d(5, 0, 0), new Vector3d(1, 0, 0));
+            Assert.AreEqual(c.IntersectionWith(r), new Point3d(5, 0, 0));
+
+        }
+
+        [TestMethod()]
         public void CircleIntersectionWithPlaneTest()
         {
             // parallel obecjts

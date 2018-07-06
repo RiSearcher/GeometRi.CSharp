@@ -712,6 +712,50 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Get intersection of ray with triangle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Ray3d r)
+        {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Max(AB, Max(BC, AC));
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(r);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            object obj = this.IntersectionWith(r.ToLine);
+
+            if (obj == null)
+            {
+                return null;
+            }
+            else if (obj.GetType() == typeof(Point3d))
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(r))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return r.IntersectionWith((Segment3d)obj);
+            }
+        }
+
         internal override int _PointLocation(Point3d p)
         {
             if (GeometRi3D.UseAbsoluteTolerance)

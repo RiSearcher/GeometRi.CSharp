@@ -370,6 +370,19 @@ namespace GeometRi
         public object IntersectionWith(Segment3d s)
         {
 
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * s.Length;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
             object obj = this.ToLine.IntersectionWith(s);
             if (obj == null)
             {
@@ -422,6 +435,51 @@ namespace GeometRi
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Get intersection of ray with sphere.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Sphere s)
+        {
+            return s.IntersectionWith(this);
+        }
+
+        /// <summary>
+        /// Get intersection of ray with ellipse.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Ellipse e)
+        {
+            return e.IntersectionWith(this);
+        }
+
+        /// <summary>
+        /// Get intersection of ray with ellipsoid.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Ellipsoid e)
+        {
+            return e.IntersectionWith(this);
+        }
+
+        /// <summary>
+        /// Get intersection of ray with circle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Circle3d c)
+        {
+            return c.IntersectionWith(this);
+        }
+
+        /// <summary>
+        /// Get intersection of ray with triangle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Triangle t)
+        {
+            return t.IntersectionWith(this);
         }
 
         /// <summary>

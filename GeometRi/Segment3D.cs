@@ -567,6 +567,24 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of segment with ray.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Ray3d r)
+        {
+            return r.IntersectionWith(this);
+        }
+
+        /// <summary>
+        /// Get intersection of segment with triangle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Triangle t)
+        {
+            return t.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a segment to the line.
         /// Return object of type 'Segment3d' or 'Point3d'
         /// </summary>
