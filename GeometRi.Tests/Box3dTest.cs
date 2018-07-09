@@ -121,6 +121,104 @@ namespace GeometRi_Tests
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
+
+        [TestMethod]
+        public void LineIntersectionWithBoxTest()
+        {
+            Rotation rot = new Rotation();
+            Point3d p = new Point3d(0, 0, 0);
+            Box3d b = new Box3d(p, 2, 2, 2, rot);
+
+            Line3d l = new Line3d(new Point3d(1, 1, 1), new Vector3d(1, 1, 1));
+            Segment3d s = (Segment3d)b.IntersectionWith(l);
+            Assert.AreEqual(s, new Segment3d(new Point3d(-1, -1, -1), new Point3d(1, 1, 1)));
+
+            l = new Line3d(new Point3d(1, -1, -1), new Vector3d(-1, 1, 1));
+            s = (Segment3d)b.IntersectionWith(l);
+            Assert.AreEqual(s, new Segment3d(new Point3d(1, -1, -1), new Point3d(-1, 1, 1)));
+
+            l = new Line3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            s = (Segment3d)b.IntersectionWith(l);
+            Assert.AreEqual(s, new Segment3d(new Point3d(-1, 0, 0), new Point3d(1, 0, 0)));
+
+            l = new Line3d(new Point3d(0, 0, 0), new Vector3d(0, 1, 0));
+            s = (Segment3d)b.IntersectionWith(l);
+            Assert.AreEqual(s, new Segment3d(new Point3d(0, -1, 0), new Point3d(0, 1, 0)));
+
+            l = new Line3d(new Point3d(0, 0, 0), new Vector3d(0, 0, 1));
+            s = (Segment3d)b.IntersectionWith(l);
+            Assert.AreEqual(s, new Segment3d(new Point3d(0, 0, -1), new Point3d(0, 0, 1)));
+
+            // Intersection is point
+            l = new Line3d(new Point3d(-1, -1, 1), new Vector3d(1, 1, 1));
+            Assert.AreEqual((Point3d)b.IntersectionWith(l), new Point3d(-1, -1, 1));
+        }
+
+        [TestMethod]
+        public void RayIntersectionWithBoxTest()
+        {
+            Rotation rot = new Rotation();
+            Point3d p = new Point3d(0, 0, 0);
+            Box3d b = new Box3d(p, 2, 2, 2, rot);
+
+            Ray3d r = new Ray3d(new Point3d(-1, -1, -1), new Vector3d(1, 1, 1));
+            Segment3d s = (Segment3d)b.IntersectionWith(r);
+            Assert.AreEqual(s, new Segment3d(new Point3d(-1, -1, -1), new Point3d(1, 1, 1)));
+
+            r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 1, 1));
+            s = (Segment3d)b.IntersectionWith(r);
+            Assert.AreEqual(s, new Segment3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
+
+            r = new Ray3d(new Point3d(1, -1, -1), new Vector3d(-1, 1, 1));
+            s = (Segment3d)b.IntersectionWith(r);
+            Assert.AreEqual(s, new Segment3d(new Point3d(1, -1, -1), new Point3d(-1, 1, 1)));
+
+            r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            s = (Segment3d)b.IntersectionWith(r);
+            Assert.AreEqual(s, new Segment3d(new Point3d(0, 0, 0), new Point3d(1, 0, 0)));
+
+            r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(0, -1, 0));
+            s = (Segment3d)b.IntersectionWith(r);
+            Assert.AreEqual(s, new Segment3d(new Point3d(0, 0, 0), new Point3d(0, -1, 0)));
+
+            r = new Ray3d(new Point3d(0, 0, 0), new Vector3d(0, 0, 1));
+            s = (Segment3d)b.IntersectionWith(r);
+            Assert.AreEqual(s, new Segment3d(new Point3d(0, 0, 0), new Point3d(0, 0, 1)));
+
+            // Intersection is point
+            r = new Ray3d(new Point3d(-1, -1, 1), new Vector3d(1, 1, 1));
+            Assert.AreEqual((Point3d)b.IntersectionWith(r), new Point3d(-1, -1, 1));
+        }
+
+        [TestMethod]
+        public void SegmnetIntersectionWithBoxTest()
+        {
+            Rotation rot = new Rotation();
+            Point3d p = new Point3d(0, 0, 0);
+            Box3d b = new Box3d(p, 2, 2, 2, rot);
+
+            Segment3d s = new Segment3d(new Point3d(-1, -1, -1), new Point3d(1, 1, 1));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(-1, -1, -1), new Point3d(1, 1, 1)));
+
+            s = new Segment3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
+
+            s = new Segment3d(new Point3d(1, -1, -1), new Point3d(-1, 1, 1));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(1, -1, -1), new Point3d(-1, 1, 1)));
+
+            s = new Segment3d(new Point3d(0, 0, 0), new Point3d(1, 0, 0));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(0, 0, 0), new Point3d(1, 0, 0)));
+
+            s = new Segment3d(new Point3d(0, 0, 0), new Point3d(0, -1, 0));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(0, 0, 0), new Point3d(0, -1, 0)));
+
+            s = new Segment3d(new Point3d(0, 0, 0), new Point3d(0, 0, 1));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(0, 0, 0), new Point3d(0, 0, 1)));
+
+            // Intersection is point
+            s = new Segment3d(new Point3d(-1, -1, 1), new Point3d(0, 0, 2));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(-1, -1, 1));
+        }
     }
 
 

@@ -343,6 +343,106 @@ namespace GeometRi
         }
         #endregion
 
+        #region "Intersection"
+        /// <summary>
+        /// Get intersection of line with box.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Line3d l)
+        {
+            return _line_intersection(l, double.NegativeInfinity, double.PositiveInfinity);
+        }
+
+        /// <summary>
+        /// Get intersection of ray with box.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Ray3d r)
+        {
+            return _line_intersection(r.ToLine, 0.0, double.PositiveInfinity);
+        }
+
+        /// <summary>
+        /// Get intersection of segment with box.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Segment3d s)
+        {
+            return _line_intersection(s.ToLine, 0.0, s.Length);
+        }
+
+        internal object _line_intersection(Line3d l, double t0, double t1)
+        {
+            // Modification of Smith's algorithm:
+            // "An Efficient and Robust Ray–Box Intersection Algorithm"
+            // Amy Williams, Steve Barrus, R. Keith Morley, Peter Shirley
+            // http://www.cs.utah.edu/~awilliam/box/box.pdf
+
+            // Define local CS aligned with box
+            Coord3d local_CS = new Coord3d(this.Center, this.Orientation.ConvertToGlobal().ToRotationMatrix, "local_CS");
+
+            Point3d Pmin = this.P1.ConvertTo(local_CS);
+            Point3d Pmax = this.P7.ConvertTo(local_CS);
+
+            l = new Line3d(l.Point.ConvertTo(local_CS), l.Direction.ConvertTo(local_CS).Normalized);
+
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;            double divx = 1 / l.Direction.X;            if (divx >= 0)
+            {
+                tmin = (Pmin.X - l.Point.X) * divx;
+                tmax = (Pmax.X - l.Point.X) * divx;
+            }
+            else
+            {
+                tmin = (Pmax.X - l.Point.X) * divx;
+                tmax = (Pmin.X - l.Point.X) * divx;
+            }            double divy = 1 / l.Direction.Y;            if (divy >= 0)
+            {
+                tymin = (Pmin.Y - l.Point.Y) * divy;
+                tymax = (Pmax.Y - l.Point.Y) * divy;
+            }
+            else
+            {
+                tymin = (Pmax.Y - l.Point.Y) * divy;
+                tymax = (Pmin.Y - l.Point.Y) * divy;
+            }            if ((tmin > tymax) || (tymin > tmax))
+                return null;            if (tymin > tmin)
+                tmin = tymin;
+            if (tymax < tmax)
+                tmax = tymax;
+
+            double divz = 1 / l.Direction.Z;
+            if (divz >= 0)
+            {
+                tzmin = (Pmin.Z - l.Point.Z) * divz;
+                tzmax = (Pmax.Z - l.Point.Z) * divz;
+            }
+            else
+            {
+                tzmin = (Pmax.Z - l.Point.Z) * divz;
+                tzmax = (Pmin.Z - l.Point.Z) * divz;
+            }            if ((tmin > tzmax) || (tzmin > tmax))
+                return null;
+            if (tzmin > tmin)
+                tmin = tzmin;
+            if (tzmax < tmax)
+                tmax = tzmax;
+
+            // Now check the overlapping portion of the segments
+            // This part is missing in the original algorithm
+            if (tmin > t1)                return null;            if (tmax < t0)                return null;            if (tmin < t0)                tmin = t0;            if (tmax > t1)                tmax = t1;
+
+            if (GeometRi3D.AlmostEqual(tmin, tmax))
+            {
+                return l.Point.Translate(tmin * l.Direction);
+            }
+            else
+            {
+                return new Segment3d(l.Point.Translate(tmin * l.Direction), l.Point.Translate(tmax * l.Direction));
+            }
+        }
+        #endregion
+
+
         internal override int _PointLocation(Point3d p)
         {
             Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);
