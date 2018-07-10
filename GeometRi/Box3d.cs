@@ -371,12 +371,27 @@ namespace GeometRi
             return _line_intersection(s.ToLine, 0.0, s.Length);
         }
 
-        internal object _line_intersection(Line3d l, double t0, double t1)
+        private object _line_intersection(Line3d l, double t0, double t1)
         {
-            // Modification of Smith's algorithm:
+            // Smith's algorithm:
             // "An Efficient and Robust Ray–Box Intersection Algorithm"
             // Amy Williams, Steve Barrus, R. Keith Morley, Peter Shirley
             // http://www.cs.utah.edu/~awilliam/box/box.pdf
+
+            // Modified to allow tolerance based checks
+            
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Diagonal;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = _line_intersection(l, t0, t1);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
 
             // Define local CS aligned with box
             Coord3d local_CS = new Coord3d(this.Center, this.Orientation.ConvertToGlobal().ToRotationMatrix, "local_CS");
@@ -404,10 +419,10 @@ namespace GeometRi
             {
                 tymin = (Pmax.Y - l.Point.Y) * divy;
                 tymax = (Pmin.Y - l.Point.Y) * divy;
-            }            if ((tmin > tymax) || (tymin > tmax))
-                return null;            if (tymin > tmin)
+            }            if (GeometRi3D.Greater(tmin, tymax) || GeometRi3D.Greater(tymin, tmax))
+                return null;            if (GeometRi3D.Greater(tymin, tmin))
                 tmin = tymin;
-            if (tymax < tmax)
+            if (GeometRi3D.Smaller(tymax, tmax))
                 tmax = tymax;
 
             double divz = 1 / l.Direction.Z;
@@ -420,16 +435,16 @@ namespace GeometRi
             {
                 tzmin = (Pmax.Z - l.Point.Z) * divz;
                 tzmax = (Pmin.Z - l.Point.Z) * divz;
-            }            if ((tmin > tzmax) || (tzmin > tmax))
+            }            if (GeometRi3D.Greater(tmin, tzmax) || GeometRi3D.Greater(tzmin, tmax))
                 return null;
-            if (tzmin > tmin)
+            if (GeometRi3D.Greater(tzmin, tmin))
                 tmin = tzmin;
-            if (tzmax < tmax)
+            if (GeometRi3D.Smaller(tzmax, tmax))
                 tmax = tzmax;
 
             // Now check the overlapping portion of the segments
             // This part is missing in the original algorithm
-            if (tmin > t1)                return null;            if (tmax < t0)                return null;            if (tmin < t0)                tmin = t0;            if (tmax > t1)                tmax = t1;
+            if (GeometRi3D.Greater(tmin, t1))                return null;            if (GeometRi3D.Smaller(tmax, t0))                return null;            if (GeometRi3D.Smaller(tmin, t0))                tmin = t0;            if (GeometRi3D.Greater(tmax, t1))                tmax = t1;
 
             if (GeometRi3D.AlmostEqual(tmin, tmax))
             {

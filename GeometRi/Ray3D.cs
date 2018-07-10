@@ -483,6 +483,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of ray with box.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Box3d b)
+        {
+            return b.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a ray to the plane.
         /// Return object of type 'Ray3d' or 'Point3d'
         /// </summary>

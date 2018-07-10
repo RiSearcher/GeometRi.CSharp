@@ -365,6 +365,7 @@ Box object defined by center point, three dimensions and orientation in space.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
+* __IntersectionWith__ - intersection of box with line, ray or segment
 * __Equals__ - check if two ellipsoids are equals
 * __ToString__ - string representation of ellipsoid in global or local coordinate system
 

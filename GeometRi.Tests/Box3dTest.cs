@@ -191,7 +191,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
-        public void SegmnetIntersectionWithBoxTest()
+        public void SegmentIntersectionWithBoxTest()
         {
             Rotation rot = new Rotation();
             Point3d p = new Point3d(0, 0, 0);
@@ -218,6 +218,67 @@ namespace GeometRi_Tests
             // Intersection is point
             s = new Segment3d(new Point3d(-1, -1, 1), new Point3d(0, 0, 2));
             Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(-1, -1, 1));
+        }
+
+        [TestMethod]
+        public void SegmentIntersectionWithBoxRelativeTest()
+        {
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
+            Rotation rot = new Rotation();
+            Point3d p = new Point3d(0, 0, 0);
+            Box3d b = new Box3d(p, 2, 2, 2, rot);
+
+            // Segment aligned with X-axis
+            Segment3d s = new Segment3d(new Point3d(-2, 0, 0), new Point3d(-1.01, 0, 0));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(-1, 0, 0));
+
+            s = new Segment3d(new Point3d(1.01, 0, 0), new Point3d(2, 0, 0));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(1, 0, 0));
+
+            s = new Segment3d(new Point3d(-0.5, 0, 0), new Point3d(0.5, 0, 0));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), s);
+
+            s = new Segment3d(new Point3d(-1.5, 0, 0), new Point3d(1.5, 0, 0));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(-1, 0, 0), new Point3d(1, 0, 0)));
+
+            // Segment aligned with Y-axis
+            s = new Segment3d(new Point3d(0, -2, 0), new Point3d(0, -1.01, 0));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(0, -1, 0));
+
+            s = new Segment3d(new Point3d(0, 1.01, 0), new Point3d(0, 2, 0));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(0, 1, 0));
+
+            s = new Segment3d(new Point3d(0, -0.5, 0), new Point3d(0, 0.5, 0));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), s);
+
+            s = new Segment3d(new Point3d(0, -1.5, 0), new Point3d(0, 1.5, 0));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(0, -1, 0), new Point3d(0, 1, 0)));
+
+            // Segment aligned with Z-axis
+            s = new Segment3d(new Point3d(0, 0, -2), new Point3d(0, 0, -1.01));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(0, 0, -1));
+
+            s = new Segment3d(new Point3d(0, 0, 1.01), new Point3d(0, 0, 2));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(0, 0, 1));
+
+            s = new Segment3d(new Point3d(0, 0, -0.5), new Point3d(0, 0, 0.5));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), s);
+
+            s = new Segment3d(new Point3d(0, 0, -1.5), new Point3d(0, 0, 1.5));
+            Assert.AreEqual((Segment3d)b.IntersectionWith(s), new Segment3d(new Point3d(0, 0, -1), new Point3d(0, 0, 1)));
+
+            // Segment crossing corner
+            s = new Segment3d(new Point3d(2.01, 0, 1), new Point3d(0.01, 2, 1));
+            Assert.AreEqual((Point3d)b.IntersectionWith(s), new Point3d(1, 1, 1));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
         }
     }
 
