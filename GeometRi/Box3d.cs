@@ -401,9 +401,7 @@ namespace GeometRi
 
             l = new Line3d(l.Point.ConvertTo(local_CS), l.Direction.ConvertTo(local_CS).Normalized);
 
-            double tmin, tmax, tymin, tymax, tzmin, tzmax;
-            double divx = 1.0 / l.Direction.X;
-            if (divx >= 0)
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;            double divx = 1 / l.Direction.X;            if (divx >= 0)
             {
                 tmin = (Pmin.X - l.Point.X) * divx;
                 tmax = (Pmax.X - l.Point.X) * divx;
@@ -412,10 +410,7 @@ namespace GeometRi
             {
                 tmin = (Pmax.X - l.Point.X) * divx;
                 tmax = (Pmin.X - l.Point.X) * divx;
-            }
-            
-            double divy = 1.0 / l.Direction.Y;
-            if (divy >= 0)
+            }            double divy = 1 / l.Direction.Y;            if (divy >= 0)
             {
                 tymin = (Pmin.Y - l.Point.Y) * divy;
                 tymax = (Pmax.Y - l.Point.Y) * divy;
@@ -424,16 +419,13 @@ namespace GeometRi
             {
                 tymin = (Pmax.Y - l.Point.Y) * divy;
                 tymax = (Pmin.Y - l.Point.Y) * divy;
-            }
-            
-            if (GeometRi3D.Greater(tmin, tymax) || GeometRi3D.Greater(tymin, tmax))
-                return null;
-            if (GeometRi3D.Greater(tymin, tmin))
+            }            if (GeometRi3D.Greater(tmin, tymax) || GeometRi3D.Greater(tymin, tmax))
+                return null;            if (GeometRi3D.Greater(tymin, tmin))
                 tmin = tymin;
             if (GeometRi3D.Smaller(tymax, tmax))
                 tmax = tymax;
 
-            double divz = 1.0 / l.Direction.Z;
+            double divz = 1 / l.Direction.Z;
             if (divz >= 0)
             {
                 tzmin = (Pmin.Z - l.Point.Z) * divz;
@@ -443,9 +435,7 @@ namespace GeometRi
             {
                 tzmin = (Pmax.Z - l.Point.Z) * divz;
                 tzmax = (Pmin.Z - l.Point.Z) * divz;
-            }
-            
-            if (GeometRi3D.Greater(tmin, tzmax) || GeometRi3D.Greater(tzmin, tmax))
+            }            if (GeometRi3D.Greater(tmin, tzmax) || GeometRi3D.Greater(tzmin, tmax))
                 return null;
             if (GeometRi3D.Greater(tzmin, tmin))
                 tmin = tzmin;
@@ -454,14 +444,7 @@ namespace GeometRi
 
             // Now check the overlapping portion of the segments
             // This part is missing in the original algorithm
-            if (GeometRi3D.Greater(tmin, t1))
-                return null;
-            if (GeometRi3D.Smaller(tmax, t0))
-                return null;
-            if (GeometRi3D.Smaller(tmin, t0))
-                tmin = t0;
-            if (GeometRi3D.Greater(tmax, t1))
-                tmax = t1;
+            if (GeometRi3D.Greater(tmin, t1))                return null;            if (GeometRi3D.Smaller(tmax, t0))                return null;            if (GeometRi3D.Smaller(tmin, t0))                tmin = t0;            if (GeometRi3D.Greater(tmax, t1))                tmax = t1;
 
             if (GeometRi3D.AlmostEqual(tmin, tmax))
             {
