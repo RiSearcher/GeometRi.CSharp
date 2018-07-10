@@ -284,6 +284,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Get intersection of line with box.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith(Box3d b)
+        {
+            return b.IntersectionWith(this);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a line to the plane.
         /// Return object of type 'Line3d' or 'Point3d'
         /// </summary>
