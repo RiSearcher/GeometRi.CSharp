@@ -2,6 +2,7 @@
 using static System.Math;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using GeometRi;
+using System.Collections.Generic;
 
 namespace GeometRi_Tests
 {
@@ -279,6 +280,106 @@ namespace GeometRi_Tests
             // Resore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
+        }
+
+        [TestMethod]
+        public void BoxRotationTest()
+        {
+            Rotation r1 = new Rotation(new Vector3d(0, 0, 1), PI / 2);
+            Rotation r2 = new Rotation(new Vector3d(1, 0, 0), PI / 2);
+            Box3d b = new Box3d();
+
+            b = b.Rotate(r1, new Point3d(-5, 0, 0));
+            b = b.Rotate(r2, new Point3d(-5, 0, 0));
+
+            Assert.AreEqual(b.V1.Normalized, new Vector3d(0, 0, 1));
+            Assert.AreEqual(b.V2.Normalized, new Vector3d(-1, 0, 0));
+            Assert.AreEqual(b.V3.Normalized, new Vector3d(0, -1, 0));
+            Assert.AreEqual(b.Center, new Point3d(-5, 0, 5));
+        }
+
+        [TestMethod]
+        public void BoxReflectInPointTest()
+        {
+
+            Box3d b = new Box3d();
+            List<Point3d> original_points = b.ListOfPoints;
+
+            Point3d p = new Point3d(-4.1, 7.876, -8);
+            Box3d reflected_box = b.ReflectIn(p);
+            List<Point3d> reflected_points = reflected_box.ListOfPoints;
+
+            foreach (Point3d op in original_points)
+            {
+                Point3d reflected_p = op.ReflectIn(p);
+                foreach (Point3d rp in reflected_points)
+                {
+                    if (reflected_p == rp)
+                    {
+                        reflected_points.Remove(rp);
+                        break;
+                    }
+                }
+            }
+
+            Assert.IsTrue(reflected_points.Count == 0);
+
+        }
+
+        [TestMethod]
+        public void BoxReflectInLineTest()
+        {
+
+            Box3d b = new Box3d();
+            List < Point3d > original_points = b.ListOfPoints;
+
+            Line3d l = new Line3d(new Point3d(-4.1, 7.876, -8), new Vector3d(1.25, -8, -22));
+            Box3d reflected_box = b.ReflectIn(l);
+            List  < Point3d > reflected_points = reflected_box.ListOfPoints;
+
+            foreach (Point3d op in original_points)
+            {
+                Point3d reflected_p = op.ReflectIn(l);
+                foreach (Point3d rp in reflected_points)
+                {
+                    if (reflected_p == rp)
+                    {
+                        reflected_points.Remove(rp);
+                        break;
+                    }
+                }
+            }
+
+            Assert.IsTrue(reflected_points.Count == 0);
+
+        }
+
+        [TestMethod]
+        public void BoxReflectInPlaneTest()
+        {
+
+            Box3d b = new Box3d();
+            List<Point3d> original_points = b.ListOfPoints;
+
+            Plane3d s = new Plane3d(new Point3d(-4.1, 7.876, -8), new Vector3d(1.25, -8, -22));
+            Box3d reflected_box = b.ReflectIn(s);
+            List<Point3d> reflected_points = reflected_box.ListOfPoints;
+
+            foreach (Point3d op in original_points)
+            {
+                Point3d reflected_p = op.ReflectIn(s);
+                foreach (Point3d rp in reflected_points)
+                {
+                    if (reflected_p == rp)
+                    {
+                        reflected_points.Remove(rp);
+                        break;
+                    }
+                }
+            }
+
+            Assert.IsTrue(reflected_points.Count == 0);
+
         }
     }
 

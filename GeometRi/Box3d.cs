@@ -401,7 +401,9 @@ namespace GeometRi
 
             l = new Line3d(l.Point.ConvertTo(local_CS), l.Direction.ConvertTo(local_CS).Normalized);
 
-            double tmin, tmax, tymin, tymax, tzmin, tzmax;            double divx = 1 / l.Direction.X;            if (divx >= 0)
+            double tmin, tmax, tymin, tymax, tzmin, tzmax;
+            double divx = 1 / l.Direction.X;
+            if (divx >= 0)
             {
                 tmin = (Pmin.X - l.Point.X) * divx;
                 tmax = (Pmax.X - l.Point.X) * divx;
@@ -410,7 +412,10 @@ namespace GeometRi
             {
                 tmin = (Pmax.X - l.Point.X) * divx;
                 tmax = (Pmin.X - l.Point.X) * divx;
-            }            double divy = 1 / l.Direction.Y;            if (divy >= 0)
+            }
+
+            double divy = 1 / l.Direction.Y;
+            if (divy >= 0)
             {
                 tymin = (Pmin.Y - l.Point.Y) * divy;
                 tymax = (Pmax.Y - l.Point.Y) * divy;
@@ -419,8 +424,11 @@ namespace GeometRi
             {
                 tymin = (Pmax.Y - l.Point.Y) * divy;
                 tymax = (Pmin.Y - l.Point.Y) * divy;
-            }            if (GeometRi3D.Greater(tmin, tymax) || GeometRi3D.Greater(tymin, tmax))
-                return null;            if (GeometRi3D.Greater(tymin, tmin))
+            }
+
+            if (GeometRi3D.Greater(tmin, tymax) || GeometRi3D.Greater(tymin, tmax))
+                return null;
+            if (GeometRi3D.Greater(tymin, tmin))
                 tmin = tymin;
             if (GeometRi3D.Smaller(tymax, tmax))
                 tmax = tymax;
@@ -435,7 +443,9 @@ namespace GeometRi
             {
                 tzmin = (Pmax.Z - l.Point.Z) * divz;
                 tzmax = (Pmin.Z - l.Point.Z) * divz;
-            }            if (GeometRi3D.Greater(tmin, tzmax) || GeometRi3D.Greater(tzmin, tmax))
+            }
+
+            if (GeometRi3D.Greater(tmin, tzmax) || GeometRi3D.Greater(tzmin, tmax))
                 return null;
             if (GeometRi3D.Greater(tzmin, tmin))
                 tmin = tzmin;
@@ -444,7 +454,15 @@ namespace GeometRi
 
             // Now check the overlapping portion of the segments
             // This part is missing in the original algorithm
-            if (GeometRi3D.Greater(tmin, t1))                return null;            if (GeometRi3D.Smaller(tmax, t0))                return null;            if (GeometRi3D.Smaller(tmin, t0))                tmin = t0;            if (GeometRi3D.Greater(tmax, t1))                tmax = t1;
+            if (GeometRi3D.Greater(tmin, t1))
+                return null;
+            if (GeometRi3D.Smaller(tmax, t0))
+                return null;
+
+            if (GeometRi3D.Smaller(tmin, t0))
+                tmin = t0;
+            if (GeometRi3D.Greater(tmax, t1))
+                tmax = t1;
 
             if (GeometRi3D.AlmostEqual(tmin, tmax))
             {
@@ -497,6 +515,52 @@ namespace GeometRi
         public Box3d Translate(Vector3d v)
         {
             return new Box3d(_center.Translate(v), _lx, _ly, _lz);
+        }
+
+        /// <summary>
+        /// Rotate box around point 'p' as a rotation center.
+        /// </summary>
+        public Box3d Rotate(Rotation r, Point3d p)
+        {
+            Point3d new_center = r.ToRotationMatrix * (this._center - p) + p;
+            Rotation new_rotation = r * this.Orientation;
+            return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
+        }
+
+        /// <summary>
+        /// Reflect box in given point
+        /// <para>The order of corner points will be changed during reflection operation.</para>
+        /// </summary>
+        public virtual Box3d ReflectIn(Point3d p)
+        {
+            Point3d new_center = this.Center.ReflectIn(p);
+            return new Box3d(new_center, _lx, _ly, _lz, this._r);
+        }
+
+        /// <summary>
+        /// Reflect box in given line
+        /// <para>The order of corner points will be changed during reflection operation.</para>
+        /// </summary>
+        public virtual Box3d ReflectIn(Line3d l)
+        {
+            Point3d new_center = this.Center.ReflectIn(l);
+            Rotation r = new GeometRi.Rotation(l.Direction, PI);
+            Rotation new_rotation = r * this.Orientation;
+            return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
+        }
+
+        /// <summary>
+        /// Reflect box in given plane
+        /// <para>The order of corner points will be changed during reflection operation.</para>
+        /// </summary>
+        public virtual Box3d ReflectIn(Plane3d s)
+        {
+            Point3d new_center = this.Center.ReflectIn(s);
+            Vector3d nV1 = this.V1.ReflectIn(s);
+            Vector3d nV2 = this.V2.ReflectIn(s);
+            Coord3d coord = new Coord3d(new_center, nV1, nV2);
+            Rotation new_rotation = new Rotation(coord);
+            return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
         }
 
         #endregion
