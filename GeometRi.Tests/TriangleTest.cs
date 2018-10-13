@@ -375,6 +375,58 @@ namespace GeometRi_Tests
 
             Ray3d r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, 1, 0));
             Assert.IsTrue((Segment3d)t.IntersectionWith(r) == new Segment3d(new Point3d(1, 1, 0), new Point3d(3, 3, 0)));
+
+            t = new Triangle(p1, p3, p2);
+            r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, 1, 0));
+            Assert.IsTrue((Segment3d)t.IntersectionWith(r) == new Segment3d(new Point3d(1, 1, 0), new Point3d(3, 3, 0)));
+
+            r = new Ray3d(new Point3d(0, 0, 10), new Vector3d(0, 0, -1));
+            Assert.IsTrue((Point3d)t.IntersectionWith(r) == new Point3d(0, 0, 0));
+
+            r = new Ray3d(new Point3d(0, 0, -10), new Vector3d(0, 0, 1));
+            Assert.IsTrue((Point3d)t.IntersectionWith(r) == new Point3d(0, 0, 0));
+
+            r = new Ray3d(new Point3d(4, 4, -10), new Vector3d(0, 0, 1));
+            Assert.IsNull(t.IntersectionWith(r));
+
+        }
+
+        [TestMethod()]
+        public void PointInTriangleTest2()
+        {
+
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(6, 0, 0);
+            Point3d p3 = new Point3d(0, 6, 0);
+
+            Triangle t = new Triangle(p1, p2, p3);
+            Point3d p = new Point3d(4, 4, 0);
+            Assert.IsFalse(p.BelongsTo(t));
+
+            p = new Point3d(6, 0.5, 0);
+            Assert.IsFalse(p.BelongsTo(t));
+
+            p = new Point3d(5, -0.5, 0);
+            Assert.IsFalse(p.BelongsTo(t));
+
+            p = new Point3d(2, 5, 0);
+            Assert.IsFalse(p.BelongsTo(t));
+
+            p = new Point3d(2, 2, 0.1);
+            Assert.IsFalse(p.BelongsTo(t));
+
+            p = new Point3d(2, 2, 0);
+            Assert.IsTrue(p.BelongsTo(t));
+
+            p = new Point3d(5, 1, 0);
+            Assert.IsTrue(p.BelongsTo(t));
+
+            p = new Point3d(0, 1, 0);
+            Assert.IsTrue(p.BelongsTo(t));
+
+            p = new Point3d(2, 0, 0);
+            Assert.IsTrue(p.BelongsTo(t));
+
         }
     }
 }

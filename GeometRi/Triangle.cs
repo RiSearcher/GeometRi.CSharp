@@ -758,26 +758,30 @@ namespace GeometRi
 
         internal override int _PointLocation(Point3d p)
         {
+
             if (GeometRi3D.UseAbsoluteTolerance)
             {
                 Plane3d s = new Plane3d(this.A, this.Normal);
                 Point3d proj = p.ProjectionTo(s);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
                 {
-                    if (p.BelongsTo(new Segment3d(_a,_b)) || p.BelongsTo(new Segment3d(_a, _b)) || p.BelongsTo(new Segment3d(_a, _b)))
+                    if (p.BelongsTo(new Segment3d(_a, _b)) || p.BelongsTo(new Segment3d(_a, _c)) || p.BelongsTo(new Segment3d(_c, _b)))
                     {
                         return 0; // Point is on boundary
                     }
                     else
                     {
                         double area = this.Area;
+
                         double alpha = new Vector3d(proj, _b).Cross(new Vector3d(proj, _c)).Norm / (2 * area);
                         double beta = new Vector3d(proj, _c).Cross(new Vector3d(proj, _a)).Norm / (2 * area);
-                        double gamma = 1 - alpha - beta;
-                        if ( 0 < alpha && alpha < 1 && 0 < beta && beta < 1 && 0 < gamma && gamma < 1 )
+                        double gamma = new Vector3d(proj, _a).Cross(new Vector3d(proj, _b)).Norm / (2 * area);
+
+                        if (GeometRi3D.AlmostEqual(((alpha + beta + gamma)-1.0)* (AB + BC + AC) / 3, 0.0))
                         {
                             return 1; // Point is strictly inside
-                        } else
+                        }
+                        else
                         {
                             return -1;
                         }
