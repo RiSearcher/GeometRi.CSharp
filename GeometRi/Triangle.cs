@@ -764,17 +764,17 @@ namespace GeometRi
                 Point3d proj = p.ProjectionTo(s);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
                 {
-                    if (p.BelongsTo(new Segment3d(_a,_b)) || p.BelongsTo(new Segment3d(_a, _b)) || p.BelongsTo(new Segment3d(_a, _b)))
+                    if (p.BelongsTo(new Segment3d(_a,_b)) || p.BelongsTo(new Segment3d(_a, _c)) || p.BelongsTo(new Segment3d(_c, _b)))
                     {
                         return 0; // Point is on boundary
                     }
                     else
                     {
                         double area = this.Area;
-                        double alpha = new Vector3d(proj, _b).Cross(new Vector3d(proj, _c)).Norm / (2 * area);
-                        double beta = new Vector3d(proj, _c).Cross(new Vector3d(proj, _a)).Norm / (2 * area);
+                        double alpha = (_a.Y * _c.X - _a.X * _c.Y + (_c.Y - _a.Y) * proj.X + (_a.X - _c.X) * proj.Y) / (2 * area);
+                        double beta = (_a.X * _b.Y - _a.Y * _b.X + (_a.Y - _b.Y) * proj.X + (_b.X - _a.X) * proj.Y) / (2 * area);
                         double gamma = 1 - alpha - beta;
-                        if ( 0 < alpha && alpha < 1 && 0 < beta && beta < 1 && 0 < gamma && gamma < 1 )
+                        if (0 < alpha && 0 < beta && 0 < gamma)
                         {
                             return 1; // Point is strictly inside
                         } else
