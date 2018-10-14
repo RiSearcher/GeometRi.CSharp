@@ -172,7 +172,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
-        public void PointInTriangleRelativeTest()
+        public void PointInsideRelativeTest()
         {
             Point3d a = new Point3d(0, 0, 0);
             Point3d b = new Point3d(15, 0, 0);
@@ -190,11 +190,71 @@ namespace GeometRi_Tests
             Assert.IsFalse(p.IsOutside(s));
             Assert.IsFalse(p.IsOnBoundary(s));
 
+            p = new Point3d(0.2, 5, 0.0);  // Point inside
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsTrue(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
+        [TestMethod]
+        public void PointOnBoundaryRelativeTest()
+        {
+            Point3d a = new Point3d(0, 0, 0);
+            Point3d b = new Point3d(15, 0, 0);
+            Point3d p = new Point3d(0, 15, 0);
+            Triangle s = new Triangle(a, b, p);
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
+
             p = new Point3d(10, 0.1, 0);  // Point on boundary
             Assert.IsTrue(p.BelongsTo(s));
             Assert.IsFalse(p.IsInside(s));
             Assert.IsFalse(p.IsOutside(s));
             Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(0.1, 0.1, 0);  // Point on boundary
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(-0.1, -0.1, 0);  // Point on boundary
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            p = new Point3d(7.6, 7.6, 0);  // Point on boundary
+            Assert.IsTrue(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsFalse(p.IsOutside(s));
+            Assert.IsTrue(p.IsOnBoundary(s));
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
+        [TestMethod]
+        public void PointOutsideRelativeTest()
+        {
+            Point3d a = new Point3d(0, 0, 0);
+            Point3d b = new Point3d(15, 0, 0);
+            Point3d p = new Point3d(0, 15, 0);
+            Triangle s = new Triangle(a, b, p);
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = false;
 
             p = new Point3d(1, 1, 0.2);  // Point outside
             Assert.IsFalse(p.BelongsTo(s));
@@ -208,11 +268,22 @@ namespace GeometRi_Tests
             Assert.IsTrue(p.IsOutside(s));
             Assert.IsFalse(p.IsOnBoundary(s));
 
+            p = new Point3d(7.65, 7.65, 0);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
+            p = new Point3d(-0.2, 10, 0);  // Point outside
+            Assert.IsFalse(p.BelongsTo(s));
+            Assert.IsFalse(p.IsInside(s));
+            Assert.IsTrue(p.IsOutside(s));
+            Assert.IsFalse(p.IsOnBoundary(s));
+
             // Resore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
-
 
         [TestMethod()]
         public void TriangleIntersectionWithLineTest()
