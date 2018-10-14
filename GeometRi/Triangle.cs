@@ -772,10 +772,12 @@ namespace GeometRi
                     else
                     {
                         double area = this.Area;
-                        double alpha = (_a.Y * _c.X - _a.X * _c.Y + (_c.Y - _a.Y) * proj.X + (_a.X - _c.X) * proj.Y) / (2 * area);
-                        double beta = (_a.X * _b.Y - _a.Y * _b.X + (_a.Y - _b.Y) * proj.X + (_b.X - _a.X) * proj.Y) / (2 * area);
-                        double gamma = 1 - alpha - beta;
-                        if (0 < alpha && 0 < beta && 0 < gamma)
+
+                        double alpha = new Vector3d(proj, _b).Cross(new Vector3d(proj, _c)).Norm / (2 * area);
+                        double beta = new Vector3d(proj, _c).Cross(new Vector3d(proj, _a)).Norm / (2 * area);
+                        double gamma = new Vector3d(proj, _a).Cross(new Vector3d(proj, _b)).Norm / (2 * area);
+
+                        if (GeometRi3D.AlmostEqual(((alpha + beta + gamma) - 1.0) * (AB + BC + AC) / 3, 0.0))
                         {
                             return 1; // Point is strictly inside
                         }
