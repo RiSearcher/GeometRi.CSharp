@@ -571,13 +571,41 @@ namespace GeometRi
 
         public static bool operator ==(Vector3d v1, Vector3d v2)
         {
+            if(v1 == null)
+                return v2 == null;
             return v1.Equals(v2);
         }
         public static bool operator !=(Vector3d v1, Vector3d v2)
         {
+            if(v1 == null)
+                return v2 != null;
             return !v1.Equals(v2);
         }
 
+
+        /// <summary>
+        /// Returns a new vector representing the x-axis (1, 0, 0)
+        /// </summary>
+        public static Vector3d XAxis
+        {
+            get { return new Vector3d(1, 0, 0); }
+        }
+        
+        /// <summary>
+        /// Returns a new vector representing the y-axis (0, 1, 0)
+        /// </summary>
+        public static Vector3d YAxis
+        {
+            get { return new Vector3d(0, 1, 0); }
+        }
+        
+        /// <summary>
+        /// Returns a new vector representing the z-axis (0, 0, 1)
+        /// </summary>
+        public static Vector3d ZAxis
+        {
+            get { return new Vector3d(0, 0, 1); }
+        }
     }
 }
 
