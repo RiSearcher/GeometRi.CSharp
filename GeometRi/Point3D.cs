@@ -569,6 +569,8 @@ namespace GeometRi
 
         public static bool operator ==(Point3d p1, Point3d p2)
         {
+            if(p1 == null)
+                return p2 == null;
             return p1.Equals(p2);
         }
         public static bool operator !=(Point3d p1, Point3d p2)
@@ -576,6 +578,14 @@ namespace GeometRi
             return !p1.Equals(p2);
         }
 
+        
+        /// <summary>
+        /// Returns a new origin point (0, 0, 0)
+        /// </summary>
+        public static Point3d Origin
+        {
+            get { return new Point3d(0, 0, 0); }
+        }
     }
 }
 
