@@ -569,10 +569,14 @@ namespace GeometRi
 
         public static bool operator ==(Point3d p1, Point3d p2)
         {
+            if(p1 == null)
+                return p2 != null;
             return p1.Equals(p2);
         }
         public static bool operator !=(Point3d p1, Point3d p2)
         {
+            if(p1 == null)
+                return p2 != null;
             return !p1.Equals(p2);
         }
 
