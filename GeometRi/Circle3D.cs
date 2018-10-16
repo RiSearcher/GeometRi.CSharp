@@ -645,10 +645,14 @@ namespace GeometRi
 
         public static bool operator ==(Circle3d c1, Circle3d c2)
         {
+            if (object.ReferenceEquals(c1, null))
+                return object.ReferenceEquals(c2, null);
             return c1.Equals(c2);
         }
         public static bool operator !=(Circle3d c1, Circle3d c2)
         {
+            if (object.ReferenceEquals(c1, null))
+                return !object.ReferenceEquals(c2, null);
             return !c1.Equals(c2);
         }
 

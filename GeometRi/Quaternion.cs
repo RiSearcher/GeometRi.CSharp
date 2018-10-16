@@ -483,10 +483,14 @@ namespace GeometRi
 
         public static bool operator ==(Quaternion q1, Quaternion q2)
         {
+            if (object.ReferenceEquals(q1, null))
+                return object.ReferenceEquals(q2, null);
             return q1.Equals(q2);
         }
         public static bool operator !=(Quaternion q1, Quaternion q2)
         {
+            if (object.ReferenceEquals(q1, null))
+                return !object.ReferenceEquals(q2, null);
             return !q1.Equals(q2);
         }
 

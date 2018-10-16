@@ -635,10 +635,14 @@ namespace GeometRi
         //-----------------------------------------------------------------
         public static bool operator ==(Box3d b1, Box3d b2)
         {
+            if (object.ReferenceEquals(b1, null))
+                return object.ReferenceEquals(b2, null);
             return b1.Equals(b2);
         }
         public static bool operator !=(Box3d b1, Box3d b2)
         {
+            if (object.ReferenceEquals(b1, null))
+                return !object.ReferenceEquals(b2, null);
             return !b1.Equals(b2);
         }
     }

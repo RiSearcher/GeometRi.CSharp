@@ -185,5 +185,19 @@ namespace GeometRi_Tests
             p = new Point3d(3, 3, 0);
             Assert.IsTrue(p.BelongsTo(s));
         }
+
+        [TestMethod()]
+        public void PointEqualsNullTest()
+        {
+            Point3d p1 = null;
+            Point3d p2 = new Point3d(0, 0, 0);
+
+            Assert.IsTrue(p1 != p2);
+            Assert.IsFalse(p1 == p2);
+
+            p2 = null;
+            Assert.IsTrue(p1 == p2);
+            Assert.IsFalse(p1 != p2);
+        }
     }
 }

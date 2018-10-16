@@ -539,10 +539,14 @@ namespace GeometRi
 
         public static bool operator ==(Plane3d s1, Plane3d s2)
         {
+            if (object.ReferenceEquals(s1, null))
+                return object.ReferenceEquals(s2, null);
             return s1.Equals(s2);
         }
         public static bool operator !=(Plane3d s1, Plane3d s2)
         {
+            if (object.ReferenceEquals(s1, null))
+                return !object.ReferenceEquals(s2, null);
             return !s1.Equals(s2);
         }
 

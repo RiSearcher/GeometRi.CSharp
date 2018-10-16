@@ -571,10 +571,14 @@ namespace GeometRi
 
         public static bool operator ==(Vector3d v1, Vector3d v2)
         {
+            if (object.ReferenceEquals(v1, null))
+                return object.ReferenceEquals(v2, null);
             return v1.Equals(v2);
         }
         public static bool operator !=(Vector3d v1, Vector3d v2)
         {
+            if (object.ReferenceEquals(v1, null))
+                return !object.ReferenceEquals(v2, null);
             return !v1.Equals(v2);
         }
 

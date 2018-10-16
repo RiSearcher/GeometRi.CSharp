@@ -426,10 +426,14 @@ namespace GeometRi
 
         public static bool operator ==(Matrix3d m1, Matrix3d m2)
         {
+            if (object.ReferenceEquals(m1, null))
+                return object.ReferenceEquals(m2, null);
             return m1.Equals(m2);
         }
         public static bool operator !=(Matrix3d m1, Matrix3d m2)
         {
+            if (object.ReferenceEquals(m1, null))
+                return !object.ReferenceEquals(m2, null);
             return !m1.Equals(m2);
         }
 

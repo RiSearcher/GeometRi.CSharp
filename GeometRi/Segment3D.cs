@@ -821,10 +821,14 @@ namespace GeometRi
         //-----------------------------------------------------------------
         public static bool operator ==(Segment3d l1, Segment3d l2)
         {
+            if (object.ReferenceEquals(l1, null))
+                return object.ReferenceEquals(l2, null);
             return l1.Equals(l2);
         }
         public static bool operator !=(Segment3d l1, Segment3d l2)
         {
+            if (object.ReferenceEquals(l1, null))
+                return !object.ReferenceEquals(l2, null);
             return !l1.Equals(l2);
         }
 

@@ -789,10 +789,14 @@ namespace GeometRi
 
         public static bool operator ==(Ellipse c1, Ellipse c2)
         {
+            if (object.ReferenceEquals(c1, null))
+                return object.ReferenceEquals(c2, null);
             return c1.Equals(c2);
         }
         public static bool operator !=(Ellipse c1, Ellipse c2)
         {
+            if (object.ReferenceEquals(c1, null))
+                return !object.ReferenceEquals(c2, null);
             return !c1.Equals(c2);
         }
 

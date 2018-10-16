@@ -968,10 +968,14 @@ namespace GeometRi
 
         public static bool operator ==(Triangle t1, Triangle t2)
         {
+            if (object.ReferenceEquals(t1, null))
+                return object.ReferenceEquals(t2, null);
             return t1.Equals(t2);
         }
         public static bool operator !=(Triangle t1, Triangle t2)
         {
+            if (object.ReferenceEquals(t1, null))
+                return !object.ReferenceEquals(t2, null);
             return !t1.Equals(t2);
         }
     }

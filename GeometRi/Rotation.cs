@@ -813,10 +813,14 @@ namespace GeometRi
         //-----------------------------------------------------------------
         public static bool operator ==(Rotation m1, Rotation m2)
         {
+            if (object.ReferenceEquals(m1, null))
+                return object.ReferenceEquals(m2, null);
             return m1.Equals(m2);
         }
         public static bool operator !=(Rotation m1, Rotation m2)
         {
+            if (object.ReferenceEquals(m1, null))
+                return !object.ReferenceEquals(m2, null);
             return !m1.Equals(m2);
         }
 
