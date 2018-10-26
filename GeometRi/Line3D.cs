@@ -76,6 +76,14 @@ namespace GeometRi
             get { return false; }
         }
 
+        /// <summary>
+        /// Returns copy the object
+        /// </summary>
+        public Line3d ToLine
+        {
+            get { return this.Copy(); }
+        }
+
         #region "ParallelMethods"
         /// <summary>
         /// Check if two objects are parallel
@@ -123,6 +131,22 @@ namespace GeometRi
         public bool IsOrthogonalTo(IPlanarObject obj)
         {
             return this.Direction.IsParallelTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are coplanar
+        /// </summary>
+        public bool IsCoplanarTo(IPlanarObject obj)
+        {
+            return GeometRi3D._coplanar(this, obj);
+        }
+
+        /// <summary>
+        /// Check if two objects are coplanar
+        /// </summary>
+        public bool IsCoplanarTo(ILinearObject obj)
+        {
+            return GeometRi3D._coplanar(this, obj);
         }
         #endregion
 

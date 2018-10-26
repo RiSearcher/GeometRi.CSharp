@@ -152,6 +152,7 @@ Infinite line  in 3D space and defined by any point lying on the line and a dire
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
+* __IsCoplanarTo__ - check if line is coplanar to other linear or planar object
 * __AngleTo__ - angle between two objects
 * __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate line by vector
@@ -176,6 +177,7 @@ Represent ray in 3D space and is defined by starting point and direction vector.
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
+* __IsCoplanarTo__ - check if ray is coplanar to other linear or planar object
 * __AngleTo__ - angle between two objects
 * __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate ray by vector
@@ -205,6 +207,7 @@ Represent a line segment in 3D space and is defined by two points.
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
+* __IsCoplanarTo__ - check if segment is coplanar to other linear or planar object
 * __AngleTo__ - angle between two objects
 * __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate segment by vector
@@ -229,6 +232,7 @@ or by point and two vectors in the plane.
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
+* __IsCoplanarTo__ - check if plane is coplanar to other linear or planar object
 * __AngleTo__ - angle between two objects
 * __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate plane by vector
@@ -281,6 +285,7 @@ Defines a circle in 3D space by center point, radius and normal vector.
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
+* __IsCoplanarTo__ - check if circle is coplanar to other linear or planar object
 * __AngleTo__ - angle between two objects
 * __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate circle by vector
@@ -317,6 +322,7 @@ Ellipse in 3D space, defined by center point and two orthogonal vectors, major a
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
+* __IsCoplanarTo__ - check if ellipse is coplanar to other linear or planar object
 * __AngleTo__ - angle between two objects
 * __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate ellipse by vector
@@ -407,6 +413,7 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
 * __IsOrthogonalTo__ - check if two objects are orthogonal
+* __IsCoplanarTo__ - check if triangle is coplanar to other linear or planar object
 * __AngleTo__ - angle between two objects
 * __AngleToDeg__ - angle between two objects (in degrees)
 * __Translate__ - translate triangle by vector

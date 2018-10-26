@@ -139,6 +139,17 @@ namespace GeometRi
                 return PI * (a + b) * (1 + 3 * h / (10 + Sqrt(4 - 3 * h)));
             }
         }
+
+        /// <summary>
+        /// Convert ellipse to plane object.
+        /// </summary>
+        public Plane3d ToPlane
+        {
+            get
+            {
+                return new Plane3d(_point, Normal);
+            }
+        }
         #endregion
 
         #region "ParallelMethods"
@@ -188,6 +199,22 @@ namespace GeometRi
         public bool IsOrthogonalTo(IPlanarObject obj)
         {
             return this.Normal.IsOrthogonalTo(obj.Normal);
+        }
+
+        /// <summary>
+        /// Check if two objects are coplanar
+        /// </summary>
+        public bool IsCoplanarTo(IPlanarObject obj)
+        {
+            return GeometRi3D._coplanar(this, obj);
+        }
+
+        /// <summary>
+        /// Check if two objects are coplanar
+        /// </summary>
+        public bool IsCoplanarTo(ILinearObject obj)
+        {
+            return GeometRi3D._coplanar(this, obj);
         }
         #endregion
 

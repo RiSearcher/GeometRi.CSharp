@@ -246,5 +246,53 @@ namespace GeometRi
             }
         }
         #endregion
+
+        static internal bool _coplanar(IPlanarObject obj1, IPlanarObject obj2)
+        {
+            if (obj1.ToPlane.IsNotParallelTo(obj2.ToPlane))
+            {
+                return false;
+            }
+
+            if (obj1.GetType() == typeof(Triangle))
+            {
+                return ((Triangle)obj1).A.BelongsTo(obj2.ToPlane);
+            }
+            else if (obj1.GetType() == typeof(Circle3d))
+            {
+                return ((Circle3d)obj1).Center.BelongsTo(obj2.ToPlane);
+            }
+            else if (obj1.GetType() == typeof(Ellipse))
+            {
+                return ((Ellipse)obj1).Center.BelongsTo(obj2.ToPlane);
+            }
+            else if (obj1.GetType() == typeof(Plane3d))
+            {
+                return ((Plane3d)obj1).Point.BelongsTo(obj2.ToPlane);
+            } else
+            {
+                return false;
+            }
+
+        }
+
+        static internal bool _coplanar(ILinearObject obj1, ILinearObject obj2)
+        {
+            if (obj1.ToLine.IsParallelTo(obj2.ToLine))
+            {
+                return true;
+            }
+            return AlmostEqual(obj1.ToLine.DistanceTo(obj2.ToLine), 0.0);
+        }
+
+        static internal bool _coplanar(IPlanarObject obj1, ILinearObject obj2)
+        {
+            return obj1.Normal.IsOrthogonalTo(obj2.Direction) && obj2.ToLine.Point.BelongsTo(obj1.ToPlane);
+        }
+
+        static internal bool _coplanar(ILinearObject obj1, IPlanarObject obj2)
+        {
+            return _coplanar(obj2, obj1);
+        }
     }
 }

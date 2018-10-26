@@ -2,6 +2,7 @@
 
 namespace GeometRi
 {
+
     /// <summary>
     /// Interface for 1D objects (vector, line, ray, segment)
     /// </summary>
@@ -9,6 +10,7 @@ namespace GeometRi
     {
         Vector3d Direction { get; }
         bool IsOriented { get; }
+        Line3d ToLine { get; }
     }
 
     /// <summary>
@@ -18,6 +20,7 @@ namespace GeometRi
     {
         Vector3d Normal { get; }
         bool IsOriented { get; }
+        Plane3d ToPlane { get; }
     }
 
     /// <summary>

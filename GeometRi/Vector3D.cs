@@ -151,6 +151,14 @@ namespace GeometRi
         {
             get {  return true;  }
         }
+
+        /// <summary>
+        /// Returns line passing through origin in the direction of vector
+        /// </summary>
+        public Line3d ToLine
+        {
+            get { return new Line3d(new Point3d(), this.Direction); }
+        }
         //////////////////////////////////////////
 
         #region "ParallelMethods"

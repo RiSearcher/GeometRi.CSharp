@@ -123,6 +123,22 @@ namespace GeometRi
         {
             return this.Direction.IsParallelTo(obj.Normal);
         }
+
+        /// <summary>
+        /// Check if two objects are coplanar
+        /// </summary>
+        public bool IsCoplanarTo(IPlanarObject obj)
+        {
+            return GeometRi3D._coplanar(this, obj);
+        }
+
+        /// <summary>
+        /// Check if two objects are coplanar
+        /// </summary>
+        public bool IsCoplanarTo(ILinearObject obj)
+        {
+            return GeometRi3D._coplanar(this, obj);
+        }
         #endregion
 
         #region "DistanceTo"
