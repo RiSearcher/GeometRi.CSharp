@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi.Example", "GeometR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi.Tests", "GeometRi.Tests\GeometRi.Tests.csproj", "{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GeometRi.Example.FSharp", "GeometRi.Example.FSharp\GeometRi.Example.FSharp.fsproj", "{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +29,15 @@ Global
 		{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1B4727F-687A-461B-81A0-20DD7CA681A2}
 	EndGlobalSection
 EndGlobal
