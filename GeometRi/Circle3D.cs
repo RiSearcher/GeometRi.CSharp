@@ -518,6 +518,34 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Check if circle is located inside box.
+        /// </summary>
+        public bool IsInside(Box3d box)
+        {
+            if (!this.Center.IsInside(box)) return false;
+
+            Plane3d p = new Plane3d(box.P1, box.P2, box.P3);
+            if (this.IntersectionWith(p) != null) return false;
+
+            p = new Plane3d(box.P1, box.P2, box.P6);
+            if (this.IntersectionWith(p) != null) return false;
+
+            p = new Plane3d(box.P2, box.P3, box.P7);
+            if (this.IntersectionWith(p) != null) return false;
+
+            p = new Plane3d(box.P3, box.P4, box.P8);
+            if (this.IntersectionWith(p) != null) return false;
+
+            p = new Plane3d(box.P4, box.P1, box.P5);
+            if (this.IntersectionWith(p) != null) return false;
+
+            p = new Plane3d(box.P5, box.P6, box.P7);
+            if (this.IntersectionWith(p) != null) return false;
+
+            return true;
+        }
+
         #region "AngleTo"
         /// <summary>
         /// Angle between two objects in radians (0 &lt; angle &lt; Pi)

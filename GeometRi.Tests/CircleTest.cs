@@ -269,5 +269,17 @@ namespace GeometRi_Tests
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
+
+        [TestMethod()]
+        public void IsInsideBoxTest()
+        {
+            Box3d box = new Box3d();
+            Circle3d c = new Circle3d(new Point3d(0, 0, 0), 0.2, new Vector3d(0, 0, 1));
+            Assert.IsTrue(c.IsInside(box));
+            c = new Circle3d(new Point3d(5, 0, 0), 0.2, new Vector3d(0, 0, 1));
+            Assert.IsFalse(c.IsInside(box));
+            c = new Circle3d(new Point3d(0.9, 0, 0), 0.2, new Vector3d(0, 0, 1));
+            Assert.IsFalse(c.IsInside(box));
+        }
     }
 }
