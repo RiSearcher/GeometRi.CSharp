@@ -163,6 +163,24 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleIntersectionWithCircle3DTest_2()
+        {
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.01;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            Circle3d c1 = new Circle3d(new Point3d(-0.28776, -0.29482, -0.16311), 0.2, new Vector3d(-0.44759, -0.3224, -0.8341));
+            Circle3d c2 = new Circle3d(new Point3d(-0.35134, -0.27228, -0.12871), 0.2, new Vector3d(0.84394, -0.416, -0.33868));
+            Assert.IsTrue(c1.IntersectionWith(c2) != null);
+            Assert.IsTrue(c2.IntersectionWith(c1) != null);
+
+            // Resore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
+        [TestMethod()]
         public void CircleParametricFormTest()
         {
             Circle3d c = new Circle3d(new Point3d(5, 6, 1), 5, new Vector3d(3, 0, 1));

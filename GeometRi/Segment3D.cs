@@ -508,37 +508,24 @@ namespace GeometRi
                 double x1 = 0.0;
                 double x2 = s.Length;
 
-                double x3 = this.P1.ConvertTo(cs).X;
-                double x4 = this.P2.ConvertTo(cs).X;
+                double t3 = this.P1.ConvertTo(cs).X;
+                double t4 = this.P2.ConvertTo(cs).X;
+                double x3 = Min(t3, t4);
+                double x4 = Max(t3, t4);
 
 
+                // Segments do not overlap
+                if (GeometRi3D.Smaller(x4, x1, tol) || GeometRi3D.Greater(x3, x2, tol)) { return null; }
 
-                if (GeometRi3D.Smaller(Max(x3, x4), x1, tol) || GeometRi3D.Greater(Min(x3, x4), x2, tol)) { return null; }
-
+                // One common point
                 if (GeometRi3D.AlmostEqual(Max(x3, x4), x1, tol)) { return new Point3d(x1, 0, 0, cs); }
                 if (GeometRi3D.AlmostEqual(Min(x3, x4), x2, tol)) { return new Point3d(x2, 0, 0, cs); }
 
-                if (GeometRi3D.Smaller(Min(x3, x4), x1, tol) && GeometRi3D.Greater(Max(x3, x4), x2, tol))
-                {
-                    return s.Copy();
-                }
+                // Overlaping segments
+                x1 = Max(x1, x3);
+                x2 = Min(x2, x4);
+                return new Segment3d(new Point3d(x1, 0, 0, cs), new Point3d(x2, 0, 0, cs));
 
-                if (GeometRi3D.Greater(Min(x3, x4), x1, tol) && GeometRi3D.Smaller(Max(x3, x4), x2, tol))
-                {
-                    return this.Copy();
-                }
-
-                if (GeometRi3D.Smaller(Min(x3, x4), x1, tol))
-                {
-                    return new Segment3d(new Point3d(x1, 0, 0, cs), new Point3d(Max(x3, x4), 0, 0, cs));
-                }
-
-                if (GeometRi3D.Greater(Max(x3, x4), x2, tol))
-                {
-                    return new Segment3d(new Point3d(x2, 0, 0, cs), new Point3d(Min(x3, x4), 0, 0, cs));
-                }
-
-                return null;
             }
             else
             {
