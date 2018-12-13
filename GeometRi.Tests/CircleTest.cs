@@ -175,7 +175,7 @@ namespace GeometRi_Tests
             Assert.IsTrue(c1.IntersectionWith(c2) != null);
             Assert.IsTrue(c2.IntersectionWith(c1) != null);
 
-            // Resore initial state
+            // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
@@ -193,7 +193,25 @@ namespace GeometRi_Tests
             Assert.IsTrue(c1.IntersectionWith(c2) == null);
             Assert.IsTrue(c2.IntersectionWith(c1) == null);
 
-            // Resore initial state
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+        }
+
+        [TestMethod()]
+        public void CircleIntersectionWithCircle3DTest_4()
+        {
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = 0.03;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            Circle3d c1 = new Circle3d(new Point3d(0.21512, -0.00082439, 0.17926), 0.3, new Vector3d(0.62821, -0.68096, 0.37636));
+            Circle3d c2 = new Circle3d(new Point3d(-0.038202, -0.090672, -0.078966), 0.3, new Vector3d(-0.060788, -0.026431, 0.9978));
+            Assert.IsTrue(c1.IntersectionWith(c2) != null);
+            Assert.IsTrue(c2.IntersectionWith(c1) != null);
+
+            // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }
@@ -301,7 +319,7 @@ namespace GeometRi_Tests
             Assert.IsTrue(p.IsOutside(s));
             Assert.IsFalse(p.IsOnBoundary(s));
 
-            // Resore initial state
+            // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
         }

@@ -367,19 +367,19 @@ namespace GeometRi
                     {
                         return null;
                     }
-                    else if (GeometRi3D.AlmostEqual(det, 0))
-                    {
-                        double x = -Math.Pow(a, 2) * m * c / amb;
-                        double y = Math.Pow(b, 2) * c / amb;
-                        return new Point3d(x, y, 0, local_coord);
-                    }
-                    else
+                    else if (det > 1e-12)
                     {
                         double x1 = (-Math.Pow(a, 2) * m * c + a * b * Sqrt(det)) / amb;
                         double x2 = (-Math.Pow(a, 2) * m * c - a * b * Sqrt(det)) / amb;
                         double y1 = (Math.Pow(b, 2) * c + a * b * m * Sqrt(det)) / amb;
                         double y2 = (Math.Pow(b, 2) * c - a * b * m * Sqrt(det)) / amb;
                         return new Segment3d(new Point3d(x1, y1, 0, local_coord), new Point3d(x2, y2, 0, local_coord));
+                    }
+                    else
+                    {
+                        double x = -Math.Pow(a, 2) * m * c / amb;
+                        double y = Math.Pow(b, 2) * c / amb;
+                        return new Point3d(x, y, 0, local_coord);
                     }
 
                 }
