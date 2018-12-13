@@ -65,7 +65,7 @@ namespace GeometRi
 
         public Vector3d Normal
         {
-            get { return _v1.Cross(_v2); }
+            get { return _v1.Cross(_v2).Normalized; }
         }
 
         public bool IsOriented
