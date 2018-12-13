@@ -284,9 +284,10 @@ namespace GeometRi
             s2.SetCoord(Coord3d.GlobalCS);
             s3.SetCoord(Coord3d.GlobalCS);
             double det = new Matrix3d(new[] { A, B, C }, new[] { s2.A, s2.B, s2.C }, new [] { s3.A, s3.B, s3.C }).Det;
-            if (Abs(det) < GeometRi3D.Tolerance)
-            {
-                if (this.Normal.IsParallelTo(s2.Normal) && this.Normal.IsParallelTo(s3.Normal))
+            //if (Abs(det) < GeometRi3D.Tolerance)
+            if (Abs(det) < 1e-12)
+                {
+                    if (this.Normal.IsParallelTo(s2.Normal) && this.Normal.IsParallelTo(s3.Normal))
                 {
                     // Planes are coplanar
                     if (this.Point.BelongsTo(s2) && this.Point.BelongsTo(s3))
@@ -354,17 +355,17 @@ namespace GeometRi
                 // This part needs to be rewritten
                 if (Abs(v.X) >= Abs(v.Y) && Abs(v.X) >= Abs(v.Z))
                 {
-                    Point3d p = (Point3d)this.IntersectionWith(s2, Coord3d.GlobalCS.YZ_plane);
+                    Point3d p = (Point3d)Coord3d.GlobalCS.YZ_plane.IntersectionWith(this, s2);
                     return new Line3d(p, v);
                 }
                 else if (Abs(v.Y) >= Abs(v.X) && Abs(v.Y) >= Abs(v.Z))
                 {
-                    Point3d p = (Point3d)this.IntersectionWith(s2, Coord3d.GlobalCS.XZ_plane);
+                    Point3d p = (Point3d)Coord3d.GlobalCS.XZ_plane.IntersectionWith(this, s2);
                     return new Line3d(p, v);
                 }
                 else
                 {
-                    Point3d p = (Point3d)this.IntersectionWith(s2, Coord3d.GlobalCS.XY_plane);
+                    Point3d p = (Point3d)Coord3d.GlobalCS.XY_plane.IntersectionWith(this, s2);
                     return new Line3d(p, v);
                 }
             }
