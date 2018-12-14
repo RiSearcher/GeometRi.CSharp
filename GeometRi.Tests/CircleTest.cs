@@ -235,6 +235,40 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleDistanceToPlaneTest()
+        {
+            // Parallel circle
+            Plane3d p = new Plane3d(new Point3d(), new Vector3d(0, 0, 1));
+            Circle3d c = new Circle3d(new Point3d(10, 10, 10), 5, new Vector3d(0, 0, 1));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(p), 10));
+
+            // Orthogonal circle
+            c = new Circle3d(new Point3d(10, 10, 10), 5, new Vector3d(1, 1, 0));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(p), 5));
+
+            // Inclined circle
+            c = new Circle3d(new Point3d(10, 10, 10), 5, new Vector3d(3, 0, 4));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(p), 7));
+        }
+
+        [TestMethod()]
+        public void CircleDistanceToPointTest()
+        {
+            Circle3d c = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Point3d p = new Point3d(2, 3, 4);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(p), 4));
+
+            p = new Point3d(4, 3, 0);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(p), 0));
+
+            p = new Point3d(2, 3, 0);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(p), 0));
+
+            p = new Point3d(8, 0, 4);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(p), 5));
+        }
+
+        [TestMethod()]
         public void CircleParametricFormTest()
         {
             Circle3d c = new Circle3d(new Point3d(5, 6, 1), 5, new Vector3d(3, 0, 1));

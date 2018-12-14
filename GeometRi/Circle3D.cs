@@ -254,6 +254,43 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Distance from circle to plane
+        /// </summary>
+        public double DistanceTo(Plane3d s)
+        {
+            double center_distance = this.Center.DistanceTo(s);
+            double angle = this.Normal.AngleTo(s.Normal);
+            double delta = Abs(this.R * Sin(angle));
+
+            if (delta < center_distance)
+            {
+                return center_distance - delta;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Shortest distance from point to circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Point3d p)
+        {
+            Point3d projection = p.ProjectionTo(this.ToPlane);
+            if (projection.BelongsTo(this))
+            {
+                return projection.DistanceTo(p);
+            }
+            else
+            {
+                Point3d closest_point = this.Center.Translate(this.R * new Vector3d(this.Center, projection).Normalized);
+                return closest_point.DistanceTo(p);
+            }
+        }
+
+
+        /// <summary>
         /// Orthogonal projection of the circle to plane
         /// </summary>
         public Ellipse ProjectionTo(Plane3d s)

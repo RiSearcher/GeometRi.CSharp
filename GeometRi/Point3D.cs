@@ -230,6 +230,22 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Shortest distance between point and sphere (including interior points).
+        /// </summary>
+        public double DistanceTo(Sphere s)
+        {
+            return s.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Shortest distance from point to circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            return c.DistanceTo(this);
+        }
+
         #endregion
 
 

@@ -243,6 +243,14 @@ namespace GeometRi
         #endregion
 
         /// <summary>
+        /// Distance from plane to circle
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            return c.DistanceTo(this);
+        }
+
+        /// <summary>
         /// Get intersection of line with plane.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Line3d'.
         /// </summary>

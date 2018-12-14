@@ -87,6 +87,9 @@ namespace GeometRi
 #endregion
 
 #region "DistanceTo"
+        /// <summary>
+        /// Shortest distance between point and sphere (including interior points).
+        /// </summary>
         public double DistanceTo(Point3d p)
         {
             double d = p.DistanceTo(this.Center);
