@@ -10,6 +10,7 @@ namespace GeometRi
     {
 
         private static double _tolerance = 1E-12;
+        private static double _default_tolerance = 1E-12;
         private static bool _absolute = true;
 
         /// <summary>
@@ -19,6 +20,15 @@ namespace GeometRi
         {
             get { return _tolerance; }
             set { _tolerance = value; }
+        }
+
+        /// <summary>
+        /// Default tolerance used for comparison operations
+        /// </summary>
+        public static double DefaultTolerance
+        {
+            get { return _default_tolerance; }
+            set { _default_tolerance = value; }
         }
 
         /// <summary>

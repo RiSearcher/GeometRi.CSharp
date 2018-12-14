@@ -289,6 +289,145 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Shortest distance between two circles (including interior points) (approximate solution)
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            if (this.Normal.IsParallelTo(c.Normal))
+            {
+                Point3d projection = c.Center.ProjectionTo(this.ToPlane);
+                double dist = projection.DistanceTo(this.Center);
+                double vdist = projection.DistanceTo(c.Center);
+                if (dist < this.R + c.R)
+                {
+                    return vdist;
+                }
+                else
+                {
+                    return Sqrt((dist - this.R - c.R) * (dist - this.R - c.R) + vdist * vdist);
+                }
+            }
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            object obj = this.IntersectionWith(c);
+            if (obj != null)
+            {
+                return 0;
+            }
+
+            double dist1 = _distance_cicle_to_circle(this, c);
+            double dist2 = _distance_cicle_to_circle(c, this);
+
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+
+            return Min(dist1, dist2);
+        }
+
+        private double _distance_cicle_to_circle(Circle3d c1, Circle3d c2)
+        // Use quadratic interpolation to find closest point on one circle to other
+        {
+            double d1 = 1e20;
+            double t1 = 0;
+            Point3d p;
+
+            for (int i = 0; i < 16; i++)
+            {
+                double t = i * Math.PI / 8;
+                p = c1.ParametricForm(t);
+                double dist = p.DistanceTo(c2);
+                if (dist < d1)
+                {
+                    d1 = dist;
+                    t1 = t;
+                }
+            }
+            double t2 = t1 - Math.PI / 8;
+            p = c1.ParametricForm(t2);
+            double d2 = p.DistanceTo(c2);
+            double t3 = t1 + Math.PI / 8;
+            p = c1.ParametricForm(t3);
+            double d3 = p.DistanceTo(c2);
+
+            int iter = 0;
+            bool flag = false;
+            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance & d1 > GeometRi3D.DefaultTolerance)
+            {
+                if (++iter > 100) break;
+
+                double ax = 2.0 * d1 / (t1 - t2) / (t1 - t3);
+                double aa = 0.5 * ax * (t2 + t3);
+                double bx = 2.0 * d2 / (t2 - t1) / (t2 - t3);
+                double bb = 0.5 * bx * (t1 + t3);
+                double cx = 2.0 * d3 / (t3 - t1) / (t3 - t2);
+                double cc = 0.5 * cx * (t1 + t2);
+
+                double t = (aa + bb + cc) / (ax + bx + cx);
+                p = c1.ParametricForm(t);
+                double d = p.DistanceTo(c2);
+
+                if (d > d1)
+                // Possible special case, non-smooth function ( f(t)=|t| )
+                {
+                    flag = true;
+                    break;
+                }
+
+                if (t>t2 & t<t1)
+                {
+                    t3 = t1; d3 = d1;
+                }
+                else
+                {
+                    t2 = t1; d2 = d1;
+                }
+                t1 = t; d1 = d;
+            }
+
+            if (flag)
+            // Possible special case, non-smooth function ( f(t)=|t| )
+            {
+                while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance & d1 > GeometRi3D.DefaultTolerance)
+                {
+                    if (++iter > 100) break;
+
+                    double t = (t2+t1) / 2;
+                    p = c1.ParametricForm(t);
+                    double d = p.DistanceTo(c2);
+                    if (d < d1)
+                    {
+                        t3 = t1; d3 = d1;
+                        t1 = t;  d1 = d;
+                    }
+                    else
+                    {
+                        t2 = t; d2 = d;
+                    }
+
+                    t = (t3 + t1) / 2;
+                    p = c1.ParametricForm(t);
+                    d = p.DistanceTo(c2);
+                    if (d < d1)
+                    {
+                        t2 = t1; d2 = d1;
+                        t1 = t; d1 = d;
+                    }
+                    else
+                    {
+                        t3 = t; d3 = d;
+                    }
+                }
+            }
+
+            return d1;
+        }
+
 
         /// <summary>
         /// Orthogonal projection of the circle to plane

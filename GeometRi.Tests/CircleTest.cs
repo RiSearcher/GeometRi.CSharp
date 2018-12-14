@@ -269,6 +269,17 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleDistanceToCircleTest()
+        {
+            Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Circle3d c2 = new Circle3d(new Point3d(11, 0, 0), 5, new Vector3d(0, 0, 1));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c1.DistanceTo(c2), 1));
+
+            c2 = new Circle3d(new Point3d(11, 0, 0), 5, new Vector3d(0, 2, 1));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c1.DistanceTo(c2), 1));
+        }
+
+        [TestMethod()]
         public void CircleParametricFormTest()
         {
             Circle3d c = new Circle3d(new Point3d(5, 6, 1), 5, new Vector3d(3, 0, 1));
