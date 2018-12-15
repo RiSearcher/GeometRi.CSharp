@@ -238,6 +238,47 @@ namespace GeometRi
             get { return new Sphere(_point, _r); }
 
         }
+
+        /// <summary>
+        /// Check if circle is located inside box with tolerance defined by global tolerance property (GeometRi3D.Tolerance).
+        /// </summary>
+        public bool IsInside(Box3d box)
+        {
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.IsInside(box);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            if (!this.Center.IsInside(box)) return false;
+
+            Plane3d p = new Plane3d(box.P1, box.P2, box.P3);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P1, box.P2, box.P6);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P2, box.P3, box.P7);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P3, box.P4, box.P8);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P4, box.P1, box.P5);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P5, box.P6, box.P7);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            return true;
+        }
         #endregion
 
         /// <summary>
@@ -692,34 +733,6 @@ namespace GeometRi
                 GeometRi3D.Tolerance = tol;
                 return result;
             }
-        }
-
-        /// <summary>
-        /// Check if circle is located inside box.
-        /// </summary>
-        public bool IsInside(Box3d box)
-        {
-            if (!this.Center.IsInside(box)) return false;
-
-            Plane3d p = new Plane3d(box.P1, box.P2, box.P3);
-            if (this.IntersectionWith(p) != null) return false;
-
-            p = new Plane3d(box.P1, box.P2, box.P6);
-            if (this.IntersectionWith(p) != null) return false;
-
-            p = new Plane3d(box.P2, box.P3, box.P7);
-            if (this.IntersectionWith(p) != null) return false;
-
-            p = new Plane3d(box.P3, box.P4, box.P8);
-            if (this.IntersectionWith(p) != null) return false;
-
-            p = new Plane3d(box.P4, box.P1, box.P5);
-            if (this.IntersectionWith(p) != null) return false;
-
-            p = new Plane3d(box.P5, box.P6, box.P7);
-            if (this.IntersectionWith(p) != null) return false;
-
-            return true;
         }
 
         #region "AngleTo"
