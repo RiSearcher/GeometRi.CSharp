@@ -280,6 +280,55 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleToCircleClosestPointTest()
+        {
+            Point3d p1, p2;
+
+            // Nonintersecting circles in one plane
+            Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Circle3d c2 = new Circle3d(new Point3d(11, 0, 0), 5, new Vector3d(0, 0, 1));
+            double dist = c1.DistanceTo(c2, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, p1.DistanceTo(p2)));
+
+            // Intersecting circles in one plane
+            c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            c2 = new Circle3d(new Point3d(8, 0, 0), 5, new Vector3d(0, 0, 1));
+            dist = c1.DistanceTo(c2, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, p1.DistanceTo(p2)));
+
+            // Intersecting circles in one plane
+            c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            c2 = new Circle3d(new Point3d(0, 0, 0), 3, new Vector3d(0, 0, 1));
+            dist = c1.DistanceTo(c2, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, p1.DistanceTo(p2)));
+
+            // Touching circles
+            c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            c2 = new Circle3d(new Point3d(8, 0, 0), 3, new Vector3d(0, 0, 1));
+            dist = c1.DistanceTo(c2, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, p1.DistanceTo(p2)));
+
+            // Coplanar circles
+            c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            c2 = new Circle3d(new Point3d(5, 0, 5), 3, new Vector3d(0, 0, 1));
+            dist = c1.DistanceTo(c2, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, p1.DistanceTo(p2)));
+
+            // Coplanar circles
+            c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            c2 = new Circle3d(new Point3d(15, 0, 5), 3, new Vector3d(0, 0, 1));
+            dist = c1.DistanceTo(c2, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, p1.DistanceTo(p2)));
+
+            // Random circles
+            c1 = new Circle3d(new Point3d(2, 3, 0), 5, new Vector3d(4, -2, 1));
+            c2 = new Circle3d(new Point3d(15, 7, 5), 3, new Vector3d(2, 3, 1));
+            dist = c1.DistanceTo(c2, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, p1.DistanceTo(p2)));
+
+        }
+
+        [TestMethod()]
         public void CircleParametricFormTest()
         {
             Circle3d c = new Circle3d(new Point3d(5, 6, 1), 5, new Vector3d(3, 0, 1));
