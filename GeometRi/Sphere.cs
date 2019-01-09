@@ -162,7 +162,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Shortest distance between sphere and circle (including interior points) (approximate solution)
+        /// Shortest distance between sphere and circle (including interior points) (approximate solution).
         /// <para> The output points may be not unique in case of intersecting objects.</para>
         /// </summary>
         /// <param name="c">Target circle</param>
@@ -172,6 +172,57 @@ namespace GeometRi
         {
             return c.DistanceTo(this, out p2, out p1);
         }
+
+        /// <summary>
+        /// Shortest distance between two spheres.
+        /// <para> Zero distance is returned if one sphere located inside other.</para>
+        /// </summary>
+        public double DistanceTo(Sphere s)
+        {
+            double dist = this.Center.DistanceTo(s.Center);
+            if (dist <= this.R + s.R)
+            {
+                return 0;
+            }
+            else
+            {
+                return dist - this.R - s.R;
+            }
+        }
+
+        /// <summary>
+        /// Shortest distance between two spheres.
+        /// <para> Zero distance is returned if one sphere located inside other.</para>
+        /// <para> The output points may be not unique in case of touching objects.</para>
+        /// </summary>
+        /// <param name="s">Target sphere</param>
+        /// <param name="p1">Closest point on source sphere</param>
+        /// <param name="p2">Closest point on target sphere</param>
+        public double DistanceTo(Sphere s, out Point3d p1, out Point3d p2)
+        {
+            double dist = this.Center.DistanceTo(s.Center);
+            if (dist <= this.R + s.R)
+            {
+                if (this.Center == s.Center)
+                {
+                    p1 = this.Center.Translate(this.R * new Vector3d(1, 0, 0));
+                    p2 = s.Center.Translate(s.R * new Vector3d(1, 0, 0));
+                }
+                else
+                {
+                    p1 = this.Center.Translate(this.R * new Vector3d(this.Center, s.Center).Normalized);
+                    p2 = s.Center.Translate(s.R * new Vector3d(s.Center, this.Center).Normalized);
+                }
+                return 0;
+            }
+            else
+            {
+                p1 = this.Center.Translate(this.R * new Vector3d(this.Center, s.Center).Normalized);
+                p2 = s.Center.Translate(s.R * new Vector3d(s.Center, this.Center).Normalized);
+                return dist - this.R - s.R;
+            }
+        }
+
         #endregion
 
         #region "BoundingBox"

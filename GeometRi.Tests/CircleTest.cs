@@ -471,7 +471,7 @@ namespace GeometRi_Tests
             s = new Sphere(new Point3d(2, 0, 0), 1.0);
             Assert.IsTrue(c.Intersects(s));
 
-            // Non-intersectiong objects
+            // Non-intersecting objects
             s = new Sphere(new Point3d(3, 0, 0), 1.0);
             Assert.IsFalse(c.Intersects(s));
 
@@ -482,27 +482,45 @@ namespace GeometRi_Tests
         {
             Point3d p = new Point3d();
             Circle3d c = new Circle3d(p, 1.0, new Vector3d(0, 0, 1));
+            Point3d p1, p2;
 
             // Intersecting objects
             Sphere s = new Sphere(new Point3d(0, 0, 1), 1.1);
-            Assert.AreEqual(c.DistanceTo(s), 0.0);
+            double dist = c.DistanceTo(s, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(0, 0, 0));
+            Assert.AreEqual(p2, new Point3d(0, 0, -0.1));
 
             s = new Sphere(new Point3d(0, 0, 0), 10);
             Assert.AreEqual(c.DistanceTo(s), 0.0);
 
             s = new Sphere(new Point3d(2, 0, 0), 1.1);
-            Assert.AreEqual(c.DistanceTo(s), 0.0);
+            dist = c.DistanceTo(s, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(1, 0, 0));
+            Assert.AreEqual(p2, new Point3d(0.9, 0, 0));
 
             // Touching objects
             s = new Sphere(new Point3d(0, 0, 1), 1.0);
-            Assert.AreEqual(c.DistanceTo(s), 0.0);
+            dist = c.DistanceTo(s, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(0, 0, 0));
+            Assert.AreEqual(p2, new Point3d(0, 0, 0));
 
             s = new Sphere(new Point3d(2, 0, 0), 1.0);
-            Assert.AreEqual(c.DistanceTo(s), 0.0);
+            dist = c.DistanceTo(s, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(1, 0, 0));
+            Assert.AreEqual(p2, new Point3d(1, 0, 0));
 
-            // Non-intersectiong objects
+            // Non-intersecting objects
             s = new Sphere(new Point3d(3, 0, 0), 1.0);
-            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(s), 1.0));
+            dist = c.DistanceTo(s, out p1, out p2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 1.0));
+            Assert.AreEqual(p1, new Point3d(1, 0, 0));
+            Assert.AreEqual(p2, new Point3d(2, 0, 0));
         }
+
+
     }
 }

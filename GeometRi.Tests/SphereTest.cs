@@ -206,5 +206,35 @@ namespace GeometRi_Tests
             Assert.IsTrue(s.IsInside(b));
         }
 
+        [TestMethod()]
+        public void SphereDistanceToSphereTest()
+        {
+            Sphere s1 = new Sphere(new Point3d(0, 0, 0), 1.0);
+            Point3d p1, p2;
+
+            // Intersecting objects
+            Sphere s2 = new Sphere(new Point3d(1, 0, 0), 1.0);
+            double dist = s1.DistanceTo(s2, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(1, 0, 0));
+            Assert.AreEqual(p2, new Point3d(0, 0, 0));
+
+            // Touching objects
+            s2 = new Sphere(new Point3d(2, 0, 0), 1.0);
+            dist = s1.DistanceTo(s2, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(1, 0, 0));
+            Assert.AreEqual(p2, new Point3d(1, 0, 0));
+
+
+            // Non-intersecting objects
+            s2 = new Sphere(new Point3d(3, 0, 0), 1.0);
+            dist = s1.DistanceTo(s2, out p1, out p2);
+            Assert.AreEqual(dist, 1.0);
+            Assert.AreEqual(p1, new Point3d(1, 0, 0));
+            Assert.AreEqual(p2, new Point3d(2, 0, 0));
+
+        }
+
     }
 }

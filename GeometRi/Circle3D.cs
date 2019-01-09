@@ -641,7 +641,14 @@ namespace GeometRi
             if (s.Center.ProjectionTo(p).BelongsTo(this))
             {
                 p1 = s.Center.ProjectionTo(p);
-                p2 = p1;
+                if (s.Center == p1)
+                {
+                    p2 = s.Center.Translate(s.R * this.Normal.Normalized);
+                }
+                else
+                {
+                    p2 = s.Center.Translate(s.R * new Vector3d(s.Center, p1).Normalized);
+                }
                 return s.DistanceTo(p);
             }
 
