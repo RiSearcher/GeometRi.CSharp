@@ -160,6 +160,18 @@ namespace GeometRi
         {
             return c.DistanceTo(this);
         }
+
+        /// <summary>
+        /// Shortest distance between sphere and circle (including interior points) (approximate solution)
+        /// <para> The output points may be not unique in case of intersecting objects.</para>
+        /// </summary>
+        /// <param name="c">Target circle</param>
+        /// <param name="p1">Closest point on sphere</param>
+        /// <param name="p2">Closest point on circle</param>
+        public double DistanceTo(Circle3d c, out Point3d p1, out Point3d p2)
+        {
+            return c.DistanceTo(this, out p2, out p1);
+        }
         #endregion
 
         #region "BoundingBox"

@@ -628,6 +628,45 @@ namespace GeometRi
             return dist;
         }
 
+        /// <summary>
+        /// Shortest distance between two circles (including interior points) (approximate solution)
+        /// <para> The output points may be not unique in case of intersecting objects.</para>
+        /// </summary>
+        /// <param name="s">Target sphere</param>
+        /// <param name="p1">Closest point on circle</param>
+        /// <param name="p2">Closest point on sphere</param>
+        public double DistanceTo(Sphere s, out Point3d p1, out Point3d p2)
+        {
+            Plane3d p = this.ToPlane;
+            if (s.Center.ProjectionTo(p).BelongsTo(this))
+            {
+                p1 = s.Center.ProjectionTo(p);
+                p2 = p1;
+                return s.DistanceTo(p);
+            }
+
+            if (this.Intersects(s))
+            {
+                Object obj = s.IntersectionWith(p);
+                if (obj.GetType() == typeof(Point3d))
+                {
+                    p1 = (Point3d)obj;
+                    p2 = p1;
+                }
+                else
+                {
+                    Circle3d c = (Circle3d)obj;
+                    p1 = this.Center.Translate(this.R * new Vector3d(this.Center, c.Center).Normalized);
+                    p2 = c.Center.Translate(c.R * new Vector3d(c.Center, this.Center).Normalized);
+                }
+                return 0;
+            }
+
+            double dist = _distance_cicle_to_sphere(this, s, out p1, out p2);
+
+            return dist;
+        }
+
         private double _distance_cicle_to_sphere(Circle3d c1, Sphere c2, out Point3d p1, out Point3d p2)
         // Use quadratic interpolation to find closest point on circle
         // p1 and p2 - closest points on circle and sphere respectively
