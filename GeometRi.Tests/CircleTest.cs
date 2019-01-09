@@ -447,5 +447,62 @@ namespace GeometRi_Tests
             c = new Circle3d(new Point3d(0.9, 0, 0), 0.2, new Vector3d(0, 0, 1));
             Assert.IsFalse(c.IsInside(box));
         }
+
+        [TestMethod()]
+        public void CircleIntersectsSphereTest()
+        {
+            Point3d p = new Point3d();
+            Circle3d c = new Circle3d(p, 1.0, new Vector3d(0, 0, 1));
+
+            // Intersecting objects
+            Sphere s = new Sphere(new Point3d(0, 0, 1), 1.1);
+            Assert.IsTrue(c.Intersects(s));
+
+            s = new Sphere(new Point3d(0, 0, 0), 10);
+            Assert.IsTrue(c.Intersects(s));
+
+            s = new Sphere(new Point3d(2, 0, 0), 1.1);
+            Assert.IsTrue(c.Intersects(s));
+
+            // Touching objects
+            s = new Sphere(new Point3d(0, 0, 1), 1.0);
+            Assert.IsTrue(c.Intersects(s));
+
+            s = new Sphere(new Point3d(2, 0, 0), 1.0);
+            Assert.IsTrue(c.Intersects(s));
+
+            // Non-intersectiong objects
+            s = new Sphere(new Point3d(3, 0, 0), 1.0);
+            Assert.IsFalse(c.Intersects(s));
+
+        }
+
+        [TestMethod()]
+        public void CircleDistanceToSphereTest()
+        {
+            Point3d p = new Point3d();
+            Circle3d c = new Circle3d(p, 1.0, new Vector3d(0, 0, 1));
+
+            // Intersecting objects
+            Sphere s = new Sphere(new Point3d(0, 0, 1), 1.1);
+            Assert.AreEqual(c.DistanceTo(s), 0.0);
+
+            s = new Sphere(new Point3d(0, 0, 0), 10);
+            Assert.AreEqual(c.DistanceTo(s), 0.0);
+
+            s = new Sphere(new Point3d(2, 0, 0), 1.1);
+            Assert.AreEqual(c.DistanceTo(s), 0.0);
+
+            // Touching objects
+            s = new Sphere(new Point3d(0, 0, 1), 1.0);
+            Assert.AreEqual(c.DistanceTo(s), 0.0);
+
+            s = new Sphere(new Point3d(2, 0, 0), 1.0);
+            Assert.AreEqual(c.DistanceTo(s), 0.0);
+
+            // Non-intersectiong objects
+            s = new Sphere(new Point3d(3, 0, 0), 1.0);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(c.DistanceTo(s), 1.0));
+        }
     }
 }

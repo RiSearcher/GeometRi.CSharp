@@ -188,5 +188,23 @@ namespace GeometRi_Tests
             GeometRi3D.Tolerance = tol;
         }
 
+        [TestMethod]
+        public void SphereInBoxTest()
+        {
+            Box3d b = new Box3d(new Point3d(), 1.0, 1.0, 1.0);
+
+            Point3d p = new Point3d(5, 0, 0);
+            Sphere s = new Sphere(p, 0.1);
+            Assert.IsFalse(s.IsInside(b));
+
+            p = new Point3d(0.4, 0, 0);
+            s = new Sphere(p, 0.1);
+            Assert.IsFalse(s.IsInside(b));
+
+            p = new Point3d(0.3, 0, 0);
+            s = new Sphere(p, 0.1);
+            Assert.IsTrue(s.IsInside(b));
+        }
+
     }
 }

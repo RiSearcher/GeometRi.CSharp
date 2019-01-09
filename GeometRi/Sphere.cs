@@ -152,6 +152,14 @@ namespace GeometRi
                 return 0;
             }
         }
+
+        /// <summary>
+        /// Shortest distance between sphere and circle (including interior points) (approximate solution)
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            return c.DistanceTo(this);
+        }
         #endregion
 
         #region "BoundingBox"
@@ -180,7 +188,64 @@ namespace GeometRi
             get { return this; }
 
         }
+
+        /// <summary>
+        /// Check if sphere is located inside box with tolerance defined by global tolerance property (GeometRi3D.Tolerance).
+        /// </summary>
+        public bool IsInside(Box3d box)
+        {
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.IsInside(box);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            if (!this.Center.IsInside(box)) return false;
+
+            Plane3d p = new Plane3d(box.P1, box.P2, box.P3);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P1, box.P2, box.P6);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P2, box.P3, box.P7);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P3, box.P4, box.P8);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P4, box.P1, box.P5);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            p = new Plane3d(box.P5, box.P6, box.P7);
+            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+
+            return true;
+        }
         #endregion
+
+        /// <summary>
+        /// Point on sphere's surface closest to target point "p".
+        /// </summary>
+        public Point3d ClosestPoint(Point3d p)
+        {
+            if (p == this.Center)
+            {
+                // return any point on surface
+                return this.Center.Translate(this.R * new Vector3d(1, 0, 0));
+            }
+            else
+            {
+                return this.Center.Translate(this.R * new Vector3d(this.Center, p).Normalized);
+            }
+        }
 
         #region "Intersections"
         /// <summary>

@@ -582,6 +582,127 @@ namespace GeometRi
             return d1;
         }
 
+        /// <summary>
+        /// Intersection check between circle and sphere
+        /// </summary>
+        public bool Intersects(Sphere s)
+        {
+            if (this.Center.DistanceTo(s.Center) <= this.R + s.R)
+            {
+                Object obj = s.IntersectionWith(this.ToPlane);
+                if (obj != null & obj.GetType() == typeof(Circle3d))
+                {
+                    // Check for circle-circle intersection
+                    if (this.IntersectionWith((Circle3d)obj) != null)
+                        return true;
+                }
+                else if (obj != null & obj.GetType() == typeof(Point3d))
+                {
+                    return ((Point3d)obj).BelongsTo(this);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Shortest distance between circle and sphere (including interior points) (approximate solution)
+        /// </summary>
+        public double DistanceTo(Sphere s)
+        {
+            Plane3d p = this.ToPlane;
+            if (s.Center.ProjectionTo(p).BelongsTo(this))
+            {
+                return s.DistanceTo(p);
+            }
+
+            if (this.Intersects(s))
+                return 0;
+
+            Point3d p1, p2;
+            double dist = _distance_cicle_to_sphere(this, s, out p1, out p2);
+
+            return dist;
+        }
+
+        private double _distance_cicle_to_sphere(Circle3d c1, Sphere c2, out Point3d p1, out Point3d p2)
+        // Use quadratic interpolation to find closest point on circle
+        // p1 and p2 - closest points on circle and sphere respectively
+        {
+            double d1 = 1e20;
+            double t1 = 0;
+            Point3d p;
+
+            for (int i = 0; i < 16; i++)
+            {
+                double t = i * Math.PI / 8;
+                p = c1.ParametricForm(t);
+                double dist = p.DistanceTo(c2);
+                if (dist < d1)
+                {
+                    d1 = dist;
+                    t1 = t;
+                }
+            }
+            double t2 = t1 - Math.PI / 8;
+            p = c1.ParametricForm(t2);
+            double d2 = p.DistanceTo(c2);
+            double t3 = t1 + Math.PI / 8;
+            p = c1.ParametricForm(t3);
+            double d3 = p.DistanceTo(c2);
+
+            int iter = 0;
+            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance & d1 > GeometRi3D.DefaultTolerance)
+            {
+                if (++iter > 100) break;
+
+                double ax = 2.0 * d1 / (t1 - t2) / (t1 - t3);
+                double aa = 0.5 * ax * (t2 + t3);
+                double bx = 2.0 * d2 / (t2 - t1) / (t2 - t3);
+                double bb = 0.5 * bx * (t1 + t3);
+                double cx = 2.0 * d3 / (t3 - t1) / (t3 - t2);
+                double cc = 0.5 * cx * (t1 + t2);
+
+                double t = (aa + bb + cc) / (ax + bx + cx);
+                p = c1.ParametricForm(t);
+                double d = p.DistanceTo(c2);
+
+                if (d < d1)
+                {
+                    if (t > t2 & t < t1)
+                    {
+                        t3 = t1; d3 = d1;
+                    }
+                    else
+                    {
+                        t2 = t1; d2 = d1;
+                    }
+                    t1 = t; d1 = d;
+                }
+                else
+                {
+                    if (t < t1)
+                    {
+                        t2 = t; d2 = d;
+                    }
+                    else
+                    {
+                        t3 = t; d3 = d;
+                    }
+                }
+
+
+            }
+
+            p1 = c1.ParametricForm(t1);
+            p2 = c2.ClosestPoint(p1);
+            return d1;
+        }
+
+
 
         /// <summary>
         /// Orthogonal projection of the circle to plane
@@ -736,7 +857,16 @@ namespace GeometRi
 
                     // One circle inside the other
                     if (d < Abs(this.R - c.R) - GeometRi3D.Tolerance)
-                        return null;
+                    {
+                        if (this.R > c.R)
+                        {
+                            return c.Copy();
+                        }
+                        else
+                        {
+                            return this.Copy();
+                        }
+                    }
 
                     // Outer tangency
                     if (GeometRi3D.AlmostEqual(d, this.R + c.R))
