@@ -192,7 +192,7 @@ namespace GeometRi
 
         /// <summary>
         /// Shortest distance between two spheres.
-        /// <para> Zero distance is returned if one sphere located inside other.</para>
+        /// <para> Zero distance is returned if one sphere is located inside the other.</para>
         /// <para> The output points may be not unique in case of touching objects.</para>
         /// </summary>
         /// <param name="s">Target sphere</param>

@@ -590,13 +590,13 @@ namespace GeometRi
             if (this.Center.DistanceTo(s.Center) <= this.R + s.R)
             {
                 Object obj = s.IntersectionWith(this.ToPlane);
-                if (obj != null & obj.GetType() == typeof(Circle3d))
+                if (obj != null && obj.GetType() == typeof(Circle3d))
                 {
                     // Check for circle-circle intersection
                     if (this.IntersectionWith((Circle3d)obj) != null)
                         return true;
                 }
-                else if (obj != null & obj.GetType() == typeof(Point3d))
+                else if (obj != null && obj.GetType() == typeof(Point3d))
                 {
                     return ((Point3d)obj).BelongsTo(this);
                 }
