@@ -509,7 +509,7 @@ namespace GeometRi
 
             int iter = 0;
             bool flag = false;
-            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance & d1 > GeometRi3D.DefaultTolerance)
+            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance && d1 > GeometRi3D.DefaultTolerance)
             {
                 if (++iter > 100) break;
 
@@ -545,7 +545,7 @@ namespace GeometRi
             if (flag)
             // Possible special case, non-smooth function ( f(t)=|t| )
             {
-                while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance & d1 > GeometRi3D.DefaultTolerance)
+                while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance && d1 > GeometRi3D.DefaultTolerance)
                 {
                     if (++iter > 100) break;
 
@@ -701,7 +701,7 @@ namespace GeometRi
             double d3 = p.DistanceTo(c2);
 
             int iter = 0;
-            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance & d1 > GeometRi3D.DefaultTolerance)
+            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance && d1 > GeometRi3D.DefaultTolerance)
             {
                 if (++iter > 100) break;
 

@@ -103,6 +103,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Shortest distance between sphere and line
+        /// </summary>
         public double DistanceTo(Line3d l)
         {
             double d = l.DistanceTo(this.Center);
@@ -116,6 +119,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Shortest distance between sphere and ray
+        /// </summary>
         public double DistanceTo(Ray3d r)
         {
             if (this.Center.ProjectionTo(r.ToLine).BelongsTo(r))
@@ -128,6 +134,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Shortest distance between sphere and segment
+        /// </summary>
         public double DistanceTo(Segment3d s)
         {
             if (this.Center.ProjectionTo(s.ToLine).BelongsTo(s))
@@ -140,6 +149,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Shortest distance between sphere and plane
+        /// </summary>
         public double DistanceTo(Plane3d s)
         {
             double d = this.Center.DistanceTo(s);

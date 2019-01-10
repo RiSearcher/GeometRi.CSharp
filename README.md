@@ -255,7 +255,9 @@ common translation, rotation and reflection methods.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __DistanceTo__ - shortest distance to point, line, ray, segment or plane
+* __IsInside__ - check if sphere is located inside box
+* __ClosestPoint__ - point on sphere's surface closest to target point
+* __DistanceTo__ - shortest distance to point, line, ray, segment, plane, circle or sphere
 * __IntersectionWith__ - intersection of sphere with line, plane, segment or other sphere
 * __ProjectionTo__ - orthogonal projection of sphere to the line or plane
 * __Translate__ - translate sphere by vector
@@ -279,8 +281,11 @@ Defines a circle in 3D space by center point, radius and normal vector.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
+* __IsInside__ - check if circle is located inside box
+* __ClosestPoint__ - point on circle's surface closest to target point
 * __ParametricForm__ - return point on circle for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of circle to plane or line
+* __DistanceTo__ - shortest distance to point, plane, circle or sphere
 * __IntersectionWith__ - intersection of circle with line, plane, segment or other circle
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
