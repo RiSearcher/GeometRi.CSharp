@@ -124,6 +124,27 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
+        public void ClosestPointTest()
+        {
+            Rotation r = new Rotation(new Vector3d(2, 1, 5), PI / 3);
+            Box3d b = new Box3d(new Point3d(1, 1, 1), 2, 2, 2);
+            Point3d p0 = new Point3d(1, 2, 2);
+            Point3d p1 = new Point3d(-1, -1, -1);
+            Point3d p3 = new Point3d(3, 3, -1);
+            Point3d p6 = new Point3d(3, -1, 3);
+
+            b = b.Rotate(r, p0);
+            p1 = p1.Rotate(r, p0);
+            p3 = p3.Rotate(r, p0);
+            p6 = p6.Rotate(r, p0);
+
+            Assert.AreEqual(p0, b.ClosestPoint(p0));
+            Assert.AreEqual(b.P1, b.ClosestPoint(p1));
+            Assert.AreEqual(b.P3, b.ClosestPoint(p3));
+            Assert.AreEqual(b.P6, b.ClosestPoint(p6));
+        }
+
+        [TestMethod]
         public void LineIntersectionWithBoxTest()
         {
             Rotation rot = new Rotation();

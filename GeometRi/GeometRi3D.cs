@@ -4,9 +4,9 @@ using static System.Math;
 namespace GeometRi
 {
     /// <summary>
-    /// Abstract class. Implements global tolerance property and tolerance based equality methods.
+    /// Static class. Implements global tolerance property and tolerance based equality methods.
     /// </summary>
-    public abstract class GeometRi3D
+    public static class GeometRi3D
     {
 
         private static double _tolerance = 1E-12;
@@ -176,6 +176,18 @@ namespace GeometRi
             n1 = (n1 << 4) ^ (n1 >> 28) ^ n2;
             n1 = (n1 << 4) ^ (n1 >> 28) ^ n3;
             return (n1 << 4) ^ (n1 >> 28) ^ n4;
+        }
+
+        /// <summary>
+        /// Restrict 'value' to a range [min, max].
+        /// </summary>
+        public static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
+        {
+            if (value == null || min == null || max == null) throw new ArgumentNullException();
+            // Check if min <= max
+            if (min.CompareTo(max) <= 0) return value.CompareTo(min) < 0 ? min : value.CompareTo(max) > 0 ? max : value;
+            // Reverse min and max otherwise
+            return value.CompareTo(max) < 0 ? max : value.CompareTo(min) > 0 ? min : value;
         }
 
         #region "CalcAngle"

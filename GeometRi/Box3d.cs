@@ -274,6 +274,36 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// List of triangles forming the box's surface
+        /// </summary>
+        public List<Triangle> ListOfTriangles
+        {
+            get
+            {
+                List<Triangle> list = new List<Triangle> { };
+                list.Add(new Triangle(P1, P3, P2));
+                list.Add(new Triangle(P1, P4, P3));
+
+                list.Add(new Triangle(P1, P2, P6));
+                list.Add(new Triangle(P1, P6, P5));
+
+                list.Add(new Triangle(P2, P3, P7));
+                list.Add(new Triangle(P2, P7, P6));
+
+                list.Add(new Triangle(P3, P4, P8));
+                list.Add(new Triangle(P3, P8, P7));
+
+                list.Add(new Triangle(P4, P1, P5));
+                list.Add(new Triangle(P4, P5, P8));
+
+                list.Add(new Triangle(P5, P6, P7));
+                list.Add(new Triangle(P5, P7, P8));
+
+                return list;
+            }
+        }
+
+        /// <summary>
         /// Volume of the box.
         /// </summary>
         public double Volume
@@ -475,6 +505,28 @@ namespace GeometRi
         }
         #endregion
 
+
+        /// <summary>
+        /// Local coordinate system with origin in box's center and aligned with box
+        /// </summary>
+        public Coord3d LocalCoord()
+        {
+            return new Coord3d(_center, _r.ToRotationMatrix.Transpose());
+        }
+
+        /// <summary>
+        /// Point on box (including interior points) closest to target point "p".
+        /// </summary>
+        public Point3d ClosestPoint(Point3d p)
+        {
+            Coord3d local_coord = this.LocalCoord();
+            p = p.ConvertTo(local_coord);
+            double x = GeometRi3D.Clamp(p.X, -_lx / 2, _lx / 2);
+            double y = GeometRi3D.Clamp(p.Y, -_ly / 2, _ly / 2);
+            double z = GeometRi3D.Clamp(p.Z, -_lz / 2, _lz / 2);
+
+            return new Point3d(x, y, z, local_coord);
+        }
 
         internal override int _PointLocation(Point3d p)
         {
