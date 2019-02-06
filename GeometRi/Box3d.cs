@@ -536,6 +536,16 @@ namespace GeometRi
             return ClosestPoint(p).DistanceTo(p);
         }
 
+        /// <summary>
+        /// Shortest distance from box to sphere
+        /// </summary>
+        public double DistanceTo(Sphere s)
+        {
+            Point3d p = this.ClosestPoint(s.Center);
+            double dist = p.DistanceTo(s.Center);
+            return dist <= s.R ? 0.0 : dist - s.R;
+        }
+
         internal override int _PointLocation(Point3d p)
         {
             Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);

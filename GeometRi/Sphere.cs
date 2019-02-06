@@ -235,6 +235,14 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Shortest distance from box to sphere
+        /// </summary>
+        public double DistanceTo(Box3d box)
+        {
+            return box.DistanceTo(this);
+        }
+
         #endregion
 
         #region "BoundingBox"
