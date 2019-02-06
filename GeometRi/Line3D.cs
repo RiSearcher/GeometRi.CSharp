@@ -195,6 +195,25 @@ namespace GeometRi
                 return (r2 - r1).Cross(s1).Norm / s1.Norm;
             }
         }
+
+        /// <summary>
+        /// Shortest distance between line and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            return c.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Shortest distance between line and circle (including interior points)
+        /// </summary>
+        /// <param name="c">Target circle</param>
+        /// <param name="point_on_line">Closest point on line</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        public double DistanceTo(Circle3d c, out Point3d point_on_line, out Point3d point_on_circle)
+        {
+            return c.DistanceTo(this, out point_on_circle, out point_on_line);
+        }
         #endregion
 
 

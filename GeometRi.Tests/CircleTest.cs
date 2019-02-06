@@ -521,6 +521,49 @@ namespace GeometRi_Tests
             Assert.AreEqual(p2, new Point3d(2, 0, 0));
         }
 
+        [TestMethod()]
+        public void CircleDistanceToLineTest()
+        {
+            Point3d p = new Point3d();
+            Circle3d c = new Circle3d(p, 1.0, new Vector3d(0, 0, 1));
+            Point3d p1, p2;
+
+            // Parallel objects
+            Line3d l= new Line3d(new Point3d(0, 0, 1), new Vector3d(1, 0, 0));
+            double dist = c.DistanceTo(l, out p1, out p2);
+            Assert.AreEqual(dist, 1.0);
+            Assert.AreEqual(p1, p);
+            Assert.AreEqual(p2, new Point3d(0, 0, 1));
+
+            // Coplanar intersecting objects
+            l = new Line3d(new Point3d(0, 0.5, 0), new Vector3d(1, 0, 0));
+            dist = c.DistanceTo(l, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(0, 0.5, 0));
+            Assert.AreEqual(p2, new Point3d(0, 0.5, 0));
+
+            // Coplanar non-intersecting objects
+            l = new Line3d(new Point3d(0, 1.5, 0), new Vector3d(1, 0, 0));
+            dist = c.DistanceTo(l, out p1, out p2);
+            Assert.AreEqual(dist, 0.5);
+            Assert.AreEqual(p1, new Point3d(0, 1, 0));
+            Assert.AreEqual(p2, new Point3d(0, 1.5, 0));
+
+            // Intersecting objects
+            l = new Line3d(new Point3d(0, 0.5, 0), new Vector3d(0, 0, 1));
+            dist = c.DistanceTo(l, out p1, out p2);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(p1, new Point3d(0, 0.5, 0));
+            Assert.AreEqual(p2, new Point3d(0, 0.5, 0));
+
+            // Non-intersecting objects
+            l = new Line3d(new Point3d(0, 1.5, 0), new Vector3d(0, 0, 1));
+            dist = c.DistanceTo(l, out p1, out p2);
+            Assert.AreEqual(dist, 0.5);
+            Assert.AreEqual(p1, new Point3d(0, 1, 0));
+            Assert.AreEqual(p2, new Point3d(0, 1.5, 0));
+        }
+
 
     }
 }

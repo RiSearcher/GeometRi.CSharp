@@ -511,7 +511,7 @@ namespace GeometRi
         /// </summary>
         public Coord3d LocalCoord()
         {
-            return new Coord3d(_center, _r.ToRotationMatrix.Transpose());
+            return new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
         }
 
         /// <summary>

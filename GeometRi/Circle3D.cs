@@ -382,8 +382,8 @@ namespace GeometRi
             }
 
             Point3d p1_1, p1_2, p2_1, p2_2;
-            double dist1 = _distance_cicle_to_circle(this, c, out p1_1, out p1_2);
-            double dist2 = _distance_cicle_to_circle(c, this, out p2_1, out p2_2);
+            double dist1 = _distance_circle_to_circle(this, c, out p1_1, out p1_2);
+            double dist2 = _distance_circle_to_circle(c, this, out p2_1, out p2_2);
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
@@ -461,8 +461,8 @@ namespace GeometRi
             }
 
             Point3d p1_1, p1_2, p2_1, p2_2;
-            double dist1 = _distance_cicle_to_circle(this, c, out p1_1, out p1_2);
-            double dist2 = _distance_cicle_to_circle(c, this, out p2_1, out p2_2);
+            double dist1 = _distance_circle_to_circle(this, c, out p1_1, out p1_2);
+            double dist2 = _distance_circle_to_circle(c, this, out p2_1, out p2_2);
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
@@ -481,7 +481,7 @@ namespace GeometRi
             return Min(dist1, dist2);
         }
 
-        private double _distance_cicle_to_circle(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2)
+        private double _distance_circle_to_circle(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2)
         // Use quadratic interpolation to find closest point on one circle to other
         // p1 and p2 - closest points on both circles
         {
@@ -623,7 +623,7 @@ namespace GeometRi
                 return 0;
 
             Point3d p1, p2;
-            double dist = _distance_cicle_to_sphere(this, s, out p1, out p2);
+            double dist = _distance_circle_to_sphere(this, s, out p1, out p2);
 
             return dist;
         }
@@ -669,12 +669,12 @@ namespace GeometRi
                 return 0;
             }
 
-            double dist = _distance_cicle_to_sphere(this, s, out p1, out p2);
+            double dist = _distance_circle_to_sphere(this, s, out p1, out p2);
 
             return dist;
         }
 
-        private double _distance_cicle_to_sphere(Circle3d c1, Sphere c2, out Point3d p1, out Point3d p2)
+        private double _distance_circle_to_sphere(Circle3d c1, Sphere c2, out Point3d p1, out Point3d p2)
         // Use quadratic interpolation to find closest point on circle
         // p1 and p2 - closest points on circle and sphere respectively
         {
@@ -746,6 +746,61 @@ namespace GeometRi
             p1 = c1.ParametricForm(t1);
             p2 = c2.ClosestPoint(p1);
             return d1;
+        }
+
+        /// <summary>
+        /// Shortest distance between line and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Line3d l)
+        {
+            Point3d p1, p2;
+            double dist = _distance_circle_to_line(l, out p1, out p2);
+            return dist;
+        }
+
+        /// <summary>
+        /// Shortest distance between line and circle (including interior points)
+        /// </summary>
+        /// <param name="l">Target line</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        /// <param name="point_on_line">Closest point on line</param>
+        public double DistanceTo(Line3d l, out Point3d point_on_circle, out Point3d point_on_line)
+        {
+            double dist = _distance_circle_to_line(l, out point_on_circle, out point_on_line);
+            return dist;
+        }
+
+        /// <summary>
+        /// Shortest distance between line and circle (including interior points)
+        /// </summary>
+        /// <param name="l">Target line</param>
+        /// <param name="p1">Closest point on circle</param>
+        /// <param name="p2">Closest point on line</param>
+        private double _distance_circle_to_line(Line3d l, out Point3d p1, out Point3d p2)
+        {
+
+            // Line is parallel
+            if (l.IsParallelTo(this))
+            {
+                p2 = this.Center.ProjectionTo(l);
+                p1 = this.ClosestPoint(p2);
+                return p1.DistanceTo(p2);
+            }
+
+            // Intrsecting line
+            object obj = l.IntersectionWith(this);
+            if (obj != null)
+            {
+                p1 = (Point3d)obj;
+                p2 = p1;
+                return 0;
+            }
+
+            Point3d p = (Point3d)l.IntersectionWith(this.ToPlane);
+            Vector3d v = new Vector3d(this.Center, p).Normalized;
+            p1 = this.Center.Translate(this.R * v);
+            p2 = p1.ProjectionTo(l);
+            return p1.DistanceTo(p2);
         }
 
 
