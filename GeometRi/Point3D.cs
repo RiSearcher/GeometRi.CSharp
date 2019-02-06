@@ -246,6 +246,14 @@ namespace GeometRi
             return c.DistanceTo(this);
         }
 
+        /// <summary>
+        /// Distance from box to point (zero will be returned for point located inside box)
+        /// </summary>
+        public double DistanceTo(Box3d box)
+        {
+            return box.ClosestPoint(this).DistanceTo(this);
+        }
+
         #endregion
 
 

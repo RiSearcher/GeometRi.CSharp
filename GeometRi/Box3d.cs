@@ -528,6 +528,14 @@ namespace GeometRi
             return new Point3d(x, y, z, local_coord);
         }
 
+        /// <summary>
+        /// Distance from box to point (zero will be returned for point located inside box)
+        /// </summary>
+        public double DistanceTo(Point3d p)
+        {
+            return ClosestPoint(p).DistanceTo(p);
+        }
+
         internal override int _PointLocation(Point3d p)
         {
             Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);

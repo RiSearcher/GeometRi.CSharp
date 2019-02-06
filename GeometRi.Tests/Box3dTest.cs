@@ -145,6 +145,19 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
+        public void DistanceToPointTest()
+        {
+            Box3d b = new Box3d();
+            Point3d p1 = new Point3d(0.3, 0.4, 0.2); // Point inside box
+            Point3d p2 = new Point3d(0.3, 0.4, 0.5); // Point on boundary
+            Point3d p3 = new Point3d(0.3, 0.4, 1.0); // Point outside box
+
+            Assert.IsTrue(GeometRi3D.AlmostEqual(b.DistanceTo(p1), 0.0));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(b.DistanceTo(p2), 0.0));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(b.DistanceTo(p3), 0.5));
+        }
+
+        [TestMethod]
         public void LineIntersectionWithBoxTest()
         {
             Rotation rot = new Rotation();
