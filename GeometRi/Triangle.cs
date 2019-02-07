@@ -548,6 +548,60 @@ namespace GeometRi
         #endregion
 
         /// <summary>
+        /// Shortest distance between triangle and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Point3d p)
+        {
+            Point3d closest_point = this.ClosestPoint(p);
+            return p.DistanceTo(closest_point);
+        }
+
+        /// <summary>
+        /// Calculates the point on the triangle closest to given point.
+        /// </summary>
+        public Point3d ClosestPoint(Point3d p)
+        {
+            Point3d projection_point = p.ProjectionTo(this.ToPlane);
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            int code = _PointLocation(projection_point);
+
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+
+            if (code >= 0)
+            {
+                return projection_point;
+            }
+
+            Segment3d AB = new Segment3d(this.A, this.B);
+            Segment3d BC = new Segment3d(this.B, this.C);
+            Segment3d AC = new Segment3d(this.A, this.C);
+
+            double dist = p.DistanceTo(AB);
+            Point3d closest_point = AB.ClosestPoint(p);
+            double dist2 = p.DistanceTo(BC);
+            if (dist2 < dist)
+            {
+                dist = dist2;
+                closest_point = BC.ClosestPoint(p);
+            }
+            dist2 = p.DistanceTo(AC);
+            if (dist2 < dist)
+            {
+                dist = dist2;
+                closest_point = AC.ClosestPoint(p);
+            }
+
+            return closest_point;
+        }
+
+        /// <summary>
         /// Orthogonal projection of the triangle to line
         /// </summary>
         public Segment3d ProjectionTo(Line3d l)

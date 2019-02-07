@@ -151,6 +151,32 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Point on segment closest to target point "p".
+        /// </summary>
+        public Point3d ClosestPoint(Point3d p)
+        {
+            Point3d projection_point = p.ProjectionTo(this.ToLine);
+            if (projection_point.BelongsTo(this))
+            {
+                return projection_point;
+            }
+            else
+            {
+                double dist1 = p.DistanceTo(this.P1);
+                double dist2 = p.DistanceTo(this.P2);
+
+                if (dist1 <= dist2)
+                {
+                    return this.P1;
+                }
+                else
+                {
+                    return this.P2;
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns shortest distance from segment to the plane
         /// </summary>
         public double DistanceTo(Plane3d s)
