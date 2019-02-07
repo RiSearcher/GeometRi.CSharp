@@ -586,6 +586,47 @@ namespace GeometRi_Tests
             Assert.AreEqual(p2, new Point3d(0, 0, 0));
         }
 
+        [TestMethod()]
+        public void CircleclosestPointToTriangleTest()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(5, 0, 0);
+            Point3d p3 = new Point3d(0, 5, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Point3d pc, pt;
+
+            // Circle in triangle
+            Circle3d c = new Circle3d(new Point3d(2, 2, 0), 1, new Vector3d(0, 0, 1));
+            double dist = c.DistanceTo(t, out pc, out pt);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(pc, new Point3d(2, 2, 0));
+            Assert.AreEqual(pt, new Point3d(2, 2, 0));
+
+            // Triangle in circle
+            c = new Circle3d(new Point3d(5, 5, 0), 10, new Vector3d(0, 0, 1));
+            dist = c.DistanceTo(t, out pc, out pt);
+            Assert.AreEqual(dist, 0.0);
+            Assert.AreEqual(pc, pt);
+            Assert.IsTrue(pc.BelongsTo(c));
+            Assert.IsTrue(pt.BelongsTo(t));
+
+            // Closest point at vertex
+            c = new Circle3d(new Point3d(-2, -2, 0), Sqrt(2), new Vector3d(0, 0, 1));
+            dist = c.DistanceTo(t, out pc, out pt);
+            Assert.AreEqual(dist, Sqrt(2.0));
+            Assert.AreEqual(pc, new Point3d(-1, -1, 0));
+            Assert.AreEqual(pt, p1);
+
+            // Closest point at edge
+            c = new Circle3d(new Point3d(2, -2, 0), 1, new Vector3d(0, 0, 1));
+            dist = c.DistanceTo(t, out pc, out pt);
+            Assert.AreEqual(dist, 1.0);
+            Assert.AreEqual(pc, new Point3d(2, -1, 0));
+            Assert.AreEqual(pt, new Point3d(2, 0, 0));
+
+        }
+
 
     }
 }

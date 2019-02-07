@@ -874,7 +874,6 @@ namespace GeometRi
         }
 
 
-
         /// <summary>
         /// Shortest distance between line and circle (including interior points)
         /// </summary>
@@ -906,6 +905,53 @@ namespace GeometRi
             p1 = this.Center.Translate(this.R * v);
             p2 = p1.ProjectionTo(l);
             return p1.DistanceTo(p2);
+        }
+
+
+        /// <summary>
+        /// Shortest distance between triangle and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Triangle t)
+        {
+            Point3d point_on_circle, point_on_triangle;
+            return DistanceTo(t, out point_on_circle, out point_on_triangle);
+        }
+
+        /// <summary>
+        /// Shortest distance between triangle and circle (including interior points)
+        /// </summary>
+        /// <param name="t">Target triangle</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        /// <param name="point_on_triangle">Closest point on triangle</param>
+        public double DistanceTo(Triangle t, out Point3d point_on_circle, out Point3d point_on_triangle)
+        {
+            double dist = this.DistanceTo(t.ToPlane, out point_on_circle, out point_on_triangle);
+            if (t.DistanceTo(point_on_triangle) <= GeometRi3D.DefaultTolerance)
+            {
+                return dist;
+            }
+
+            Segment3d AB = new Segment3d(t.A, t.B);
+            Segment3d BC = new Segment3d(t.B, t.C);
+            Segment3d AC = new Segment3d(t.A, t.C);
+
+            dist = this.DistanceTo(AB, out point_on_circle, out point_on_triangle);
+            Point3d point_on_circle2, point_on_triangle2;
+            double dist2 = this.DistanceTo(BC, out point_on_circle2, out point_on_triangle2);
+            if (dist2 < dist)
+            {
+                dist = dist2;
+                point_on_circle = point_on_circle2;
+                point_on_triangle = point_on_triangle2;
+            }
+            dist2 = this.DistanceTo(AC, out point_on_circle2, out point_on_triangle2);
+            if (dist2 < dist)
+            {
+                dist = dist2;
+                point_on_circle = point_on_circle2;
+                point_on_triangle = point_on_triangle2;
+            }
+            return dist;
         }
 
 

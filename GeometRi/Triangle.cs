@@ -602,6 +602,26 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Shortest distance between triangle and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            Point3d point_on_circle, point_on_triangle;
+            return c.DistanceTo(this, out point_on_circle, out point_on_triangle);
+        }
+
+        /// <summary>
+        /// Shortest distance between triangle and circle (including interior points)
+        /// </summary>
+        /// <param name="c">Target circle</param>
+        /// <param name="point_on_triangle">Closest point on triangle</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        public double DistanceTo(Circle3d c, out Point3d point_on_triangle, out Point3d point_on_circle)
+        {
+            return c.DistanceTo(this, out point_on_circle, out point_on_triangle);
+        }
+
+        /// <summary>
         /// Orthogonal projection of the triangle to line
         /// </summary>
         public Segment3d ProjectionTo(Line3d l)
