@@ -339,6 +339,25 @@ namespace GeometRi
             return Min(this.P1.DistanceTo(r.Point), this.P2.DistanceTo(r.Point));
 
         }
+
+        /// <summary>
+        /// Shortest distance between segment and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            return c.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Shortest distance between segment and circle (including interior points)
+        /// </summary>
+        /// <param name="c">Target circle</param>
+        /// <param name="point_on_segment">Closest point on segment</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        public double DistanceTo(Circle3d c, out Point3d point_on_segment, out Point3d point_on_circle)
+        {
+            return c.DistanceTo(this, out point_on_circle, out point_on_segment);
+        }
         #endregion
 
         /// <summary>

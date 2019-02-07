@@ -753,8 +753,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Line3d l)
         {
-            Point3d p1, p2;
-            double dist = _distance_circle_to_line(l, out p1, out p2);
+            Point3d point_on_circle, point_on_line;
+            double dist = _distance_circle_to_line(l, out point_on_circle, out point_on_line);
             return dist;
         }
 
@@ -768,6 +768,72 @@ namespace GeometRi
         {
             double dist = _distance_circle_to_line(l, out point_on_circle, out point_on_line);
             return dist;
+        }
+
+        /// <summary>
+        /// Shortest distance between ray and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Ray3d r)
+        {
+            Point3d point_on_circle, point_on_ray;
+            return DistanceTo(r, out point_on_circle, out point_on_ray);
+        }
+
+        /// <summary>
+        /// Shortest distance between ray and circle (including interior points)
+        /// </summary>
+        /// <param name="r">Target ray</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        /// <param name="point_on_ray">Closest point on ray</param>
+        public double DistanceTo(Ray3d r, out Point3d point_on_circle, out Point3d point_on_ray)
+        {
+            double dist = _distance_circle_to_line(r.ToLine, out point_on_circle, out point_on_ray);
+
+            if (point_on_ray.BelongsTo(r)) return dist;
+
+            point_on_ray = r.Point;
+            point_on_circle = this.ClosestPoint(point_on_ray);
+            return point_on_ray.DistanceTo(point_on_circle);
+        }
+
+        /// <summary>
+        /// Shortest distance between segment and circle (including interior points)
+        /// </summary>
+        public double DistanceTo(Segment3d s)
+        {
+            Point3d point_on_circle, point_on_ray;
+            return DistanceTo(s, out point_on_circle, out point_on_ray);
+        }
+
+        /// <summary>
+        /// Shortest distance between segment and circle (including interior points)
+        /// </summary>
+        /// <param name="s">Target segment</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        /// <param name="point_on_segment">Closest point on segment</param>
+        public double DistanceTo(Segment3d s, out Point3d point_on_circle, out Point3d point_on_segment)
+        {
+            double dist = _distance_circle_to_line(s.ToLine, out point_on_circle, out point_on_segment);
+
+            if (point_on_segment.BelongsTo(s)) return dist;
+
+            Point3d point_on_circle1 = this.ClosestPoint(s.P1);
+            Point3d point_on_circle2 = this.ClosestPoint(s.P2);
+            double dist1 = point_on_circle1.DistanceTo(s.P1);
+            double dist2 = point_on_circle2.DistanceTo(s.P2);
+
+            if (dist1 < dist2)
+            {
+                point_on_circle = point_on_circle1;
+                point_on_segment = s.P1;
+                return dist1;
+            }
+            else
+            {
+                point_on_circle = point_on_circle2;
+                point_on_segment = s.P2;
+                return dist2;
+            }
         }
 
         /// <summary>
