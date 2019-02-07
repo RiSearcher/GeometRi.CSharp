@@ -251,6 +251,17 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Shortest distance between plane and circle (including interior points)
+        /// </summary>
+        /// <param name="c">Target circle</param>
+        /// <param name="point_on_plane">Closest point on plane</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        public double DistanceTo(Circle3d c, out Point3d point_on_plane, out Point3d point_on_circle)
+        {
+            return c.DistanceTo(this, out point_on_circle, out point_on_plane);
+        }
+
+        /// <summary>
         /// Get intersection of line with plane.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Line3d'.
         /// </summary>

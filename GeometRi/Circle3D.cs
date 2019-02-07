@@ -1,5 +1,6 @@
 ﻿using System;
 using static System.Math;
+using System.Collections.Generic;
 
 namespace GeometRi
 {
@@ -310,6 +311,42 @@ namespace GeometRi
             else
             {
                 return 0;
+            }
+        }
+
+        /// <summary>
+        /// Shortest distance between plane and circle
+        /// <para> The output points may be not unique in case of parallel or intersecting objects.</para>
+        /// </summary>
+        /// <param name="p">Target plane</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        /// <param name="point_on_plane">Closest point on plane</param>
+        public double DistanceTo(Plane3d p, out Point3d point_on_circle, out Point3d point_on_plane)
+        {
+            if (this.IsParallelTo(p))
+            {
+                point_on_circle = this.Center;
+                point_on_plane = point_on_circle.ProjectionTo(p);
+                return point_on_circle.DistanceTo(point_on_plane);
+            }
+
+            Vector3d v1 = this.Normal.Cross(p.Normal);
+            Vector3d v2 = this.Normal.Cross(v1);
+            Line3d l = new Line3d(this.Center, v2);
+            Point3d intersection_point = (Point3d)l.IntersectionWith(p);
+
+            if (intersection_point.DistanceTo(this) <= GeometRi3D.DefaultTolerance)
+            {
+                point_on_circle = intersection_point;
+                point_on_plane = intersection_point;
+                return 0;
+            }
+            else
+            {
+                v1 = new Vector3d(this.Center, intersection_point).Normalized;
+                point_on_circle = this.Center.Translate(this.R * v1);
+                point_on_plane = point_on_circle.ProjectionTo(p);
+                return point_on_circle.DistanceTo(point_on_plane);
             }
         }
 
@@ -835,6 +872,8 @@ namespace GeometRi
                 return dist2;
             }
         }
+
+
 
         /// <summary>
         /// Shortest distance between line and circle (including interior points)

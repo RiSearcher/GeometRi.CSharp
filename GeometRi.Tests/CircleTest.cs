@@ -564,6 +564,28 @@ namespace GeometRi_Tests
             Assert.AreEqual(p2, new Point3d(0, 1.5, 0));
         }
 
+        [TestMethod()]
+        public void CircleclosestPointToPlaneTest()
+        {
+            Point3d p = new Point3d(0, 0, 5);
+            Circle3d c = new Circle3d(p, 1.0, new Vector3d(0, 0, 1));
+            Plane3d plane = new Plane3d(new Point3d(), new Vector3d(0, 0, 1));
+            Point3d p1, p2;
+
+            // Parallel objects
+            double dist = c.DistanceTo(plane, out p1, out p2);
+            Assert.AreEqual(dist, 5.0);
+            Assert.AreEqual(p1, p);
+            Assert.AreEqual(p2, new Point3d(0, 0, 0));
+
+            // Non-parallel objects
+            c = new Circle3d(p, 1.0, new Vector3d(1, 0, 0));
+            dist = c.DistanceTo(plane, out p1, out p2);
+            Assert.AreEqual(dist, 4.0);
+            Assert.AreEqual(p1, new Point3d(0, 0, 4));
+            Assert.AreEqual(p2, new Point3d(0, 0, 0));
+        }
+
 
     }
 }
