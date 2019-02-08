@@ -254,6 +254,14 @@ namespace GeometRi
             return box.ClosestPoint(this).DistanceTo(this);
         }
 
+        /// <summary>
+        /// Shortest distance from point to triangle (including interior points)
+        /// </summary>
+        public double DistanceTo(Triangle t)
+        {
+            return t.DistanceTo(this);
+        }
+
         #endregion
 
 

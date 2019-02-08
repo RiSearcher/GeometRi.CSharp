@@ -954,6 +954,14 @@ namespace GeometRi
             return dist;
         }
 
+        /// <summary>
+        /// Shortest distance from circle to box
+        /// </summary>
+        public double DistanceTo(Box3d box)
+        {
+            return box.DistanceTo(this);
+        }
+
 
 
         /// <summary>

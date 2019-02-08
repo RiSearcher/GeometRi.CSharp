@@ -548,7 +548,7 @@ namespace GeometRi
         #endregion
 
         /// <summary>
-        /// Shortest distance between triangle and circle (including interior points)
+        /// Shortest distance between triangle and point
         /// </summary>
         public double DistanceTo(Point3d p)
         {

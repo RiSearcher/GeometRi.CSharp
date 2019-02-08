@@ -499,5 +499,20 @@ namespace GeometRi_Tests
             Assert.IsTrue(p.BelongsTo(t));
 
         }
+
+        [TestMethod()]
+        public void TriangleDistanceToCircleTest()
+        {
+            Point3d p1 = new Point3d(-0.5, -0.5, -0.5);
+            Point3d p2 = new Point3d(0.5, 0.5, -0.5);
+            Point3d p3 = new Point3d(0.5, -0.5, -0.5);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Circle3d c = new Circle3d(new Point3d(-1.3195, -1.0435, -0.70047), 0.35, new Vector3d(0.83694, -0.13208, -0.53112));
+
+            double dist = t.DistanceTo(c);
+
+
+        }
     }
 }

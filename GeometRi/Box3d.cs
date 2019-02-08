@@ -546,6 +546,24 @@ namespace GeometRi
             return dist <= s.R ? 0.0 : dist - s.R;
         }
 
+        /// <summary>
+        /// Shortest distance from box to circle
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            if (c.Center.IsInside(this))
+            {
+                return 0;
+            }
+            double min_dist = Double.PositiveInfinity;
+            foreach (Triangle triangle in ListOfTriangles)
+            {
+                double dist = c.DistanceTo(triangle);
+                if (dist < min_dist) min_dist = dist;
+            }
+            return min_dist;
+        }
+
         internal override int _PointLocation(Point3d p)
         {
             Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);
