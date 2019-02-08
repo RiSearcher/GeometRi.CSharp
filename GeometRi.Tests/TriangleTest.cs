@@ -511,7 +511,7 @@ namespace GeometRi_Tests
             Circle3d c = new Circle3d(new Point3d(-1.3195, -1.0435, -0.70047), 0.35, new Vector3d(0.83694, -0.13208, -0.53112));
 
             double dist = t.DistanceTo(c);
-
+            Assert.IsTrue(dist > 0);
 
         }
     }
