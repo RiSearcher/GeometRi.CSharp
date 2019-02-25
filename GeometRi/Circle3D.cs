@@ -260,6 +260,18 @@ namespace GeometRi
 
             if (!this.Center.IsInside(box)) return false;
 
+            // quick check
+            Point3d center = this.Center.ConvertToGlobal();
+            if (!box.IsAxisAligned)
+            {
+                Coord3d coord = new Coord3d(box.Center, box.V1, box.V2);
+                center = center.ConvertTo(coord);
+            }
+            if (Abs(center.X - box.Center.X) > 0.5 * box.L1 - this.R) return false;
+            if (Abs(center.Y - box.Center.Y) > 0.5 * box.L2 - this.R) return false;
+            if (Abs(center.Z - box.Center.Z) > 0.5 * box.L3 - this.R) return false;
+
+
             Plane3d p = new Plane3d(box.P1, box.P2, box.P3);
             if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
 

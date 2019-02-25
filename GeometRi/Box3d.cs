@@ -327,6 +327,14 @@ namespace GeometRi
             get { return Sqrt(_lx * _lx + _ly * _ly + _lz * _lz); }
         }
 
+        /// <summary>
+        /// True if box is axis aligned
+        /// </summary>
+        public bool IsAxisAligned
+        {
+            get { return _r.ToRotationMatrix.IsIdentity; }
+        }
+
         #endregion
 
         #region "BoundingBox"
