@@ -857,6 +857,14 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Intersection check between circle and triangle
+        /// </summary>
+        public bool Intersects(Circle3d c)
+        {
+            return c.Intersects(this);
+        }
+
         internal override int _PointLocation(Point3d p)
         {
 

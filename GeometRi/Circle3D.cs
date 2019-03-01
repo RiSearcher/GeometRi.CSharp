@@ -658,6 +658,38 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between circle and triangle
+        /// </summary>
+        public bool Intersects(Triangle t)
+        {
+            if (this.IsCoplanarTo(t))
+            {
+                if (t.A.BelongsTo(this)) return true;
+                if (t.B.BelongsTo(this)) return true;
+                if (t.C.BelongsTo(this)) return true;
+
+                if (this.Center.BelongsTo(t)) return true;
+                if (this.IntersectionWith(new Segment3d(t.A, t.B)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.B, t.C)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.C, t.A)) != null) return true;
+            }
+
+            if (this.DistanceTo(t.ToPlane) > 0) return false;
+
+            object obj = this.IntersectionWith(t.ToPlane);
+            if (obj != null && obj.GetType() == typeof(Point3d))
+            {
+                return ((Point3d)obj).BelongsTo(this);
+            }
+            else if (obj != null && obj.GetType() == typeof(Segment3d))
+            {
+                return ((Segment3d)obj).IntersectionWith(t) != null;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Shortest distance between circle and sphere (including interior points) (approximate solution)
         /// </summary>
         public double DistanceTo(Sphere s)
