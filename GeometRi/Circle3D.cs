@@ -690,6 +690,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between circle and box
+        /// </summary>
+        public bool Intersects(Box3d box)
+        {
+            return box.Intersects(this);
+        }
+
+        /// <summary>
         /// Shortest distance between circle and sphere (including interior points) (approximate solution)
         /// </summary>
         public double DistanceTo(Sphere s)

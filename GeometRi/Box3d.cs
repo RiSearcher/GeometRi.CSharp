@@ -572,6 +572,21 @@ namespace GeometRi
             return min_dist;
         }
 
+        /// <summary>
+        /// Intersection check between circle and box
+        /// </summary>
+        public bool Intersects(Circle3d c)
+        {
+            if (c.Center.IsInside(this)) return true;
+            if (c.Center.DistanceTo(this) > c.R) return false;
+
+            foreach (Triangle triangle in ListOfTriangles)
+            {
+                if (c.Intersects(triangle)) return true;
+            }
+            return false;
+        }
+
         internal override int _PointLocation(Point3d p)
         {
             Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);

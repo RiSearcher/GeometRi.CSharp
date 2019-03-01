@@ -427,6 +427,24 @@ namespace GeometRi_Tests
 
         }
 
+        [TestMethod()]
+        public void BoxIntersectsCircleTest()
+        {
+            Box3d box = new Box3d();
+            Circle3d c = new Circle3d(new Point3d(), 1, new Vector3d(0, 0, 1));
+            Assert.IsTrue(c.Intersects(box));
+
+            c = new Circle3d(new Point3d(1.5, 0, 0), 1, new Vector3d(0, 0, 1));
+            Assert.IsTrue(c.Intersects(box));
+
+            c = new Circle3d(new Point3d(0.5, 0.5, 0.5), 1, new Vector3d(1, 1, 1));
+            Assert.IsTrue(c.Intersects(box));
+
+            c = new Circle3d(new Point3d(0.6, 0.6, 0.6), 1, new Vector3d(1, 1, 1));
+            Assert.IsFalse(c.Intersects(box));
+
+        }
+
 
     }
 
