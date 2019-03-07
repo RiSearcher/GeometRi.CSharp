@@ -672,7 +672,7 @@ namespace GeometRi
 
             object obj = l.IntersectionWith(s);
             if (obj == null)
-            { 
+            {
                 return null;
             }
             else
@@ -695,6 +695,13 @@ namespace GeometRi
                     bool bAB = (object.ReferenceEquals(null, pAB)) ? false : pAB.BelongsTo(sAB);
                     bool bAC = (object.ReferenceEquals(null, pAC)) ? false : pAC.BelongsTo(sAC);
                     bool bBC = (object.ReferenceEquals(null, pBC)) ? false : pBC.BelongsTo(sBC);
+
+                    if (!(bAB || bAC || bBC)) return null;
+
+                    // Line crosses in one point (for nearly parallel line and triangle)
+                    if (bAB && !bBC && !bAC) { return pAB; }
+                    if (bBC && !bAB && !bAC) { return pBC; }
+                    if (bAC && !bAB && !bBC) { return pAC; }
 
                     // Line crosses one corner, return point
                     if (bAB && bBC && pAB==pBC && !bAC) { return pAB; }
