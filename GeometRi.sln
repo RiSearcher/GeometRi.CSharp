@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi", "GeometRi\GeometRi.csproj", "{F73E450B-8F34-4B6B-8BF3-B7A17D9F52C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeometRi", "GeometRi\GeometRi.csproj", "{F73E450B-8F34-4B6B-8BF3-B7A17D9F52C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi.Example", "GeometRi.Example\GeometRi.Example.csproj", "{3D086E96-C1D2-42DB-9EED-300C3A9BBAA8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi.Tests", "GeometRi.Tests\GeometRi.Tests.csproj", "{B99F3733-D205-4EDA-9B4C-F2F68A9DFD59}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GeometRi.Example.FSharp", "GeometRi.Example.FSharp\GeometRi.Example.FSharp.fsproj", "{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeometRi.Benchmarks", "GeometRi.Benchmarks\GeometRi.Benchmarks.csproj", "{BBB4B097-55D3-4135-AF02-471E007E3FDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D59A9E53-D080-4AE9-B5CB-E60F2BF5E634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB4B097-55D3-4135-AF02-471E007E3FDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB4B097-55D3-4135-AF02-471E007E3FDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB4B097-55D3-4135-AF02-471E007E3FDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB4B097-55D3-4135-AF02-471E007E3FDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
