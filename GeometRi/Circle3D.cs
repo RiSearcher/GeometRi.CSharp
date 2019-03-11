@@ -51,7 +51,7 @@ namespace GeometRi
             //_point = (new Point3d(X, Y, 0, CS)).ConvertTo(p1.Coord);
             _point = new Point3d(X, Y, 0, CS);
             _point = _point.ConvertTo(p1.Coord);
-            _r = Sqrt((X - a1.X)*(X - a1.X) + (Y - a1.Y)*(Y - a1.Y));
+            _r = Sqrt((X - a1.X) * (X - a1.X) + (Y - a1.Y) * (Y - a1.Y));
             _normal = v1.Cross(v2);
 
         }
@@ -212,7 +212,7 @@ namespace GeometRi
                 Vector3d v3 = this.Normal.Normalized;
                 Matrix3d m = new Matrix3d(v1, v2, v3);
                 Rotation r = new Rotation(m.Transpose());
-                return new Box3d(_point, 2.0*_r, 2.0*_r, 0, r);
+                return new Box3d(_point, 2.0 * _r, 2.0 * _r, 0, r);
             }
         }
 
@@ -400,10 +400,11 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Circle3d c)
         {
+            double dist;
             if (this.Normal.IsParallelTo(c.Normal))
             {
                 Point3d projection = c.Center.ProjectionTo(this.ToPlane);
-                double dist = projection.DistanceTo(this.Center);
+                dist = projection.DistanceTo(this.Center);
                 double vdist = projection.DistanceTo(c.Center);
                 if (dist < this.R + c.R)
                 {
@@ -430,15 +431,31 @@ namespace GeometRi
                 return 0;
             }
 
-            Point3d p1_1, p1_2, p2_1, p2_2;
-            double dist1 = _distance_circle_to_circle(this, c, out p1_1, out p1_2);
-            double dist2 = _distance_circle_to_circle(c, this, out p2_1, out p2_2);
+            Point3d p_on_circle, p_on_plane;
+            dist = this.DistanceTo(c.ToPlane, out p_on_circle, out p_on_plane);
+            if (p_on_plane.BelongsTo(c))
+            {
+                // Restore initial state
+                GeometRi3D.UseAbsoluteTolerance = mode;
+                GeometRi3D.Tolerance = tol;
+                return dist;
+            }
 
+            dist = c.DistanceTo(this.ToPlane, out p_on_circle, out p_on_plane);
+            if (p_on_plane.BelongsTo(this))
+            {
+                // Restore initial state
+                GeometRi3D.UseAbsoluteTolerance = mode;
+                GeometRi3D.Tolerance = tol;
+                return dist;
+            }
+
+            dist = _distance_circle_to_circle(this, c, out Point3d p1, out Point3d p2);
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
+            return dist;
 
-            return Min(dist1, dist2);
         }
 
         /// <summary>
@@ -450,10 +467,11 @@ namespace GeometRi
         /// <param name="p2">Closest point on target circle</param>
         public double DistanceTo(Circle3d c, out Point3d p1, out Point3d p2)
         {
+            double dist;
             if (this.Normal.IsParallelTo(c.Normal))
             {
                 Point3d projection = c.Center.ProjectionTo(this.ToPlane);
-                double dist = projection.DistanceTo(this.Center);
+                dist = projection.DistanceTo(this.Center);
                 double vdist = projection.DistanceTo(c.Center);
                 if (dist < this.R + c.R)
                 {
@@ -509,31 +527,39 @@ namespace GeometRi
                 return 0;
             }
 
-            Point3d p1_1, p1_2, p2_1, p2_2;
-            double dist1 = _distance_circle_to_circle(this, c, out p1_1, out p1_2);
-            double dist2 = _distance_circle_to_circle(c, this, out p2_1, out p2_2);
+            dist = this.DistanceTo(c.ToPlane, out p1, out p2);
+            if (p2.BelongsTo(c))
+            {
+                // Restore initial state
+                GeometRi3D.UseAbsoluteTolerance = mode;
+                GeometRi3D.Tolerance = tol;
+                return dist;
+            }
+
+            dist = c.DistanceTo(this.ToPlane, out p2, out p1);
+            if (p1.BelongsTo(this))
+            {
+                // Restore initial state
+                GeometRi3D.UseAbsoluteTolerance = mode;
+                GeometRi3D.Tolerance = tol;
+                return dist;
+            }
+
+            dist = _distance_circle_to_circle(this, c, out p1, out p2);
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
 
-            if (dist1 < dist2)
-            {
-                p1 = p1_1;
-                p2 = p1_2;
-            }
-            else
-            {
-                p1 = p2_2;
-                p2 = p2_1;
-            }
-            return Min(dist1, dist2);
+            return dist;
+
         }
 
         private double _distance_circle_to_circle(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2)
         // Use quadratic interpolation to find closest point on one circle to other
         // p1 and p2 - closest points on both circles
         {
+            double tol = GeometRi3D.DefaultTolerance;
             double d1 = 1e20;
             double t1 = 0;
             Point3d p;
@@ -558,7 +584,7 @@ namespace GeometRi
 
             int iter = 0;
             bool flag = false;
-            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance && d1 > GeometRi3D.DefaultTolerance)
+            while ((d2 - d1 > tol || d3 - d1 > tol)  && d1 > tol)
             {
                 if (++iter > 100) break;
 
@@ -594,7 +620,7 @@ namespace GeometRi
             if (flag)
             // Possible special case, non-smooth function ( f(t)=|t| )
             {
-                while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance && d1 > GeometRi3D.DefaultTolerance)
+                while ((d2 - d1 > tol || d3 - d1 > tol) && d1 > tol)
                 {
                     if (++iter > 100) break;
 
