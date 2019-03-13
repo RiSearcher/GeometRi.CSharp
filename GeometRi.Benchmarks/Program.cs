@@ -18,7 +18,7 @@ namespace GeometRi.Benchmarks
             //    object obj = c.Intersects(box);
             //});
 
-            //Profile("Test", 10000, () =>
+            //Profile("Test", 20000, () =>
             //{
             //    Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
             //    Circle3d c2 = new Circle3d(new Point3d(11, 0, 0), 5, new Vector3d(0, 0, 1));
@@ -29,6 +29,14 @@ namespace GeometRi.Benchmarks
             //    bool t2 = GeometRi3D.AlmostEqual(c1.DistanceTo(c2), 1);
 
             //});
+
+            Circle3d c = new Circle3d(new Point3d(2, 22, 43), 5, new Vector3d(0, 0, 2));
+            Point3d p = new Point3d(12, -22, -43);
+            Profile("Test", 2000000, () =>
+            {
+                double dist = p.DistanceTo(c);
+
+            });
 
 
             Console.ReadLine();

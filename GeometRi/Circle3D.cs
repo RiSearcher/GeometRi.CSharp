@@ -368,14 +368,24 @@ namespace GeometRi
         public double DistanceTo(Point3d p)
         {
             Point3d projection = p.ProjectionTo(this.ToPlane);
-            if (projection.BelongsTo(this))
+            if (projection.Coord != this.Center.Coord)
+            {
+                projection = projection.ConvertTo(this.Center.Coord);
+            }
+            double proj_dist_cent = projection.DistanceTo(this.Center);
+
+            if (proj_dist_cent <= this.R)
             {
                 return projection.DistanceTo(p);
             }
             else
             {
-                Point3d closest_point = this.Center.Translate(this.R * new Vector3d(this.Center, projection).Normalized);
-                return closest_point.DistanceTo(p);
+                // find closest point on circle's boundary
+                double x = this._point.X + this.R / proj_dist_cent * (projection.X - this._point.X);
+                double y = this._point.Y + this.R / proj_dist_cent * (projection.Y - this._point.Y);
+                double z = this._point.Z + this.R / proj_dist_cent * (projection.Z - this._point.Z);
+
+                return Sqrt((x - p.X) * (x - p.X) + (y - p.Y) * (y - p.Y) + (z - p.Z) * (z - p.Z));
             }
         }
 
@@ -385,13 +395,24 @@ namespace GeometRi
         public Point3d ClosestPoint(Point3d p)
         {
             Point3d projection = p.ProjectionTo(this.ToPlane);
-            if (projection.BelongsTo(this))
+            if (projection.Coord != this.Center.Coord)
+            {
+                projection = projection.ConvertTo(this.Center.Coord);
+            }
+            double proj_dist_cent = projection.DistanceTo(this.Center);
+
+            if (proj_dist_cent <= this.R)
             {
                 return projection;
             }
             else
             {
-                return this.Center.Translate(this.R * new Vector3d(this.Center, projection).Normalized);
+                // find closest point on circle's boundary
+                double x = this._point.X + this.R / proj_dist_cent * (projection.X - this._point.X);
+                double y = this._point.Y + this.R / proj_dist_cent * (projection.Y - this._point.Y);
+                double z = this._point.Z + this.R / proj_dist_cent * (projection.Z - this._point.Z);
+
+                return new Point3d(x, y, z, this.Center.Coord);
             }
         }
 
@@ -433,7 +454,7 @@ namespace GeometRi
 
             Point3d p_on_circle, p_on_plane;
             dist = this.DistanceTo(c.ToPlane, out p_on_circle, out p_on_plane);
-            if (p_on_plane.BelongsTo(c))
+            if (p_on_plane.DistanceTo(c.Center) <= c.R)
             {
                 // Restore initial state
                 GeometRi3D.UseAbsoluteTolerance = mode;
@@ -442,7 +463,7 @@ namespace GeometRi
             }
 
             dist = c.DistanceTo(this.ToPlane, out p_on_circle, out p_on_plane);
-            if (p_on_plane.BelongsTo(this))
+            if (p_on_plane.DistanceTo(this.Center) <= this.R)
             {
                 // Restore initial state
                 GeometRi3D.UseAbsoluteTolerance = mode;
@@ -528,7 +549,7 @@ namespace GeometRi
             }
 
             dist = this.DistanceTo(c.ToPlane, out p1, out p2);
-            if (p2.BelongsTo(c))
+            if (p2.DistanceTo(c.Center) <= c.R)
             {
                 // Restore initial state
                 GeometRi3D.UseAbsoluteTolerance = mode;
@@ -537,7 +558,7 @@ namespace GeometRi
             }
 
             dist = c.DistanceTo(this.ToPlane, out p2, out p1);
-            if (p1.BelongsTo(this))
+            if (p1.DistanceTo(this.Center) <= this.R)
             {
                 // Restore initial state
                 GeometRi3D.UseAbsoluteTolerance = mode;
