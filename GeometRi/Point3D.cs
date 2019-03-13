@@ -177,7 +177,17 @@ namespace GeometRi
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);
-            return new Vector3d(this, p).Norm;
+            return Sqrt((this._x - p._x) * (this._x - p._x) + (this._y - p._y) * (this._y - p._y) + (this._z - p._z) * (this._z - p._z));
+        }
+
+        /// <summary>
+        /// Returns squared distance between two points
+        /// </summary>
+        public double DistanceSquared(Point3d p)
+        {
+            if ((this._coord != p._coord))
+                p = p.ConvertTo(this._coord);
+            return (this._x - p._x) * (this._x - p._x) + (this._y - p._y) * (this._y - p._y) + (this._z - p._z) * (this._z - p._z);
         }
 
         /// <summary>
