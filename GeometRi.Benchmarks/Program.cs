@@ -30,12 +30,23 @@ namespace GeometRi.Benchmarks
 
             //});
 
+            //Circle3d c = new Circle3d(new Point3d(2, 22, 43), 5, new Vector3d(0, 0, 2));
+            //Point3d p = new Point3d(12, -22, -43);
+            //Profile("Test", 2000000, () =>
+            //{
+            //    double dist = p.DistanceTo(c);
+
+            //});
+
+
             Circle3d c = new Circle3d(new Point3d(2, 22, 43), 5, new Vector3d(0, 0, 2));
-            Point3d p = new Point3d(12, -22, -43);
+            Point3d p1 = new Point3d(12, -22, -43);
+            Point3d p2 = new Point3d(3, 14, -6);
+            Point3d p3 = new Point3d(-12, 11, 4);
+            Triangle t = new Triangle(p1, p2, p3);
             Profile("Test", 2000000, () =>
             {
-                double dist = p.DistanceTo(c);
-
+                bool test = c.Intersects(t);
             });
 
 

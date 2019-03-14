@@ -705,6 +705,27 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between two circles
+        /// </summary>
+        public bool Intersects(Circle3d c)
+        {
+            if (this.IsCoplanarTo(c))
+            {
+                if (this.Center.DistanceTo(c.Center) <= this.R + c.R) return true;
+            }
+
+            if (this.DistanceTo(c.ToPlane) > 0) return false;
+
+            object obj = this.IntersectionWith(c);
+            if (obj != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Intersection check between circle and triangle
         /// </summary>
         public bool Intersects(Triangle t)
