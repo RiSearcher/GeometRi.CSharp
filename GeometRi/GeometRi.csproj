@@ -15,7 +15,7 @@ Compatible with .Net Framework 2.0 and .Net Standard 1.0 (.Net Core, Mono, Xamar
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
     <Version>1.3.5.9</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes>Ver. 1.3.5.9.alpha</PackageReleaseNotes>
+    <PackageReleaseNotes>Shortest distance calculation for various objects.</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/RiSearcher/GeometRi.CSharp/blob/master/LICENSE.txt</PackageLicenseUrl>
   </PropertyGroup>
 
