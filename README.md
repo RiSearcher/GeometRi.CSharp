@@ -80,7 +80,8 @@ By default all points are defined in global coordinate system.
 * __Add__ - add two points
 * __Subtract__ - subtract one point from other
 * __Scale__ - scale point by given number
-* __DistanceTo__ - shortest distance from point to point, line, plane, ray or segment
+* __DistanceTo__ - shortest distance from point to point to other objects
+* __ClosestPoint__ - closest point on circle, box, triangle, sphere, ellipse, ellipsoid
 * __ProjectionTo__ - orthogonal projection of point to line, plane or sphere
 * __BelongsTo__ - test if point is located in the epsilon neighborhood of the object
 * __IsInside__ - test if point is located strictly inside (not in the epsilon neighborhood of the boundary) of the object
@@ -257,7 +258,8 @@ common translation, rotation and reflection methods.
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __IsInside__ - check if sphere is located inside box
 * __ClosestPoint__ - point on sphere's surface closest to target point
-* __DistanceTo__ - shortest distance to point, line, ray, segment, plane, circle or sphere
+* __DistanceTo__ - shortest distance to point, line, ray, segment, plane, circle, sphere or box
+* __Intersects__ - intersection check with circle
 * __IntersectionWith__ - intersection of sphere with line, plane, segment or other sphere
 * __ProjectionTo__ - orthogonal projection of sphere to the line or plane
 * __Translate__ - translate sphere by vector
@@ -285,7 +287,8 @@ Defines a circle in 3D space by center point, radius and normal vector.
 * __ClosestPoint__ - point on circle's surface closest to target point
 * __ParametricForm__ - return point on circle for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of circle to plane or line
-* __DistanceTo__ - shortest distance to point, plane, circle or sphere
+* __DistanceTo__ - shortest distance to point, plane, circle, sphere, box or triangle
+* __Intersects__ - intersection check with box, triangle, circle and sphere
 * __IntersectionWith__ - intersection of circle with line, plane, segment or other circle
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -376,6 +379,8 @@ Box object defined by center point, three dimensions and orientation in space.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
+* __DistanceTo__ - shortest distance to point, circle or sphere
+* __Intersects__ - intersection check with circle
 * __IntersectionWith__ - intersection of box with line, ray or segment
 * __Translate__ - translate box by vector
 * __Rotate__ - rotate box around origin or other point
@@ -413,7 +418,9 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __IntersectionWith__ - intersection of triangle with line, plane or segment
+* __DistanceTo__ - shortest distance to point and circle
+* __IntersectionWith__ - intersection of triangle with line, plane, ray or segment
+* __Intersects__ - intersection check with circle
 * __ProjectionTo__ - orthogonal projection of triangle to line
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel

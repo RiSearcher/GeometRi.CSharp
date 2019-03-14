@@ -274,6 +274,38 @@ namespace GeometRi
 
         #endregion
 
+        /// <summary>
+        /// Closest point on circle (including interior points).
+        /// </summary>
+        public Point3d ClosestPoint(Circle3d c)
+        {
+            return c.ClosestPoint(this);
+        }
+
+        /// <summary>
+        /// Closest point on box (including interior points).
+        /// </summary>
+        public Point3d ClosestPoint(Box3d box)
+        {
+            return box.ClosestPoint(this);
+        }
+
+        /// <summary>
+        /// Closest point on triangle.
+        /// </summary>
+        public Point3d ClosestPoint(Triangle t)
+        {
+            return t.ClosestPoint(this);
+        }
+
+        /// <summary>
+        /// Point on sphere's surface closest to target point "p".
+        /// </summary>
+        public Point3d ClosestPoint(Sphere s)
+        {
+            return s.ClosestPoint(this);
+        }
+
 
         /// <summary>
         /// Returns orthogonal projection of the point to the plane

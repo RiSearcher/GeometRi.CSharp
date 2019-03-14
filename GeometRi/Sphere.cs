@@ -570,6 +570,14 @@ namespace GeometRi
         #endregion
 
         /// <summary>
+        /// Intersection check between circle and sphere
+        /// </summary>
+        public bool Intersects(Circle3d c)
+        {
+            return c.Intersects(this);
+        }
+
+        /// <summary>
         /// Orthogonal projection of the sphere to the plane
         /// </summary>
         public Circle3d ProjectionTo(Plane3d s)
