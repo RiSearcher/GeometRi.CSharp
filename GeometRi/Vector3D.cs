@@ -171,20 +171,7 @@ namespace GeometRi
             if ((this._coord != v._coord))
                 v = v.ConvertTo(this._coord);
 
-            double this_norm = this.Norm;
-            double v_norm = v.Norm;
-            return GeometRi3D.AlmostEqual(this.Normalized.Cross(v.Normalized).Norm, 0.0);
-
-            //if (GeometRi3D.Greater(this_norm, 0.0) && GeometRi3D.Greater(v_norm, 0.0))
-            //{
-            //    return GeometRi3D.AlmostEqual(this.Normalized.Cross(v.Normalized).Norm, 0.0);
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-
-            
+            return GeometRi3D.AlmostEqual(this.Normalized.Cross(v.Normalized).Norm, 0.0);        
         }
 
         /// <summary>
@@ -208,14 +195,6 @@ namespace GeometRi
             double v_norm = v.Norm;
             return GeometRi3D.AlmostEqual(Abs(this * v) / (this_norm * v_norm), 0.0);
 
-            //if (GeometRi3D.Greater(this_norm, 0.0) && GeometRi3D.Greater(v_norm, 0.0))
-            //{
-            //    return GeometRi3D.AlmostEqual(Abs(this * v) / (this_norm * v_norm), 0.0);
-            //}
-            //else
-            //{
-            //    return false;
-            //}
         }
 
         /// <summary>

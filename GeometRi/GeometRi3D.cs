@@ -271,7 +271,8 @@ namespace GeometRi
 
         static internal bool _coplanar(IPlanarObject obj1, IPlanarObject obj2)
         {
-            if (obj1.ToPlane.IsNotParallelTo(obj2.ToPlane))
+
+            if (obj1.Normal.IsNotParallelTo(obj2.Normal))
             {
                 return false;
             }
