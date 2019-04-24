@@ -130,7 +130,7 @@ namespace GeometRi
         /// </summary>
         public double Norm
         {
-            get { return Sqrt(Math.Pow(val[0], 2) + Math.Pow(val[1], 2) + Math.Pow(val[2], 2)); }
+            get { return Sqrt(val[0]*val[0] + val[1]*val[1] + val[2]*val[2]); }
         }
 
         /// <summary>
