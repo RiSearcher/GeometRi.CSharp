@@ -135,6 +135,17 @@ namespace GeometRi
             }
         }
 
+        public Vector3d Diagonal
+        {
+            get { return new Vector3d(this.val[0, 0], this.val[1, 1], this.val[2, 2]); }
+            set
+            {
+                this.val[0, 0] = value.X;
+                this.val[1, 1] = value.Y;
+                this.val[2, 2] = value.Z;
+            }
+        }
+
         /// <summary>
         /// Determinant of the matrix
         /// </summary>

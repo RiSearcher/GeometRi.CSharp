@@ -134,6 +134,22 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Minimal element of a vector
+        /// </summary>
+        public double MinElement
+        {
+            get { return Min(Min(val[0], val[1]), val[2]); }
+        }
+
+        /// <summary>
+        /// Maximal element of a vector
+        /// </summary>
+        public double MaxElement
+        {
+            get { return Max(Max(val[0], val[1]), val[2]); }
+        }
+
+        /// <summary>
         ///  Reference coordinate system
         /// </summary>
         public Coord3d Coord
