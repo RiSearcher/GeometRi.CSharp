@@ -245,6 +245,47 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void SegmentDistanceToSegmentTest2()
+        {
+            // Parallel segments
+            //    P1-----------P2
+            //    P1-----------P2
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(0, 0, 1), new Point3d(5, 0, 1));
+            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+
+            //    P2-----------P1
+            //    P1-----------P2
+            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            s2 = new Segment3d(new Point3d(5, 0, 1), new Point3d(0, 0, 1));
+            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+
+            //    P1-----------P2
+            //          P1-----------P2
+            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            s2 = new Segment3d(new Point3d(-2, 0, 1), new Point3d(2, 0, 1));
+            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+
+            //    P2-----------P1
+            //          P1-----------P2
+            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            s2 = new Segment3d(new Point3d(2, 0, 1), new Point3d(-2, 0, 1));
+            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+
+            //    P1-----------P2
+            //                    P1-----------P2
+            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            s2 = new Segment3d(new Point3d(-5, 0, 1), new Point3d(-1, 0, 1));
+            Assert.IsTrue(Abs(s1.DistanceTo(s2) - Sqrt(2)) < GeometRi3D.Tolerance);
+
+            //    P2-----------P1
+            //                    P1-----------P2
+            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            s2 = new Segment3d(new Point3d(-1, 0, 1), new Point3d(-5, 0, 1));
+            Assert.IsTrue(Abs(s1.DistanceTo(s2) - Sqrt(2)) < GeometRi3D.Tolerance);
+        }
+
+        [TestMethod()]
         public void SegmentDistanceToRayTest()
         {
             Segment3d s1 = new Segment3d(new Point3d(-5, 0, 0), new Point3d(5, 0, 0));
