@@ -211,6 +211,34 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void SegmentIntersectionWithSegmentSymmetryTest()
+        {
+            // Test symmetry in segment-segment intersection
+            // s1.IntersectionWith(s2) == s2.IntersectionWith(s1)
+
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 5, 0));
+
+            // Coincided segments
+            Segment3d s2 = new Segment3d(new Point3d(5, 5, 0), new Point3d(0, 0, 0));
+            object obj1 = s1.IntersectionWith(s2);
+            object obj2 = s2.IntersectionWith(s1);
+            Assert.IsTrue((obj1 == null && obj2 == null) || (obj1 != null && obj2 != null));
+
+            // Non-parallel segments
+            s2 = new Segment3d(new Point3d(5, 5.000000001, 0), new Point3d(-0.0000000001, 0, 0));
+            obj1 = s1.IntersectionWith(s2);
+            obj2 = s2.IntersectionWith(s1);
+            Assert.IsTrue((obj1 == null && obj2 == null) || (obj1 != null && obj2 != null));
+
+            // Nearly parallel segments
+            s2 = new Segment3d(new Point3d(3, 3.000000000001, 0), new Point3d(6, 6, 0));
+            obj1 = s1.IntersectionWith(s2);
+            obj2 = s2.IntersectionWith(s1);
+            Assert.IsTrue((obj1 == null && obj2 == null) || (obj1 != null && obj2 != null));
+
+        }
+
+        [TestMethod()]
         public void SegmentBelongsToLineTest()
         {
             Line3d l = new Line3d(new Point3d(), new Vector3d(1, 0, 0));

@@ -520,22 +520,10 @@ namespace GeometRi
 
             if (this == s) { return this.Copy(); }
 
-            object obj = this.ToLine.IntersectionWith(s);
-            if (obj == null) { return null; }
+            Line3d l1 = this.ToLine;
+            Line3d l2 = s.ToLine;
 
-            if (obj.GetType() == typeof(Point3d))
-            {
-                Point3d p = (Point3d)obj;
-                if (p.BelongsTo(this) && p.BelongsTo(s))
-                {
-                    return p;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else if (obj.GetType() == typeof(Segment3d))
+            if (this.BelongsTo(l2) || s.BelongsTo(l1))
             {
                 // Segments are collinear
 
@@ -558,7 +546,6 @@ namespace GeometRi
                 double x3 = Min(t3, t4);
                 double x4 = Max(t3, t4);
 
-
                 // Segments do not overlap
                 if (GeometRi3D.Smaller(x4, x1, tol) || GeometRi3D.Greater(x3, x2, tol)) { return null; }
 
@@ -570,11 +557,18 @@ namespace GeometRi
                 x1 = Max(x1, x3);
                 x2 = Min(x2, x4);
                 return new Segment3d(new Point3d(x1, 0, 0, cs), new Point3d(x2, 0, 0, cs));
-
             }
             else
             {
-                return null;
+                Point3d p = l1.PerpendicularTo(l2);
+                if (p.BelongsTo(this) && p.BelongsTo(s))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
