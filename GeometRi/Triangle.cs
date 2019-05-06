@@ -6,6 +6,9 @@ namespace GeometRi
     /// <summary>
     /// Triangle in 3D space defined by three points.
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Triangle : FiniteObject, IPlanarObject
     {
 

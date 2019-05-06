@@ -6,6 +6,9 @@ namespace GeometRi
     /// <summary>
     /// Unit quaternion (W + X*i + Y*j + Z*k).
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Quaternion
     {
 

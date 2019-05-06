@@ -6,6 +6,9 @@ namespace GeometRi
     /// <summary>
     /// Line segment in 3D space defined by two end points.
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Segment3d : FiniteObject, ILinearObject, IFiniteObject
     {
 

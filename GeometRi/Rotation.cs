@@ -7,6 +7,9 @@ namespace GeometRi
     /// <summary>
     /// Rotation in 3D space defined in global or local reference frame (internally represented by rotation matrix).
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Rotation
     {
         private Matrix3d _r;

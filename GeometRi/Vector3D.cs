@@ -6,6 +6,9 @@ namespace GeometRi
     /// <summary>
     /// Vector in 3D space defined in global or local reference frame.
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Vector3d : ILinearObject
     {
 

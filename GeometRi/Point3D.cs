@@ -6,6 +6,9 @@ namespace GeometRi
     /// <summary>
     /// Point in 3D space defined in global or local reference frame.
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Point3d
     {
 

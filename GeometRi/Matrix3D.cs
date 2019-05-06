@@ -6,6 +6,9 @@ namespace GeometRi
     /// <summary>
     /// General 3x3 matrix class.
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Matrix3d
     {
 

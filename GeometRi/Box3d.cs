@@ -7,6 +7,9 @@ namespace GeometRi
     /// <summary>
     /// Arbitrary oriented 3D box, can be degenerated with one or more dimensions equal 0.
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class Box3d : FiniteObject, IFiniteObject
     {
 
@@ -14,7 +17,7 @@ namespace GeometRi
         private double _lx, _ly, _lz;
         private Rotation _r;
 
-        #region "Constructors"
+#region "Constructors"
 
         /// <summary>
         /// Default constructor, initializes unit box in the origin of the global coordinate system aligned with coordinate axes.
@@ -73,7 +76,7 @@ namespace GeometRi
             _lz = lz;
             _r = new Rotation(coord);
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Creates copy of the object
@@ -83,7 +86,7 @@ namespace GeometRi
             return new Box3d(_center, _lx, _ly, _lz, _r);
         }
 
-        #region "Properties"
+#region "Properties"
         /// <summary>
         /// Center point of the box.
         /// </summary>
@@ -335,9 +338,9 @@ namespace GeometRi
             get { return _r.ToRotationMatrix.IsIdentity; }
         }
 
-        #endregion
+#endregion
 
-        #region "BoundingBox"
+#region "BoundingBox"
         /// <summary>
         /// Return minimum bounding box.
         /// </summary>
@@ -379,9 +382,9 @@ namespace GeometRi
                 return new Sphere(this.Center, r);
             }
         }
-        #endregion
+#endregion
 
-        #region "Intersection"
+#region "Intersection"
         /// <summary>
         /// Get intersection of line with box.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
@@ -511,7 +514,7 @@ namespace GeometRi
                 return new Segment3d(l.Point.Translate(tmin * l.Direction), l.Point.Translate(tmax * l.Direction));
             }
         }
-        #endregion
+#endregion
 
 
         /// <summary>
@@ -619,7 +622,7 @@ namespace GeometRi
             }
         }
 
-        #region "TranslateRotateReflect"
+#region "TranslateRotateReflect"
         /// <summary>
         /// Translate box by a vector
         /// </summary>
@@ -674,7 +677,7 @@ namespace GeometRi
             return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
         }
 
-        #endregion
+#endregion
 
 
         /// <summary>
