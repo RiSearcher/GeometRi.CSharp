@@ -769,6 +769,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between circle and segment
+        /// </summary>
+        public bool Intersects(Segment3d s)
+        {
+            return this.IntersectionWith(s) != null;
+        }
+
+        /// <summary>
         /// Shortest distance between circle and sphere (including interior points) (approximate solution)
         /// </summary>
         public double DistanceTo(Sphere s)

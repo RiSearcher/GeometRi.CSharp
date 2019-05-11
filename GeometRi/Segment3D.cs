@@ -639,6 +639,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between segment and circle
+        /// </summary>
+        public bool Intersects(Circle3d c)
+        {
+            return this.IntersectionWith(c) != null;
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a segment to the line.
         /// Return object of type 'Segment3d' or 'Point3d'
         /// </summary>
