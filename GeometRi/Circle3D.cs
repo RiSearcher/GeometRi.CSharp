@@ -310,6 +310,7 @@ namespace GeometRi
 
         }
 
+        #region "DistanceMethods"
         /// <summary>
         /// Distance from circle to plane
         /// </summary>
@@ -682,101 +683,6 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Intersection check between circle and sphere
-        /// </summary>
-        public bool Intersects(Sphere s)
-        {
-            if (this.Center.DistanceTo(s.Center) <= this.R + s.R)
-            {
-                Object obj = s.IntersectionWith(this.ToPlane);
-                if (obj != null && obj.GetType() == typeof(Circle3d))
-                {
-                    // Check for circle-circle intersection
-                    if (this.IntersectionWith((Circle3d)obj) != null)
-                        return true;
-                }
-                else if (obj != null && obj.GetType() == typeof(Point3d))
-                {
-                    return ((Point3d)obj).BelongsTo(this);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Intersection check between two circles
-        /// </summary>
-        public bool Intersects(Circle3d c)
-        {
-            if (this.IsCoplanarTo(c))
-            {
-                if (this.Center.DistanceTo(c.Center) <= this.R + c.R) return true;
-            }
-
-            if (this.DistanceTo(c.ToPlane) > 0) return false;
-
-            object obj = this.IntersectionWith(c);
-            if (obj != null)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Intersection check between circle and triangle
-        /// </summary>
-        public bool Intersects(Triangle t)
-        {
-            if (this.IsCoplanarTo(t))
-            {
-                if (t.A.BelongsTo(this)) return true;
-                if (t.B.BelongsTo(this)) return true;
-                if (t.C.BelongsTo(this)) return true;
-
-                if (this.Center.BelongsTo(t)) return true;
-                if (this.IntersectionWith(new Segment3d(t.A, t.B)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t.B, t.C)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t.C, t.A)) != null) return true;
-            }
-
-            if (this.DistanceTo(t.ToPlane) > 0) return false;
-
-            object obj = this.IntersectionWith(t.ToPlane);
-            if (obj != null && obj.GetType() == typeof(Point3d))
-            {
-                return ((Point3d)obj).BelongsTo(this);
-            }
-            else if (obj != null && obj.GetType() == typeof(Segment3d))
-            {
-                return ((Segment3d)obj).IntersectionWith(t) != null;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Intersection check between circle and box
-        /// </summary>
-        public bool Intersects(Box3d box)
-        {
-            return box.Intersects(this);
-        }
-
-        /// <summary>
-        /// Intersection check between circle and segment
-        /// </summary>
-        public bool Intersects(Segment3d s)
-        {
-            return this.IntersectionWith(s) != null;
-        }
-
-        /// <summary>
         /// Shortest distance between circle and sphere (including interior points) (approximate solution)
         /// </summary>
         public double DistanceTo(Sphere s)
@@ -1092,8 +998,102 @@ namespace GeometRi
         {
             return box.DistanceTo(this);
         }
+        #endregion
 
+        /// <summary>
+        /// Intersection check between circle and sphere
+        /// </summary>
+        public bool Intersects(Sphere s)
+        {
+            if (this.Center.DistanceTo(s.Center) <= this.R + s.R)
+            {
+                Object obj = s.IntersectionWith(this.ToPlane);
+                if (obj != null && obj.GetType() == typeof(Circle3d))
+                {
+                    // Check for circle-circle intersection
+                    if (this.IntersectionWith((Circle3d)obj) != null)
+                        return true;
+                }
+                else if (obj != null && obj.GetType() == typeof(Point3d))
+                {
+                    return ((Point3d)obj).BelongsTo(this);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
 
+        /// <summary>
+        /// Intersection check between two circles
+        /// </summary>
+        public bool Intersects(Circle3d c)
+        {
+            if (this.IsCoplanarTo(c))
+            {
+                if (this.Center.DistanceTo(c.Center) <= this.R + c.R) return true;
+            }
+
+            if (this.DistanceTo(c.ToPlane) > 0) return false;
+
+            object obj = this.IntersectionWith(c);
+            if (obj != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Intersection check between circle and triangle
+        /// </summary>
+        public bool Intersects(Triangle t)
+        {
+            if (this.IsCoplanarTo(t))
+            {
+                if (t.A.BelongsTo(this)) return true;
+                if (t.B.BelongsTo(this)) return true;
+                if (t.C.BelongsTo(this)) return true;
+
+                if (this.Center.BelongsTo(t)) return true;
+                if (this.IntersectionWith(new Segment3d(t.A, t.B)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.B, t.C)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.C, t.A)) != null) return true;
+            }
+
+            if (this.DistanceTo(t.ToPlane) > 0) return false;
+
+            object obj = this.IntersectionWith(t.ToPlane);
+            if (obj != null && obj.GetType() == typeof(Point3d))
+            {
+                return ((Point3d)obj).BelongsTo(this);
+            }
+            else if (obj != null && obj.GetType() == typeof(Segment3d))
+            {
+                return ((Segment3d)obj).IntersectionWith(t) != null;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Intersection check between circle and box
+        /// </summary>
+        public bool Intersects(Box3d box)
+        {
+            return box.Intersects(this);
+        }
+
+        /// <summary>
+        /// Intersection check between circle and segment
+        /// </summary>
+        public bool Intersects(Segment3d s)
+        {
+            return this.IntersectionWith(s) != null;
+        }
 
         /// <summary>
         /// Orthogonal projection of the circle to plane
@@ -1227,6 +1227,10 @@ namespace GeometRi
             }
             //====================================================
 
+            // Early exit (separated circles)
+            if (this.Center.DistanceTo(c.Center) > this.R  + c.R  +  GeometRi3D.Tolerance)
+                return null;
+
             if (this.Normal.IsParallelTo(c.Normal))
             {
                 if (this.Center.BelongsTo(new Plane3d(c.Center, c.Normal)))
@@ -1243,8 +1247,8 @@ namespace GeometRi
                     double d = this.Center.DistanceTo(c.Center);
 
                     // Separated circles
-                    if (GeometRi3D.Greater(d, this.R + c.R))
-                        return null;
+                    //if (GeometRi3D.Greater(d, this.R + c.R))
+                     //   return null;
 
                     // One circle inside the other
                     if (d < Abs(this.R - c.R) - GeometRi3D.Tolerance)
@@ -1312,7 +1316,7 @@ namespace GeometRi
                 else if (obj.GetType() == typeof(Point3d))
                 {
                     Point3d p = (Point3d)obj;
-                    if (p.BelongsTo(c))
+                    if (p.DistanceTo(this.Center) < this.R + GeometRi3D.Tolerance)
                     {
                         return p;
                     }

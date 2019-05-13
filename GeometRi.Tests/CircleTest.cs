@@ -142,6 +142,16 @@ namespace GeometRi_Tests
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
 
             // Touching circles
+            c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            c2 = new Circle3d(new Point3d(5, 0, 5), 5, new Vector3d(1, 0, 0));
+            Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+
+            // Non touching circles
+            c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            c2 = new Circle3d(new Point3d(6, 0, 5), 5, new Vector3d(1, 0, 0));
+            Assert.IsNull(c1.IntersectionWith(c2));
+
+            // Touching circles
             c2 = new Circle3d(new Point3d(10, 0, 0), 5, new Vector3d(0, 1, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
 
