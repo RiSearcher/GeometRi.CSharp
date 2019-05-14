@@ -1120,8 +1120,73 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Line3d l)
         {
-            Ellipse e = this.ToEllipse;
-            return e.IntersectionWith(l);
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(l);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+
+            if (l.Direction.IsOrthogonalTo(this.Normal))
+            {
+                if (l.Point.BelongsTo(new Plane3d(this.Center, this.Normal)))
+                {
+                    // coplanar objects
+                    // Find intersection of line and circle (2D)
+
+                    // Local coord: X - line direction, Z - circle normal
+                    Coord3d local_coord = new Coord3d(this.Center, l.Direction, this.Normal.Cross(l.Direction));
+                    Point3d p = l.Point.ConvertTo(local_coord);
+
+                    double c = p.Y;
+
+                    if (Abs(c) > this.R + GeometRi3D.Tolerance)
+                    {
+                        return null;
+                    }
+                    else if (Abs(c) < this.R)
+                    {
+                        double x1 = Sqrt(this.R * this.R - Abs(c) * Abs(c));
+                        double x2 = -x1;
+                        return new Segment3d(new Point3d(x1, c, 0, local_coord), new Point3d(x2, c, 0, local_coord));
+                    }
+                    else if (c > 0)
+                    {
+                        return new Point3d(0, this.R, 0, local_coord);
+                    }
+                    else
+                    {
+                        return new Point3d(0, -this.R, 0, local_coord);
+                    }
+
+                }
+                else
+                {
+                    // parallel objects
+                    return null;
+                }
+            }
+            else
+            {
+                // Line intersects circle' plane
+                Point3d p = (Point3d)l.IntersectionWith(new Plane3d(this.Center, this.Normal));
+                if (p.DistanceTo(this.Center) < this.R + GeometRi3D.Tolerance)
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         /// <summary>
@@ -1130,8 +1195,42 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Segment3d s)
         {
-            Ellipse e = this.ToEllipse;
-            return e.IntersectionWith(s);
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            object obj = this.IntersectionWith(s.ToLine);
+
+            if (obj == null)
+            {
+                return null;
+            }
+            else if (obj.GetType() == typeof(Point3d))
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(s))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return s.IntersectionWith((Segment3d)obj);
+            }
         }
 
         /// <summary>
@@ -1140,8 +1239,42 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Ray3d r)
         {
-            Ellipse e = this.ToEllipse;
-            return e.IntersectionWith(r);
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.R;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                object result = this.IntersectionWith(r);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            object obj = this.IntersectionWith(r.ToLine);
+
+            if (obj == null)
+            {
+                return null;
+            }
+            else if (obj.GetType() == typeof(Point3d))
+            {
+                Point3d p = (Point3d)obj;
+                if (p.BelongsTo(r))
+                {
+                    return p;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return r.IntersectionWith((Segment3d)obj);
+            }
         }
 
         /// <summary>
@@ -1197,7 +1330,7 @@ namespace GeometRi
                 }
                 else
                 {
-                    double d = Sqrt(Math.Pow(this.R, 2) - Math.Pow(p.Y, 2));
+                    double d = Sqrt(this.R * this.R - p.Y * p.Y);
                     Point3d p1 = new Point3d(-d, p.Y, 0, local_coord);
                     Point3d p2 = new Point3d(d, p.Y, 0, local_coord);
                     return new Segment3d(p1, p2);
@@ -1306,8 +1439,15 @@ namespace GeometRi
             else
             {
                 // Check 3D intersection
-                Plane3d plane = new Plane3d(this.Center, this.Normal);
-                object obj = plane.IntersectionWith(c);
+                Plane3d plane_this = new Plane3d(this.Center, this.Normal);
+                if (c.DistanceTo(plane_this) > GeometRi3D.Tolerance)
+                    return null;
+
+                Plane3d plane_c = new Plane3d(c.Center, c.Normal);
+                if (this.DistanceTo(plane_c) > GeometRi3D.Tolerance)
+                    return null;
+
+                object obj = c.IntersectionWith(plane_this);
 
                 if (obj == null)
                 {
