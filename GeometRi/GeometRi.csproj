@@ -15,7 +15,8 @@ Compatible with .Net Framework 2.0 and .Net Standard 1.0 (.Net Core, Mono, Xamar
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
     <Version>1.3.5.10</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Added "Serializable" attribute for .Net Framework 2.0 build.
+Fixed bug in circle/circle intersection.</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/RiSearcher/GeometRi.CSharp/blob/master/LICENSE.txt</PackageLicenseUrl>
   </PropertyGroup>
 
