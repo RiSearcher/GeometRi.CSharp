@@ -536,14 +536,14 @@ namespace GeometRi_Tests
             t = new Triangle(p1, p2, p3);
             Assert.IsTrue(c.Intersects(t));
 
-            // circle touth triangle
+            // circle touch triangle
             p1 = new Point3d(1, -1, 0);
             p2 = new Point3d(1, 1, 0);
             p3 = new Point3d(3, 0, 0);
             t = new Triangle(p1, p2, p3);
             Assert.IsTrue(c.Intersects(t));
 
-            // non-intersectiong objects
+            // Non-intersecting objects
             p1 = new Point3d(1.5, -1, 0);
             p2 = new Point3d(1.5, 1, 0);
             p3 = new Point3d(3, 0, 0);
@@ -557,12 +557,27 @@ namespace GeometRi_Tests
             t = new Triangle(p1, p2, p3);
             Assert.IsTrue(c.Intersects(t));
 
-            // non-intersectiong objects
+            // Non-intersecting objects
             p1 = new Point3d(1.5, -1, -1);
             p2 = new Point3d(1.5, 1, -2);
             p3 = new Point3d(3, 0, -1);
             t = new Triangle(p1, p2, p3);
             Assert.IsFalse(c.Intersects(t));
+        }
+
+        [TestMethod()]
+        public void TriangleClosestPointTest()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(10, 0, 0);
+            Point3d p3 = new Point3d(5, 5, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Point3d p = new Point3d(1, 1, 1);
+            Assert.AreEqual(p.ClosestPoint(t), new Point3d(1, 1, 0));
+
+            p = new Point3d(-3, -1, 0);
+            Assert.AreEqual(p.ClosestPoint(t), new Point3d(0, 0, 0));
         }
     }
 }

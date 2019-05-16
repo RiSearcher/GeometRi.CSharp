@@ -60,14 +60,6 @@ namespace GeometRi_Example
 
 
 
-            Line3d ll1 = new Line3d(new Point3d(2, 2, 2), new Vector3d(1, 1, 1));
-            Line3d ll2 = new Line3d(new Point3d(201, 200, 200), new Vector3d(-10, -10, -10));
-
-            GeometRi3D.Tolerance = 0.01;
-            GeometRi3D.UseAbsoluteTolerance = false;
-            if (ll1.Equals(ll2))
-            {  };
-
 
             Console.ReadLine();
 

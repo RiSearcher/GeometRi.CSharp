@@ -691,8 +691,7 @@ namespace GeometRi
                     {
                         return 0; // Point is on boundary
                     }
-                    else if (Abs(new Vector3d(proj, this.P1).Normalized.AngleTo(new Vector3d(proj, this.P2).Normalized)) < 2e-10)
-                    // Need to decrease accuracy due to Acos calculations
+                    else if (Abs(new Vector3d(proj, this.P1).Normalized.AngleTo(new Vector3d(proj, this.P2).Normalized)) < PI/2)
                     {
                         return -1; // Point is outside
                     }
