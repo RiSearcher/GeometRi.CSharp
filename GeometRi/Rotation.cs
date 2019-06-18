@@ -14,6 +14,9 @@ namespace GeometRi
     {
         private Matrix3d _r;
         private Coord3d _coord;
+        private double _angle;
+        private Vector3d _axis;
+        private bool converted_to_axisangle = false;
 
         #region "Constructors"
         /// <summary>
@@ -130,39 +133,23 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns axis of the r0tation (use 'ToAngle' property to get angle of the rotation).
+        /// Returns axis of the rotation (use 'ToAngle' property to get angle of the rotation).
         /// </summary>
         public Vector3d ToAxis
         {
             get
             {
-                double angle = this.ToAngle;
-                if (GeometRi3D.AlmostEqual(angle,0.0))
+
+                if (converted_to_axisangle)
                 {
-                    return new Vector3d(1, 0, 0, _coord);
-                } else if (GeometRi3D.Smaller(angle,PI))
-                {
-                    Vector3d v = new Vector3d(_r[2, 1] - _r[1, 2], _r[0, 2] - _r[2, 0], _r[1, 0] - _r[0, 1], _coord);
-                    return v.Normalized;
-                } else if (_r[0,0] >= _r[1,1] && _r[0,0] >= _r[2,2])
-                {
-                    double x = Sqrt(_r[0, 0] - _r[1, 1] - _r[2, 2] + 1) / 2;
-                    double y = _r[0, 1] / (2 * x);
-                    double z = _r[0, 2] / (2 * x);
-                    return new Vector3d(x, y, z, _coord);
-                } else if (_r [1,1] >= _r [0,0] && _r [1,1] >= _r [2,2])
-                {
-                    double y = Sqrt(_r[1, 1] - _r[0, 0] - _r[2, 2] + 1) / 2;
-                    double x = _r[0, 1] / (2 * y);
-                    double z = _r[1, 2] / (2 * y);
-                    return new Vector3d(x, y, z, _coord);
-                } else
-                {
-                    double z = Sqrt(_r[2, 2] - _r[0, 0] - _r[1, 1] + 1) / 2;
-                    double x = _r[0, 2] / (2 * z);
-                    double y = _r[1, 2] / (2 * z);
-                    return new Vector3d(x, y, z, _coord);
+                    return _axis;
                 }
+
+                Quaternion q = this.ToQuaternion;
+                _angle = q.ToAngle;
+                _axis = q.ToAxis;
+                converted_to_axisangle = true;
+                return _axis;
             }
         }
 
@@ -171,10 +158,21 @@ namespace GeometRi
         /// </summary>
         public double ToAngle
         {
-            // To avoid singularities convert to quaternion first.
-            // Another way:
-            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
-            get { return this.ToQuaternion.ToAngle; }
+            get
+            {
+                if (converted_to_axisangle)
+                {
+                    return _angle;
+                }
+                else
+                {
+                    Quaternion q = this.ToQuaternion;
+                    _angle = q.ToAngle;
+                    _axis = q.ToAxis;
+                    converted_to_axisangle = true;
+                    return _angle;
+                }
+            }
         }
 
         /// <summary>
