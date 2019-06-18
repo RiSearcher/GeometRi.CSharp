@@ -15,8 +15,9 @@ Compatible with .Net Framework 2.0 and .Net Standard 1.0 (.Net Core, Mono, Xamar
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
     <Version>1.3.5.12</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed "Rotation.ToAxis/Angle" method.</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/RiSearcher/GeometRi.CSharp/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
