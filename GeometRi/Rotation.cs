@@ -125,6 +125,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Returns inverse rotation.
+        /// </summary>
+        public Rotation Inverse
+        {
+            get { return new Rotation(this._r.Transpose()); }
+        }
+
+        /// <summary>
         /// Returns quaternion equivalent to the current rotation.
         /// </summary>
         public Quaternion ToQuaternion
