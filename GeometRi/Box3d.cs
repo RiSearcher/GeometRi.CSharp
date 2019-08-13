@@ -307,6 +307,25 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// List of planes forming the box's surface
+        /// </summary>
+        public List<Plane3d> ListOfPlanes
+        {
+            get
+            {
+                List<Plane3d> list = new List<Plane3d> { };
+                list.Add(new Plane3d(P1, -V1));
+                list.Add(new Plane3d(P2, V1));
+                list.Add(new Plane3d(P1, -V2));
+                list.Add(new Plane3d(P4, V2));
+                list.Add(new Plane3d(P1, -V3));
+                list.Add(new Plane3d(P5, V3));
+
+                return list;
+            }
+        }
+
+        /// <summary>
         /// Volume of the box.
         /// </summary>
         public double Volume
