@@ -326,6 +326,31 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// List of edges forming the box
+        /// </summary>
+        public List<Segment3d> ListOfEdges
+        {
+            get
+            {
+                List<Segment3d> list = new List<Segment3d> { };
+                list.Add(new Segment3d(P1, P2));
+                list.Add(new Segment3d(P2, P3));
+                list.Add(new Segment3d(P3, P4));
+                list.Add(new Segment3d(P4, P1));
+                list.Add(new Segment3d(P5, P6));
+                list.Add(new Segment3d(P6, P7));
+                list.Add(new Segment3d(P7, P8));
+                list.Add(new Segment3d(P8, P5));
+                list.Add(new Segment3d(P1, P5));
+                list.Add(new Segment3d(P2, P6));
+                list.Add(new Segment3d(P3, P7));
+                list.Add(new Segment3d(P4, P8));
+
+                return list;
+            }
+        }
+
+        /// <summary>
         /// Volume of the box.
         /// </summary>
         public double Volume
