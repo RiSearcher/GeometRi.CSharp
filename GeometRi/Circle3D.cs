@@ -937,11 +937,149 @@ namespace GeometRi
                 return 0;
             }
 
+            // TO DO: change order and calculate intersection only once
+
             Point3d p = (Point3d)l.IntersectionWith(this.ToPlane);
             Vector3d v = new Vector3d(this.Center, p).Normalized;
             p1 = this.Center.Translate(this.R * v);
             p2 = p1.ProjectionTo(l);
             return p1.DistanceTo(p2);
+        }
+
+        /// <summary>
+        /// Shortest distance between line and circle's boundary (excluding interior points)
+        /// (only one point will be returned for symmetrical case)
+        /// </summary>
+        /// <param name="l">Target line</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        /// <param name="point_on_line">Closest point on line</param>
+        private double _distance_circle_boundary_to_line(Line3d l, out Point3d point_on_circle, out Point3d point_on_line)
+        {
+
+            // Line is parallel
+            if (l.IsParallelTo(this))
+            {
+                Plane3d plane = this.ToPlane;
+                Line3d line_proj = (Line3d)l.ProjectionTo(plane);
+
+                object obj = line_proj.IntersectionWith(this);
+                if (obj == null)
+                {
+                    // Non-intersecting objects
+                    point_on_line = this.Center.ProjectionTo(l);
+                    point_on_circle = this.ClosestPoint(point_on_line);
+                    return point_on_line.DistanceTo(point_on_circle);
+                }
+                else if (obj.GetType() == typeof(Point3d))
+                {
+                    // Touching objects
+                    point_on_circle = (Point3d)obj;
+                    point_on_line = point_on_circle.ProjectionTo(l);
+                    return point_on_line.DistanceTo(point_on_circle);
+                }
+                else
+                {
+                    // Intrsecting objects, only one point will be used
+                    Segment3d segm = (Segment3d)obj;
+                    point_on_circle = segm.P1;
+                    point_on_line = point_on_circle.ProjectionTo(l);
+                    return point_on_line.DistanceTo(point_on_circle);
+                }
+            }
+
+            // Orthogonal line
+            if (l.IsOrthogonalTo(this))
+            {
+                Plane3d plane = this.ToPlane;
+                Point3d projection_point = (Point3d)l.IntersectionWith(plane);
+
+                if (projection_point == this.Center)
+                {
+                    point_on_line = projection_point;
+                    point_on_circle = this.ParametricForm(0);
+                    return point_on_line.DistanceTo(point_on_circle);
+                }
+                else
+                {
+                    Vector3d v = new Vector3d(this.Center, projection_point).Normalized;
+                    point_on_line = projection_point;
+                    point_on_circle = this.Center.Translate(this.R * v);
+                    return point_on_line.DistanceTo(point_on_circle);
+                }
+            }
+
+
+            // General case
+
+            double d1 = 1e20;
+            double t1 = 0;
+            Point3d p;
+
+            for (int i = 0; i < 16; i++)
+            {
+                double t = i * Math.PI / 8;
+                p = this.ParametricForm(t);
+                double dist = p.DistanceTo(l);
+                if (dist < d1)
+                {
+                    d1 = dist;
+                    t1 = t;
+                }
+            }
+            double t2 = t1 - Math.PI / 8;
+            p = this.ParametricForm(t2);
+            double d2 = p.DistanceTo(l);
+            double t3 = t1 + Math.PI / 8;
+            p = this.ParametricForm(t3);
+            double d3 = p.DistanceTo(l);
+
+            int iter = 0;
+            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance && d1 > GeometRi3D.DefaultTolerance)
+            {
+                if (++iter > 100) break;
+
+                double ax = 2.0 * d1 / (t1 - t2) / (t1 - t3);
+                double aa = 0.5 * ax * (t2 + t3);
+                double bx = 2.0 * d2 / (t2 - t1) / (t2 - t3);
+                double bb = 0.5 * bx * (t1 + t3);
+                double cx = 2.0 * d3 / (t3 - t1) / (t3 - t2);
+                double cc = 0.5 * cx * (t1 + t2);
+
+                double t = (aa + bb + cc) / (ax + bx + cx);
+                p = this.ParametricForm(t);
+                double d = p.DistanceTo(l);
+
+                if (d < d1)
+                {
+                    if (t > t2 & t < t1)
+                    {
+                        t3 = t1; d3 = d1;
+                    }
+                    else
+                    {
+                        t2 = t1; d2 = d1;
+                    }
+                    t1 = t; d1 = d;
+                }
+                else
+                {
+                    if (t < t1)
+                    {
+                        t2 = t; d2 = d;
+                    }
+                    else
+                    {
+                        t3 = t; d3 = d;
+                    }
+                }
+
+
+            }
+
+            point_on_circle = this.ParametricForm(t1);
+            point_on_line = point_on_circle.ProjectionTo(l);
+            return point_on_line.DistanceTo(point_on_circle);
+
         }
 
 
