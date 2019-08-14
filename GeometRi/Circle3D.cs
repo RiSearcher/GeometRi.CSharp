@@ -833,6 +833,16 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Shortest distance between line and circle (excluding interior points)
+        /// </summary>
+        public double DistanceToBoundary(Line3d l)
+        {
+            Point3d point_on_circle, point_on_line;
+            double dist = _distance_circle_boundary_to_line(l, out point_on_circle, out point_on_line);
+            return dist;
+        }
+
+        /// <summary>
         /// Shortest distance between line and circle (including interior points)
         /// </summary>
         /// <param name="l">Target line</param>
@@ -841,6 +851,18 @@ namespace GeometRi
         public double DistanceTo(Line3d l, out Point3d point_on_circle, out Point3d point_on_line)
         {
             double dist = _distance_circle_to_line(l, out point_on_circle, out point_on_line);
+            return dist;
+        }
+
+        /// <summary>
+        /// Shortest distance between line and circle (excluding interior points)
+        /// </summary>
+        /// <param name="l">Target line</param>
+        /// <param name="point_on_circle">Closest point on circle</param>
+        /// <param name="point_on_line">Closest point on line</param>
+        public double DistanceToBoundary(Line3d l, out Point3d point_on_circle, out Point3d point_on_line)
+        {
+            double dist = _distance_circle_boundary_to_line(l, out point_on_circle, out point_on_line);
             return dist;
         }
 

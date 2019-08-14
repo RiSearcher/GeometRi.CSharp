@@ -637,6 +637,65 @@ namespace GeometRi_Tests
 
         }
 
+        [TestMethod()]
+        public void CircleBoundaryDistanceToLineTest()
+        {
+            Point3d p = new Point3d();
+            Circle3d c = new Circle3d(p, 1.0, new Vector3d(0, 0, 1));
+            Point3d point_on_circle, point_on_line;
+
+            // Parallel objects
+            Line3d l = new Line3d(new Point3d(0, 2, 1), new Vector3d(1, 0, 0));
+            double dist = c.DistanceToBoundary(l, out point_on_circle, out point_on_line);
+            Assert.AreEqual(dist, Sqrt(2));
+            Assert.AreEqual(point_on_circle, new Point3d(0, 1, 0));
+            Assert.AreEqual(point_on_line, new Point3d(0, 2, 1));
+
+            l = new Line3d(new Point3d(0, 1, 1), new Vector3d(1, 0, 0));
+            dist = c.DistanceToBoundary(l, out point_on_circle, out point_on_line);
+            Assert.AreEqual(dist, 1);
+            Assert.AreEqual(point_on_circle, new Point3d(0, 1, 0));
+            Assert.AreEqual(point_on_line, new Point3d(0, 1, 1));
+
+            l = new Line3d(new Point3d(0, 0, 1), new Vector3d(1, 0, 0));
+            dist = c.DistanceToBoundary(l, out point_on_circle, out point_on_line);
+            Assert.AreEqual(dist, 1);
+            Assert.AreEqual(point_on_circle, new Point3d(1, 0, 0));
+            Assert.AreEqual(point_on_line, new Point3d(1, 0, 1));
+
+            // Coplanar intersecting objects
+            l = new Line3d(new Point3d(0, 1, 0), new Vector3d(1, 0, 0));
+            dist = c.DistanceToBoundary(l, out point_on_circle, out point_on_line);
+            Assert.AreEqual(dist, 0);
+            Assert.AreEqual(point_on_circle, new Point3d(0, 1, 0));
+            Assert.AreEqual(point_on_line, new Point3d(0, 1, 0));
+
+
+            // Coplanar non-intersecting objects
+            l = new Line3d(new Point3d(0, 2, 0), new Vector3d(1, 0, 0));
+            dist = c.DistanceToBoundary(l, out point_on_circle, out point_on_line);
+            Assert.AreEqual(dist, 1);
+            Assert.AreEqual(point_on_circle, new Point3d(0, 1, 0));
+            Assert.AreEqual(point_on_line, new Point3d(0, 2, 0));
+
+
+            // Intersecting objects
+            l = new Line3d(new Point3d(1, 0, 0), new Vector3d(1, 0, 1));
+            dist = c.DistanceToBoundary(l, out point_on_circle, out point_on_line);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+            Assert.AreEqual(point_on_circle, new Point3d(1, 0, 0));
+            Assert.AreEqual(point_on_line, new Point3d(1, 0, 0));
+
+
+            // Non-intersecting objects
+            l = new Line3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 1));
+            dist = c.DistanceToBoundary(l, out point_on_circle, out point_on_line);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, Sqrt(0.5)));
+            Assert.AreEqual(point_on_circle, new Point3d(-1, 0, 0));
+            Assert.AreEqual(point_on_line, new Point3d(-0.5, 0, -0.5));
+
+        }
+
 
     }
 }
