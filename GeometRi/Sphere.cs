@@ -95,7 +95,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Point3d p)
         {
-            double d = p.DistanceTo(this.Center);
+            double d = p.DistanceTo(this._point);
             if (d > this.R)
             {
                 return d - this.R;
@@ -111,7 +111,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Line3d l)
         {
-            double d = l.DistanceTo(this.Center);
+            double d = l.DistanceTo(this._point);
             if (d > this.R)
             {
                 return d - this.R;
@@ -127,7 +127,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Ray3d r)
         {
-            if (this.Center.ProjectionTo(r.ToLine).BelongsTo(r))
+            if (this._point.ProjectionTo(r.ToLine).BelongsTo(r))
             {
                 return this.DistanceTo(r.ToLine);
             }
@@ -142,7 +142,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            if (this.Center.ProjectionTo(s.ToLine).BelongsTo(s))
+            if (this._point.ProjectionTo(s.ToLine).BelongsTo(s))
             {
                 return this.DistanceTo(s.ToLine);
             }
@@ -157,7 +157,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Plane3d s)
         {
-            double d = this.Center.DistanceTo(s);
+            double d = this._point.DistanceTo(s);
             if (d > this.R)
             {
                 return d - this.R;
@@ -194,7 +194,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Sphere s)
         {
-            double dist = this.Center.DistanceTo(s.Center);
+            double dist = this._point.DistanceTo(s._point);
             if (dist <= this.R + s.R)
             {
                 return 0;
@@ -215,25 +215,25 @@ namespace GeometRi
         /// <param name="p2">Closest point on target sphere</param>
         public double DistanceTo(Sphere s, out Point3d p1, out Point3d p2)
         {
-            double dist = this.Center.DistanceTo(s.Center);
+            double dist = this._point.DistanceTo(s._point);
             if (dist <= this.R + s.R)
             {
-                if (this.Center == s.Center)
+                if (this._point == s._point)
                 {
-                    p1 = this.Center.Translate(this.R * new Vector3d(1, 0, 0));
-                    p2 = s.Center.Translate(s.R * new Vector3d(1, 0, 0));
+                    p1 = this._point.Translate(this.R * new Vector3d(1, 0, 0));
+                    p2 = s._point.Translate(s.R * new Vector3d(1, 0, 0));
                 }
                 else
                 {
-                    p1 = this.Center.Translate(this.R * new Vector3d(this.Center, s.Center).Normalized);
-                    p2 = s.Center.Translate(s.R * new Vector3d(s.Center, this.Center).Normalized);
+                    p1 = this._point.Translate(this.R * new Vector3d(this._point, s._point).Normalized);
+                    p2 = s._point.Translate(s.R * new Vector3d(s._point, this._point).Normalized);
                 }
                 return 0;
             }
             else
             {
-                p1 = this.Center.Translate(this.R * new Vector3d(this.Center, s.Center).Normalized);
-                p2 = s.Center.Translate(s.R * new Vector3d(s.Center, this.Center).Normalized);
+                p1 = this._point.Translate(this.R * new Vector3d(this._point, s._point).Normalized);
+                p2 = s._point.Translate(s.R * new Vector3d(s._point, this._point).Normalized);
                 return dist - this.R - s.R;
             }
         }
