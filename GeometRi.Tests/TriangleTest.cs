@@ -563,6 +563,13 @@ namespace GeometRi_Tests
             p3 = new Point3d(3, 0, -1);
             t = new Triangle(p1, p2, p3);
             Assert.IsFalse(c.Intersects(t));
+
+            // Non-intersecting objects
+            p1 = new Point3d(1, 1, -1);
+            p2 = new Point3d(1, 1, -2);
+            p3 = new Point3d(1, 5, -1);
+            t = new Triangle(p1, p2, p3);
+            Assert.IsFalse(c.Intersects(t));
         }
 
         [TestMethod()]

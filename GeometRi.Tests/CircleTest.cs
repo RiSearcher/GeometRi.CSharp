@@ -575,7 +575,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void CircleclosestPointToPlaneTest()
+        public void CircleClosestPointToPlaneTest()
         {
             Point3d p = new Point3d(0, 0, 5);
             Circle3d c = new Circle3d(p, 1.0, new Vector3d(0, 0, 1));
@@ -597,7 +597,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void CircleclosestPointToTriangleTest()
+        public void CircleClosestPointToTriangleTest()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(5, 0, 0);

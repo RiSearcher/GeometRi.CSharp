@@ -1211,7 +1211,7 @@ namespace GeometRi
             object obj = this.IntersectionWith(t_plane);
             if (obj != null && obj.GetType() == typeof(Point3d))
             {
-                return ((Point3d)obj).BelongsTo(this);
+                return ((Point3d)obj).BelongsTo(t);
             }
             else if (obj != null && obj.GetType() == typeof(Segment3d))
             {
