@@ -225,13 +225,12 @@ namespace GeometRi
         public Box3d BoundingBox(Coord3d coord = null)
         {
             coord = (coord == null) ? Coord3d.GlobalCS : coord;
-            Line3d l1 = new Line3d(coord.Origin, coord.Xaxis);
-            Line3d l2 = new Line3d(coord.Origin, coord.Yaxis);
-            Line3d l3 = new Line3d(coord.Origin, coord.Zaxis);
-            Segment3d s1 = this.ProjectionTo(l1);
-            Segment3d s2 = this.ProjectionTo(l2);
-            Segment3d s3 = this.ProjectionTo(l3);
-            return new Box3d(_point, s1.Length, s2.Length, s3.Length, coord);
+
+            double s1 = _r * Cos(coord.Xaxis.AngleTo(this));
+            double s2 = _r * Cos(coord.Yaxis.AngleTo(this));
+            double s3 = _r * Cos(coord.Zaxis.AngleTo(this));
+
+            return new Box3d(_point, 2 * s1, 2 * s2, 2 * s3, coord);
         }
 
         /// <summary>
@@ -261,40 +260,19 @@ namespace GeometRi
             }
             //====================================================
 
-            if (!this.Center.IsInside(box)) return false;
+            if (!this._point.IsInside(box)) return false;
 
-            // quick check
-            Point3d center = this.Center.ConvertToGlobal();
-            if (!box.IsAxisAligned)
-            {
-                Coord3d coord = new Coord3d(box.Center, box.V1, box.V2);
-                center = center.ConvertTo(coord);
-            }
-            if (Abs(center.X - box.Center.X) > 0.5 * box.L1 - this.R) return false;
-            if (Abs(center.Y - box.Center.Y) > 0.5 * box.L2 - this.R) return false;
-            if (Abs(center.Z - box.Center.Z) > 0.5 * box.L3 - this.R) return false;
+            Coord3d local_coord = box.LocalCoord();
+            Box3d circle_box = this.BoundingBox(local_coord);
+            Point3d p = _point.ConvertTo(local_coord);
 
-
-            Plane3d p = new Plane3d(box.P1, box.P2, box.P3);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P1, box.P2, box.P6);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P2, box.P3, box.P7);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P3, box.P4, box.P8);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P4, box.P1, box.P5);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P5, box.P6, box.P7);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+            if (box.L1 / 2 - (Abs(p.X) + circle_box.L1 / 2) < GeometRi3D.Tolerance) return false;
+            if (box.L2 / 2 - (Abs(p.Y) + circle_box.L2 / 2) < GeometRi3D.Tolerance) return false;
+            if (box.L3 / 2 - (Abs(p.Z) + circle_box.L3 / 2) < GeometRi3D.Tolerance) return false;
 
             return true;
         }
+
         #endregion
 
         /// <summary>
