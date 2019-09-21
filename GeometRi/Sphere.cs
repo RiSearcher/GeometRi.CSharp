@@ -293,28 +293,18 @@ namespace GeometRi
             }
             //====================================================
 
-            if (!this.Center.IsInside(box)) return false;
+            if (!this._point.IsInside(box)) return false;
 
-            Plane3d p = new Plane3d(box.P1, box.P2, box.P3);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+            Coord3d local_coord = box.LocalCoord();
+            Point3d p = _point.ConvertTo(local_coord);
 
-            p = new Plane3d(box.P1, box.P2, box.P6);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P2, box.P3, box.P7);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P3, box.P4, box.P8);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P4, box.P1, box.P5);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
-
-            p = new Plane3d(box.P5, box.P6, box.P7);
-            if (this.DistanceTo(p) < GeometRi3D.Tolerance) return false;
+            if (box.L1 / 2 - (Abs(p.X) + this._r) < GeometRi3D.Tolerance) return false;
+            if (box.L2 / 2 - (Abs(p.Y) + this._r) < GeometRi3D.Tolerance) return false;
+            if (box.L3 / 2 - (Abs(p.Z) + this._r) < GeometRi3D.Tolerance) return false;
 
             return true;
         }
+
         #endregion
 
         /// <summary>
