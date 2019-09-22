@@ -200,8 +200,8 @@ namespace GeometRi
         /// <returns></returns>
         public double DistanceTo(Line3d l)
         {
-            Vector3d v = new Vector3d(this, l.Point);
-            return v.Cross(l.Direction).Norm / l.Direction.Norm;
+            Vector3d v = new Vector3d(this, l._point);
+            return v.Cross(l._dir).Norm / l._dir.Norm;
         }
 
         /// <summary>
@@ -348,14 +348,7 @@ namespace GeometRi
         /// </summary>
         public bool BelongsTo(Line3d l)
         {
-            if (this == l.Point)
-            {
-                return true;
-            }
-            else
-            {
-                return this.DistanceTo(l) <= GeometRi3D.Tolerance;
-            }
+            return this.DistanceTo(l) <= GeometRi3D.Tolerance;
         }
 
         /// <summary>

@@ -12,8 +12,8 @@ namespace GeometRi
     public class Line3d : ILinearObject
     {
 
-        private Point3d _point;
-        private Vector3d _dir;
+        internal Point3d _point;
+        internal Vector3d _dir;
 
         #region "Constructors"
         /// <summary>
