@@ -39,16 +39,30 @@ namespace GeometRi.Benchmarks
             //});
 
 
-            Circle3d c = new Circle3d(new Point3d(2, 22, 43), 5, new Vector3d(0, 0, 2));
-            Point3d p1 = new Point3d(12, -22, -43);
-            Point3d p2 = new Point3d(3, 14, -6);
-            Point3d p3 = new Point3d(-12, 11, 4);
+            //Circle3d c = new Circle3d(new Point3d(2, 22, 43), 5, new Vector3d(0, 0, 2));
+            //Point3d p1 = new Point3d(12, -22, -43);
+            //Point3d p2 = new Point3d(3, 14, -6);
+            //Point3d p3 = new Point3d(-12, 11, 4);
+            //Triangle t = new Triangle(p1, p2, p3);
+            //Profile("Test", 200000, () =>
+            //{
+            //    bool test = c.Intersects(t);
+            //});
+
+            Line3d s = new Line3d(new Point3d(1, 2, 0), new Vector3d(-5, 7, 0));
+            Point3d p1 = new Point3d(12, -22, 0);
+            Point3d p2 = new Point3d(3, 14, 0);
+            Point3d p3 = new Point3d(-12, 11, 0);
             Triangle t = new Triangle(p1, p2, p3);
-            Profile("Test", 2000000, () =>
+            Profile("Test2", 1000000, () =>
             {
-                bool test = c.Intersects(t);
+                Object test = t.IntersectionWith(s);
             });
 
+            Profile("Test3", 1000000, () =>
+            {
+                Object test = t.IntersectionWithOld(s);
+            });
 
             Console.ReadLine();
         }

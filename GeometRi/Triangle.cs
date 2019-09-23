@@ -682,47 +682,96 @@ namespace GeometRi
             {
                 if (obj.GetType() == typeof(Line3d))
                 {
-                    Segment3d sAB = new Segment3d(A, B);
-                    Segment3d sBC = new Segment3d(B, C);
-                    Segment3d sAC = new Segment3d(A, C);
+                    // Coplanar line and triangle
 
-                    // Line coincides with one side, return segment
-                    if (sAB.BelongsTo(l)) { return sAB; }
-                    if (sBC.BelongsTo(l)) { return sBC; }
-                    if (sAC.BelongsTo(l)) { return sAC; }
+                    // Check intersection in one corner
+                    // or in corner and opposite side
+                    if (_a.BelongsTo(l))
+                    {
+                        object obj2 = new Segment3d(_b, _c).IntersectionWith(l);
+                        if (obj2 != null && obj2.GetType() == typeof(Point3d))
+                        {
+                            return new Segment3d(_a, (Point3d)obj2);
+                        }
+                        else
+                        {
+                            return A;
+                        }
+                    }
 
-                    Point3d pAB = (Point3d)sAB.IntersectionWith(l);
-                    Point3d pBC = (Point3d)sBC.IntersectionWith(l);
-                    Point3d pAC = (Point3d)sAC.IntersectionWith(l);
+                    if (_b.BelongsTo(l))
+                    {
+                        object obj2 = new Segment3d(_a, _c).IntersectionWith(l);
+                        if (obj2 != null && obj2.GetType() == typeof(Point3d))
+                        {
+                            return new Segment3d(_b, (Point3d)obj2);
+                        }
+                        else
+                        {
+                            return B;
+                        }
+                    }
 
-                    bool bAB = (object.ReferenceEquals(null, pAB)) ? false : pAB.BelongsTo(sAB);
-                    bool bAC = (object.ReferenceEquals(null, pAC)) ? false : pAC.BelongsTo(sAC);
-                    bool bBC = (object.ReferenceEquals(null, pBC)) ? false : pBC.BelongsTo(sBC);
+                    if (_c.BelongsTo(l))
+                    {
+                        object obj2 = new Segment3d(_a, _b).IntersectionWith(l);
+                        if (obj2 != null && obj2.GetType() == typeof(Point3d))
+                        {
+                            return new Segment3d(_c, (Point3d)obj2);
+                        }
+                        else
+                        {
+                            return C;
+                        }
+                    }
 
-                    if (!(bAB || bAC || bBC)) return null;
+                    // Check intersection with two sides
+                    object objAB = new Segment3d(_a, _b).IntersectionWith(l);
+                    object objBC = new Segment3d(_b, _c).IntersectionWith(l);
+                    if (objAB != null && objAB.GetType() == typeof(Point3d))
+                    {
+                        if (objBC != null && objBC.GetType() == typeof(Point3d))
+                        {
+                            return new Segment3d((Point3d)objAB, (Point3d)objBC);
+                        }
+                        else
+                        {
+                            object objAC = new Segment3d(_a, _c).IntersectionWith(l);
+                            if (objAC != null && objAC.GetType() == typeof(Point3d))
+                            {
+                                return new Segment3d((Point3d)objAB, (Point3d)objAC);
+                            }
+                            else
+                            {
+                                return (Point3d)objAB;
+                            }
+                        }
+                    }
 
-                    // Line crosses in one point (for nearly parallel line and triangle)
-                    if (bAB && !bBC && !bAC) { return pAB; }
-                    if (bBC && !bAB && !bAC) { return pBC; }
-                    if (bAC && !bAB && !bBC) { return pAC; }
+                    if (objBC != null && objBC.GetType() == typeof(Point3d))
+                    {
+                        object objAC = new Segment3d(_a, _c).IntersectionWith(l);
+                        if (objAC != null && objAC.GetType() == typeof(Point3d))
+                        {
+                            return new Segment3d((Point3d)objBC, (Point3d)objAC);
+                        }
+                        else
+                        {
+                            return (Point3d)objBC;
+                        }
+                    }
 
-                    // Line crosses one corner, return point
-                    if (bAB && bBC && pAB==pBC && !bAC) { return pAB; }
-                    if (bAB && bAC && pAB==pAC && !bBC) { return pAB; }
-                    if (bAC && bBC && pAC==pBC && !bAB) { return pAC; }
+                    object objAC2 = new Segment3d(_a, _c).IntersectionWith(l);
+                    if (objAC2 != null && objAC2.GetType() == typeof(Point3d))
+                    {
+                        return (Point3d)objAC2;
+                    }
+                    else
+                    {
+                        return null;
+                    }
 
-                    // Line crosses two sides, return segment
-                    if (bAB && bBC && !bAC) { return new Segment3d(pAB, pBC); }
-                    if (bAB && bAC && !bBC) { return new Segment3d(pAB, pAC); }
-                    if (bAC && bBC && !bAB) { return new Segment3d(pAC, pBC); }
 
-                    // Line crosses one corner and one side, return segment
-                    if (pAB == pBC && bAC) { return new Segment3d(pAB, pAC); }
-                    if (pAB == pAC && bBC) { return new Segment3d(pAB, pBC); }
-                    if (pAC == pBC && bAB) { return new Segment3d(pAB, pAC); }
-
-                    //else
-                    return null;
 
                 }
                 else
