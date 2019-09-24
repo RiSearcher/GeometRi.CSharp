@@ -12,9 +12,9 @@ namespace GeometRi
     public class Triangle : FiniteObject, IPlanarObject
     {
 
-        private Point3d _a;
-        private Point3d _b;
-        private Point3d _c;
+        internal Point3d _a;
+        internal Point3d _b;
+        internal Point3d _c;
 
         /// <summary>
         /// Initializes triangle object using three points.
@@ -134,7 +134,7 @@ namespace GeometRi
 
         public Vector3d Normal
         {
-            get { return new Vector3d(A, B).Cross(new Vector3d(A, C)); }
+            get { return new Vector3d(_a, _b).Cross(new Vector3d(_a, _c)); }
         }
 
         public bool IsOriented
@@ -929,7 +929,7 @@ namespace GeometRi
 
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                Plane3d s = new Plane3d(this.A, this.Normal);
+                Plane3d s = new Plane3d(this._a, this.Normal);
                 Point3d proj = p.ProjectionTo(s);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
                 {

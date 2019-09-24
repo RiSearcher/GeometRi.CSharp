@@ -294,8 +294,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Plane3d s)
         {
-            double center_distance = this.Center.DistanceTo(s);
-            double angle = this.Normal.AngleTo(s.Normal);
+            double center_distance = this._point.DistanceTo(s);
+            double angle = this._normal.AngleTo(s.Normal);
             double delta = Abs(this.R * Sin(angle));
 
             if (delta < center_distance)
@@ -324,9 +324,9 @@ namespace GeometRi
                 return point_on_circle.DistanceTo(point_on_plane);
             }
 
-            Vector3d v1 = this.Normal.Cross(p.Normal);
-            Vector3d v2 = this.Normal.Cross(v1);
-            Line3d l = new Line3d(this.Center, v2);
+            Vector3d v1 = this._normal.Cross(p.Normal);
+            Vector3d v2 = this._normal.Cross(v1);
+            Line3d l = new Line3d(this._point, v2);
             Point3d intersection_point = (Point3d)l.IntersectionWith(p);
 
             if (intersection_point.DistanceTo(this) <= GeometRi3D.DefaultTolerance)
@@ -337,8 +337,8 @@ namespace GeometRi
             }
             else
             {
-                v1 = new Vector3d(this.Center, intersection_point).Normalized;
-                point_on_circle = this.Center.Translate(this.R * v1);
+                v1 = new Vector3d(this._point, intersection_point).Normalized;
+                point_on_circle = this._point.Translate(this.R * v1);
                 point_on_plane = point_on_circle.ProjectionTo(p);
                 return point_on_circle.DistanceTo(point_on_plane);
             }
@@ -681,7 +681,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Shortest distance between two circles (including interior points) (approximate solution)
+        /// Shortest distance between circle and sphere (including interior points) (approximate solution)
         /// <para> The output points may be not unique in case of intersecting objects.</para>
         /// </summary>
         /// <param name="s">Target sphere</param>
@@ -1143,7 +1143,7 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Sphere s)
         {
-            if (this.Center.DistanceTo(s.Center) <= this.R + s.R)
+            if (this._point.DistanceTo(s.Center) <= this.R + s.R)
             {
                 Object obj = s.IntersectionWith(this.ToPlane);
                 if (obj != null && obj.GetType() == typeof(Circle3d))
@@ -1198,14 +1198,14 @@ namespace GeometRi
 
             if (this.IsCoplanarTo(t))
             {
-                if (t.A.DistanceTo(this._point) <= this._r) return true;
-                if (t.B.DistanceTo(this._point) <= this._r) return true;
-                if (t.C.DistanceTo(this._point) <= this._r) return true;
+                if (t._a.DistanceTo(this._point) <= this._r) return true;
+                if (t._b.DistanceTo(this._point) <= this._r) return true;
+                if (t._c.DistanceTo(this._point) <= this._r) return true;
 
                 if (this._point.BelongsTo(t)) return true;
-                if (this.IntersectionWith(new Segment3d(t.A, t.B)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t.B, t.C)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t.C, t.A)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t._a, t._b)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t._b, t._c)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t._c, t._a)) != null) return true;
             }
 
             object obj = this.IntersectionWith(t_plane);
@@ -1439,9 +1439,9 @@ namespace GeometRi
             }
             //====================================================
 
-            if (this.Normal.IsParallelTo(s.Normal))
+            if (this._normal.IsParallelTo(s.Normal))
             {
-                if (this.Center.BelongsTo(s))
+                if (this._point.BelongsTo(s))
                 {
                     // coplanar objects
                     return this.Copy();
@@ -1454,9 +1454,9 @@ namespace GeometRi
             }
             else
             {
-                Line3d l = (Line3d)s.IntersectionWith(new Plane3d(this.Center, this.Normal));
-                Coord3d local_coord = new Coord3d(this.Center, l.Direction, this.Normal.Cross(l.Direction));
-                Point3d p = l.Point.ConvertTo(local_coord);
+                Line3d l = (Line3d)s.IntersectionWith(new Plane3d(this._point, this._normal));
+                Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
+                Point3d p = l._point.ConvertTo(local_coord);
 
                 if (GeometRi3D.Greater(Abs(p.Y), this.R))
                 {
