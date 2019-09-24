@@ -687,11 +687,11 @@ namespace GeometRi
                 Point3d proj = p.ProjectionTo(this.ToLine);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj),0))
                 {
-                    if (GeometRi3D.AlmostEqual(p.DistanceTo(this.P1), 0) || GeometRi3D.AlmostEqual(p.DistanceTo(this.P2), 0))
+                    if (GeometRi3D.AlmostEqual(p.DistanceTo(this._p1), 0) || GeometRi3D.AlmostEqual(p.DistanceTo(this._p2), 0))
                     {
                         return 0; // Point is on boundary
                     }
-                    else if (Abs(new Vector3d(proj, this.P1).Normalized.AngleTo(new Vector3d(proj, this.P2).Normalized)) < PI/2)
+                    else if (Abs(new Vector3d(proj, this._p1).Normalized.AngleTo(new Vector3d(proj, this._p2).Normalized)) < PI/2)
                     {
                         return -1; // Point is outside
                     }
@@ -711,6 +711,35 @@ namespace GeometRi
                 GeometRi3D.Tolerance = tol * this.Length;
                 GeometRi3D.UseAbsoluteTolerance = true;
                 int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+        }
+
+        internal int _AxialPointLocation(Point3d p)
+        {
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if (GeometRi3D.AlmostEqual(p.DistanceTo(this._p1), 0) || GeometRi3D.AlmostEqual(p.DistanceTo(this._p2), 0))
+                {
+                    return 0; // Point is on boundary
+                }
+                else if (Abs(new Vector3d(p, this._p1).Normalized.AngleTo(new Vector3d(p, this._p2).Normalized)) < PI / 2)
+                {
+                    return -1; // Point is outside
+                }
+                else
+                {
+                    return 1; // // Point is strictly inside
+                }
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * this.Length;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._AxialPointLocation(p);
                 GeometRi3D.UseAbsoluteTolerance = false;
                 GeometRi3D.Tolerance = tol;
                 return result;

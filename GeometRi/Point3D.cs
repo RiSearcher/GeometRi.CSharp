@@ -135,7 +135,7 @@ namespace GeometRi
             else
             {
                 Vector3d v = new Vector3d(this.X, this.Y, this.Z);
-                v = _coord.Axes.Inverse() * v;
+                v = _coord.Axes.Transpose() * v; // Orthogonal matrix: Inverse == Transpose
 
                 return v.ToPoint + _coord.Origin;
 
@@ -233,9 +233,10 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            if (this.ProjectionTo(s.ToLine).BelongsTo(s))
+            Point3d projection = this.ProjectionTo(s.ToLine);
+            if (s._AxialPointLocation(projection) > 0)
             {
-                return this.DistanceTo(s.ToLine);
+                return this.DistanceTo(projection);
             }
             else
             {

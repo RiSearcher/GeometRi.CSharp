@@ -59,10 +59,7 @@ namespace GeometRi.Benchmarks
                 Object test = t.IntersectionWith(s);
             });
 
-            Profile("Test3", 1000000, () =>
-            {
-                Object test = t.IntersectionWithOld(s);
-            });
+
 
             Console.ReadLine();
         }
