@@ -555,8 +555,33 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Point3d p)
         {
-            Point3d closest_point = this.ClosestPoint(p);
-            return p.DistanceTo(closest_point);
+            Point3d projection_point = p.ProjectionTo(this.ToPlane);
+
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            int code = _PointLocation(projection_point);
+
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+
+            if (code >= 0)
+            {
+                return 0;
+            }
+
+            Segment3d AB = new Segment3d(this._a, this._b);
+            Segment3d BC = new Segment3d(this._b, this._c);
+            Segment3d AC = new Segment3d(this._a, this._c);
+
+            double dist = p.DistanceTo(AB);
+            double dist2 = p.DistanceTo(BC);
+            double dist3 = p.DistanceTo(AC);
+
+            return Min(dist,Min(dist2, dist3));
         }
 
         /// <summary>
@@ -582,9 +607,9 @@ namespace GeometRi
                 return projection_point;
             }
 
-            Segment3d AB = new Segment3d(this.A, this.B);
-            Segment3d BC = new Segment3d(this.B, this.C);
-            Segment3d AC = new Segment3d(this.A, this.C);
+            Segment3d AB = new Segment3d(this._a, this._b);
+            Segment3d BC = new Segment3d(this._b, this._c);
+            Segment3d AC = new Segment3d(this._a, this._c);
 
             double dist = p.DistanceTo(AB);
             Point3d closest_point = AB.ClosestPoint(p);

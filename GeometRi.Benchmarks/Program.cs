@@ -56,7 +56,7 @@ namespace GeometRi.Benchmarks
             Triangle t = new Triangle(p1, p2, p3);
             Profile("Test2", 1000000, () =>
             {
-                Object test = t.IntersectionWith(s);
+                double a1 = t.DistanceTo(new Point3d(1112, 332, 432));
             });
 
 
