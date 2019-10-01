@@ -292,16 +292,12 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Determines whether two objects are equal.
+        /// Determines whether two coordinate systems are equal.
+        /// <para>Object's references are compared for speed.</para>
         /// </summary>
         public override bool Equals(object obj)
         {
-            if (obj == null || (!object.ReferenceEquals(this.GetType(), obj.GetType())))
-            {
-                return false;
-            }
-            Coord3d cs = (Coord3d)obj;
-            return this._name == cs._name;
+            return object.ReferenceEquals(this, obj);
         }
 
         /// <summary>
