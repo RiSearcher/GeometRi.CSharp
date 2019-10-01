@@ -17,9 +17,12 @@ namespace GeometRi
         private double _lx, _ly, _lz;
         private Rotation _r;
 
+        private List<Point3d> _list_p = null;
         private List<Triangle> _list_t = null;
+        private List<Segment3d> _list_e = null;
+        private List<Plane3d> _list_plane = null;
 
-#region "Constructors"
+        #region "Constructors"
 
         /// <summary>
         /// Default constructor, initializes unit box in the origin of the global coordinate system aligned with coordinate axes.
@@ -97,7 +100,10 @@ namespace GeometRi
             get { return _center.Copy(); }
             set {
                 _center = value.Copy();
+                _list_p = null;
                 _list_t = null;
+                _list_e = null;
+                _list_plane = null;
             }
         }
 
@@ -109,7 +115,10 @@ namespace GeometRi
             get { return _lx; }
             set {
                 _lx = value;
+                _list_p = null;
                 _list_t = null;
+                _list_e = null;
+                _list_plane = null;
             }
         }
 
@@ -121,7 +130,10 @@ namespace GeometRi
             get { return _ly; }
             set {
                 _ly = value;
+                _list_p = null;
                 _list_t = null;
+                _list_e = null;
+                _list_plane = null;
             }
         }
 
@@ -133,7 +145,10 @@ namespace GeometRi
             get { return _lz; }
             set {
                 _lz = value;
+                _list_p = null;
                 _list_t = null;
+                _list_e = null;
+                _list_plane = null;
             }
         }
 
@@ -169,7 +184,10 @@ namespace GeometRi
             get { return _r.Copy(); }
             set {
                 _r = value.Copy();
+                _list_p = null;
                 _list_t = null;
+                _list_e = null;
+                _list_plane = null;
             }
         }
 
@@ -290,7 +308,18 @@ namespace GeometRi
         /// </summary>
         public List<Point3d> ListOfPoints
         {
-            get { return new List<Point3d> { P1, P2, P3, P4, P5, P6, P7, P8 }; }
+            get
+            {
+                if (_list_p == null)
+                {
+                    _list_p = new List<Point3d> { P1, P2, P3, P4, P5, P6, P7, P8 };
+                    return _list_p;
+                }
+                else
+                {
+                    return _list_p;
+                }
+            }
         }
 
         /// <summary>
@@ -346,15 +375,22 @@ namespace GeometRi
         {
             get
             {
-                List<Plane3d> list = new List<Plane3d> { };
-                list.Add(new Plane3d(P1, -V1));
-                list.Add(new Plane3d(P2, V1));
-                list.Add(new Plane3d(P1, -V2));
-                list.Add(new Plane3d(P4, V2));
-                list.Add(new Plane3d(P1, -V3));
-                list.Add(new Plane3d(P5, V3));
+                if (_list_plane == null)
+                {
+                    _list_plane = new List<Plane3d> { };
+                    _list_plane.Add(new Plane3d(P1, -V1));
+                    _list_plane.Add(new Plane3d(P2, V1));
+                    _list_plane.Add(new Plane3d(P1, -V2));
+                    _list_plane.Add(new Plane3d(P4, V2));
+                    _list_plane.Add(new Plane3d(P1, -V3));
+                    _list_plane.Add(new Plane3d(P5, V3));
 
-                return list;
+                    return _list_plane;
+                }
+                else
+                {
+                    return _list_plane;
+                }
             }
         }
 
@@ -365,21 +401,28 @@ namespace GeometRi
         {
             get
             {
-                List<Segment3d> list = new List<Segment3d> { };
-                list.Add(new Segment3d(P1, P2));
-                list.Add(new Segment3d(P2, P3));
-                list.Add(new Segment3d(P3, P4));
-                list.Add(new Segment3d(P4, P1));
-                list.Add(new Segment3d(P5, P6));
-                list.Add(new Segment3d(P6, P7));
-                list.Add(new Segment3d(P7, P8));
-                list.Add(new Segment3d(P8, P5));
-                list.Add(new Segment3d(P1, P5));
-                list.Add(new Segment3d(P2, P6));
-                list.Add(new Segment3d(P3, P7));
-                list.Add(new Segment3d(P4, P8));
+                if (_list_e ==  null)
+                {
+                    _list_e = new List<Segment3d> { };
+                    _list_e.Add(new Segment3d(P1, P2));
+                    _list_e.Add(new Segment3d(P2, P3));
+                    _list_e.Add(new Segment3d(P3, P4));
+                    _list_e.Add(new Segment3d(P4, P1));
+                    _list_e.Add(new Segment3d(P5, P6));
+                    _list_e.Add(new Segment3d(P6, P7));
+                    _list_e.Add(new Segment3d(P7, P8));
+                    _list_e.Add(new Segment3d(P8, P5));
+                    _list_e.Add(new Segment3d(P1, P5));
+                    _list_e.Add(new Segment3d(P2, P6));
+                    _list_e.Add(new Segment3d(P3, P7));
+                    _list_e.Add(new Segment3d(P4, P8));
 
-                return list;
+                    return _list_e;
+                }
+                else
+                {
+                    return _list_e;
+                }
             }
         }
 
