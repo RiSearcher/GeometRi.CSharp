@@ -54,9 +54,11 @@ namespace GeometRi.Benchmarks
             Point3d p2 = new Point3d(3, 14, 0);
             Point3d p3 = new Point3d(-12, 11, 0);
             Triangle t = new Triangle(p1, p2, p3);
-            Profile("Test2", 1000000, () =>
+            Circle3d c1 = new Circle3d(new Point3d(2, 22, 43), 50, new Vector3d(0, 0, 2));
+            Circle3d c2 = new Circle3d(new Point3d(22, -3, 8), 50, new Vector3d(-1, 2, -4));
+            Profile("Test2", 2000000, () =>
             {
-                double a1 = t.DistanceTo(new Point3d(1112, 332, 432));
+                bool a1 = c2.Intersects(c1);
             });
 
 

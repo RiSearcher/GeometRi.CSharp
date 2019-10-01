@@ -1169,16 +1169,6 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Circle3d c)
         {
-
-            // Early exit (separated circles)
-            if (this._point.DistanceTo(c._point) > this.R + c.R + GeometRi3D.Tolerance)
-                return false;
-
-            if (this.IsCoplanarTo(c))
-            {
-                return true;
-            }
-
             object obj = this.IntersectionWith(c);
             if (obj != null)
             {
@@ -1277,16 +1267,16 @@ namespace GeometRi
             //====================================================
 
 
-            if (l.Direction.IsOrthogonalTo(this.Normal))
+            if (l._dir.IsOrthogonalTo(this._normal))
             {
-                if (l.Point.BelongsTo(new Plane3d(this.Center, this.Normal)))
+                if (l._point.BelongsTo(new Plane3d(this._point, this._normal)))
                 {
                     // coplanar objects
                     // Find intersection of line and circle (2D)
 
                     // Local coord: X - line direction, Z - circle normal
-                    Coord3d local_coord = new Coord3d(this.Center, l.Direction, this.Normal.Cross(l.Direction));
-                    Point3d p = l.Point.ConvertTo(local_coord);
+                    Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
+                    Point3d p = l._point.ConvertTo(local_coord);
 
                     double c = p.Y;
 
@@ -1319,8 +1309,8 @@ namespace GeometRi
             else
             {
                 // Line intersects circle' plane
-                Point3d p = (Point3d)l.IntersectionWith(new Plane3d(this.Center, this.Normal));
-                if (p.DistanceTo(this.Center) < this.R + GeometRi3D.Tolerance)
+                Point3d p = (Point3d)l.IntersectionWith(new Plane3d(this._point, this._normal));
+                if (p.DistanceTo(this._point) < this.R + GeometRi3D.Tolerance)
                 {
                     return p;
                 }
@@ -1503,23 +1493,24 @@ namespace GeometRi
             //====================================================
 
             // Early exit (separated circles)
-            if (this._point.DistanceTo(c._point) > this.R  + c.R  +  GeometRi3D.Tolerance)
+            double d = this._point.DistanceTo(c._point);
+            if (d > this.R  + c.R  +  GeometRi3D.Tolerance)
                 return null;
 
-            if (this.Normal.IsParallelTo(c.Normal))
+            if (this._normal.IsParallelTo(c._normal))
             {
-                if (this._point.BelongsTo(new Plane3d(c._point, c.Normal)))
+                if (this._point.BelongsTo(new Plane3d(c._point, c._normal)))
                 {
                     // Coplanar objects
                     // Search 2D intersection of two circles
 
                     // Equal circles
-                    if (this._point == c._point && GeometRi3D.AlmostEqual(this.R, c.R))
+                    if (GeometRi3D.AlmostEqual(d, 0) && GeometRi3D.AlmostEqual(this.R, c.R))
                     {
                         return this.Copy();
                     }
 
-                    double d = this._point.DistanceTo(c._point);
+                    
 
                     // One circle inside the other
                     if (d < Abs(this.R - c.R) - GeometRi3D.Tolerance)
@@ -1559,7 +1550,7 @@ namespace GeometRi
                     // intersecting circles
                     // Create local CS with origin in circle's center
                     Vector3d vec1 = new Vector3d(this._point, c._point);
-                    Vector3d vec2 = vec1.Cross(this.Normal);
+                    Vector3d vec2 = vec1.Cross(this._normal);
                     Coord3d local_cs = new Coord3d(this._point, vec1, vec2);
 
                     double x = 0.5 * (d * d - c.R * c.R + this.R * this.R) / d;
@@ -1577,11 +1568,11 @@ namespace GeometRi
             else
             {
                 // Check 3D intersection
-                Plane3d plane_this = new Plane3d(this._point, this.Normal);
+                Plane3d plane_this = new Plane3d(this._point, this._normal);
                 if (c.DistanceTo(plane_this) > GeometRi3D.Tolerance)
                     return null;
 
-                Plane3d plane_c = new Plane3d(c._point, c.Normal);
+                Plane3d plane_c = new Plane3d(c._point, c._normal);
                 if (this.DistanceTo(plane_c) > GeometRi3D.Tolerance)
                     return null;
 
