@@ -13,9 +13,9 @@ namespace GeometRi
     public class Circle3d : FiniteObject, IPlanarObject, IFiniteObject
     {
 
-        private Point3d _point;
+        internal Point3d _point;
         private double _r;
-        private Vector3d _normal;
+        internal Vector3d _normal;
 
         /// <summary>
         /// Initializes circle instance using center point, radius and normal vector.

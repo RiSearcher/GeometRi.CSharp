@@ -17,6 +17,8 @@ namespace GeometRi
         private double _lx, _ly, _lz;
         private Rotation _r;
 
+        private List<Triangle> _list_t = null;
+
 #region "Constructors"
 
         /// <summary>
@@ -93,7 +95,10 @@ namespace GeometRi
         public Point3d Center
         {
             get { return _center.Copy(); }
-            set { _center = value.Copy(); }
+            set {
+                _center = value.Copy();
+                _list_t = null;
+            }
         }
 
         /// <summary>
@@ -102,7 +107,10 @@ namespace GeometRi
         public double L1
         {
             get { return _lx; }
-            set { _lx = value; }
+            set {
+                _lx = value;
+                _list_t = null;
+            }
         }
 
         /// <summary>
@@ -111,7 +119,10 @@ namespace GeometRi
         public double L2
         {
             get { return _ly; }
-            set { _ly = value; }
+            set {
+                _ly = value;
+                _list_t = null;
+            }
         }
 
         /// <summary>
@@ -120,7 +131,10 @@ namespace GeometRi
         public double L3
         {
             get { return _lz; }
-            set { _lz = value; }
+            set {
+                _lz = value;
+                _list_t = null;
+            }
         }
 
         /// <summary>
@@ -153,7 +167,10 @@ namespace GeometRi
         public Rotation Orientation
         {
             get { return _r.Copy(); }
-            set { _r = value.Copy(); }
+            set {
+                _r = value.Copy();
+                _list_t = null;
+            }
         }
 
         /// <summary>
@@ -283,26 +300,42 @@ namespace GeometRi
         {
             get
             {
-                List<Triangle> list = new List<Triangle> { };
-                list.Add(new Triangle(P1, P3, P2));
-                list.Add(new Triangle(P1, P4, P3));
+                if (_list_t == null)
+                {
+                    Point3d P1 = this.P1;
+                    Point3d P2 = this.P2;
+                    Point3d P3 = this.P3;
+                    Point3d P4 = this.P4;
+                    Point3d P5 = this.P5;
+                    Point3d P6 = this.P6;
+                    Point3d P7 = this.P7;
+                    Point3d P8 = this.P8;
+                    _list_t = new List<Triangle> { };
+                    _list_t.Add(new Triangle(P1, P3, P2));
+                    _list_t.Add(new Triangle(P1, P4, P3));
 
-                list.Add(new Triangle(P1, P2, P6));
-                list.Add(new Triangle(P1, P6, P5));
+                    _list_t.Add(new Triangle(P1, P2, P6));
+                    _list_t.Add(new Triangle(P1, P6, P5));
 
-                list.Add(new Triangle(P2, P3, P7));
-                list.Add(new Triangle(P2, P7, P6));
+                    _list_t.Add(new Triangle(P2, P3, P7));
+                    _list_t.Add(new Triangle(P2, P7, P6));
 
-                list.Add(new Triangle(P3, P4, P8));
-                list.Add(new Triangle(P3, P8, P7));
+                    _list_t.Add(new Triangle(P3, P4, P8));
+                    _list_t.Add(new Triangle(P3, P8, P7));
 
-                list.Add(new Triangle(P4, P1, P5));
-                list.Add(new Triangle(P4, P5, P8));
+                    _list_t.Add(new Triangle(P4, P1, P5));
+                    _list_t.Add(new Triangle(P4, P5, P8));
 
-                list.Add(new Triangle(P5, P6, P7));
-                list.Add(new Triangle(P5, P7, P8));
+                    _list_t.Add(new Triangle(P5, P6, P7));
+                    _list_t.Add(new Triangle(P5, P7, P8));
 
-                return list;
+                    return _list_t;
+                }
+                else
+                {
+                    return _list_t;
+                }
+
             }
         }
 
@@ -624,8 +657,10 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Circle3d c)
         {
-            if (c.Center.IsInside(this)) return true;
-            if (c.Center.DistanceTo(this) > c.R) return false;
+            //if (c.Center.IsInside(this)) return true;
+            double dist = c._point.DistanceTo(this);
+            if (dist > c.R) return false;
+            if (dist < GeometRi3D.Tolerance) return true;
 
             foreach (Triangle triangle in ListOfTriangles)
             {
@@ -636,7 +671,7 @@ namespace GeometRi
 
         internal override int _PointLocation(Point3d p)
         {
-            Coord3d coord = new Coord3d(this.Center, this.V1, this.V2);
+            Coord3d coord = this.LocalCoord();
             p = p.ConvertTo(coord);
             if (GeometRi3D.UseAbsoluteTolerance)
             {
