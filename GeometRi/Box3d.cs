@@ -555,36 +555,36 @@ namespace GeometRi
             //====================================================
 
             // Define local CS aligned with box
-            Coord3d local_CS = new Coord3d(this.Center, this.Orientation.ConvertToGlobal().ToRotationMatrix, "local_CS");
+            Coord3d local_CS = this.LocalCoord();
 
             Point3d Pmin = this.P1.ConvertTo(local_CS);
             Point3d Pmax = this.P7.ConvertTo(local_CS);
 
-            l = new Line3d(l.Point.ConvertTo(local_CS), l.Direction.ConvertTo(local_CS).Normalized);
+            l = new Line3d(l._point.ConvertTo(local_CS), l._dir.ConvertTo(local_CS).Normalized);
 
             double tmin, tmax, tymin, tymax, tzmin, tzmax;
-            double divx = 1 / l.Direction.X;
+            double divx = 1 / l._dir.X;
             if (divx >= 0)
             {
-                tmin = (Pmin.X - l.Point.X) * divx;
-                tmax = (Pmax.X - l.Point.X) * divx;
+                tmin = (Pmin.X - l._point.X) * divx;
+                tmax = (Pmax.X - l._point.X) * divx;
             }
             else
             {
-                tmin = (Pmax.X - l.Point.X) * divx;
-                tmax = (Pmin.X - l.Point.X) * divx;
+                tmin = (Pmax.X - l._point.X) * divx;
+                tmax = (Pmin.X - l._point.X) * divx;
             }
 
-            double divy = 1 / l.Direction.Y;
+            double divy = 1 / l._dir.Y;
             if (divy >= 0)
             {
-                tymin = (Pmin.Y - l.Point.Y) * divy;
-                tymax = (Pmax.Y - l.Point.Y) * divy;
+                tymin = (Pmin.Y - l._point.Y) * divy;
+                tymax = (Pmax.Y - l._point.Y) * divy;
             }
             else
             {
-                tymin = (Pmax.Y - l.Point.Y) * divy;
-                tymax = (Pmin.Y - l.Point.Y) * divy;
+                tymin = (Pmax.Y - l._point.Y) * divy;
+                tymax = (Pmin.Y - l._point.Y) * divy;
             }
 
             if (GeometRi3D.Greater(tmin, tymax) || GeometRi3D.Greater(tymin, tmax))
@@ -594,16 +594,16 @@ namespace GeometRi
             if (GeometRi3D.Smaller(tymax, tmax))
                 tmax = tymax;
 
-            double divz = 1 / l.Direction.Z;
+            double divz = 1 / l._dir.Z;
             if (divz >= 0)
             {
-                tzmin = (Pmin.Z - l.Point.Z) * divz;
-                tzmax = (Pmax.Z - l.Point.Z) * divz;
+                tzmin = (Pmin.Z - l._point.Z) * divz;
+                tzmax = (Pmax.Z - l._point.Z) * divz;
             }
             else
             {
-                tzmin = (Pmax.Z - l.Point.Z) * divz;
-                tzmax = (Pmin.Z - l.Point.Z) * divz;
+                tzmin = (Pmax.Z - l._point.Z) * divz;
+                tzmax = (Pmin.Z - l._point.Z) * divz;
             }
 
             if (GeometRi3D.Greater(tmin, tzmax) || GeometRi3D.Greater(tzmin, tmax))
@@ -627,11 +627,11 @@ namespace GeometRi
 
             if (GeometRi3D.AlmostEqual(tmin, tmax))
             {
-                return l.Point.Translate(tmin * l.Direction);
+                return l._point.Translate(tmin * l._dir);
             }
             else
             {
-                return new Segment3d(l.Point.Translate(tmin * l.Direction), l.Point.Translate(tmax * l.Direction));
+                return new Segment3d(l._point.Translate(tmin * l._dir), l._point.Translate(tmax * l._dir));
             }
         }
 #endregion
@@ -682,7 +682,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Circle3d c)
         {
-            if (c.Center.IsInside(this))
+            if (c._point.IsInside(this))
             {
                 return 0;
             }
@@ -690,6 +690,7 @@ namespace GeometRi
             foreach (Triangle triangle in ListOfTriangles)
             {
                 double dist = c.DistanceTo(triangle);
+                if (dist <= GeometRi3D.Tolerance) return 0;
                 if (dist < min_dist) min_dist = dist;
             }
             return min_dist;
