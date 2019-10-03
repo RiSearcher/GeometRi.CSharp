@@ -33,7 +33,14 @@ namespace GeometRi
         /// </summary>
         public Rotation(Coord3d coord)
         {
-            _r = coord.Axes.Transpose();
+            if (coord == null)
+            {
+                _r = Matrix3d.Identity();
+            }
+            else
+            {
+                _r = coord.Axes.Transpose();
+            }
             _coord = Coord3d.GlobalCS;
         }
 

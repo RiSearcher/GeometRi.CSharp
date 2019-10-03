@@ -16,6 +16,7 @@ namespace GeometRi
         private Point3d _center;
         private double _lx, _ly, _lz;
         private Rotation _r;
+        private Coord3d _local_coord = null;
 
         private List<Point3d> _list_p = null;
         private List<Triangle> _list_t = null;
@@ -34,6 +35,7 @@ namespace GeometRi
             _ly = ly;
             _lz = lz;
             _r = new Rotation();
+            _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
         }
 
         /// <summary>
@@ -42,10 +44,15 @@ namespace GeometRi
         /// <param name="coord">Reference coordinate system.</param>
         public Box3d(Coord3d coord = null)
         {
-            coord = (coord == null) ? Coord3d.GlobalCS : coord;
             _center = new Point3d(coord);
             _lx = _ly = _lz = 1.0;
             _r = new Rotation(coord);
+            if (coord != null)
+            {
+                // do not set local_coord for box aligned with global CS
+                _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
+            }
+            coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
         /// <summary>
@@ -63,6 +70,7 @@ namespace GeometRi
             _ly = ly;
             _lz = lz;
             _r = r.Copy();
+            _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
         }
 
         /// <summary>
@@ -80,6 +88,7 @@ namespace GeometRi
             _ly = ly;
             _lz = lz;
             _r = new Rotation(coord);
+            _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
         }
 #endregion
 
@@ -104,6 +113,7 @@ namespace GeometRi
                 _list_t = null;
                 _list_e = null;
                 _list_plane = null;
+                _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
             }
         }
 
@@ -188,6 +198,7 @@ namespace GeometRi
                 _list_t = null;
                 _list_e = null;
                 _list_plane = null;
+                _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
             }
         }
 
@@ -642,7 +653,7 @@ namespace GeometRi
         /// </summary>
         public Coord3d LocalCoord()
         {
-            return new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
+            return _local_coord;
         }
 
         /// <summary>
@@ -672,8 +683,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Sphere s)
         {
-            Point3d p = this.ClosestPoint(s.Center);
-            double dist = p.DistanceTo(s.Center);
+            Point3d p = this.ClosestPoint(s._point);
+            double dist = p.DistanceTo(s._point);
             return dist <= s.R ? 0.0 : dist - s.R;
         }
 

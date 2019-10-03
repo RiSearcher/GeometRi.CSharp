@@ -58,9 +58,11 @@ namespace GeometRi.Benchmarks
             Circle3d c2 = new Circle3d(new Point3d(22, -3, 8), 50, new Vector3d(-1, 2, -4));
             Box3d box = new Box3d();
             Circle3d c3 = new Circle3d(new Point3d(0.3, 0.55, 0.3), 0.1, new Vector3d(0, 0, 2));
-            Profile("Test2", 20000, () =>
+            Sphere sph = new Sphere(new Point3d(2.3, 1.55, 0.3), 0.1);
+            double dist1 = sph.DistanceTo(box);
+            Profile("Test2", 2000000, () =>
             {
-                bool a1 = c3.Intersects(box);
+                double dist = sph.DistanceTo(box);
             });
 
 

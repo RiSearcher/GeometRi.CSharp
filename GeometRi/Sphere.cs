@@ -12,7 +12,7 @@ namespace GeometRi
     public class Sphere : FiniteObject, IFiniteObject
     {
 
-        private Point3d _point;
+        internal Point3d _point;
         private double _r;
 
         /// <summary>
