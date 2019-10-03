@@ -295,8 +295,8 @@ namespace GeometRi
         public double DistanceTo(Plane3d s)
         {
             double center_distance = this._point.DistanceTo(s);
-            double angle = this._normal.AngleTo(s.Normal);
-            double delta = Abs(this.R * Sin(angle));
+            double sin_angle = this._normal.Cross(s.Normal).Norm / this._normal.Norm / s.Normal.Norm;
+            double delta = Abs(this.R * sin_angle);
 
             if (delta < center_distance)
             {
@@ -1568,14 +1568,27 @@ namespace GeometRi
             else
             {
                 // Check 3D intersection
+
+                Vector3d v = new Vector3d(this._point, c._point);
+                double this_norm = this._normal.Norm;
+                double c_norm = c._normal.Norm;
+
+                double cos_angle1 = this._normal * v / this_norm / d;
+                double delta1 = Abs(d * cos_angle1);
+
+                double sin_angle2 = this._normal.Cross(c._normal).Norm / this_norm / c_norm;
+                double delta2 = Abs(this.R * sin_angle2);
+
+                if (delta1 > delta2) return null;
+
+                cos_angle1 = c._normal * v / c_norm / d;
+                delta1 = Abs(d * cos_angle1);
+                delta2 = Abs(c.R * sin_angle2);
+
+                if (delta1 > delta2) return null;
+
+
                 Plane3d plane_this = new Plane3d(this._point, this._normal);
-                if (c.DistanceTo(plane_this) > GeometRi3D.Tolerance)
-                    return null;
-
-                Plane3d plane_c = new Plane3d(c._point, c._normal);
-                if (this.DistanceTo(plane_c) > GeometRi3D.Tolerance)
-                    return null;
-
                 object obj = c.IntersectionWith(plane_this);
 
                 if (obj == null)
