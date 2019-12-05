@@ -105,31 +105,38 @@ namespace GeometRi_Tests
             Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
             Circle3d c2 = new Circle3d(new Point3d(5, 0, 1), 5, new Vector3d(0, 0, 1));
             Assert.AreEqual(c1.IntersectionWith(c2), null);
+            Assert.IsFalse(c1.Intersects(c2));
 
             // Coincided circles
             c2 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
             Assert.AreEqual(c1.IntersectionWith(c2), c1);
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Separated circles
             c2 = new Circle3d(new Point3d(10, 0, 0), 2, new Vector3d(0, 0, 1));
             Assert.AreEqual(c1.IntersectionWith(c2), null);
+            Assert.IsFalse(c1.Intersects(c2));
 
             // Outer tangency
             c2 = new Circle3d(new Point3d(10, 0, 0), 5, new Vector3d(0, 0, 1));
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Inner tangency 1
             c2 = new Circle3d(new Point3d(3, 0, 0), 2, new Vector3d(0, 0, 1));
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Inner tangency 2
             c2 = new Circle3d(new Point3d(-2, 0, 0), 7, new Vector3d(0, 0, 1));
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Intersection
             c2 = new Circle3d(new Point3d(6, 0, 0), 5, new Vector3d(0, 0, 1));
             Segment3d s = new Segment3d(new Point3d(3, 4, 0), new Point3d(3, -4, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), s);
+            Assert.IsTrue(c1.Intersects(c2));
 
         }
 
@@ -140,35 +147,42 @@ namespace GeometRi_Tests
             Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
             Circle3d c2 = new Circle3d(new Point3d(5, 0, 0), 5, new Vector3d(1, 0, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Touching circles
             c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
             c2 = new Circle3d(new Point3d(5, 0, 5), 5, new Vector3d(1, 0, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Non touching circles
             c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
             c2 = new Circle3d(new Point3d(6, 0, 5), 5, new Vector3d(1, 0, 0));
             Assert.IsNull(c1.IntersectionWith(c2));
+            Assert.IsFalse(c1.Intersects(c2));
 
             // Touching circles
             c2 = new Circle3d(new Point3d(10, 0, 0), 5, new Vector3d(0, 1, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), new Point3d(5, 0, 0));
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Intersecting circles
             c2 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 1, 0));
             Segment3d s = new Segment3d(new Point3d(-5, 0, 0), new Point3d(5, 0, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), s);
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Intersecting circles
             c2 = new Circle3d(new Point3d(5, 0, 0), 5, new Vector3d(0, 1, 0));
             s = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), s);
+            Assert.IsTrue(c1.Intersects(c2));
 
             // Intersecting circles
             c2 = new Circle3d(new Point3d(0, 0, 4), 5, new Vector3d(0, 1, 0));
             s = new Segment3d(new Point3d(-3, 0, 0), new Point3d(3, 0, 0));
             Assert.AreEqual(c1.IntersectionWith(c2), s);
+            Assert.IsTrue(c1.Intersects(c2));
 
         }
 
@@ -184,6 +198,8 @@ namespace GeometRi_Tests
             Circle3d c2 = new Circle3d(new Point3d(-0.35134, -0.27228, -0.12871), 0.2, new Vector3d(0.84394, -0.416, -0.33868));
             Assert.IsTrue(c1.IntersectionWith(c2) != null);
             Assert.IsTrue(c2.IntersectionWith(c1) != null);
+            Assert.IsTrue(c1.Intersects(c2));
+            Assert.IsTrue(c2.Intersects(c1));
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
@@ -202,6 +218,8 @@ namespace GeometRi_Tests
             Circle3d c2 = new Circle3d(new Point3d(0.18967, -0.14709, 0.081927), 0.25, new Vector3d(0.90756, -0.16092, -0.38787));
             Assert.IsTrue(c1.IntersectionWith(c2) == null);
             Assert.IsTrue(c2.IntersectionWith(c1) == null);
+            Assert.IsFalse(c1.Intersects(c2));
+            Assert.IsFalse(c2.Intersects(c1));
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
@@ -220,6 +238,8 @@ namespace GeometRi_Tests
             Circle3d c2 = new Circle3d(new Point3d(-0.038202, -0.090672, -0.078966), 0.3, new Vector3d(-0.060788, -0.026431, 0.9978));
             Assert.IsTrue(c1.IntersectionWith(c2) != null);
             Assert.IsTrue(c2.IntersectionWith(c1) != null);
+            Assert.IsTrue(c1.Intersects(c2));
+            Assert.IsTrue(c2.Intersects(c1));
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
@@ -238,6 +258,8 @@ namespace GeometRi_Tests
             Circle3d c2 = new Circle3d(new Point3d(-0.13031, 0.2539, 0.11499), 0.1, new Vector3d(0.70155, 0.62669, -0.33924));
             Assert.IsTrue(c1.IntersectionWith(c2) != null);
             Assert.IsTrue(c2.IntersectionWith(c1) != null);
+            Assert.IsTrue(c1.Intersects(c2));
+            Assert.IsTrue(c2.Intersects(c1));
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;

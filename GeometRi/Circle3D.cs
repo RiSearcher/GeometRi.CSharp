@@ -1169,14 +1169,141 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Circle3d c)
         {
-            object obj = this.IntersectionWith(c);
-            if (obj != null)
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
             {
-                return true;
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Max(this.R, c.R);
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.Intersects(c);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            // Early exit (separated circles)
+            double d = this._point.DistanceTo(c._point);
+            if (d > this.R + c.R + GeometRi3D.Tolerance)
+                return false;
+
+            if (this._normal.IsParallelTo(c._normal))
+            {
+                if (this._point.BelongsTo(new Plane3d(c._point, c._normal)))
+                {
+                    // Coplanar objects
+                    if (d <= this.R + c.R + GeometRi3D.Tolerance)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }  
+                }
+                else
+                {
+                    // parallel objects
+                    return false;
+                }
+            }
+            else
+            {
+                // Check 3D intersection
+                Vector3d v = new Vector3d(this._point, c._point);
+                double this_norm = this._normal.Norm;
+                double c_norm = c._normal.Norm;
+
+                double cos_angle1 = this._normal * v / this_norm / d;
+                double delta1 = Abs(d * cos_angle1);
+
+                double sin_angle2 = this._normal.Cross(c._normal).Norm / this_norm / c_norm;
+                double delta2 = Abs(this.R * sin_angle2);
+
+                if (delta1 > delta2) return false;
+
+                cos_angle1 = c._normal * v / c_norm / d;
+                delta1 = Abs(d * cos_angle1);
+                delta2 = Abs(c.R * sin_angle2);
+
+                if (delta1 > delta2) return false;
+
+
+
+                Plane3d plane_this = new Plane3d(this._point, this._normal);
+
+                Line3d l = (Line3d)plane_this.IntersectionWith(new Plane3d(c._point, c._normal));
+                Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
+                Point3d p = l._point.ConvertTo(local_coord);
+
+                if (GeometRi3D.Greater(Abs(p.Y), this.R))
+                {
+                    // No intersection
+                    return false;
+                }
+                else if (GeometRi3D.AlmostEqual(Abs(p.Y), this.R))
+                {
+                    // Intersection in one point
+                    Point3d pp = new Point3d(0, p.Y, 0, local_coord);
+                    if (pp.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    double dd = Sqrt(this.R * this.R - p.Y * p.Y);
+                    Point3d p1 = new Point3d(-dd, p.Y, 0, local_coord);
+                    Point3d p2 = new Point3d(dd, p.Y, 0, local_coord);
+
+                    // check if at least one point is outside circle "c"
+                    if (p1.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance) return false;
+
+                    // Now check if segment (p1,p2) intrsects circle "c"
+                    // Use local coord with center in c.Point and X-axis aligned with segment
+                    local_coord = new Coord3d(this._point, l._dir, c._normal.Cross(l._dir));
+                    p1 = p1.ConvertTo(local_coord);
+                    p2 = p2.ConvertTo(local_coord);
+
+                    // use parametric form
+                    // x=t*x1+(1-t)x2
+                    // y=t*y1+(1-t)y2
+                    // and take into account that y1=y2, x0=y0=0
+                    double aa = (p1.X * p1.X - p2.X * p2.X);
+                    double bb = 2 * p2.X * (p1.X - p2.X);
+                    double cc = p2.X * p2.X - c.R * c.R;
+                    double discr = bb * bb - 4 * aa * cc;
+
+                    if (discr < 0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        discr = Sqrt(discr);
+                        double t1 = (-bb + discr) / (2 * aa);
+                        double t2 = (-bb - discr) / (2 * aa);
+                        if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+
             }
 
-            return false;
         }
+
+
 
         /// <summary>
         /// Intersection check between circle and triangle
