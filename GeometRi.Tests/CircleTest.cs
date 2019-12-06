@@ -267,6 +267,19 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleIntersectionWithCircle3DTest_6()
+        {
+
+            Circle3d c1 = new Circle3d(new Point3d(0.54942463156146, 0.471633229492457, 0.687724718029017), 0.45, new Vector3d(0.00234836551341398, -0.00168595290036738, 0.00407955171963179));
+            Circle3d c2 = new Circle3d(new Point3d(0.466918419682331, 0.557604272259504, 0.400167832409575), 0.45, new Vector3d(0.000185747980640577, 0.0018045609707127, 0.00465929795040716));
+            Assert.IsTrue(c1.IntersectionWith(c2) != null);
+            Assert.IsTrue(c2.IntersectionWith(c1) != null);
+            Assert.IsTrue(c1.Intersects(c2));
+            Assert.IsTrue(c2.Intersects(c1));
+
+        }
+
+        [TestMethod()]
         public void CircleDistanceToPlaneTest()
         {
             // Parallel circle

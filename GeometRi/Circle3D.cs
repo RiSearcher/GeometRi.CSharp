@@ -1262,11 +1262,11 @@ namespace GeometRi
                     Point3d p2 = new Point3d(dd, p.Y, 0, local_coord);
 
                     // check if at least one point is outside circle "c"
-                    if (p1.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance) return false;
+                    if (p1.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance) return true;
 
                     // Now check if segment (p1,p2) intrsects circle "c"
                     // Use local coord with center in c.Point and X-axis aligned with segment
-                    local_coord = new Coord3d(this._point, l._dir, c._normal.Cross(l._dir));
+                    local_coord = new Coord3d(c._point, l._dir, c._normal.Cross(l._dir));
                     p1 = p1.ConvertTo(local_coord);
                     p2 = p2.ConvertTo(local_coord);
 
@@ -1274,9 +1274,9 @@ namespace GeometRi
                     // x=t*x1+(1-t)x2
                     // y=t*y1+(1-t)y2
                     // and take into account that y1=y2, x0=y0=0
-                    double aa = (p1.X * p1.X - p2.X * p2.X);
+                    double aa = (p1.X - p2.X) * (p1.X - p2.X);
                     double bb = 2 * p2.X * (p1.X - p2.X);
-                    double cc = p2.X * p2.X - c.R * c.R;
+                    double cc = p2.X * p2.X + p2.Y * p2.Y - c.R * c.R;
                     double discr = bb * bb - 4 * aa * cc;
 
                     if (discr < 0)
