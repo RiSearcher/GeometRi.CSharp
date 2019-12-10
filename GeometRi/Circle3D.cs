@@ -400,8 +400,20 @@ namespace GeometRi
 
         /// <summary>
         /// Shortest distance between two circles (including interior points) (approximate solution)
+        /// <para> Default tolerance for numerical solution: GeometRi3D.DefaultTolerance.</para>
         /// </summary>
+        /// <param name="c">Target circle</param>
         public double DistanceTo(Circle3d c)
+        {
+            return DistanceTo(c, GeometRi3D.DefaultTolerance);
+        }
+
+        /// <summary>
+        /// Shortest distance between two circles (including interior points) (approximate solution)
+        /// </summary>
+        /// <param name="c">Target circle</param>
+        /// <param name="tolerance">Tolerance for numerical solution, default GeometRi3D.DefaultTolerance</param>
+        public double DistanceTo(Circle3d c, double tolerance)
         {
             double dist;
             if (this._normal.IsParallelTo(c._normal))
@@ -453,7 +465,7 @@ namespace GeometRi
                 return dist;
             }
 
-            dist = _distance_circle_to_circle(this, c, out Point3d p1, out Point3d p2);
+            dist = _distance_circle_to_circle(this, c, out Point3d p1, out Point3d p2, tolerance);
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
             GeometRi3D.Tolerance = tol;
@@ -464,11 +476,25 @@ namespace GeometRi
         /// <summary>
         /// Shortest distance between two circles (including interior points) (approximate solution)
         /// <para> The output points may be not unique in case of parallel or intersecting circles.</para>
+        /// <para> Default tolerance for numerical solution: GeometRi3D.DefaultTolerance.</para>
         /// </summary>
         /// <param name="c">Target circle</param>
         /// <param name="p1">Closest point on source circle</param>
         /// <param name="p2">Closest point on target circle</param>
         public double DistanceTo(Circle3d c, out Point3d p1, out Point3d p2)
+        {
+            return DistanceTo(c, out p1, out p2, GeometRi3D.DefaultTolerance);
+        }
+
+        /// <summary>
+        /// Shortest distance between two circles (including interior points) (approximate solution)
+        /// <para> The output points may be not unique in case of parallel or intersecting circles.</para>
+        /// </summary>
+        /// <param name="c">Target circle</param>
+        /// <param name="p1">Closest point on source circle</param>
+        /// <param name="p2">Closest point on target circle</param>
+        /// <param name="tolerance">Tolerance for numerical solution, default GeometRi3D.DefaultTolerance</param>
+        public double DistanceTo(Circle3d c, out Point3d p1, out Point3d p2, double tolerance)
         {
             double dist;
             if (this._normal.IsParallelTo(c._normal))
@@ -548,7 +574,7 @@ namespace GeometRi
                 return dist;
             }
 
-            dist = _distance_circle_to_circle(this, c, out p1, out p2);
+            dist = _distance_circle_to_circle(this, c, out p1, out p2, tolerance);
 
             // Restore initial state
             GeometRi3D.UseAbsoluteTolerance = mode;
@@ -558,11 +584,11 @@ namespace GeometRi
 
         }
 
-        private double _distance_circle_to_circle(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2)
+        private double _distance_circle_to_circle(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2, double tol)
         // Use quadratic interpolation to find closest point on one circle to other
         // p1 and p2 - closest points on both circles
         {
-            double tol = GeometRi3D.DefaultTolerance;
+            //double tol = GeometRi3D.DefaultTolerance;
             double d1 = 1e20;
             double t1 = 0;
             Point3d p;
@@ -665,6 +691,16 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Sphere s)
         {
+            return DistanceTo(s, GeometRi3D.DefaultTolerance);
+        }
+
+        /// <summary>
+        /// Shortest distance between circle and sphere (including interior points) (approximate solution)
+        /// </summary>
+        /// <param name="s">Target sphere</param>
+        /// <param name="tolerance">Tolerance for numerical solution, default GeometRi3D.DefaultTolerance</param>
+        public double DistanceTo(Sphere s, double tolerance)
+        {
             Plane3d p = this.ToPlane;
             if (s.Center.ProjectionTo(p).BelongsTo(this))
             {
@@ -675,9 +711,22 @@ namespace GeometRi
                 return 0;
 
             Point3d p1, p2;
-            double dist = _distance_circle_to_sphere(this, s, out p1, out p2);
+            double dist = _distance_circle_to_sphere(this, s, out p1, out p2, tolerance);
 
             return dist;
+        }
+
+        /// <summary>
+        /// Shortest distance between circle and sphere (including interior points) (approximate solution)
+        /// <para> The output points may be not unique in case of intersecting objects.</para>
+        /// <para> Default tolerance for numerical solution: GeometRi3D.DefaultTolerance.</para>
+        /// </summary>
+        /// <param name="s">Target sphere</param>
+        /// <param name="p1">Closest point on circle</param>
+        /// <param name="p2">Closest point on sphere</param>
+        public double DistanceTo(Sphere s, out Point3d p1, out Point3d p2)
+        {
+            return DistanceTo(s, out p1, out p2, GeometRi3D.DefaultTolerance);
         }
 
         /// <summary>
@@ -687,7 +736,8 @@ namespace GeometRi
         /// <param name="s">Target sphere</param>
         /// <param name="p1">Closest point on circle</param>
         /// <param name="p2">Closest point on sphere</param>
-        public double DistanceTo(Sphere s, out Point3d p1, out Point3d p2)
+        /// <param name="tolerance">Tolerance for numerical solution, default GeometRi3D.DefaultTolerance</param>
+        public double DistanceTo(Sphere s, out Point3d p1, out Point3d p2, double tolerance)
         {
             Plane3d p = this.ToPlane;
             if (s.Center.ProjectionTo(p).BelongsTo(this))
@@ -721,12 +771,12 @@ namespace GeometRi
                 return 0;
             }
 
-            double dist = _distance_circle_to_sphere(this, s, out p1, out p2);
+            double dist = _distance_circle_to_sphere(this, s, out p1, out p2, tolerance);
 
             return dist;
         }
 
-        private double _distance_circle_to_sphere(Circle3d c1, Sphere c2, out Point3d p1, out Point3d p2)
+        private double _distance_circle_to_sphere(Circle3d c1, Sphere c2, out Point3d p1, out Point3d p2, double tol)
         // Use quadratic interpolation to find closest point on circle
         // p1 and p2 - closest points on circle and sphere respectively
         {
@@ -753,7 +803,7 @@ namespace GeometRi
             double d3 = p.DistanceTo(c2);
 
             int iter = 0;
-            while (d2 - d1 > 0.2 * GeometRi3D.DefaultTolerance && d1 > GeometRi3D.DefaultTolerance)
+            while (d2 - d1 > 0.2 * tol && d1 > tol)
             {
                 if (++iter > 100) break;
 
