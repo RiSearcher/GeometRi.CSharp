@@ -671,11 +671,32 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Point on axis aligned box (including interior points) closest to target point "p".
+        /// </summary>
+        public Point3d AABBClosestPoint(Point3d p)
+        {
+            p = p.ConvertToGlobal();
+            double x = GeometRi3D.Clamp(p.X, this._center.X - _lx / 2, this._center.X + _lx / 2);
+            double y = GeometRi3D.Clamp(p.Y, this._center.Y - _ly / 2, this._center.Y + _ly / 2);
+            double z = GeometRi3D.Clamp(p.Z, this._center.Z - _lz / 2, this._center.Z + _lz / 2);
+
+            return new Point3d(x, y, z);
+        }
+
+        /// <summary>
         /// Distance from box to point (zero will be returned for point located inside box)
         /// </summary>
         public double DistanceTo(Point3d p)
         {
             return ClosestPoint(p).DistanceTo(p);
+        }
+
+        /// <summary>
+        /// Distance from axis aligned box to point (zero will be returned for point located inside box)
+        /// </summary>
+        public double AABBDistanceTo(Point3d p)
+        {
+            return AABBClosestPoint(p).DistanceTo(p);
         }
 
         /// <summary>

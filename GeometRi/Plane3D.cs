@@ -12,8 +12,8 @@ namespace GeometRi
     public class Plane3d : IPlanarObject
     {
 
-        private Point3d _point;
-        private Vector3d _normal;
+        internal Point3d _point;
+        internal Vector3d _normal;
         private Coord3d _coord;
 
         #region "Constructors"

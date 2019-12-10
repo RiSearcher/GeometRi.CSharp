@@ -295,7 +295,7 @@ namespace GeometRi
         public double DistanceTo(Plane3d s)
         {
             double center_distance = this._point.DistanceTo(s);
-            double sin_angle = this._normal.Cross(s.Normal).Norm / this._normal.Norm / s.Normal.Norm;
+            double sin_angle = this._normal.Cross(s._normal).Norm / this._normal.Norm / s._normal.Norm;
             double delta = Abs(this.R * sin_angle);
 
             if (delta < center_distance)
