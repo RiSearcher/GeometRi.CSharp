@@ -665,10 +665,18 @@ namespace GeometRi
             double t1 = 0;
             Point3d p;
 
+            // Prepare data for parametric form for circle "c1".
+            // _point + v1.ToPoint * Cos(t) + v2.ToPoint * Sin(t);
+            // Get two orthogonal vectors coplanar "c1"
+            Vector3d v1 = c1._r * c1._normal.OrthogonalVector.Normalized;
+            Vector3d v2 = c1._r * (c1._normal.Cross(v1)).Normalized;
+            Point3d pf1 = v1.ToPoint.ConvertTo(c1._point.Coord);
+            Point3d pf2 = v2.ToPoint.ConvertTo(c1._point.Coord);
+
             for (int i = 0; i < 16; i++)
             {
                 double t = i * Math.PI / 8;
-                p = c1.ParametricForm(t);
+                p = c1._point + pf1 * Cos(t) + pf2 * Sin(t);
                 double dist = p.DistanceTo(c2);
                 if (dist < d1)
                 {
@@ -677,10 +685,10 @@ namespace GeometRi
                 }
             }
             double t2 = t1 - Math.PI / 8;
-            p = c1.ParametricForm(t2);
+            p = c1._point + pf1 * Cos(t2) + pf2 * Sin(t2);
             double d2 = p.DistanceTo(c2);
             double t3 = t1 + Math.PI / 8;
-            p = c1.ParametricForm(t3);
+            p = c1._point + pf1 * Cos(t3) + pf2 * Sin(t3);
             double d3 = p.DistanceTo(c2);
 
             int iter = 0;
@@ -697,7 +705,7 @@ namespace GeometRi
                 double cc = 0.5 * cx * (t1 + t2);
 
                 double t = (aa + bb + cc) / (ax + bx + cx);
-                p = c1.ParametricForm(t);
+                p = c1._point + pf1 * Cos(t) + pf2 * Sin(t);
                 double d = p.DistanceTo(c2);
 
                 if (d > d1)
@@ -726,7 +734,7 @@ namespace GeometRi
                     if (++iter > 100) break;
 
                     double t = (t2+t1) / 2;
-                    p = c1.ParametricForm(t);
+                    p = c1._point + pf1 * Cos(t) + pf2 * Sin(t);
                     double d = p.DistanceTo(c2);
                     if (d < d1)
                     {
@@ -739,7 +747,7 @@ namespace GeometRi
                     }
 
                     t = (t3 + t1) / 2;
-                    p = c1.ParametricForm(t);
+                    p = c1._point + pf1 * Cos(t) + pf2 * Sin(t);
                     d = p.DistanceTo(c2);
                     if (d < d1)
                     {
@@ -753,7 +761,7 @@ namespace GeometRi
                 }
             }
 
-            p1 = c1.ParametricForm(t1);
+            p1 = c1._point + pf1 * Cos(t1) + pf2 * Sin(t1);
             p2 = c2.ClosestPoint(p1);
             return d1;
         }
