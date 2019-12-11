@@ -325,6 +325,31 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleDistanceToCircleGreaterTest()
+        {
+            Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Circle3d c2 = new Circle3d(new Point3d(11, 0, 0), 5, new Vector3d(0, 0, 1));
+            Assert.IsTrue(c1.DistanceGreater(c2, 0.9, 1e-5));
+
+            c2 = new Circle3d(new Point3d(11, 0, 0), 5, new Vector3d(0, 1, 0));
+            Assert.IsTrue(c1.DistanceGreater(c2, 0.9, 1e-5));
+
+            c2 = new Circle3d(new Point3d(11, 0, 1), 5, new Vector3d(0, 0, 1));
+            Assert.IsTrue(c1.DistanceGreater(c2, 0.9, 1e-5));
+
+            c2 = new Circle3d(new Point3d(5, 0, 1), 5, new Vector3d(0, 0, 1));
+            Assert.IsTrue(c1.DistanceGreater(c2, 0.9, 1e-5));
+
+            c2 = new Circle3d(new Point3d(5, 0, 1), 5, new Vector3d(0.01, 0, 1));
+            Assert.IsTrue(c1.DistanceGreater(c2, 0.1, 1e-5));
+
+            c1 = new Circle3d(new Point3d(0.48856, 0.63565, 0.57343), 0.1, new Vector3d(0.40758, -0.78312, 0.46968));
+            c2 = new Circle3d(new Point3d(0.47796, 0.64711, 0.60481), 0.1, new Vector3d(0.43088, 0.14784, -0.89022));
+            Assert.IsFalse(c1.DistanceGreater(c2, 0.002, 1e-12));
+
+        }
+
+        [TestMethod()]
         public void CircleToCircleClosestPointTest()
         {
             Point3d p1, p2;

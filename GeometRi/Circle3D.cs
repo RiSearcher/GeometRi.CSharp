@@ -584,6 +584,78 @@ namespace GeometRi
 
         }
 
+
+        [Obsolete]
+        /// <summary>
+        /// Check if distance between two circles is greater than threshold
+        /// </summary>
+        public bool DistanceGreater(Circle3d c, double threshold, double tolerance)
+        {
+
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Max(this.R, c.R);
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.DistanceGreater(c, threshold, tolerance);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            // Early exit (separated circles)
+            double d = this._point.DistanceTo(c._point);
+            if (d > this.R + c.R + GeometRi3D.Tolerance + threshold)
+                return true;
+
+            if (this._normal.IsParallelTo(c._normal))
+            {
+                if (this._point.BelongsTo(new Plane3d(c._point, c._normal)))
+                {
+                    // Coplanar objects
+                    if (d <= this.R + c.R + GeometRi3D.Tolerance + threshold)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    // parallel objects
+                    return this.DistanceTo(c, out Point3d p1, out Point3d p2, tolerance) > threshold;
+                }
+            }
+            else
+            {
+                // Check 3D intersection
+                Vector3d v = new Vector3d(this._point, c._point);
+                double this_norm = this._normal.Norm;
+                double c_norm = c._normal.Norm;
+
+                double cos_angle1 = this._normal * v / this_norm / d;
+                double delta1 = Abs(d * cos_angle1);
+
+                double sin_angle2 = this._normal.Cross(c._normal).Norm / this_norm / c_norm;
+                double delta2 = Abs(this.R * sin_angle2);
+
+                if (delta1 > delta2 + threshold) return true;
+
+                cos_angle1 = c._normal * v / c_norm / d;
+                delta1 = Abs(d * cos_angle1);
+                delta2 = Abs(c.R * sin_angle2);
+
+                if (delta1 > delta2 + threshold) return true;
+
+                return this.DistanceTo(c, out Point3d p1, out Point3d p2, tolerance) > threshold;
+
+            }
+        }
+
         private double _distance_circle_to_circle(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2, double tol)
         // Use quadratic interpolation to find closest point on one circle to other
         // p1 and p2 - closest points on both circles
