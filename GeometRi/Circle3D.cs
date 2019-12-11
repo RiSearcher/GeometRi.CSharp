@@ -1067,13 +1067,7 @@ namespace GeometRi
                 return 0;
             }
 
-            // TO DO: change order and calculate intersection only once
-
-            Point3d p = (Point3d)l.IntersectionWith(this.ToPlane);
-            Vector3d v = new Vector3d(this.Center, p).Normalized;
-            p1 = this.Center.Translate(this.R * v);
-            p2 = p1.ProjectionTo(l);
-            return p1.DistanceTo(p2);
+            return _distance_circle_boundary_to_line(l, out p1, out p2);
         }
 
         /// <summary>
