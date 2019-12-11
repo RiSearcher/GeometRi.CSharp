@@ -632,6 +632,13 @@ namespace GeometRi_Tests
             Assert.AreEqual(dist, 0.5);
             Assert.AreEqual(p1, new Point3d(0, 1, 0));
             Assert.AreEqual(p2, new Point3d(0, 1.5, 0));
+
+            // Non-intersecting objects
+            l = new Line3d(new Point3d(0, 1.5, 0), new Vector3d(1, 0, 1));
+            dist = c.DistanceTo(l, out p1, out p2);
+            Assert.AreEqual(dist, 0.5);
+            Assert.AreEqual(p1, new Point3d(0, 1, 0));
+            Assert.AreEqual(p2, new Point3d(0, 1.5, 0));
         }
 
         [TestMethod()]
