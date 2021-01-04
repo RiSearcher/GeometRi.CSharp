@@ -18,8 +18,9 @@ Compatible with .Net Framework 2.0 and .Net Standard 1.0 (.Net Core, Mono, Xamar
     <PackageReleaseNotes>Many optimizations.
 Distance from line to circle's boundary.
 Fixed circle/triangle intersection check.</PackageReleaseNotes>
-    <PackageLicenseUrl>https://github.com/RiSearcher/GeometRi.CSharp/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -35,6 +36,13 @@ Fixed circle/triangle intersection check.</PackageReleaseNotes>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 
 </Project>
