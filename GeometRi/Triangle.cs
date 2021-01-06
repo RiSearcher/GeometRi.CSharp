@@ -949,6 +949,41 @@ namespace GeometRi
             return c.Intersects(this);
         }
 
+        /// <summary>
+        /// Intersection check between two triangles
+        /// </summary>
+        public bool Intersects(Triangle t)
+        {
+            Plane3d t_plane = t.ToPlane;
+
+            if (this.IsCoplanarTo(t))
+            {
+                if (t._a.BelongsTo(this)) return true;
+                if (t._b.BelongsTo(this)) return true;
+                if (t._c.BelongsTo(this)) return true;
+
+                if (this._a.BelongsTo(t)) return true;
+                if (this._b.BelongsTo(t)) return true;
+                if (this._c.BelongsTo(t)) return true;
+
+                if (this.IntersectionWith(new Segment3d(t._a, t._b)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t._b, t._c)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t._c, t._a)) != null) return true;
+            }
+
+            object obj = this.IntersectionWith(t_plane);
+            if (obj != null && obj.GetType() == typeof(Point3d))
+            {
+                return ((Point3d)obj).BelongsTo(t);
+            }
+            else if (obj != null && obj.GetType() == typeof(Segment3d))
+            {
+                return ((Segment3d)obj).IntersectionWith(t) != null;
+            }
+
+            return false;
+        }
+
         internal override int _PointLocation(Point3d p)
         {
 

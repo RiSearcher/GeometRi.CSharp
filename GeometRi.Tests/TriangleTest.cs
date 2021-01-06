@@ -572,6 +572,62 @@ namespace GeometRi_Tests
             Assert.IsFalse(c.Intersects(t));
         }
 
+
+        [TestMethod()]
+        public void TriangleIntersectsTriangleTest()
+        {
+
+            Circle3d c = new Circle3d(new Point3d(), 1.0, new Vector3d(0, 0, 1));
+            Triangle t1 = new Triangle(new Point3d(0, 0, 0), new Point3d(10, 0, 0), new Point3d(0, 10, 0));
+
+            // Coplanar objects
+            // Triangle 2 is inside triangle 1
+            Triangle t2 = new Triangle(new Point3d(1, 1, 0), new Point3d(2, 1, 0), new Point3d(1, 2, 0));
+            Assert.IsTrue(t2.Intersects(t1));
+            Assert.IsTrue(t1.Intersects(t2));
+
+            // Triangle 1 is inside triangle 2
+            t2 = new Triangle(new Point3d(-1, -1, 0), new Point3d(20, -1, 0), new Point3d(-1, 20, 0));
+            Assert.IsTrue(t2.Intersects(t1));
+            Assert.IsTrue(t1.Intersects(t2));
+
+            // Triangle 2 touch vertex of triangle 1
+            t2 = new Triangle(new Point3d(10, 0, 0), new Point3d(20, 0, 0), new Point3d(10, -10, 0));
+            Assert.IsTrue(t2.Intersects(t1));
+            Assert.IsTrue(t1.Intersects(t2));
+
+            // Triangle 2 touch edge of triangle 1
+            t2 = new Triangle(new Point3d(5, 0, 0), new Point3d(10, -5, 0), new Point3d(0, -5, 0));
+            Assert.IsTrue(t2.Intersects(t1));
+            Assert.IsTrue(t1.Intersects(t2));
+
+            // Triangle 2 intersects triangle 1
+            t2 = new Triangle(new Point3d(5, -1, 0), new Point3d(5, 20, 0), new Point3d(6, -1, 0));
+            Assert.IsTrue(t2.Intersects(t1));
+            Assert.IsTrue(t1.Intersects(t2));
+
+            // Non-intersecting objects
+            t2 = new Triangle(new Point3d(-5, -1, 0), new Point3d(-5, -20, 0), new Point3d(-6, -1, 0));
+            Assert.IsFalse(t2.Intersects(t1));
+            Assert.IsFalse(t1.Intersects(t2));
+
+
+            // Non-coplanar objects
+            t2 = new Triangle(new Point3d(5, 1, 1), new Point3d(6, 1, -1), new Point3d(5, 2, 1));
+            Assert.IsTrue(t2.Intersects(t1));
+            Assert.IsTrue(t1.Intersects(t2));
+
+            t2 = new Triangle(new Point3d(5, 1, 1), new Point3d(6, 1, 0), new Point3d(5, 2, 1));
+            Assert.IsTrue(t2.Intersects(t1));
+            Assert.IsTrue(t1.Intersects(t2));
+
+            // Non-intersecting objects
+            t2 = new Triangle(new Point3d(15, 1, 0), new Point3d(15, -20, -1), new Point3d(15, -1, 5));
+            Assert.IsFalse(t2.Intersects(t1));
+            Assert.IsFalse(t1.Intersects(t2));
+
+        }
+
         [TestMethod()]
         public void TriangleClosestPointTest()
         {
