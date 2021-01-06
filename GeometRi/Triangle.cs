@@ -984,6 +984,14 @@ namespace GeometRi
             return false;
         }
 
+        /// <summary>
+        /// Check intersection of triangle with box
+        /// </summary>
+        public bool Intersects(Box3d box)
+        {
+            return box.Intersects(this);
+        }
+
         internal override int _PointLocation(Point3d p)
         {
 

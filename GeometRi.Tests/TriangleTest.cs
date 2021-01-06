@@ -576,8 +576,6 @@ namespace GeometRi_Tests
         [TestMethod()]
         public void TriangleIntersectsTriangleTest()
         {
-
-            Circle3d c = new Circle3d(new Point3d(), 1.0, new Vector3d(0, 0, 1));
             Triangle t1 = new Triangle(new Point3d(0, 0, 0), new Point3d(10, 0, 0), new Point3d(0, 10, 0));
 
             // Coplanar objects

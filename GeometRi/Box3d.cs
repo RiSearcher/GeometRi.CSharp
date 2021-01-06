@@ -543,6 +543,24 @@ namespace GeometRi
             return _line_intersection(s.ToLine, 0.0, s.Length);
         }
 
+        /// <summary>
+        /// Check intersection of box with triangle
+        /// </summary>
+        public bool Intersects(Triangle t)
+        {
+            if (t.A.BelongsTo(this) || t.B.BelongsTo(this) || t.C.BelongsTo(this))
+            {
+                return true;
+            }
+
+            foreach (Triangle bt in this.ListOfTriangles)
+            {
+                if (bt.Intersects(t)) return true;
+            }
+
+            return false;
+        }
+
         private object _line_intersection(Line3d l, double t0, double t1)
         {
             // Smith's algorithm:

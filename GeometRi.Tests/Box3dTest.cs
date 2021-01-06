@@ -457,6 +457,30 @@ namespace GeometRi_Tests
 
         }
 
+        [TestMethod()]
+        public void BoxIntersectsTriangleTest()
+        {
+            Box3d box = new Box3d();
+            
+            // Triangle is inside box
+            Triangle t = new Triangle(new Point3d(0, 0, 0), new Point3d(0.2, -0.1, 0), new Point3d(0, -0.2, -0.1));
+            Assert.IsTrue(box.Intersects(t));
+
+            // Triangle is outside of box
+            t = new Triangle(new Point3d(1, 1, 1), new Point3d(2, 1, 1), new Point3d(1, 2, 1));
+            Assert.IsFalse(box.Intersects(t));
+
+            // Triangle touches box
+            t = new Triangle(new Point3d(0.5, 0, 0), new Point3d(0.7, -0.1, 0), new Point3d(0.8, -0.2, -0.1));
+            Assert.IsTrue(box.Intersects(t));
+
+            // Triangle intersects box
+            t = new Triangle(new Point3d(-1, -1, 0), new Point3d(0.7, 0.9, 0.1), new Point3d(0.8, -2, -0.1));
+            Assert.IsTrue(box.Intersects(t));
+
+
+        }
+
 
     }
 

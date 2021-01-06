@@ -380,7 +380,7 @@ Box object defined by center point, three dimensions and orientation in space.
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, circle or sphere
-* __Intersects__ - intersection check with circle
+* __Intersects__ - intersection check with circle or triangle
 * __IntersectionWith__ - intersection of box with line, ray or segment
 * __Translate__ - translate box by vector
 * __Rotate__ - rotate box around origin or other point
@@ -420,7 +420,7 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point and circle
 * __IntersectionWith__ - intersection of triangle with line, plane, ray or segment
-* __Intersects__ - intersection check with circle
+* __Intersects__ - intersection check with triangle, box or circle
 * __ProjectionTo__ - orthogonal projection of triangle to line
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
