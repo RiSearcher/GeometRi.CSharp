@@ -640,5 +640,23 @@ namespace GeometRi_Tests
             p = new Point3d(-3, -1, 0);
             Assert.AreEqual(p.ClosestPoint(t), new Point3d(0, 0, 0));
         }
+
+        [TestMethod()]
+        public void TriangleDistancetoPointTest()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Point3d p = new Point3d(1, 1, 8);
+            Assert.IsTrue(Abs(t.DistanceTo(p) - 8) < GeometRi3D.Tolerance);
+
+            p = new Point3d(5, 0, 4);
+            Assert.IsTrue(Abs(t.DistanceTo(p) - 5) < GeometRi3D.Tolerance);
+
+        }
+
+
     }
 }

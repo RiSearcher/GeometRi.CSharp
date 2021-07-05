@@ -570,7 +570,7 @@ namespace GeometRi
 
             if (code >= 0)
             {
-                return 0;
+                return p.DistanceTo(projection_point);
             }
 
             Segment3d AB = new Segment3d(this._a, this._b);
