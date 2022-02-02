@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using static System.Math;
 
 namespace GeometRi
@@ -9,9 +9,29 @@ namespace GeometRi
 #if NET20
     [Serializable]
 #endif
+    /// <summary>
+    /// Distance types
+    /// https://www.codeproject.com/Articles/32292/Quantitative-Variable-Distances
+    /// </summary>
+    public enum DistanceType
+    {
+        Euclidean   = 0,
+        Cosine      = 1,
+        Hamming     = 2,
+        Mahalanobis = 3,
+        Manhattan   = 4,
+        Minkowski   = 5,
+        Chebyshev   = 6,
+        Wasserstein = 7,
+        Jaccard     = 8,
+        Haversine   = 9,
+        SorensenDice=10,
+        Hausdorf    =11,
+        Levenstein  =12
+    };
+
     public class Point3d
     {
-
         private double _x;
         private double _y;
         private double _z;
@@ -174,13 +194,152 @@ namespace GeometRi
 
         #region "DistanceTo"
         /// <summary>
-        /// Returns distance between two points
+        /// Returns distance between two points. Default type is Euclidean
         /// </summary>
+        /// 
         public double DistanceTo(Point3d p)
         {
-            if ((this._coord != p._coord))
-                p = p.ConvertTo(this._coord);
-            return Sqrt((this._x - p._x) * (this._x - p._x) + (this._y - p._y) * (this._y - p._y) + (this._z - p._z) * (this._z - p._z));
+            return DistanceTo(p, DistanceType.Euclidean);
+        }
+        /// <summary>
+        /// Returns distance between two points
+        /// </summary>
+        /// 
+        public double DistanceTo(Point3d p, DistanceType dtype)
+        {
+            if ((this._coord != p._coord)) p = p.ConvertTo(this._coord);
+
+            if (dtype == DistanceType.Euclidean)
+            {
+                return Sqrt((this._x - p._x) * (this._x - p._x) + (this._y - p._y) * (this._y - p._y) + (this._z - p._z) * (this._z - p._z));
+            }
+
+            /*
+                private double Manhattan_H()
+                {
+                  double xd = this.x - this._goalNode.x;
+                  double yd = this.y - this._goalNode.y;
+
+                  return Math.Abs(xd) + Math.Abs(yd);
+                }             
+             */
+            if (dtype == DistanceType.Manhattan)
+            {
+                return Abs(this._x - p._x) + Abs(this._y - p._y) + Abs(this._z - p._z);
+            }
+            if (dtype == DistanceType.Cosine)
+            {
+                /*
+                  In cosine similarity, data objects in a dataset are treated as a vector. The formula to find the cosine similarity between two vectors is –
+                    Cos(x, y) = x . y / ||x|| * ||y||
+                where,
+                    x . y = product (dot) of the vectors ‘x’ and ‘y’.
+                    ||x|| and ||y|| = length of the two vectors ‘x’ and ‘y’.
+                    ||x|| * ||y|| = cross product of the two vectors ‘x’ and ‘y’.
+
+
+                Example :
+                    Consider an example to find the similarity between two vectors – ‘x’ and ‘y’, using Cosine Similarity.
+
+                    The ‘x’ vector has values, x = { 3, 2, 0, 5 }
+                    The ‘y’ vector has values, y = { 1, 0, 0, 0 }
+
+                    The formula for calculating the cosine similarity is : Cos(x, y) = x . y / ||x|| * ||y||
+
+                    x . y = 3*1 + 2*0 + 0*0 + 5*0 = 3
+
+                    ||x|| = √ (3)^2 + (2)^2 + (0)^2 + (5)^2 = 6.16
+
+                    ||y|| = √ (1)^2 + (0)^2 + (0)^2 + (0)^2 = 1
+
+                    ∴ Cos(x, y) = 3 / (6.16 * 1) = 0.49 
+
+                The dissimilarity between the two vectors ‘x’ and ‘y’ is given by –
+                    ∴ Dis(x, y) = 1 - Cos(x, y) = 1 - 0.49 = 0.51
+
+                The cosine similarity between two vectors is measured in ‘θ’.
+                If θ = 0°, the ‘x’ and ‘y’ vectors overlap, thus proving they are similar.
+                If θ = 90°, the ‘x’ and ‘y’ vectors are dissimilar.
+
+                 */
+
+                double xymult = this._x * p._x + this._y * p._y + this._z * p._z;
+                double xnorm = Sqrt(this._x * this._x + this._y * this._y + this._z * this._z);
+                double ynorm = Sqrt(p._x * p._x + p._y * p._y + p._z * p._z);
+                double cosxy = 0;
+                if(xnorm!=0 && ynorm!=0)
+                    cosxy = xymult / (xnorm * ynorm);
+
+                return cosxy;
+            }
+            if (dtype == DistanceType.Minkowski)
+            {
+                /*
+                 * if dim = 32 it is Euclidean?
+                 * 
+                MINKOWSKI DISTANCE
+                The Minkowski Distance can be computed by the following formula, the parameter tex_3ae7d06c160d08e65eaca60d50bdfa77 How to Compute Minkowski, Euclidean and CityBlock Distance in C++? c / c++ math  can be arbitary.
+
+                tex_27aa0210836aef89b91234bc3970855c How to Compute Minkowski, Euclidean and CityBlock Distance in C++? c / c++ math 
+
+                So, translating into C/C++ code with help of this easiest power function:
+
+                double GetMinkowskiDistance(double *x, double *y, int n, double r) {
+                    double sum = 0;
+                    for (int i = 0; i < n; i ++) {
+                        sum += power(x[i] - y[i], r);
+                    }
+                    return power(sum, 1.0 / r);
+                }
+                -------------
+                For example,
+                we are given two vectors, vect1 as (4, 2, 6, 8) and vect2 as (5, 1, 7, 9). Their Minkowski distance for p = 2 is given by, ( |4 – 5|2 + |2 – 1|2 + |6 – 7|2 + |8 – 9|2 )1/2  which is equal to 2. This article focuses upon how we can calculate Minkowski distance in R.
+                Method 1:Using a custom function
+                We can calculate Minkowski distance between a pair of vectors by apply the formula,
+                ( Σ|vector1i – vector2i|p )1/p
+                Here,
+                vector1 is the first vector
+                vector2 is the second vector
+                p is an integer
+
+                    public static double MinkowskiDistance(double[] X, double[] Y, int order)
+                    {
+                        int count = 0;
+                        double distance = 0.0;
+                        double sum = 0.0;
+                        if (X.GetUpperBound(0) != Y.GetUpperBound(0))
+                        {
+                            throw new System.ArgumentException("the number of elements" + 
+                                      " in X must match the number of elements in Y");
+                        }
+                        else
+                        {
+                            count = X.Length;
+                        }
+                        for (int i = 0; i < count; i++)
+                        {
+                            sum = sum + Math.Pow(Math.Abs(X[i] - Y[i]), order);
+                        }
+                        distance = Math.Pow(sum,(1/order));
+                        return distance;
+                    }                 
+                 */
+                return Abs(this._x - p._x) + Abs(this._y - p._y) + Abs(this._z - p._z);
+            }
+            /*
+                max(|x2 - x1|, |y2 - y1|)
+                Making it:
+
+                public static int CalculateChebyshevDistance(int x1, int x2, int y1, int y2)
+                {
+                    return Math.Max(Math.Abs(x2 - x1), Math.Abs(y2 - y1));
+                }             
+             */
+            if (dtype == DistanceType.Chebyshev)
+            {
+                return Max(Max(Abs(this._x - p._x), Abs(this._y - p._y)),Abs(this._z - p._z));
+            }
+            return 0;
         }
 
         /// <summary>
@@ -653,6 +812,3 @@ namespace GeometRi
 
     }
 }
-
-
-
