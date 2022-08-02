@@ -72,6 +72,7 @@
     <Compile Include="BoundingBoxTest.cs" />
     <Compile Include="RelativeToleranceTest.cs" />
     <Compile Include="CoplanarityTest.cs" />
+    <Compile Include="TetrahedronTest.cs" />
     <Compile Include="Vector3dTest.cs" />
   </ItemGroup>
   <ItemGroup>
