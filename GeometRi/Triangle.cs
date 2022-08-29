@@ -655,20 +655,18 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            if (GeometRi3D.UseAbsoluteTolerance)
-            {
-                return _DistanceToSegment(s);
-            }
-            else
-            {
-                double tol = GeometRi3D.Tolerance;
-                GeometRi3D.Tolerance = tol * s.Length;
-                GeometRi3D.UseAbsoluteTolerance = true;
-                double dist = _DistanceToSegment(s);
-                GeometRi3D.UseAbsoluteTolerance = false;
-                GeometRi3D.Tolerance = tol;
-                return dist;
-            }
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            double dist = _DistanceToSegment(s);
+
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+
+            return dist;
         }
 
         /// <summary>
@@ -741,6 +739,91 @@ namespace GeometRi
             return dist;
         }
 
+
+        /// <summary>
+        /// Shortest distance between two triangles
+        /// </summary>
+        public double DistanceTo(Triangle t)
+        {
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            double dist = _DistanceToTriangle(t);
+
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+
+            return dist;
+        }
+
+        /// <summary>
+        /// Shortest distance between two triangles
+        /// </summary>
+        internal double _DistanceToTriangle(Triangle t)
+        {
+            double dist = double.PositiveInfinity;
+            double tmp;
+            
+            tmp = t.DistanceTo(new Segment3d(this._a, this._b));
+            if (tmp == 0)
+            {
+                return 0;
+            }
+            else if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = t.DistanceTo(new Segment3d(this._a, this._c));
+            if (tmp == 0)
+            {
+                return 0;
+            }
+            else if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = t.DistanceTo(new Segment3d(this._b, this._c));
+            if (tmp == 0)
+            {
+                return 0;
+            }
+            else if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = this.DistanceTo(new Segment3d(t._a, t._b));
+            if (tmp == 0)
+            {
+                return 0;
+            }
+            else if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = this.DistanceTo(new Segment3d(t._a, t._c));
+            if (tmp == 0)
+            {
+                return 0;
+            }
+            else if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = this.DistanceTo(new Segment3d(t._b, t._c));
+            if (tmp == 0)
+            {
+                return 0;
+            }
+            else if (tmp < dist)
+            {
+                dist = tmp;
+            }
+
+            return dist;
+        }
         #endregion
 
         /// <summary>
