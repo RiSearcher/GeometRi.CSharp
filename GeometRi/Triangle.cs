@@ -950,6 +950,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between tetrahedron and triangle
+        /// </summary>
+        public bool Intersects(Tetrahedron t)
+        {
+            return t.Intersects(this);
+        }
+
+        /// <summary>
         /// Intersection check between two triangles
         /// </summary>
         public bool Intersects(Triangle t)
