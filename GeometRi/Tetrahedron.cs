@@ -260,6 +260,21 @@ namespace GeometRi
                     }
                 }
             }
+            foreach (Triangle t1 in t.ListOfFaces)
+            {
+                foreach (Segment3d t2 in this.ListOfEdges)
+                {
+                    double temp_dist = t1.DistanceTo(t2);
+                    if (temp_dist == 0.0)
+                    {
+                        return 0;
+                    }
+                    else if (temp_dist < dist)
+                    {
+                        dist = temp_dist;
+                    }
+                }
+            }
             return dist;
         }
 

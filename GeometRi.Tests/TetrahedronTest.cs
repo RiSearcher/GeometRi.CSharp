@@ -211,5 +211,127 @@ namespace GeometRi_Tests
             Assert.IsFalse(s.Intersects(t));
         }
 
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_01()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // tetrahedron inside
+            Tetrahedron s = t.Scale(0.5);
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_02()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // tetrahedron outside
+            Tetrahedron s = t.Scale(1.5);
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_03()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // vertex-to-vertex contact
+            Tetrahedron s = t.ReflectIn(new Point3d(0, 0, 0));
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_04()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // vertex-to-edge contact
+            Tetrahedron s = t.Translate(new Vector3d(-1, 0.5, -0.5));
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_05()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // edge-to-edge contact
+            Tetrahedron s = t.Translate(new Vector3d(-1, 0, 0));
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_06()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // face-to-face contact
+            Plane3d p = new Plane3d(new Point3d(1, 0, 1), new Vector3d(1, 1, 1));
+            Tetrahedron s = t.ReflectIn(p);
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_07()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // face-to-face partial contact
+            Plane3d p = new Plane3d(new Point3d(1, 0, 1), new Vector3d(1, 1, 1));
+            Tetrahedron s = t.ReflectIn(p);
+            Rotation r = new Rotation(new Vector3d(1, 1, 1), Math.PI / 6);
+            s.Rotate(r, s.Center);
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_08()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // vertex-to-face contact
+            Plane3d p = new Plane3d(new Point3d(1, 0, 1), new Vector3d(1, 1, 1));
+            Point3d projection = new Point3d(0, 0, 0).ProjectionTo(p);
+            Vector3d v = new Vector3d(new Point3d(0, 0, 0), projection);
+            Tetrahedron s = t.Translate(v);
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_09()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // one vertex inside
+            Plane3d p = new Plane3d(new Point3d(1, 0, 1), new Vector3d(1, 1, 1));
+            Point3d projection = new Point3d(0, 0, 0).ProjectionTo(p);
+            Vector3d v = new Vector3d(new Point3d(0, 0, 0), projection);
+            Tetrahedron s = t.Translate(0.9 * v);
+            Assert.IsTrue(t.DistanceTo(s) == 0);
+            Assert.IsTrue(s.DistanceTo(t) == 0);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_10()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // not in contact
+            Vector3d v = new Vector3d(2,0,0);
+            Tetrahedron s = t.Translate(v);
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(s.DistanceTo(t) - 1) < GeometRi3D.Tolerance);
+        }
+
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_11()
+        {
+            Tetrahedron t = new Tetrahedron();
+            // in contact
+            Tetrahedron s = t.ReflectIn(t.Center);
+            s = s.Scale(1.1);
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 0) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(s.DistanceTo(t) - 0) < GeometRi3D.Tolerance);
+        }
+
     }
 }
