@@ -550,6 +550,7 @@ namespace GeometRi
         }
         #endregion
 
+        #region "Distance"
         /// <summary>
         /// Shortest distance between triangle and point
         /// </summary>
@@ -648,6 +649,99 @@ namespace GeometRi
         {
             return c.DistanceTo(this, out point_on_circle, out point_on_triangle);
         }
+
+        /// <summary>
+        /// Shortest distance between triangle and segment
+        /// </summary>
+        public double DistanceTo(Segment3d s)
+        {
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                return _DistanceToSegment(s);
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * s.Length;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                double dist = _DistanceToSegment(s);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return dist;
+            }
+        }
+
+        /// <summary>
+        /// Shortest distance between triangle and segment
+        /// </summary>
+        internal double _DistanceToSegment(Segment3d s)
+        {
+            if (s.P1.BelongsTo(this))
+            {
+                return 0;
+            }
+            if (s.P2.BelongsTo(this))
+            {
+                return 0;
+            }
+            Plane3d p = this.ToPlane;
+
+            if (s.IsCoplanarTo(p))
+            {
+                double dist1 = s.DistanceTo(new Segment3d(this._a, this._b));
+                double dist2 = s.DistanceTo(new Segment3d(this._a, this._c));
+                double dist3 = s.DistanceTo(new Segment3d(this._c, this._b));
+                return dist1 < dist2 ? Min(dist1, dist3) : Min(dist2, dist3);
+            }
+
+            //Segment is not coplanar with triangle's plane, therefore possible intersection is point
+            object obj = s.IntersectionWith(p);
+            if (obj != null && object.ReferenceEquals(obj.GetType(), typeof(Point3d)))
+            {
+                if (((Point3d)obj).BelongsTo(this))
+                {
+                    return 0;
+                }
+            }
+
+
+            Point3d projection_1 = s.P1.ProjectionTo(p);
+            Point3d projection_2 = s.P2.ProjectionTo(p);
+            
+            double dist = double.PositiveInfinity;
+            if (projection_1.BelongsTo(this))
+            {
+                dist = s.P1.DistanceTo(projection_1);
+            }
+            if (projection_2.BelongsTo(this))
+            {
+                double tmp_dist = s.P2.DistanceTo(projection_2);
+                if (tmp_dist < dist)
+                {
+                    dist = tmp_dist;
+                }
+            }
+
+            double tmp = s.DistanceTo(new Segment3d(this._a,this._b));
+            if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = s.DistanceTo(new Segment3d(this._a, this._c));
+            if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = s.DistanceTo(new Segment3d(this._b, this._c));
+            if (tmp < dist)
+            {
+                dist = tmp;
+            }
+
+            return dist;
+        }
+
+        #endregion
 
         /// <summary>
         /// Orthogonal projection of the triangle to line

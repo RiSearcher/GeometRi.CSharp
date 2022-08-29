@@ -387,6 +387,14 @@ namespace GeometRi
         {
             return c.DistanceTo(this, out point_on_circle, out point_on_segment);
         }
+
+        /// <summary>
+        /// Shortest distance between segment and triangle
+        /// </summary>
+        public double DistanceTo(Triangle t)
+        {
+            return t.DistanceTo(this);
+        }
         #endregion
 
         /// <summary>

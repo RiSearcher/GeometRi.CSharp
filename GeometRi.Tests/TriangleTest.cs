@@ -657,6 +657,84 @@ namespace GeometRi_Tests
 
         }
 
+        [TestMethod()]
+        public void TriangleDistancetoSegmentTest_01()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // One point belongs to triangle
+            Segment3d s = new Segment3d(new Point3d(0, 0, 0), new Point3d(-1, -1, -1));
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 0) < GeometRi3D.Tolerance);
+        }
+
+        [TestMethod()]
+        public void TriangleDistancetoSegmentTest_02()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // Segment is coplanar and belongs to triangle
+            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, 0), new Point3d(1,1,0));
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 0) < GeometRi3D.Tolerance);
+        }
+
+        [TestMethod()]
+        public void TriangleDistancetoSegmentTest_03()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // Segment is coplanar and does not belong to triangle
+            Segment3d s = new Segment3d(new Point3d(3, 0, 0), new Point3d(3, 5, 0));
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 1) < GeometRi3D.Tolerance);
+        }
+
+        [TestMethod()]
+        public void TriangleDistancetoSegmentTest_04()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // Segment intersects triangle
+            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, -1), new Point3d(0.6, 0.6, 1));
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 0) < GeometRi3D.Tolerance);
+        }
+
+        [TestMethod()]
+        public void TriangleDistancetoSegmentTest_05()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // Projection point belongs to triangle and is closest
+            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, 1), new Point3d(5, 5, 10));
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 1) < GeometRi3D.Tolerance);
+        }
+
+        [TestMethod()]
+        public void TriangleDistancetoSegmentTest_06()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            // General case
+            Segment3d s = new Segment3d(new Point3d(0.5, -1, -1), new Point3d(1, -1, 2));
+            Assert.IsTrue(Abs(t.DistanceTo(s) - 1) < GeometRi3D.Tolerance);
+        }
+
 
     }
 }
