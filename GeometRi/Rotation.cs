@@ -115,6 +115,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Random rotation
+        /// </summary>
+        public static Rotation Random()
+        {
+            return new Rotation(Vector3d.Random(), 2 * PI * GeometRi3D.rnd.NextDouble());
+        }
+
+        /// <summary>
         /// Creates copy of the object
         /// </summary>
         public Rotation Copy()

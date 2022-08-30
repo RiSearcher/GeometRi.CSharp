@@ -12,6 +12,7 @@ namespace GeometRi
         private static double _tolerance = 1E-12;
         private static double _default_tolerance = 1E-12;
         private static bool _absolute = true;
+        internal static Random rnd;
 
         /// <summary>
         /// Tolerance used for comparison operations (default 1e-12)

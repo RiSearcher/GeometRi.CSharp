@@ -88,6 +88,27 @@ namespace GeometRi
         #endregion
 
         /// <summary>
+        /// Uniformly distrbuted random vector of unit length
+        /// </summary>
+        public static Vector3d Random()
+        {
+            if (GeometRi3D.rnd == null)
+            {
+                GeometRi3D.rnd = new Random();
+            }
+            
+            double u = GeometRi3D.rnd.NextDouble();
+            double v = GeometRi3D.rnd.NextDouble();
+            double theta = Acos(2 * u - 1);
+            double phi = 2 * PI * v;
+
+            double x = Sin(theta) * Cos(phi);
+            double y = Sin(theta) * Sin(phi);
+            double z = Cos(theta);
+            return new Vector3d(x, y, z);
+        }
+
+        /// <summary>
         /// Creates copy of the object
         /// </summary>
         public Vector3d Copy()
