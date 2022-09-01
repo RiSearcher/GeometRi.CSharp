@@ -617,6 +617,18 @@ namespace GeometRi
             return false;
         }
 
+        /// <summary>
+        /// Check intersection of two boxes (only for AABB boxes, no check is performed for speed)
+        /// </summary>
+        public bool Intersects(Box3d box)
+        {
+            bool x = Abs(this.Center.X - box.Center.X) <= 0.5 * (this.L1 + box.L1) ? true : false;
+            bool y = Abs(this.Center.Y - box.Center.Y) <= 0.5 * (this.L2 + box.L2) ? true : false;
+            bool z = Abs(this.Center.Z - box.Center.Z) <= 0.5 * (this.L3 + box.L3) ? true : false;
+
+            return x && y && z;
+        }
+
         private object _line_intersection(Line3d l, double t0, double t1)
         {
             // Smith's algorithm:
