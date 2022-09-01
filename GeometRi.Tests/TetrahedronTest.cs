@@ -346,5 +346,18 @@ namespace GeometRi_Tests
             Assert.IsTrue(Abs(aabb.L3 - 1) < GeometRi3D.Tolerance);
         }
 
+        [TestMethod()]
+        public void TetrahedronAABBTest_01()
+        {
+            Tetrahedron t = new Tetrahedron().Translate(new Vector3d(-1,0,0));
+
+            Box3d aabb = t.BoundingBox();
+
+            Assert.IsTrue(aabb.Center == new Point3d(-0.5, 0.5, 0.5));
+            Assert.IsTrue(Abs(aabb.L1 - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(aabb.L2 - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(aabb.L3 - 1) < GeometRi3D.Tolerance);
+        }
+
     }
 }

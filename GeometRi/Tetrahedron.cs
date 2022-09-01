@@ -11,6 +11,7 @@ namespace GeometRi
         private Point3d[] vertices;
 
         private Coord3d _local_coord = null;
+        private Box3d _aabb = null;
 
         private List<Triangle> _list_t = null;
         private List<Segment3d> _list_e = null;
@@ -189,7 +190,11 @@ namespace GeometRi
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
-            return Box3d.AABB(vertices, coord);
+            if (_aabb == null)
+            {
+                _aabb = Box3d.AABB(vertices, coord);
+            }
+            return _aabb;
         }
 
         /// <summary>
@@ -295,6 +300,11 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Tetrahedron t)
         {
+            if (!this.BoundingBox().Intersects(t.BoundingBox()))
+            {
+                return false;
+            }
+
             if (t.A.BelongsTo(this) || t.B.BelongsTo(this) || t.C.BelongsTo(this) || t.D.BelongsTo(this))
             {
                 return true;
@@ -384,6 +394,10 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Box3d box)
         {
+            if (!this.BoundingBox().Intersects(box))
+            {
+                return false;
+            }
             foreach (Triangle face in this.ListOfFaces)
             {
                 if (face.Intersects(box)) return true;
