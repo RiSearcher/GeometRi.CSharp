@@ -38,6 +38,14 @@ namespace GeometRi
         }
         #endregion
 
+        /// <summary>
+        /// Creates copy of the object
+        /// </summary>
+        public Tetrahedron Copy()
+        {
+            return new Tetrahedron(vertices[0], vertices[1], vertices[2], vertices[3]);
+        }
+
 
         #region "Properties"
 
@@ -371,6 +379,18 @@ namespace GeometRi
             return false;
         }
 
+        /// <summary>
+        /// Check intersection of tetrahedron with box
+        /// </summary>
+        public bool Intersects(Box3d box)
+        {
+            foreach (Triangle face in this.ListOfFaces)
+            {
+                if (face.Intersects(box)) return true;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// Get intersection of line with tetrahedron.
@@ -455,6 +475,33 @@ namespace GeometRi
             }
 
             return positive > 0 ? +1 : -1;
+        }
+
+
+        /// <summary>
+        /// Check if tetrahedron is located inside box with tolerance defined by global tolerance property (GeometRi3D.Tolerance).
+        /// </summary>
+        public bool IsInside(Box3d box)
+        {
+            // Relative tolerance ================================
+            if (!GeometRi3D.UseAbsoluteTolerance)
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * Sqrt(Max(this.A.DistanceSquared(this.D),Max(this.A.DistanceSquared(this.B), this.A.DistanceSquared(this.C))));
+                GeometRi3D.UseAbsoluteTolerance = true;
+                bool result = this.IsInside(box);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+            //====================================================
+
+            if (!this.A.IsInside(box)) return false;
+            if (!this.B.IsInside(box)) return false;
+            if (!this.C.IsInside(box)) return false;
+            if (!this.D.IsInside(box)) return false;
+
+            return true;
         }
 
 
