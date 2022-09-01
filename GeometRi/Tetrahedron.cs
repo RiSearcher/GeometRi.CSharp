@@ -189,7 +189,7 @@ namespace GeometRi
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
-            throw new NotImplementedException();
+            return Box3d.AABB(vertices, coord);
         }
 
         /// <summary>
