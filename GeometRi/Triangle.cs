@@ -1135,6 +1135,29 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between triangle and sphere
+        /// </summary>
+        public bool Intersects(Sphere s)
+        {
+            Plane3d plane = this.ToPlane;
+            Point3d projection_point = s.Center.ProjectionTo(plane);
+            
+            if (s.Center.DistanceTo(projection_point) > s.R)
+            {
+                return false;
+            }
+            else
+            {
+                if (projection_point.BelongsTo(this)) return true;
+
+                if (s.IntersectionWith(new Segment3d(A, B)) != null) return true;
+                if (s.IntersectionWith(new Segment3d(A, C)) != null) return true;
+                if (s.IntersectionWith(new Segment3d(C, B)) != null) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Intersection check between two triangles
         /// </summary>
         public bool Intersects(Triangle t)

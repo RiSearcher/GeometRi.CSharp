@@ -571,6 +571,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between sphere and triangle
+        /// </summary>
+        public bool Intersects(Triangle t)
+        {
+            return t.Intersects(this);
+        }
+
+        /// <summary>
         /// Orthogonal projection of the sphere to the plane
         /// </summary>
         public Circle3d ProjectionTo(Plane3d s)

@@ -735,6 +735,29 @@ namespace GeometRi_Tests
             Assert.IsTrue(Abs(t.DistanceTo(s) - 1) < GeometRi3D.Tolerance);
         }
 
+        [TestMethod()]
+        public void TriangleIntersectsSphereTest_01()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Sphere s = new Sphere(new Point3d(0.5, 0.5, 1.1), 1);
+            Assert.IsFalse(t.Intersects(s));
+
+            s = new Sphere(new Point3d(2, 2, 0.5), 1);
+            Assert.IsFalse(t.Intersects(s));
+
+            s = new Sphere(new Point3d(0.5, 0.5, 0.9), 1);
+            Assert.IsTrue(t.Intersects(s));
+
+            s = new Sphere(new Point3d(1.1, 1.1, 0.7), 1);
+            Assert.IsTrue(t.Intersects(s));
+
+
+        }
+
 
     }
 }
