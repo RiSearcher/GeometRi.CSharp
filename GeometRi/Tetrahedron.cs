@@ -406,6 +406,22 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Check intersection of tetrahedron with sphere
+        /// </summary>
+        public bool Intersects(Sphere s)
+        {
+            if (!this.BoundingBox().Intersects(s.BoundingBox()))
+            {
+                return false;
+            }
+            foreach (Triangle face in this.ListOfFaces)
+            {
+                if (face.Intersects(s)) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Get intersection of line with tetrahedron.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
