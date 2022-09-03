@@ -405,7 +405,6 @@ namespace GeometRi
             return false;
         }
 
-
         /// <summary>
         /// Get intersection of line with tetrahedron.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
@@ -586,6 +585,20 @@ namespace GeometRi
             Point3d p2 = center + scale * (vertices[1] - center);
             Point3d p3 = center + scale * (vertices[2] - center);
             Point3d p4 = center + scale * (vertices[3] - center);
+            return new Tetrahedron(p1, p2, p3, p4);
+        }
+
+        /// <summary>
+        /// Scale tetrahedron
+        /// </summary>
+        public virtual Tetrahedron Scale(double scale_x, double scale_y, double scale_z)
+        {
+            Point3d center = this.Center;
+            Matrix3d m = Matrix3d.DiagonalMatrix(scale_x, scale_y, scale_z);
+            Point3d p1 = center.Translate(m * (vertices[0] - center).ToVector);
+            Point3d p2 = center.Translate(m * (vertices[1] - center).ToVector);
+            Point3d p3 = center.Translate(m * (vertices[2] - center).ToVector);
+            Point3d p4 = center.Translate(m * (vertices[3] - center).ToVector);
             return new Tetrahedron(p1, p2, p3, p4);
         }
         #endregion
