@@ -511,7 +511,7 @@ namespace GeometRi
             if (this.BelongsTo(l)) { return this.Copy(); }
 
             Point3d p = l.PerpendicularTo(this.ToLine);
-            if (p.BelongsTo(this) && p.BelongsTo(l))
+            if (p != null && p.BelongsTo(this) && p.BelongsTo(l))
             {
                 return p;
             }
@@ -572,7 +572,7 @@ namespace GeometRi
             else
             {
                 Point3d p = l1.PerpendicularTo(l2);
-                if (p.BelongsTo(this) && p.BelongsTo(s))
+                if (p != null && p.BelongsTo(this) && p.BelongsTo(s))
                 {
                     return p;
                 }

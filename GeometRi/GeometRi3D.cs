@@ -273,30 +273,32 @@ namespace GeometRi
         static internal bool _coplanar(IPlanarObject obj1, IPlanarObject obj2)
         {
 
-            if (obj1.Normal.IsNotParallelTo(obj2.Normal))
-            {
-                return false;
-            }
+            //if (obj1.Normal.IsNotParallelTo(obj2.Normal))
+            //{
+            //    return false;
+            //}
 
-            if (obj1.GetType() == typeof(Triangle))
-            {
-                return ((Triangle)obj1).A.BelongsTo(obj2.ToPlane);
-            }
-            else if (obj1.GetType() == typeof(Circle3d))
-            {
-                return ((Circle3d)obj1).Center.BelongsTo(obj2.ToPlane);
-            }
-            else if (obj1.GetType() == typeof(Ellipse))
-            {
-                return ((Ellipse)obj1).Center.BelongsTo(obj2.ToPlane);
-            }
-            else if (obj1.GetType() == typeof(Plane3d))
-            {
-                return ((Plane3d)obj1).Point.BelongsTo(obj2.ToPlane);
-            } else
-            {
-                return false;
-            }
+            //if (obj1.GetType() == typeof(Triangle))
+            //{
+            //    return ((Triangle)obj1).A.BelongsTo(obj2.ToPlane);
+            //}
+            //else if (obj1.GetType() == typeof(Circle3d))
+            //{
+            //    return ((Circle3d)obj1).Center.BelongsTo(obj2.ToPlane);
+            //}
+            //else if (obj1.GetType() == typeof(Ellipse))
+            //{
+            //    return ((Ellipse)obj1).Center.BelongsTo(obj2.ToPlane);
+            //}
+            //else if (obj1.GetType() == typeof(Plane3d))
+            //{
+            //    return ((Plane3d)obj1).Point.BelongsTo(obj2.ToPlane);
+            //} else
+            //{
+            //    return false;
+            //}
+
+            return obj1.ToPlane.Equals(obj2.ToPlane);
 
         }
 

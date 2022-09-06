@@ -24,7 +24,7 @@ namespace GeometRi
         {
             _point = Center.Copy();
             _r = Radius;
-            _normal = Normal.Copy();
+            _normal = Normal.Normalized;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace GeometRi
             _point = new Point3d(X, Y, 0, CS);
             _point = _point.ConvertTo(p1.Coord);
             _r = Sqrt((X - a1.X) * (X - a1.X) + (Y - a1.Y) * (Y - a1.Y));
-            _normal = v1.Cross(v2);
+            _normal = v1.Cross(v2).Normalized;
 
         }
 
