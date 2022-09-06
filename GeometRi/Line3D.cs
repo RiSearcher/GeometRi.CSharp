@@ -33,7 +33,7 @@ namespace GeometRi
         public Line3d(Point3d p, Vector3d v)
         {
             _point = p.Copy();
-            _dir = v.Copy();
+            _dir = v.Normalized;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace GeometRi
         public Line3d(Point3d p1, Point3d p2)
         {
             _point = p1.Copy();
-            _dir = new Vector3d(p1, p2);
+            _dir = new Vector3d(p1, p2).Normalized;
         }
         #endregion
 
@@ -221,7 +221,7 @@ namespace GeometRi
 
 
         /// <summary>
-        /// Point on the perpendicular to the second line
+        /// Point on the perpendicular to the second line (null for parallel lines)
         /// </summary>
         public virtual Point3d PerpendicularTo(Line3d l)
         {
@@ -237,8 +237,8 @@ namespace GeometRi
             else
             {
                 // Lineas are parallel
-                // return any point
-                return l.Point;
+                // return null
+                return null;
                 //throw new Exception("Lines are parallel");
             }
         }

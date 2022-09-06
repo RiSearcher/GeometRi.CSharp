@@ -134,7 +134,7 @@ namespace GeometRi
 
         public Vector3d Normal
         {
-            get { return new Vector3d(_a, _b).Cross(new Vector3d(_a, _c)); }
+            get { return new Vector3d(_a, _b).Cross(new Vector3d(_a, _c)).Normalized; }
         }
 
         public bool IsOriented
@@ -885,96 +885,7 @@ namespace GeometRi
                 if (obj.GetType() == typeof(Line3d))
                 {
                     // Coplanar line and triangle
-
-                    // Check intersection in one corner
-                    // or in corner and opposite side
-                    if (_a.BelongsTo(l))
-                    {
-                        object obj2 = new Segment3d(_b, _c).IntersectionWith(l);
-                        if (obj2 != null && obj2.GetType() == typeof(Point3d))
-                        {
-                            return new Segment3d(_a, (Point3d)obj2);
-                        }
-                        else
-                        {
-                            return A;
-                        }
-                    }
-
-                    if (_b.BelongsTo(l))
-                    {
-                        object obj2 = new Segment3d(_a, _c).IntersectionWith(l);
-                        if (obj2 != null && obj2.GetType() == typeof(Point3d))
-                        {
-                            return new Segment3d(_b, (Point3d)obj2);
-                        }
-                        else
-                        {
-                            return B;
-                        }
-                    }
-
-                    if (_c.BelongsTo(l))
-                    {
-                        object obj2 = new Segment3d(_a, _b).IntersectionWith(l);
-                        if (obj2 != null && obj2.GetType() == typeof(Point3d))
-                        {
-                            return new Segment3d(_c, (Point3d)obj2);
-                        }
-                        else
-                        {
-                            return C;
-                        }
-                    }
-
-                    // Check intersection with two sides
-                    object objAB = new Segment3d(_a, _b).IntersectionWith(l);
-                    object objBC = new Segment3d(_b, _c).IntersectionWith(l);
-                    if (objAB != null && objAB.GetType() == typeof(Point3d))
-                    {
-                        if (objBC != null && objBC.GetType() == typeof(Point3d))
-                        {
-                            return new Segment3d((Point3d)objAB, (Point3d)objBC);
-                        }
-                        else
-                        {
-                            object objAC = new Segment3d(_a, _c).IntersectionWith(l);
-                            if (objAC != null && objAC.GetType() == typeof(Point3d))
-                            {
-                                return new Segment3d((Point3d)objAB, (Point3d)objAC);
-                            }
-                            else
-                            {
-                                return (Point3d)objAB;
-                            }
-                        }
-                    }
-
-                    if (objBC != null && objBC.GetType() == typeof(Point3d))
-                    {
-                        object objAC = new Segment3d(_a, _c).IntersectionWith(l);
-                        if (objAC != null && objAC.GetType() == typeof(Point3d))
-                        {
-                            return new Segment3d((Point3d)objBC, (Point3d)objAC);
-                        }
-                        else
-                        {
-                            return (Point3d)objBC;
-                        }
-                    }
-
-                    object objAC2 = new Segment3d(_a, _c).IntersectionWith(l);
-                    if (objAC2 != null && objAC2.GetType() == typeof(Point3d))
-                    {
-                        return (Point3d)objAC2;
-                    }
-                    else
-                    {
-                        return null;
-                    }
-
-
-
+                    return _coplanar_IntersectionWith(l);
                 }
                 else
                 {
@@ -1028,8 +939,77 @@ namespace GeometRi
             }
 
             Line3d l = (Line3d)s.IntersectionWith(st);
-            return this.IntersectionWith(l);
+
+            // Line "l" is coplanar with triangle by construction
+
+            return _coplanar_IntersectionWith(l);
         }
+
+        /// <summary>
+        /// Get intersection of line with triangle (coplanar).
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        internal object _coplanar_IntersectionWith(Line3d l)
+        {
+            // Check intersection with first two sides
+            Point3d onAB = l.PerpendicularTo(new Segment3d(_a, _b).ToLine);
+            Point3d onBC = l.PerpendicularTo(new Segment3d(_b, _c).ToLine);
+            if (onAB != null && onBC != null)
+            {
+                double pos_onAB = new Vector3d(_a, onAB).Dot(new Vector3d(_a, _b)) / (AB * AB);
+                double pos_onBC = new Vector3d(_b, onBC).Dot(new Vector3d(_b, _c)) / (BC * BC);
+                if (pos_onAB >= 1 - GeometRi3D.Tolerance && pos_onAB <= 1 + GeometRi3D.Tolerance &&
+                    pos_onBC >= -GeometRi3D.Tolerance && pos_onBC <= GeometRi3D.Tolerance)
+                {
+                    // intersection in one point "B"
+                    return B;
+                }
+                else if (pos_onAB >= -GeometRi3D.Tolerance && pos_onAB < 1 - GeometRi3D.Tolerance &&
+                         pos_onBC > GeometRi3D.Tolerance && pos_onBC <= 1 + GeometRi3D.Tolerance)
+                {
+                    return new Segment3d(onAB, onBC);
+                }
+            }
+
+            //Check intersection with third side
+            Point3d onAC = l.PerpendicularTo(new Segment3d(_a, _c).ToLine);
+            if (onAB != null && onAC != null)
+            {
+                double pos_onAB = new Vector3d(_a, onAB).Dot(new Vector3d(_a, _b)) / (AB * AB);
+                double pos_onAC = new Vector3d(_a, onAC).Dot(new Vector3d(_a, _c)) / (AC * AC);
+                if (pos_onAB >= -GeometRi3D.Tolerance && pos_onAB <= GeometRi3D.Tolerance &&
+                    pos_onAC >= -GeometRi3D.Tolerance && pos_onAC <= GeometRi3D.Tolerance)
+                {
+                    // intersection in one point "A"
+                    return A;
+                }
+                else if (pos_onAB > GeometRi3D.Tolerance && pos_onAB <= 1 + GeometRi3D.Tolerance &&
+                         pos_onAC > GeometRi3D.Tolerance && pos_onAC <= 1 + GeometRi3D.Tolerance)
+                {
+                    return new Segment3d(onAB, onAC);
+                }
+            }
+
+            if (onBC != null && onAC != null)
+            {
+                double pos_onBC = new Vector3d(_b, onBC).Dot(new Vector3d(_b, _c)) / (BC * BC);
+                double pos_onAC = new Vector3d(_a, onAC).Dot(new Vector3d(_a, _c)) / (AC * AC);
+                if (pos_onBC >= 1 - GeometRi3D.Tolerance && pos_onBC <= 1 + GeometRi3D.Tolerance &&
+                    pos_onAC >= 1 - GeometRi3D.Tolerance && pos_onAC <= 1 + GeometRi3D.Tolerance)
+                {
+                    // intersection in one point "C"
+                    return C;
+                }
+                else if (pos_onBC >= -GeometRi3D.Tolerance && pos_onBC < 1 - GeometRi3D.Tolerance &&
+                         pos_onAC >= -GeometRi3D.Tolerance && pos_onAC < 1 - GeometRi3D.Tolerance)
+                {
+                    return new Segment3d(onBC, onAC);
+                }
+            }
+
+            return null;
+        }
+
 
         /// <summary>
         /// Get intersection of segment with triangle.

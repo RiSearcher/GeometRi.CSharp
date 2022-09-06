@@ -52,7 +52,7 @@ namespace GeometRi
             {
                 _point = new Point3d(0, 0, -d / c, coord);
             }
-            _normal = new Vector3d(a, b, c, coord);
+            _normal = new Vector3d(a, b, c, coord).Normalized;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace GeometRi
         {
             Vector3d v1 = new Vector3d(p1, p2);
             Vector3d v2 = new Vector3d(p1, p3);
-            _normal = v1.Cross(v2);
+            _normal = v1.Cross(v2).Normalized;
             _point = p1.Copy();
         }
 
@@ -74,7 +74,7 @@ namespace GeometRi
         /// </summary>
         public Plane3d(Point3d p1, Vector3d v1, Vector3d v2)
         {
-            _normal = v1.Cross(v2);
+            _normal = v1.Cross(v2).Normalized;
             _point = p1.Copy();
         }
 
@@ -85,7 +85,7 @@ namespace GeometRi
         /// <param name="v1"></param>
         public Plane3d(Point3d p1, Vector3d v1)
         {
-            _normal = v1.Copy();
+            _normal = v1.Normalized;
             _point = p1.Copy();
         }
         #endregion
@@ -533,21 +533,37 @@ namespace GeometRi
             }
             Plane3d s = (Plane3d)obj;
 
-            if (GeometRi3D.UseAbsoluteTolerance)
+            //if (GeometRi3D.UseAbsoluteTolerance)
+            //{
+            //    return s.Point.BelongsTo(this) && s.Normal.IsParallelTo(this.Normal);
+            //}
+            //else
+            //{
+            //    double tol = GeometRi3D.Tolerance;
+            //    GeometRi3D.Tolerance = tol * this.Point.DistanceTo(this.Point.Coord.Origin);
+            //    GeometRi3D.UseAbsoluteTolerance = true;
+            //    bool res1 = s.Point.BelongsTo(this);
+            //    GeometRi3D.UseAbsoluteTolerance = false;
+            //    GeometRi3D.Tolerance = tol;
+            //    bool res2 = s.Normal.IsParallelTo(this.Normal);
+            //    return res1 && res2;
+            //}
+
+            bool isCoplanar;
+            if (this.Normal.IsParallelTo(s.Normal))
             {
-                return s.Point.BelongsTo(this) && s.Normal.IsParallelTo(this.Normal);
+                if (this.Point.Equals(s.Point))
+                    isCoplanar = true;
+                else
+                {
+                    var v = new Vector3d(this.Point, s.Point).Normalized;
+                    double a = v.Dot(s.Normal.Normalized);
+                    isCoplanar = Abs(a) <= GeometRi3D.DefaultTolerance;
+                }
             }
             else
-            {
-                double tol = GeometRi3D.Tolerance;
-                GeometRi3D.Tolerance = tol * this.Point.DistanceTo(this.Point.Coord.Origin);
-                GeometRi3D.UseAbsoluteTolerance = true;
-                bool res1 = s.Point.BelongsTo(this);
-                GeometRi3D.UseAbsoluteTolerance = false;
-                GeometRi3D.Tolerance = tol;
-                bool res2 = s.Normal.IsParallelTo(this.Normal);
-                return res1 && res2;
-            }
+                isCoplanar = false;
+            return isCoplanar;
         }
 
         /// <summary>
