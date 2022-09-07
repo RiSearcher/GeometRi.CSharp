@@ -533,22 +533,6 @@ namespace GeometRi
             }
             Plane3d s = (Plane3d)obj;
 
-            //if (GeometRi3D.UseAbsoluteTolerance)
-            //{
-            //    return s.Point.BelongsTo(this) && s.Normal.IsParallelTo(this.Normal);
-            //}
-            //else
-            //{
-            //    double tol = GeometRi3D.Tolerance;
-            //    GeometRi3D.Tolerance = tol * this.Point.DistanceTo(this.Point.Coord.Origin);
-            //    GeometRi3D.UseAbsoluteTolerance = true;
-            //    bool res1 = s.Point.BelongsTo(this);
-            //    GeometRi3D.UseAbsoluteTolerance = false;
-            //    GeometRi3D.Tolerance = tol;
-            //    bool res2 = s.Normal.IsParallelTo(this.Normal);
-            //    return res1 && res2;
-            //}
-
             bool isCoplanar;
             if (this.Normal.IsParallelTo(s.Normal))
             {
@@ -557,7 +541,7 @@ namespace GeometRi
                 else
                 {
                     var v = new Vector3d(this.Point, s.Point).Normalized;
-                    double a = v.Dot(s.Normal.Normalized);
+                    double a = v.Dot(s.Normal);
                     isCoplanar = Abs(a) <= GeometRi3D.DefaultTolerance;
                 }
             }
