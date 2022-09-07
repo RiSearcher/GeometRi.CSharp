@@ -212,7 +212,7 @@ namespace GeometRi
             {
                 Vector3d v1 = this.Normal.OrthogonalVector.Normalized;
                 Vector3d v2 = this.Normal.Cross(v1).Normalized;
-                Vector3d v3 = this.Normal.Normalized;
+                Vector3d v3 = this.Normal;
                 Matrix3d m = new Matrix3d(v1, v2, v3);
                 Rotation r = new Rotation(m.Transpose());
                 return new Box3d(_point, 2.0 * _r, 2.0 * _r, 0, r);
@@ -825,7 +825,7 @@ namespace GeometRi
                 p1 = s.Center.ProjectionTo(p);
                 if (s.Center == p1)
                 {
-                    p2 = s.Center.Translate(s.R * this.Normal.Normalized);
+                    p2 = s.Center.Translate(s.R * this.Normal);
                 }
                 else
                 {
