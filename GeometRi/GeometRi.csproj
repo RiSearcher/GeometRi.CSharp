@@ -1,21 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0;net20</TargetFrameworks>
+    <TargetFrameworks>netstandard1.0;net20;netcoreapp3.1;net5.0</TargetFrameworks>
     <RootNamespace>GeometRi</RootNamespace>
     <AssemblyName>GeometRi</AssemblyName>
     <Description>GeometRi is a simple and lightweight 3D geometry library for .Net. Its main purpose is manipulations with basic geometrical primitives, such as point, line, plane, segment in 3D space: translation and rotation operations, distance calculation, intersections, orthogonal projections of one object into another, etc. The basic objects can be defined in global or in one of the local coordinate systems and converted form one coordinate system into another. Each object stores its reference coordinate system and all necessary transformations are performed implicitly when needed.
 
-Compatible with .Net Framework 2.0 and .Net Standard 1.0 (.Net Core, Mono, Xamarin, UWP, Windows Phone).</Description>
+Compatible with .Net Framework 2.0, .Net Standard 1.0, .Net Core 3.1 and .Net 5.</Description>
     <Copyright>Copyright (c) 2017 Sergey Tarasov</Copyright>
-    <AssemblyVersion>1.3.6.0</AssemblyVersion>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Sergey Tarasov</Authors>
     <Company />
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
-    <Version>1.3.6</Version>
+    <Version>1.4.0</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes>Added tetrahedron class.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added tetrahedron class.
+More robust traingle and plane/line intersection algorithm.
+Breaking changes: Line.PerpendicuarTo(Line) now returns 'null' for parallel lines.</PackageReleaseNotes>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>

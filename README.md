@@ -15,6 +15,8 @@ will be caried out implicitly when necessary.
 The main goal was simplisity and readability of the code, therefore speed and robustness was not a priority.
 Global tolerance property is used for proximity checking, not an exact robust algorithms.
 
+## [Release notes](./ReleaseNotes.md)
+
 * [Installation](https://github.com/RiSearcher/GeometRi.CSharp#installation)
 * [Examples](https://github.com/RiSearcher/GeometRi.CSharp#examples)
 * [Classes](https://github.com/RiSearcher/GeometRi.CSharp#classes)
