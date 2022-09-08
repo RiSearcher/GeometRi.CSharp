@@ -30,6 +30,7 @@ Global tolerance property is used for proximity checking, not an exact robust al
     * [Ellipsoid](https://github.com/RiSearcher/GeometRi.CSharp#ellipsoid)
     * [Box3d](https://github.com/RiSearcher/GeometRi.CSharp#box3d)
     * [Triangle](https://github.com/RiSearcher/GeometRi.CSharp#triangle)
+    * [Tetrahedron](https://github.com/RiSearcher/GeometRi.CSharp#tetrahedron)
     * [Coord3d](https://github.com/RiSearcher/GeometRi.CSharp#coord3d)
     * [Matrix3d](https://github.com/RiSearcher/GeometRi.CSharp#matrix3d)
     * [Quaternion](https://github.com/RiSearcher/GeometRi.CSharp#quaternion)
@@ -53,7 +54,7 @@ Install-Package GeometRi
 * __Point3d__ and __Vector3d__ are two base classes, representing points and vectors in 3D space.
 Objects of type Point3d or Vector3d can be defined in global or in local coordinate systems.
 
-* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__, __Box3d__ and __Triangle__
+* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__, __Box3d__, __Triangle__ and __Tetrahedron__
 are compound classes, which are defined in terms of points and vectors.
 
 * __Coord3d__, __Rotation__, __Quaternion__ and __Matrix3d__ are auxiliary classes.
@@ -81,7 +82,7 @@ By default all points are defined in global coordinate system.
 * __Subtract__ - subtract one point from other
 * __Scale__ - scale point by given number
 * __DistanceTo__ - shortest distance from point to point to other objects
-* __ClosestPoint__ - closest point on circle, box, triangle, sphere, ellipse, ellipsoid
+* __ClosestPoint__ - closest point on circle, box, triangle, sphere, ellipse, ellipsoid, tetrahedron
 * __ProjectionTo__ - orthogonal projection of point to line, plane or sphere
 * __BelongsTo__ - test if point is located in the epsilon neighborhood of the object
 * __IsInside__ - test if point is located strictly inside (not in the epsilon neighborhood of the boundary) of the object
@@ -259,7 +260,7 @@ common translation, rotation and reflection methods.
 * __IsInside__ - check if sphere is located inside box
 * __ClosestPoint__ - point on sphere's surface closest to target point
 * __DistanceTo__ - shortest distance to point, line, ray, segment, plane, circle, sphere or box
-* __Intersects__ - intersection check with circle
+* __Intersects__ - intersection check with circle and tetrahedron
 * __IntersectionWith__ - intersection of sphere with line, plane, segment or other sphere
 * __ProjectionTo__ - orthogonal projection of sphere to the line or plane
 * __Translate__ - translate sphere by vector
@@ -372,25 +373,31 @@ Box object defined by center point, three dimensions and orientation in space.
 * __Orientation__ - box orientation
 * __P1/P2/P3/P4/P5/P6/P7/P8__ - corner points of the box
 * __ListOfPoints__ - list of corner points of the box
+* __ListOfTriangles__ - list of triangles forming the box's surface
+* __ListOfPlanes__ - list of planes forming the box's surface
+* __ListOfEdges__ - list of edges
 * __Area__ - area of the box
 * __Volume__ - volume of the box
 * __MinimumBoundingBox__ - minimum bounding box of the object
 * __BoundingSphere__ - bounding sphere of the object
+* __IsAxisAligned__ - check if box is AABB
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, circle or sphere
-* __Intersects__ - intersection check with circle or triangle
+* __Intersects__ - intersection check with box, circle, tetrahedron or triangle
 * __IntersectionWith__ - intersection of box with line, ray or segment
 * __Translate__ - translate box by vector
 * __Rotate__ - rotate box around origin or other point
 * __Reflect__ - reflect box in point, line or plane
 * __Equals__ - check if two ellipsoids are equals
 * __ToString__ - string representation of ellipsoid in global or local coordinate system
+### Static Methods
+* __AABB__ - axis aligned bounding box for a cloud of points
 
 ## Triangle
 
-Defines a triangle n 3D space. Implements common translation, rotation and reflection methods. Calculates most of the standard
+Defines a triangle in 3D space. Implements common translation, rotation and reflection methods. Calculates most of the standard
 triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, centroid, orthocenter, etc.
 ### Properties
 * __A/B/C__ - vertices of the triangle
@@ -418,9 +425,9 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __DistanceTo__ - shortest distance to point and circle
+* __DistanceTo__ - shortest distance to point, segment, triangle and circle
 * __IntersectionWith__ - intersection of triangle with line, plane, ray or segment
-* __Intersects__ - intersection check with triangle, box or circle
+* __Intersects__ - intersection check with triangle, box, tetrahedron, sphere or circle
 * __ProjectionTo__ - orthogonal projection of triangle to line
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -431,6 +438,30 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 * __Translate__ - translate triangle by vector
 * __Rotate__ - rotate triangle around origin or other point
 * __Reflect__ - reflect triangle in point, line or plane
+* __Equals__ - check if two triangles are equals
+* __ToString__ - string representation of triangle in global or local coordinate system
+
+## Tetrahedron
+
+Defines a tetrahedron in 3D space. Implements common translation, rotation and reflection methods.
+### Properties
+* __A/B/C/D__ - vertices of the tetrahedron
+* __Center__ - center of the mass of tetrahedron
+* __ListOfEdges__ - list of edges
+* __ListOfFaces__ - list of faces
+* __Area__ - area of the tetrahedron
+* __Volume__ - volume of the tetrahedron
+### Methods
+* __Copy__ - Creates copy of the object
+* __BoundingBox__ - Axis Aligned Bounding Box (AABB)
+* __DistanceTo__ - shortest distance to point and tetrahedron
+* __ClosestPoint__ - calculates the point on the terahedron's boundary closest to given point
+* __Intersects__ - intersection check with triangle, tetrahedron, line, ray, segment, box and sphere
+* __IsInside__ - check if object is located inside given box
+* __Translate__ - translate triangle by vector
+* __Rotate__ - rotate triangle around origin or other point
+* __Reflect__ - reflect triangle in point, line or plane
+* __Scale__ - scale tetrahedron
 * __Equals__ - check if two triangles are equals
 * __ToString__ - string representation of triangle in global or local coordinate system
 
