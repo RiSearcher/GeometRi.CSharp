@@ -70,7 +70,7 @@ namespace GeometRi
         /// <returns></returns>
         public Vector3d Direction
         {
-            get { return this.ToVector; }
+            get { return this.ToVector.Normalized; }
         }
 
         public bool IsOriented

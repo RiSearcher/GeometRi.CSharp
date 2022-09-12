@@ -64,6 +64,21 @@ namespace GeometRi_Tests
             //bool areCoplanar_fix = IsCoplanarTo_fix(t0,t1); //returns true
         }
 
+        [TestMethod]
+        public void SimpleAngleTest()
+        {
+            Point3d p0 = new Point3d(0, 0, 0, Coord3d.GlobalCS);
+            Point3d p1 = new Point3d(1, 1, 0, Coord3d.GlobalCS);
+
+            Segment3d s0 = new Segment3d(p0, p1);
+
+            double angle = s0.AngleToDeg(Coord3d.GlobalCS.Zaxis);
+            Assert.AreEqual(90, angle);
+
+            angle = s0.AngleToDeg(Coord3d.GlobalCS.Yaxis);
+            Assert.IsTrue(Abs(45 - angle) < 1e-14); //error, angle is 0, expected 45
+        }
+
         //public static bool Equals_fix(this Plane3d p0, Plane3d p1)
         //{
         //    bool isCoplanar;
