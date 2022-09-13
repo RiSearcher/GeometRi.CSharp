@@ -184,7 +184,7 @@ namespace GeometRi
         // ILinearObject interface implementation
         public Vector3d Direction
         {
-            get { return this.Copy();  }
+            get { return this.Normalized;  }
         }
 
         public bool IsOriented

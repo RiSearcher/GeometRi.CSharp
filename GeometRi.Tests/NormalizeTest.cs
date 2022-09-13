@@ -79,6 +79,24 @@ namespace GeometRi_Tests
             Assert.IsTrue(Abs(45 - angle) < 1e-14); //error, angle is 0, expected 45
         }
 
+        [TestMethod]
+        public void SimpleAngleTest2()
+        {
+            Point3d p0 = new Point3d(0, 100, 0);
+            Point3d p1 = new Point3d(0, 100, -100);
+
+            Rotation r = new Rotation(Coord3d.GlobalCS.Yaxis, 30 * Math.PI / 180);
+            p1 = p1.Rotate(r, p0);
+
+            Segment3d s = new Segment3d(p0, p1);
+            double angle = s.AngleToDeg(Coord3d.GlobalCS.Zaxis);
+            Assert.IsTrue(Abs(30 - angle) < 1e-12);
+
+            angle = s.AngleToDeg(Coord3d.GlobalCS.Zaxis.Mult(-80)); 
+            Assert.IsTrue(Abs(30 - angle) < 1e-12);
+ 
+        }
+
         //public static bool Equals_fix(this Plane3d p0, Plane3d p1)
         //{
         //    bool isCoplanar;
