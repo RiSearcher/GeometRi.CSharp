@@ -1,6 +1,9 @@
 # GeometRi
 ## Release notes
 
+### 1.4.0.1 (13/9/2022)
+* Fixed segment direction normalization.
+
 ### 1.4.0.0 (8/9/2022)
 * Added tetrahedron class.
 * More robust traingle and plane/line intersection algorithm.
