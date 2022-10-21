@@ -273,44 +273,172 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void SegmentDistanceToSegmentTest2()
+        public void SegmentDistanceToSegmentClosestPointsTest01()
         {
             // Parallel segments
             //    P1-----------P2
             //    P1-----------P2
             Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
             Segment3d s2 = new Segment3d(new Point3d(0, 0, 1), new Point3d(5, 0, 1));
-            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s1.P1);
+            Assert.IsTrue(p2 == s2.P1);
+        }
 
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest02()
+        {
+            // Parallel segments
             //    P2-----------P1
             //    P1-----------P2
-            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
-            s2 = new Segment3d(new Point3d(5, 0, 1), new Point3d(0, 0, 1));
-            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(5, 0, 1), new Point3d(0, 0, 1));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s1.P1);
+            Assert.IsTrue(p2 == s2.P2);
+        }
 
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest03()
+        {
+            // Parallel segments
             //    P1-----------P2
             //          P1-----------P2
-            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
-            s2 = new Segment3d(new Point3d(-2, 0, 1), new Point3d(2, 0, 1));
-            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(-2, 0, 1), new Point3d(2, 0, 1));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s1.P1);
+            Assert.IsTrue(p2 == new Point3d(0, 0, 1));
+        }
 
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest04()
+        {
+            // Parallel segments
             //    P2-----------P1
             //          P1-----------P2
-            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
-            s2 = new Segment3d(new Point3d(2, 0, 1), new Point3d(-2, 0, 1));
-            Assert.IsTrue(Abs(s1.DistanceTo(s2) - 1) < GeometRi3D.Tolerance);
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(2, 0, 1), new Point3d(-2, 0, 1));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s1.P1);
+            Assert.IsTrue(p2 == new Point3d(0, 0, 1));
+        }
 
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest05()
+        {
+            // Parallel segments
             //    P1-----------P2
             //                    P1-----------P2
-            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
-            s2 = new Segment3d(new Point3d(-5, 0, 1), new Point3d(-1, 0, 1));
-            Assert.IsTrue(Abs(s1.DistanceTo(s2) - Sqrt(2)) < GeometRi3D.Tolerance);
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(-5, 0, 1), new Point3d(-1, 0, 1));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist - Sqrt(2)) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s1.P1);
+            Assert.IsTrue(p2 == s2.P2);
+        }
 
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest06()
+        {
+            // Parallel segments
             //    P2-----------P1
             //                    P1-----------P2
-            s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
-            s2 = new Segment3d(new Point3d(-1, 0, 1), new Point3d(-5, 0, 1));
-            Assert.IsTrue(Abs(s1.DistanceTo(s2) - Sqrt(2)) < GeometRi3D.Tolerance);
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(-1, 0, 1), new Point3d(-5, 0, 1));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist - Sqrt(2)) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s1.P1);
+            Assert.IsTrue(p2 == s2.P1);
+
+            dist = s2.DistanceTo(s1, out p1, out p2);
+            Assert.IsTrue(Abs(dist - Sqrt(2)) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s2.P1);
+            Assert.IsTrue(p2 == s1.P1);
+        }
+
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest07()
+        {
+            //                             /P2
+            //                    P1------/-----P2
+            //                           /
+            //                          /P1 
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(0, -1, 0), new Point3d(2, 1, 0));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == new Point3d(1, 0, 0));
+            Assert.IsTrue(p2 == new Point3d(1, 0, 0));
+
+            dist = s2.DistanceTo(s1, out p1, out p2);
+            Assert.IsTrue(Abs(dist) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == new Point3d(1, 0, 0));
+            Assert.IsTrue(p2 == new Point3d(1, 0, 0));
+        }
+
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest08()
+        {
+            //                                       |P2
+            //                    P1-----------P2    |
+            //                                       |P1                           
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(6, -1, 0), new Point3d(6, 1, 0));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist-1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s1.P2);
+            Assert.IsTrue(p2 == new Point3d(6, 0, 0));
+
+            dist = s2.DistanceTo(s1, out p1, out p2);
+            Assert.IsTrue(Abs(dist-1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == new Point3d(6, 0, 0));
+            Assert.IsTrue(p2 == s1.P2);
+        }
+
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest09()
+        {
+            //                               /P2
+            //                              /
+            //                             /P1
+            //                    P1-----------P2  
+                           
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(3, 1, 0), new Point3d(6, 4, 0));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == new Point3d(3, 0, 0));
+            Assert.IsTrue(p2 == s2.P1);
+
+            dist = s2.DistanceTo(s1, out p1, out p2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == s2.P1);
+            Assert.IsTrue(p2 == new Point3d(3, 0, 0));
+        }
+
+        [TestMethod()]
+        public void SegmentDistanceToSegmentClosestPointsTest10()
+        {
+            //                             /P2
+            //                    P1------/-----P2
+            //                           /
+            //                          /P1 
+            Segment3d s1 = new Segment3d(new Point3d(0, 0, 0), new Point3d(5, 0, 0));
+            Segment3d s2 = new Segment3d(new Point3d(0, -1, 1), new Point3d(2, 1, 1));
+            double dist = s1.DistanceTo(s2, out Point3d p1, out Point3d p2);
+            Assert.IsTrue(Abs(dist-1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == new Point3d(1, 0, 0));
+            Assert.IsTrue(p2 == new Point3d(1, 0, 1));
+
+            dist = s2.DistanceTo(s1, out p1, out p2);
+            Assert.IsTrue(Abs(dist-1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(p1 == new Point3d(1, 0, 1));
+            Assert.IsTrue(p2 == new Point3d(1, 0, 0));
         }
 
         [TestMethod()]

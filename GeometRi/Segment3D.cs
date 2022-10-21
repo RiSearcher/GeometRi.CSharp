@@ -217,6 +217,22 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
+            return _DistanceTo(s, out double sc, out double tc);
+        }
+
+        /// <summary>
+        /// Returns shortest distance between two segments (with closest points)
+        /// </summary>
+        public double DistanceTo(Segment3d s, out Point3d point_on_this_segment, out Point3d point_on_target_segment)
+        {
+            double p1, p2;
+            double dist = _DistanceTo(s, out p1, out p2);
+            point_on_this_segment = this.P1.Translate(p1 * this.ToVector);
+            point_on_target_segment = s.P1.Translate(p2 * s.ToVector);
+            return dist;
+        }
+        internal double _DistanceTo(Segment3d s, out double p1, out double p2)
+        {
 
             // Algorithm by Dan Sunday
             // http://geomalgorithms.com/a07-_distance.html
@@ -319,6 +335,9 @@ namespace GeometRi
             // get the difference of the two closest points
             Vector3d dP = w + (sc * u) - (tc * v);
             // =  S1(sc) - S2(tc)
+
+            p1 = sc;
+            p2 = tc;
 
             return dP.Norm;
 
