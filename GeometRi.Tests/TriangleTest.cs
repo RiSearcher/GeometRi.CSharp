@@ -642,7 +642,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistancetoPointTest()
+        public void TriangleDistanceToPointTest()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -658,7 +658,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistancetoSegmentTest_01()
+        public void TriangleDistanceToSegmentTest_01()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -674,7 +674,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistancetoSegmentTest_02()
+        public void TriangleDistanceToSegmentTest_02()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -690,7 +690,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistancetoSegmentTest_03()
+        public void TriangleDistanceToSegmentTest_03()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -706,7 +706,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistancetoSegmentTest_04()
+        public void TriangleDistanceToSegmentTest_04()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -722,7 +722,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistancetoSegmentTest_05()
+        public void TriangleDistanceToSegmentTest_05()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -738,7 +738,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistancetoSegmentTest_06()
+        public void TriangleDistanceToSegmentTest_06()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -774,6 +774,44 @@ namespace GeometRi_Tests
             Assert.IsTrue(t.Intersects(s));
 
 
+        }
+
+        [TestMethod()]
+        public void TriangleDistanceToTriangleTest_01()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t1 = new Triangle(p1, p2, p3);
+
+            p1 = new Point3d(3, 0, 0);
+            p2 = new Point3d(5, 0, 0);
+            p3 = new Point3d(4, 2, 0);
+            Triangle t2 = new Triangle(p1, p2, p3);
+
+            double dist = t1.DistanceTo(t2, out Point3d point_on_triangle1, out Point3d point_on_triangle2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(point_on_triangle1 == new Point3d(2, 0, 0));
+            Assert.IsTrue(point_on_triangle2 == new Point3d(3, 0, 0));
+        }
+
+        [TestMethod()]
+        public void TriangleDistanceToTriangleTest_02()
+        {
+            Point3d p1 = new Point3d(0, 0, 0);
+            Point3d p2 = new Point3d(2, 0, 0);
+            Point3d p3 = new Point3d(0, 2, 0);
+            Triangle t1 = new Triangle(p1, p2, p3);
+
+            p1 = new Point3d(1, 1, 1);
+            p2 = new Point3d(3, 2, 3);
+            p3 = new Point3d(4, 2, 5);
+            Triangle t2 = new Triangle(p1, p2, p3);
+
+            double dist = t1.DistanceTo(t2, out Point3d point_on_triangle1, out Point3d point_on_triangle2);
+            Assert.IsTrue(Abs(dist - 1) < GeometRi3D.Tolerance);
+            Assert.IsTrue(point_on_triangle1 == new Point3d(1, 1, 0));
+            Assert.IsTrue(point_on_triangle2 == new Point3d(1, 1, 1));
         }
 
 

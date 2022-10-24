@@ -890,6 +890,25 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Shortest distance between two triangles (with closest points)
+        /// </summary>
+        public double DistanceTo(Triangle t, out Point3d point_on_this_triangle, out Point3d point_on_target_triangle)
+        {
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            double dist = _DistanceToTriangle(t, out point_on_this_triangle, out point_on_target_triangle);
+
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+
+            return dist;
+        }
+
+        /// <summary>
         /// Shortest distance between two triangles
         /// </summary>
         internal double _DistanceToTriangle(Triangle t)
@@ -898,57 +917,146 @@ namespace GeometRi
             double tmp;
             
             tmp = t.DistanceTo(new Segment3d(this._a, this._b));
-            if (tmp == 0)
+            if (tmp <= GeometRi3D.Tolerance)
             {
-                return 0;
+                return tmp;
             }
             else if (tmp < dist)
             {
                 dist = tmp;
             }
             tmp = t.DistanceTo(new Segment3d(this._a, this._c));
-            if (tmp == 0)
+            if (tmp <= GeometRi3D.Tolerance)
             {
-                return 0;
+                return tmp;
             }
             else if (tmp < dist)
             {
                 dist = tmp;
             }
             tmp = t.DistanceTo(new Segment3d(this._b, this._c));
-            if (tmp == 0)
+            if (tmp <= GeometRi3D.Tolerance)
             {
-                return 0;
+                return tmp;
             }
             else if (tmp < dist)
             {
                 dist = tmp;
             }
             tmp = this.DistanceTo(new Segment3d(t._a, t._b));
-            if (tmp == 0)
+            if (tmp <= GeometRi3D.Tolerance)
             {
-                return 0;
+                return tmp;
             }
             else if (tmp < dist)
             {
                 dist = tmp;
             }
             tmp = this.DistanceTo(new Segment3d(t._a, t._c));
-            if (tmp == 0)
+            if (tmp <= GeometRi3D.Tolerance)
             {
-                return 0;
+                return tmp;
             }
             else if (tmp < dist)
             {
                 dist = tmp;
             }
             tmp = this.DistanceTo(new Segment3d(t._b, t._c));
-            if (tmp == 0)
+            if (tmp <= GeometRi3D.Tolerance)
             {
-                return 0;
+                return tmp;
             }
             else if (tmp < dist)
             {
+                dist = tmp;
+            }
+
+            return dist;
+        }
+
+        /// <summary>
+        /// Shortest distance between two triangles (with closest points)
+        /// </summary>
+        internal double _DistanceToTriangle(Triangle t, out Point3d point_on_this_triangle, out Point3d point_on_target_triangle)
+        {
+            double dist = double.PositiveInfinity;
+            double tmp;
+            Point3d point_on_triangle, point_on_segment;
+
+            tmp = t.DistanceTo(new Segment3d(this._a, this._b), out point_on_triangle, out point_on_segment);
+            point_on_this_triangle = point_on_segment;
+            point_on_target_triangle = point_on_triangle;
+            if (tmp <= GeometRi3D.Tolerance)
+            {
+                return tmp;
+            }
+            else if (tmp < dist)
+            {
+                dist = tmp;
+            }
+            tmp = t.DistanceTo(new Segment3d(this._a, this._c), out point_on_triangle, out point_on_segment);
+            if (tmp <= GeometRi3D.Tolerance)
+            {
+                point_on_this_triangle = point_on_segment;
+                point_on_target_triangle = point_on_triangle;
+                return tmp;
+            }
+            else if (tmp < dist)
+            {
+                point_on_this_triangle = point_on_segment;
+                point_on_target_triangle = point_on_triangle;
+                dist = tmp;
+            }
+            tmp = t.DistanceTo(new Segment3d(this._b, this._c), out point_on_triangle, out point_on_segment);
+            if (tmp <= GeometRi3D.Tolerance)
+            {
+                point_on_this_triangle = point_on_segment;
+                point_on_target_triangle = point_on_triangle;
+                return tmp;
+            }
+            else if (tmp < dist)
+            {
+                point_on_this_triangle = point_on_segment;
+                point_on_target_triangle = point_on_triangle;
+                dist = tmp;
+            }
+            tmp = this.DistanceTo(new Segment3d(t._a, t._b), out point_on_triangle, out point_on_segment);
+            if (tmp <= GeometRi3D.Tolerance)
+            {
+                point_on_this_triangle = point_on_triangle;
+                point_on_target_triangle = point_on_segment;
+                return tmp;
+            }
+            else if (tmp < dist)
+            {
+                point_on_this_triangle = point_on_triangle;
+                point_on_target_triangle = point_on_segment;
+                dist = tmp;
+            }
+            tmp = this.DistanceTo(new Segment3d(t._a, t._c), out point_on_triangle, out point_on_segment);
+            if (tmp <= GeometRi3D.Tolerance)
+            {
+                point_on_this_triangle = point_on_triangle;
+                point_on_target_triangle = point_on_segment;
+                return tmp;
+            }
+            else if (tmp < dist)
+            {
+                point_on_this_triangle = point_on_triangle;
+                point_on_target_triangle = point_on_segment;
+                dist = tmp;
+            }
+            tmp = this.DistanceTo(new Segment3d(t._b, t._c), out point_on_triangle, out point_on_segment);
+            if (tmp <= GeometRi3D.Tolerance)
+            {
+                point_on_this_triangle = point_on_triangle;
+                point_on_target_triangle = point_on_segment;
+                return tmp;
+            }
+            else if (tmp < dist)
+            {
+                point_on_this_triangle = point_on_triangle;
+                point_on_target_triangle = point_on_segment;
                 dist = tmp;
             }
 
