@@ -670,6 +670,25 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Shortest distance between triangle and segment (with closest points)
+        /// </summary>
+        public double DistanceTo(Segment3d s, out Point3d point_on_triangle, out Point3d point_on_segment)
+        {
+            double tol = GeometRi3D.Tolerance;
+            bool mode = GeometRi3D.UseAbsoluteTolerance;
+            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
+            GeometRi3D.UseAbsoluteTolerance = true;
+
+            double dist = _DistanceToSegment_with_points(s, out point_on_triangle, out point_on_segment);
+
+            // Restore initial state
+            GeometRi3D.UseAbsoluteTolerance = mode;
+            GeometRi3D.Tolerance = tol;
+
+            return dist;
+        }
+
+        /// <summary>
         /// Shortest distance between triangle and segment
         /// </summary>
         internal double _DistanceToSegment(Segment3d s)
@@ -739,6 +758,117 @@ namespace GeometRi
             return dist;
         }
 
+
+        /// <summary>
+        /// Shortest distance between triangle and segment
+        /// </summary>
+        /// <param name="s">Target segment</param>
+        /// <param name="point_on_triangle">Closest point on triangle</param>
+        /// <param name="point_on_segment">Closest point on segment</param>
+        internal double _DistanceToSegment_with_points(Segment3d s, out Point3d point_on_triangle, out Point3d point_on_segment)
+        {
+            if (s.P1.BelongsTo(this))
+            {
+                point_on_triangle = s.P1;
+                point_on_segment = s.P1;
+                return 0;
+            }
+            if (s.P2.BelongsTo(this))
+            {
+                point_on_triangle = s.P2;
+                point_on_segment = s.P2;
+                return 0;
+            }
+            Plane3d p = this.ToPlane;
+
+            if (s.IsCoplanarTo(p))
+            {
+                double dist1 = s.DistanceTo(new Segment3d(this._a, this._b), out Point3d p1s, out Point3d p1t);
+                double dist2 = s.DistanceTo(new Segment3d(this._a, this._c), out Point3d p2s, out Point3d p2t);
+                double dist3 = s.DistanceTo(new Segment3d(this._c, this._b), out Point3d p3s, out Point3d p3t);
+                if (dist1 < dist2)
+                {
+                    if (dist1 < dist3)
+                    {
+                        point_on_triangle = p1t;
+                        point_on_segment = p1s;
+                        return dist1;
+                    }
+                    else if (dist2 < dist3)
+                    {
+                        point_on_triangle = p2t;
+                        point_on_segment = p2s;
+                        return dist2;
+                    }
+                    else
+                    {
+                        point_on_triangle = p3t;
+                        point_on_segment = p3s;
+                        return dist3;
+                    }
+                }
+            }
+
+            //Segment is not coplanar with triangle's plane, therefore possible intersection is point
+            object obj = s.IntersectionWith(p);
+            if (obj != null && object.ReferenceEquals(obj.GetType(), typeof(Point3d)))
+            {
+                if (((Point3d)obj).BelongsTo(this))
+                {
+                    point_on_triangle = (Point3d)obj;
+                    point_on_segment = (Point3d)obj;
+                    return 0;
+                }
+            }
+
+            double dist = double.PositiveInfinity;
+            point_on_triangle = this.A; // Arbitrary point on triangle
+            point_on_segment = s.P1; // Arbitrary point on segment
+
+            Point3d projection_1 = s.P1.ProjectionTo(p);
+            Point3d projection_2 = s.P2.ProjectionTo(p);
+
+            if (projection_1.BelongsTo(this))
+            {
+                point_on_triangle = projection_1;
+                point_on_segment = s.P1;
+                dist = s.P1.DistanceTo(projection_1);
+            }
+            if (projection_2.BelongsTo(this))
+            {
+                double tmp_dist = s.P2.DistanceTo(projection_2);
+                if (tmp_dist < dist)
+                {
+                    point_on_triangle = projection_2;
+                    point_on_segment = s.P2;
+                    dist = tmp_dist;
+                }
+            }
+
+            double tmp = s.DistanceTo(new Segment3d(this._a, this._b), out Point3d ps, out Point3d pt);
+            if (tmp < dist)
+            {
+                point_on_triangle = pt;
+                point_on_segment = ps;
+                dist = tmp;
+            }
+            tmp = s.DistanceTo(new Segment3d(this._a, this._c), out ps, out pt);
+            if (tmp < dist)
+            {
+                point_on_triangle = pt;
+                point_on_segment = ps;
+                dist = tmp;
+            }
+            tmp = s.DistanceTo(new Segment3d(this._b, this._c), out ps, out pt);
+            if (tmp < dist)
+            {
+                point_on_triangle = pt;
+                point_on_segment = ps;
+                dist = tmp;
+            }
+
+            return dist;
+        }
 
         /// <summary>
         /// Shortest distance between two triangles
