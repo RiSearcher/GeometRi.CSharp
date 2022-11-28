@@ -37,6 +37,19 @@ namespace GeometRi
             vertices[2] = v3;
             vertices[3] = v4;
         }
+
+        /// <summary>
+        /// Random tetrahedron in unit cube.
+        /// </summary>
+        static public Tetrahedron Random()
+        {
+            Random rnd = new Random(Guid.NewGuid().GetHashCode());
+            Point3d p1 = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
+            Point3d p2 = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
+            Point3d p3 = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
+            Point3d p4 = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
+            return new Tetrahedron(p1, p2, p3, p4);
+        }
         #endregion
 
         /// <summary>
