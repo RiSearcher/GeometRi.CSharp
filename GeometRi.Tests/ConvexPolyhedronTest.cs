@@ -69,5 +69,22 @@ namespace GeometRi_Tests
             }
 
         }
+
+        [TestMethod]
+        public void BoxIntersectionTest()
+        {
+            Box3d b = new Box3d();
+            Tetrahedron t = new Tetrahedron();
+
+            ConvexPolyhedron cb = ConvexPolyhedron.FromBox(b);
+            ConvexPolyhedron ct = ConvexPolyhedron.FromTetrahedron(t);
+            Assert.IsTrue(ct.Intersects(cb));
+
+            cb = cb.Translate(new Vector3d(1, 0, 0));
+            Assert.IsTrue(ct.Intersects(cb));
+
+            cb = cb.Translate(new Vector3d(1, 0, 0));
+            Assert.IsFalse(ct.Intersects(cb));
+        }
     }
 }

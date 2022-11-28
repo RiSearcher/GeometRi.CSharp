@@ -480,6 +480,15 @@ namespace GeometRi
             return true;
         }
 
+        /// <summary>
+        /// Check if polyhedron intersects box.
+        /// </summary>
+        public bool Intersects(Box3d box)
+        {
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            return this.Intersects(cp);
+        }
+
 
         #endregion
 
