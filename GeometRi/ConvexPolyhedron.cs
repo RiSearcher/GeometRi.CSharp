@@ -115,6 +115,52 @@ namespace GeometRi
 
             return new ConvexPolyhedron(4, 6, 4, vertices, edges, faces);
         }
+
+        public static ConvexPolyhedron FromBox(Box3d box)
+        {
+            Point3d[] vertices = new Point3d[8];
+            vertices[0] = box.P1.Copy();
+            vertices[1] = box.P2.Copy();
+            vertices[2] = box.P3.Copy();
+            vertices[3] = box.P4.Copy();
+            vertices[4] = box.P5.Copy();
+            vertices[5] = box.P6.Copy();
+            vertices[6] = box.P7.Copy();
+            vertices[7] = box.P8.Copy();
+
+            Edge[] edges = new Edge[12];
+            edges[0] = new Edge(vertices[0], vertices[1]);
+            edges[1] = new Edge(vertices[1], vertices[2]);
+            edges[2] = new Edge(vertices[2], vertices[3]);
+            edges[3] = new Edge(vertices[3], vertices[0]);
+            
+            edges[4] = new Edge(vertices[4], vertices[5]);
+            edges[5] = new Edge(vertices[5], vertices[6]);
+            edges[6] = new Edge(vertices[6], vertices[7]);
+            edges[7] = new Edge(vertices[7], vertices[4]);
+            
+            edges[8] = new Edge(vertices[0], vertices[4]);
+            edges[9] = new Edge(vertices[1], vertices[5]);
+            edges[10] = new Edge(vertices[2], vertices[6]);
+            edges[11] = new Edge(vertices[3], vertices[7]);
+
+            Face[] faces = new Face[6];
+            faces[0] = new Face(4, new Point3d[] { vertices[0], vertices[3], vertices[2], vertices[1] },
+                                -box.V3);
+            faces[1] = new Face(4, new Point3d[] { vertices[4], vertices[5], vertices[6], vertices[7] },
+                                box.V3);
+            faces[2] = new Face(4, new Point3d[] { vertices[0], vertices[1], vertices[5], vertices[4] },
+                                -box.V2);
+            faces[3] = new Face(4, new Point3d[] { vertices[2], vertices[3], vertices[7], vertices[6] },
+                                box.V2);
+            faces[4] = new Face(4, new Point3d[] { vertices[1], vertices[2], vertices[6], vertices[5] },
+                                box.V1);
+            faces[5] = new Face(4, new Point3d[] { vertices[0], vertices[4], vertices[7], vertices[3] },
+                                -box.V1);
+
+            return new ConvexPolyhedron(8, 12, 6, vertices, edges, faces);
+        }
+
         #endregion
 
         #region "Properties"
@@ -525,6 +571,66 @@ namespace GeometRi
             for (int i = 0; i < vertex.Length; i++)
             {
                 Point3d tmp = m * (vertex[i] - p) + p;
+                dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
+                vertex[i] = tmp;
+            }
+
+            for (int i = 0; i < edge.Length; i++)
+            {
+                edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
+            }
+            for (int i = 0; i < face.Length; i++)
+            {
+                face[i].normal = m * face[i].normal;
+                for (int j = 0; j < face[i].vertex.Length; j++)
+                {
+                    face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Scale polyhedron relative center point
+        /// </summary>
+        public virtual ConvexPolyhedron Scale(double scale)
+        {
+            Point3d center = this.Center;
+            Dictionary<Int32, Point3d> dict = new Dictionary<Int32, Point3d>();
+
+            for (int i = 0; i < vertex.Length; i++)
+            {
+                Point3d tmp = center + scale * (vertex[i] - center);
+                dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
+                vertex[i] = tmp;
+            }
+
+            for (int i = 0; i < edge.Length; i++)
+            {
+                edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
+            }
+            for (int i = 0; i < face.Length; i++)
+            {
+                for (int j = 0; j < face[i].vertex.Length; j++)
+                {
+                    face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Scale tetrahedron
+        /// </summary>
+        public virtual ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z)
+        {
+            Point3d center = this.Center;
+            Matrix3d m = Matrix3d.DiagonalMatrix(scale_x, scale_y, scale_z);
+            Dictionary<Int32, Point3d> dict = new Dictionary<Int32, Point3d>();
+
+            for (int i = 0; i < vertex.Length; i++)
+            {
+                Point3d tmp = center.Translate(m * (vertex[0] - center).ToVector);
                 dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
                 vertex[i] = tmp;
             }
