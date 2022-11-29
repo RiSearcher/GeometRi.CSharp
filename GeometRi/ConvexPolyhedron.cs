@@ -634,6 +634,7 @@ namespace GeometRi
             for (int i = 0; i < edge.Length; i++)
             {
                 edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
+                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
             }
             for (int i = 0; i < face.Length; i++)
             {
@@ -665,6 +666,7 @@ namespace GeometRi
             for (int i = 0; i < edge.Length; i++)
             {
                 edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
+                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
             }
             for (int i = 0; i < face.Length; i++)
             {
@@ -696,6 +698,7 @@ namespace GeometRi
             for (int i = 0; i < edge.Length; i++)
             {
                 edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
+                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
             }
             for (int i = 0; i < face.Length; i++)
             {
@@ -727,6 +730,7 @@ namespace GeometRi
             for (int i = 0; i < edge.Length; i++)
             {
                 edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
+                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
             }
             for (int i = 0; i < face.Length; i++)
             {
