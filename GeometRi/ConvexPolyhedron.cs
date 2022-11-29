@@ -265,9 +265,14 @@ namespace GeometRi
             for (int i = 0; i < edge.Length; i++)
             {
                 edge_copy[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
+                edge_copy[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
             }
             for (int i = 0; i < face.Length; i++)
             {
+                face_copy[i].normal = face[i].normal;
+                face_copy[i].numVertices = face[i].numVertices;
+                face_copy[i].vertex = new Point3d[face[i].vertex.Length];
+                
                 for (int j = 0; j < face[i].vertex.Length; j++)
                 {
                     face_copy[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];

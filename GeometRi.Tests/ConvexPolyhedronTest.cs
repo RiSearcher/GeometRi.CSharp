@@ -141,5 +141,14 @@ namespace GeometRi_Tests
             cb = cb.Translate(new Vector3d(1, 0, 0));
             Assert.IsFalse(ct.Intersects(cb));
         }
+
+        [TestMethod]
+        public void CopyTest()
+        {
+            Tetrahedron t = new Tetrahedron();
+            ConvexPolyhedron ct = ConvexPolyhedron.FromTetrahedron(t);
+            ConvexPolyhedron copy = ct.Copy();
+            Assert.AreEqual(ct.Volume, copy.Volume);
+        }
     }
 }
