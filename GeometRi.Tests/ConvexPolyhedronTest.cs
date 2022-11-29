@@ -71,6 +71,61 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
+        public void TetrahedronDistanceTest()
+        {
+            int count = 200;
+
+            // Likely intersecting tetrahedrones
+            for (int i = 0; i < count; i++)
+            {
+                Tetrahedron t1 = Tetrahedron.Random();
+                Tetrahedron t2 = Tetrahedron.Random();
+                // Exclude close to degenerate tetrahednones
+                if (t1.Volume > 0.1 && t2.Volume > 0.1)
+                {
+                    ConvexPolyhedron c1 = ConvexPolyhedron.FromTetrahedron(t1);
+                    ConvexPolyhedron c2 = ConvexPolyhedron.FromTetrahedron(t2);
+                    double dist1 = t1.DistanceTo(t2);
+                    double dist2 = c1.DistanceTo(c2);
+                    Assert.IsTrue(Abs(dist1-dist2) < 1e-10);
+                }
+            }
+
+            // Close non-intersecting tetrahedrones
+            for (int i = 0; i < count; i++)
+            {
+                Tetrahedron t1 = Tetrahedron.Random();
+                Tetrahedron t2 = Tetrahedron.Random().Translate(new Vector3d(1, 0, 0));
+                // Exclude close to degenerate tetrahednones
+                if (t1.Volume > 0.05 && t2.Volume > 0.05)
+                {
+                    ConvexPolyhedron c1 = ConvexPolyhedron.FromTetrahedron(t1);
+                    ConvexPolyhedron c2 = ConvexPolyhedron.FromTetrahedron(t2);
+                    double dist1 = t1.DistanceTo(t2);
+                    double dist2 = c1.DistanceTo(c2);
+                    Assert.IsTrue(Abs(dist1 - dist2) < 1e-10);
+                }
+            }
+
+            // Far non-intersecting tetrahedrones
+            for (int i = 0; i < count; i++)
+            {
+                Tetrahedron t1 = Tetrahedron.Random();
+                Tetrahedron t2 = Tetrahedron.Random().Translate(new Vector3d(10, 0, 0));
+                // Exclude close to degenerate tetrahednones
+                if (t1.Volume > 0.05 && t2.Volume > 0.05)
+                {
+                    ConvexPolyhedron c1 = ConvexPolyhedron.FromTetrahedron(t1);
+                    ConvexPolyhedron c2 = ConvexPolyhedron.FromTetrahedron(t2);
+                    double dist1 = t1.DistanceTo(t2);
+                    double dist2 = c1.DistanceTo(c2);
+                    Assert.IsTrue(Abs(dist1 - dist2) < 1e-10);
+                }
+            }
+
+        }
+
+        [TestMethod]
         public void BoxIntersectionTest()
         {
             Box3d b = new Box3d();

@@ -57,6 +57,7 @@ namespace GeometRi
         public Face[] face;
 
         private Box3d _aabb = null;
+        private List<Segment3d> _list_e = null;
 
         #region "Constructors"
 
@@ -218,6 +219,30 @@ namespace GeometRi
                 return area;
             }
         }
+
+        /// <summary>
+        /// List of edges forming the polyhedron
+        /// </summary>
+        public List<Segment3d> ListOfEdges
+        {
+            get
+            {
+                if (_list_e == null)
+                {
+                    _list_e = new List<Segment3d> { };
+                    foreach (Edge e in edge)
+                    {
+                        _list_e.Add(new Segment3d(e.p1, e.p2));
+                    }
+                    return _list_e;
+                }
+                else
+                {
+                    return _list_e;
+                }
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -320,6 +345,57 @@ namespace GeometRi
                     {
                         dist = tmp_dist;
                     }
+                }
+
+            }
+            return dist;
+        }
+
+
+        /// <summary>
+        /// Distance between two polyhedrons
+        /// </summary>
+        public double DistanceTo(ConvexPolyhedron cp)
+        {
+            Point3d c1 = this.Center;
+            Point3d c2 = cp.Center;
+
+            double dist = double.PositiveInfinity;
+
+            for (int i = 0; i < numFaces; i++)
+            {
+                // test only visible faces
+                if (face[i].normal * new Vector3d(face[i].vertex[0], c2) < 0)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < face[i].vertex.Length - 2; j++)
+                {
+                    Triangle t1 = new Triangle(face[i].vertex[0], face[i].vertex[j + 1], face[i].vertex[j + 2]);
+
+
+                    for (int k = 0; k < cp.numFaces; k++)
+                    {
+                        // test only visible faces
+                        if (cp.face[k].normal * new Vector3d(cp.face[k].vertex[0], c1) < 0)
+                        {
+                            continue;
+                        }
+
+                        for (int l = 0; l < face[k].vertex.Length - 2; l++)
+                        {
+                            Triangle t2 = new Triangle(cp.face[k].vertex[0], cp.face[k].vertex[l + 1], cp.face[k].vertex[l + 2]);
+
+                            double tmp_dist = t1.DistanceTo(t2);
+                            if (tmp_dist < dist)
+                            {
+                                dist = tmp_dist;
+                            }
+                        }
+
+                    }
+
                 }
 
             }
@@ -566,6 +642,8 @@ namespace GeometRi
                     face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
                 }
             }
+
+            _list_e = null;
             return this;
         }
 
@@ -596,6 +674,7 @@ namespace GeometRi
                     face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
                 }
             }
+            _list_e = null;
             return this;
         }
 
@@ -625,6 +704,7 @@ namespace GeometRi
                     face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
                 }
             }
+            _list_e = null;
             return this;
         }
 
@@ -639,7 +719,7 @@ namespace GeometRi
 
             for (int i = 0; i < vertex.Length; i++)
             {
-                Point3d tmp = center.Translate(m * (vertex[0] - center).ToVector);
+                Point3d tmp = center.Translate(m * (vertex[i] - center).ToVector);
                 dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
                 vertex[i] = tmp;
             }
@@ -656,6 +736,7 @@ namespace GeometRi
                     face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
                 }
             }
+            _list_e = null;
             return this;
         }
 
