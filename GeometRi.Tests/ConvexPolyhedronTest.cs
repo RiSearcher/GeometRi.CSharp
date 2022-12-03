@@ -71,6 +71,44 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
+        public void ConvexPolyhedronIntersectionCheckTest_01()
+        {
+            Box3d box = new Box3d(new Point3d(0.5, 0.5, 0.5), 1, 1, 1);
+
+            Point3d A = new Point3d(0.62055, 1.2952, 0.89845);
+            Point3d B = new Point3d(0.47681, 1.1381, 0.91592);
+            Point3d C = new Point3d(0.60429, 0.96027, 1.0405);
+            Point3d D = new Point3d(0.54816, 1.256, 1.2097);
+            Tetrahedron t = new Tetrahedron(A, B, C, D);
+
+            ConvexPolyhedron cp_box = ConvexPolyhedron.FromBox(box);
+            ConvexPolyhedron cp_t = ConvexPolyhedron.FromTetrahedron(t);
+
+            Assert.IsFalse(cp_t.Intersects(cp_box));
+        }
+
+        [TestMethod]
+        public void ConvexPolyhedronIntersectionCheckTest_02()
+        {
+            Point3d A = new Point3d(0.75189, 0.047671, 0.64089);
+            Point3d B = new Point3d(0.69441, 0.26369, 0.8156);
+            Point3d C = new Point3d(1.0126, 0.26195, 0.71716);
+            Point3d D = new Point3d(0.73275, 0.41057, 0.61468);
+            Tetrahedron t1 = new Tetrahedron(A, B, C, D);
+
+            A = new Point3d(0.91294, 0.095756, 0.74814);
+            B = new Point3d(0.95606, 0.28099, 1.0639);
+            C = new Point3d(1.2819, 0.22197, 0.84984);
+            D = new Point3d(0.9913, 0.4657, 0.74708);
+            Tetrahedron t2 = new Tetrahedron(A, B, C, D);
+
+            ConvexPolyhedron cp_t1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp_t2 = ConvexPolyhedron.FromTetrahedron(t2);
+
+            Assert.IsFalse(cp_t1.Intersects(cp_t2));
+        }
+
+        [TestMethod]
         public void TetrahedronDistanceTest()
         {
             int count = 200;

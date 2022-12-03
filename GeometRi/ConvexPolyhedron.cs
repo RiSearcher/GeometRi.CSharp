@@ -490,7 +490,7 @@ namespace GeometRi
                     Vector3d D1 = new Vector3d(c.edge[j].p1, c.edge[j].p2);
                     Vector3d N = D0.Cross(D1);
 
-                    if (N.X != 0 && N.Y != 0 && N.Z != 0)
+                    if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
                         int side0 = WhichSide(this.vertex, P, N);
                         if (side0 == 0)
