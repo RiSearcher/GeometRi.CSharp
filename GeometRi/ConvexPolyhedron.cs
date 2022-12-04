@@ -723,6 +723,7 @@ namespace GeometRi
         {
             Point3d center = this.Center;
             Matrix3d m = Matrix3d.DiagonalMatrix(scale_x, scale_y, scale_z);
+            Matrix3d m_1 = Matrix3d.DiagonalMatrix(1.0 / scale_x, 1.0 / scale_y, 1.0 / scale_z);
             Dictionary<Int32, Point3d> dict = new Dictionary<Int32, Point3d>();
 
             for (int i = 0; i < vertex.Length; i++)
@@ -739,7 +740,7 @@ namespace GeometRi
             }
             for (int i = 0; i < face.Length; i++)
             {
-                face[i].normal = m * face[i].normal;
+                face[i].normal = (Vector3d)(m_1 * face[i].normal).Normalized;
                 for (int j = 0; j < face[i].vertex.Length; j++)
                 {
                     face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];

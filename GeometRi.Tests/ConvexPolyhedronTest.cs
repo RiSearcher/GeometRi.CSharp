@@ -109,6 +109,48 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
+        public void ConvexPolyhedronIntersectionCheckTest_03()
+        {
+            Point3d A = new Point3d(0.051634, 0.391, 0.75902);
+            Point3d B = new Point3d(0.056938, 0.50361, 0.89111);
+            Point3d C = new Point3d(0.27042, 0.38715, 0.89053);
+            Point3d D = new Point3d(0.27694, 0.50134, 0.76028);
+            Tetrahedron t1 = new Tetrahedron(A, B, C, D);
+
+            A = new Point3d(-0.074466, 0.46362, 1.1418);
+            B = new Point3d(0.13639, 0.66447, 0.99967);
+            C = new Point3d(0.06711, 0.44386, 0.77189);
+            D = new Point3d(-0.19346, 0.62704, 0.84602);
+            Tetrahedron t2 = new Tetrahedron(A, B, C, D);
+
+            ConvexPolyhedron cp_t1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp_t2 = ConvexPolyhedron.FromTetrahedron(t2);
+
+            Assert.IsTrue(cp_t1.Intersects(cp_t2));
+        }
+
+        [TestMethod]
+        public void ConvexPolyhedronIntersectionCheckTest_04()
+        {
+            Point3d A = new Point3d(0.251097013104677, 0.546703145796848, 0.495434613743138);
+            Point3d B = new Point3d(0.291709439728301, 0.578882461419393, 0.650931851386847);
+            Point3d C = new Point3d(0.128566597389787, 0.440248968316735, 0.605189321180178);
+            Point3d D = new Point3d(0.350216056201755, 0.391985311884308, 0.582693942204766);
+            Tetrahedron t1 = new Tetrahedron(A, B, C, D);
+
+            A = new Point3d(0.121116388215459, 0.361753267278295, 0.898825185911191);
+            B = new Point3d(-0.00140768874670161, 0.573928160961876, 0.666186244206548);
+            C = new Point3d(0.175804665188155, 0.740808551308965, 0.844898958033819);
+            D = new Point3d(0.222857195023536, 0.471956639099317, 0.598778318291477);
+            Tetrahedron t2 = new Tetrahedron(A, B, C, D);
+
+            ConvexPolyhedron cp_t1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp_t2 = ConvexPolyhedron.FromTetrahedron(t2);
+
+            Assert.IsTrue(cp_t1.Intersects(cp_t2));
+        }
+
+        [TestMethod]
         public void TetrahedronDistanceTest()
         {
             int count = 200;
