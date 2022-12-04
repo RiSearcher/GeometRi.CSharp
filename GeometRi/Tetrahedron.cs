@@ -50,6 +50,18 @@ namespace GeometRi
             Point3d p4 = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
             return new Tetrahedron(p1, p2, p3, p4);
         }
+
+        static public Tetrahedron FromConvexPolyhedron(ConvexPolyhedron cp)
+        {
+            if (cp.numVertices == 4 && cp.numFaces == 4 && cp.numEdges == 6)
+            {
+                return new Tetrahedron(cp.vertex[0], cp.vertex[1], cp.vertex[2], cp.vertex[3]);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
         #endregion
 
         /// <summary>
@@ -689,9 +701,17 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// String representation of an object in global coordinate system.
+        /// </summary>
+        public string ToString(bool full_precision = false)
+        {
+            return ToString(Coord3d.GlobalCS, full_precision);
+        }
+
+        /// <summary>
         /// String representation of an object in reference coordinate system.
         /// </summary>
-        public string ToString(Coord3d coord)
+        public string ToString(Coord3d coord, bool full_precision = false)
         {
             string nl = System.Environment.NewLine;
 
@@ -702,10 +722,21 @@ namespace GeometRi
             Point3d p4 = vertices[3].ConvertTo(coord);
 
             string str = string.Format("Tetrahedron (reference coord.sys. ") + coord.Name + "):" + nl;
-            str += string.Format("A -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p1.X, p1.Y, p1.Z) + nl;
-            str += string.Format("B -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p2.X, p2.Y, p2.Z) + nl;
-            str += string.Format("C -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p3.X, p3.Y, p3.Z) + nl;
-            str += string.Format("D -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p4.X, p4.Y, p4.Z);
+            if (full_precision)
+            {
+                str += string.Format("A -> ({0}, {1}, {2})", p1.X, p1.Y, p1.Z) + nl;
+                str += string.Format("B -> ({0}, {1}, {2})", p2.X, p2.Y, p2.Z) + nl;
+                str += string.Format("C -> ({0}, {1}, {2})", p3.X, p3.Y, p3.Z) + nl;
+                str += string.Format("D -> ({0}, {1}, {2})", p4.X, p4.Y, p4.Z);
+            }
+            else
+            {
+                str += string.Format("A -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p1.X, p1.Y, p1.Z) + nl;
+                str += string.Format("B -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p2.X, p2.Y, p2.Z) + nl;
+                str += string.Format("C -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p3.X, p3.Y, p3.Z) + nl;
+                str += string.Format("D -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p4.X, p4.Y, p4.Z);
+            }
+
             return str;
         }
 
