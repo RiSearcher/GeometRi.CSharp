@@ -162,6 +162,61 @@ namespace GeometRi
             return new ConvexPolyhedron(8, 12, 6, vertices, edges, faces);
         }
 
+        /// <summary>
+        /// Creates regular octahedron centered at origin with vertices:
+        /// <para>(±1,  0,  0)</para>
+        /// <para>( 0, ±1,  0)</para>
+        /// <para>( 0,  0, ±1)</para>
+        /// </summary>
+        public static ConvexPolyhedron Octahedron()
+        {
+            Point3d[] vertices = new Point3d[8];
+            vertices[0] = new Point3d(1, 0, 0);
+            vertices[1] = new Point3d(-1, 0, 0);
+            vertices[2] = new Point3d(0, 1, 0);
+            vertices[3] = new Point3d(0, -1, 0);
+            vertices[4] = new Point3d(0, 0, 1);
+            vertices[5] = new Point3d(0, 0, -1);
+
+            Edge[] edges = new Edge[12];
+            edges[0] = new Edge(vertices[0], vertices[2]);
+            edges[1] = new Edge(vertices[2], vertices[1]);
+            edges[2] = new Edge(vertices[1], vertices[3]);
+            edges[3] = new Edge(vertices[3], vertices[0]);
+
+            edges[4] = new Edge(vertices[0], vertices[4]);
+            edges[5] = new Edge(vertices[2], vertices[4]);
+            edges[6] = new Edge(vertices[1], vertices[4]);
+            edges[7] = new Edge(vertices[3], vertices[4]);
+
+            edges[8] = new Edge(vertices[0], vertices[5]);
+            edges[9] = new Edge(vertices[2], vertices[5]);
+            edges[10] = new Edge(vertices[1], vertices[5]);
+            edges[11] = new Edge(vertices[3], vertices[5]);
+
+            Face[] faces = new Face[8];
+            faces[0] = new Face(3, new Point3d[] { vertices[0], vertices[2], vertices[4] },
+                                new Vector3d(vertices[0], vertices[2]).Cross(new Vector3d(vertices[0], vertices[4])).Normalized);
+            faces[1] = new Face(3, new Point3d[] { vertices[2], vertices[1], vertices[4] },
+                                new Vector3d(vertices[2], vertices[1]).Cross(new Vector3d(vertices[2], vertices[4])).Normalized);
+            faces[2] = new Face(3, new Point3d[] { vertices[1], vertices[3], vertices[4] },
+                                new Vector3d(vertices[1], vertices[3]).Cross(new Vector3d(vertices[1], vertices[4])).Normalized);
+            faces[3] = new Face(3, new Point3d[] { vertices[3], vertices[0], vertices[4] },
+                                new Vector3d(vertices[3], vertices[0]).Cross(new Vector3d(vertices[3], vertices[4])).Normalized);
+            faces[4] = new Face(3, new Point3d[] { vertices[0], vertices[3], vertices[5] },
+                                new Vector3d(vertices[0], vertices[3]).Cross(new Vector3d(vertices[0], vertices[5])).Normalized);
+            faces[5] = new Face(3, new Point3d[] { vertices[3], vertices[1], vertices[5] },
+                                new Vector3d(vertices[2], vertices[0]).Cross(new Vector3d(vertices[2], vertices[5])).Normalized);
+            faces[6] = new Face(3, new Point3d[] { vertices[1], vertices[2], vertices[5] },
+                                new Vector3d(vertices[1], vertices[2]).Cross(new Vector3d(vertices[1], vertices[5])).Normalized);
+            faces[7] = new Face(3, new Point3d[] { vertices[2], vertices[0], vertices[5] },
+                                new Vector3d(vertices[3], vertices[1]).Cross(new Vector3d(vertices[3], vertices[5])).Normalized);
+
+            return new ConvexPolyhedron(6, 12, 8, vertices, edges, faces);
+        }
+
+
+
         #endregion
 
         #region "Properties"
