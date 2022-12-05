@@ -235,6 +235,18 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
+        public void IcosahedronIntersectionCheckTest_03()
+        {
+
+            ConvexPolyhedron cp1 = ConvexPolyhedron.Icosahedron();
+            ConvexPolyhedron cp2 = ConvexPolyhedron.Icosahedron();
+
+            cp1 = cp1.Translate(new Vector3d(1.5, 0, 0));
+
+            Assert.IsTrue(cp1.Intersects(cp2));
+        }
+
+        [TestMethod]
         public void CopyTest()
         {
             Tetrahedron t = new Tetrahedron();
