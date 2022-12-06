@@ -247,6 +247,20 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
+        public void DodecaahedronIntersectionCheckTest_03()
+        {
+
+            ConvexPolyhedron cp1 = ConvexPolyhedron.Dodecahedron();
+            ConvexPolyhedron cp2 = ConvexPolyhedron.Dodecahedron();
+
+            cp2 = cp2.Translate(new Vector3d(1.5, 0, 0));
+            Assert.IsTrue(cp1.Intersects(cp2));
+
+            cp2 = cp2.Translate(new Vector3d(1.5, 0, 0));
+            Assert.IsTrue(cp1.Intersects(cp2));
+        }
+
+        [TestMethod]
         public void CopyTest()
         {
             Tetrahedron t = new Tetrahedron();
