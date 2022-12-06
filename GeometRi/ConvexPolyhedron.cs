@@ -943,6 +943,7 @@ namespace GeometRi
             }
 
             _list_e = null;
+            _aabb = null;
             return this;
         }
 
@@ -975,6 +976,7 @@ namespace GeometRi
                 }
             }
             _list_e = null;
+            _aabb = null;
             return this;
         }
 
@@ -1006,6 +1008,7 @@ namespace GeometRi
                 }
             }
             _list_e = null;
+            _aabb = null;
             return this;
         }
 
@@ -1040,6 +1043,7 @@ namespace GeometRi
                 }
             }
             _list_e = null;
+            _aabb = null;
             return this;
         }
 
