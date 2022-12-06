@@ -311,6 +311,95 @@ namespace GeometRi
             return new ConvexPolyhedron(12, 30, 20, vertices, edges, faces);
         }
 
+        /// <summary>
+        /// Creates regular dodecahedron centered at origin with vertices:
+        /// <para>(±1, ±1, ±1)</para>
+        /// <para>( 0, ±φ, ±1/φ)</para>
+        /// <para>(±φ, ±1/φ,  0)</para> 
+        /// <para>(±1/φ,  0, ±φ)</para>
+        /// <para>with 'f' equal to golden ratio (1+Sqrt(5))/2</para>
+        /// </summary>
+        public static ConvexPolyhedron Dodecahedron()
+        {
+            double f = (1 + Math.Sqrt(5)) / 2;
+
+            Point3d[] vertices = new Point3d[20];
+            vertices[0] = new Point3d(-1, 1, 1);
+            vertices[1] = new Point3d(-1, -1, 1);
+            vertices[2] = new Point3d(1, -1, 1);
+            vertices[3] = new Point3d(1, 1, 1);
+            vertices[4] = new Point3d(-1, 1, -1);
+            vertices[5] = new Point3d(-1, -1, -1);
+            vertices[6] = new Point3d(1, -1, -1);
+            vertices[7] = new Point3d(1, 1, -1);
+
+            vertices[8] = new Point3d(0, f, 1 / f);
+            vertices[9] = new Point3d(0, -f, 1 / f);
+            vertices[10] = new Point3d(0, f, -1 / f);
+            vertices[11] = new Point3d(0, -f, -1 / f);
+
+            vertices[12] = new Point3d(f, 1 / f, 0);
+            vertices[13] = new Point3d(f, -1 / f, 0);
+            vertices[14] = new Point3d(-f, 1 / f, 0);
+            vertices[15] = new Point3d(-f, -1 / f, 0);
+
+            vertices[16] = new Point3d(1 / f, 0, f);
+            vertices[17] = new Point3d(-1 / f, 0, f);
+            vertices[18] = new Point3d(1 / f, 0, -f);
+            vertices[19] = new Point3d(-1 / f, 0, -f);
+
+            Edge[] edges = new Edge[30];
+            edges[0] = new Edge(vertices[0], vertices[8]);
+            edges[1] = new Edge(vertices[0], vertices[14]);
+            edges[2] = new Edge(vertices[0], vertices[17]);
+            edges[3] = new Edge(vertices[1], vertices[9]);
+            edges[4] = new Edge(vertices[1], vertices[15]);
+            edges[5] = new Edge(vertices[1], vertices[17]);
+            edges[6] = new Edge(vertices[2], vertices[9]);
+            edges[7] = new Edge(vertices[2], vertices[13]);
+            edges[8] = new Edge(vertices[2], vertices[16]);
+            edges[9] = new Edge(vertices[3], vertices[8]);
+            edges[10] = new Edge(vertices[3], vertices[12]);
+            edges[11] = new Edge(vertices[3], vertices[16]);
+
+            edges[12] = new Edge(vertices[4], vertices[10]);
+            edges[13] = new Edge(vertices[4], vertices[14]);
+            edges[14] = new Edge(vertices[4], vertices[19]);
+            edges[15] = new Edge(vertices[5], vertices[11]);
+            edges[16] = new Edge(vertices[5], vertices[15]);
+            edges[17] = new Edge(vertices[5], vertices[19]);
+            edges[18] = new Edge(vertices[6], vertices[11]);
+            edges[19] = new Edge(vertices[6], vertices[13]);
+            edges[20] = new Edge(vertices[6], vertices[18]);
+            edges[21] = new Edge(vertices[7], vertices[10]);
+            edges[22] = new Edge(vertices[7], vertices[12]);
+            edges[23] = new Edge(vertices[7], vertices[18]);
+
+            edges[24] = new Edge(vertices[8], vertices[10]);
+            edges[25] = new Edge(vertices[9], vertices[11]);
+            edges[26] = new Edge(vertices[12], vertices[13]);
+            edges[27] = new Edge(vertices[14], vertices[15]);
+            edges[28] = new Edge(vertices[16], vertices[17]);
+            edges[29] = new Edge(vertices[18], vertices[19]);
+
+            Face[] faces = new Face[12];
+            faces[0] = new Face(5, new Point3d[] { vertices[0], vertices[14], vertices[15], vertices[1], vertices[17] });
+            faces[1] = new Face(5, new Point3d[] { vertices[1], vertices[15], vertices[5], vertices[11], vertices[9] });
+            faces[2] = new Face(5, new Point3d[] { vertices[1], vertices[9], vertices[2], vertices[16], vertices[17] });
+            faces[3] = new Face(5, new Point3d[] { vertices[2], vertices[9], vertices[11], vertices[6], vertices[13] });
+
+            faces[4] = new Face(5, new Point3d[] { vertices[0], vertices[17], vertices[16], vertices[3], vertices[8] });
+            faces[5] = new Face(5, new Point3d[] { vertices[2], vertices[13], vertices[12], vertices[3], vertices[16] });
+            faces[6] = new Face(5, new Point3d[] { vertices[0], vertices[8], vertices[10], vertices[4], vertices[14] });
+            faces[7] = new Face(5, new Point3d[] { vertices[3], vertices[12], vertices[7], vertices[10], vertices[8] });
+            faces[8] = new Face(5, new Point3d[] { vertices[4], vertices[10], vertices[7], vertices[18], vertices[19] });
+            faces[9] = new Face(5, new Point3d[] { vertices[4], vertices[19], vertices[5], vertices[15], vertices[14] });
+            faces[10] = new Face(5, new Point3d[] { vertices[6], vertices[18], vertices[7], vertices[12], vertices[13] });
+            faces[11] = new Face(5, new Point3d[] { vertices[5], vertices[19], vertices[18], vertices[6], vertices[11] });
+
+
+            return new ConvexPolyhedron(20, 30, 12, vertices, edges, faces);
+        }
 
 
         #endregion
