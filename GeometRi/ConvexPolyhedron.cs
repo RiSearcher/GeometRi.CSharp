@@ -68,7 +68,7 @@ namespace GeometRi
 
         #region "Constructors"
 
-        public ConvexPolyhedron(int numVertices, int numEdges, int numFaces, Point3d[] verices, Edge[] edges, Face[] faces)
+        public ConvexPolyhedron(int numVertices, int numEdges, int numFaces, Point3d[] verices, Edge[] edges, Face[] faces, bool check_face_orientation = false)
         {
             this.numVertices = numVertices;
             this.numEdges = numEdges;
@@ -76,6 +76,11 @@ namespace GeometRi
             this.vertex = verices;
             this.edge = edges;
             this.face = faces;
+
+            if (check_face_orientation)
+            {
+                CheckFaceOrientation();
+            }
         }
 
         public static ConvexPolyhedron FromTetrahedron(Tetrahedron t)
@@ -519,6 +524,29 @@ namespace GeometRi
                 }
             }
             return new ConvexPolyhedron(numVertices, numEdges, numFaces, vertex_copy, edge_copy, face_copy);
+        }
+
+        private void CheckFaceOrientation()
+        {
+            for (int i = 0; i < face.Length; i++)
+            {
+                Vector3d normal = face[i].normal;
+                Vector3d to_center = new Vector3d(face[i].vertex[0], this.Center);
+                if (to_center * normal > 0)
+                {
+                    face[i] = ReverseFace(face[i]);
+                }
+            }
+        }
+
+        private Face ReverseFace(Face face)
+        {
+            Point3d[] points = new Point3d[face.numVertices];
+            for (int j = 0; j < face.numVertices; j++)
+            {
+                points[j] = face.vertex[face.numVertices - j - 1];
+            }
+            return new Face(face.numVertices, points);
         }
 
 
