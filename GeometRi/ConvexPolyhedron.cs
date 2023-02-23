@@ -10,54 +10,6 @@ namespace GeometRi
     /// </summary>
     public class ConvexPolyhedron : FiniteObject, IFiniteObject
     {
-
-        public struct Edge
-        {
-            public Point3d p1, p2;
-            public Edge(Point3d P1, Point3d P2)
-            {
-                p1 = P1;
-                p2 = P2;
-            }
-        }
-
-        public struct Face
-        {
-            public int numVertices;
-            public Point3d[] vertex;
-            public Vector3d normal;
-            public Face(int numVertices, Point3d[] vertex, Vector3d normal)
-            {
-                this.numVertices = numVertices;
-                this.vertex = vertex;
-                this.normal = normal;
-            }
-
-            public Face(int numVertices, Point3d[] vertex)
-            {
-                this.numVertices = numVertices;
-                this.vertex = vertex;
-                this.normal = new Vector3d(vertex[0], vertex[1]).Cross(new Vector3d(vertex[0], vertex[2])).Normalized;
-            }
-
-            public double Area
-            {
-                get
-                {
-                    Vector3d v1, v2;
-                    v1 = new Vector3d(vertex[0], vertex[1]);
-                    double area = 0;
-                    for (int i = 0; i < vertex.Length - 2; i++)
-                    {
-                        v2 = new Vector3d(vertex[0], vertex[i + 2]);
-                        area += v1.Cross(v2).Norm;
-                        v1 = v2;
-                    }
-                    return area / 2;
-                }
-            }
-        }
-
         public int numVertices, numEdges, numFaces;
         public Point3d[] vertex;
         public Edge[] edge;
@@ -65,22 +17,122 @@ namespace GeometRi
 
         private Box3d _aabb = null;
         private List<Segment3d> _list_e = null;
+        public struct Edge
+        {
+            public int p1, p2;
+            internal ConvexPolyhedron parent;
+            public Edge(int P1, int P2)
+            {
+                p1 = P1;
+                p2 = P2;
+                parent = null;
+            }
+
+            public Point3d P1
+            {
+                get
+                {
+                    return parent.vertex[p1];
+                }
+            }
+
+            public Point3d P2
+            {
+                get
+                {
+                    return parent.vertex[p2];
+                }
+            }
+        }
+        public interface IVertex
+        {
+            Point3d this[int index] { get; }
+        }
+
+        public struct Face : IVertex
+        {
+            public int numVertices;
+            public int[] vertex;
+            public Vector3d normal;
+            internal ConvexPolyhedron parent;
+            public Face(int numVertices, int[] vertex)
+            {
+                this.numVertices = numVertices;
+                this.vertex = vertex;
+                parent = null;
+                normal = null;
+            }
+
+            public double Area
+            {
+                get
+                {
+                    Vector3d v1, v2;
+                    v1 = new Vector3d(parent.vertex[vertex[0]], parent.vertex[vertex[1]]);
+                    double area = 0;
+                    for (int i = 0; i < vertex.Length - 2; i++)
+                    {
+                        v2 = new Vector3d(parent.vertex[vertex[0]], parent.vertex[vertex[i + 2]]);
+                        area += v1.Cross(v2).Norm;
+                        v1 = v2;
+                    }
+                    return area / 2;
+                }
+            }
+
+            Point3d IVertex.this[int index]
+            {
+                get
+                {
+                    return parent.vertex[vertex[index]];
+                }
+            }
+            /// <summary>
+            /// Returns a Point3d object for vertex [i]
+            /// </summary>
+            public IVertex Vertex
+            {
+                get
+                {
+                    return this;
+                }
+            }
+
+            internal void UpdateNormal()
+            {
+                normal = new Vector3d(parent.vertex[vertex[0]], parent.vertex[vertex[1]]).Cross(new Vector3d(parent.vertex[vertex[0]], parent.vertex[vertex[2]])).Normalized;
+            }
+        }
+
+
 
         #region "Constructors"
 
-        public ConvexPolyhedron(int numVertices, int numEdges, int numFaces, Point3d[] verices, Edge[] edges, Face[] faces, bool check_face_orientation = false)
+        public ConvexPolyhedron(int numVertices, int numEdges, int numFaces, Point3d[] vertices, Edge[] edges, Face[] faces, bool check_face_orientation = false)
         {
             this.numVertices = numVertices;
             this.numEdges = numEdges;
             this.numFaces = numFaces;
-            this.vertex = verices;
+            this.vertex = vertices;
             this.edge = edges;
             this.face = faces;
+
+            // Initialize fields
+            for (int i = 0; i < edges.Length; i++)
+            {
+                edges[i].parent = this;
+            }
+            for (int i = 0; i < faces.Length; i++)
+            {
+                faces[i].parent = this;
+                faces[i].UpdateNormal();
+            }
 
             if (check_face_orientation)
             {
                 CheckFaceOrientation();
             }
+
         }
 
         public static ConvexPolyhedron FromTetrahedron(Tetrahedron t)
@@ -92,41 +144,23 @@ namespace GeometRi
             vertices[3] = t.D.Copy();
 
             Edge[] edges = new Edge[6];
-            edges[0] = new Edge(vertices[0], vertices[1]);
-            edges[1] = new Edge(vertices[1], vertices[2]);
-            edges[2] = new Edge(vertices[2], vertices[0]);
-            edges[3] = new Edge(vertices[0], vertices[3]);
-            edges[4] = new Edge(vertices[1], vertices[3]);
-            edges[5] = new Edge(vertices[2], vertices[3]);
+            edges[0] = new Edge(0, 1);
+            edges[1] = new Edge(1, 2);
+            edges[2] = new Edge(2, 0);
+            edges[3] = new Edge(0, 3);
+            edges[4] = new Edge(1, 3);
+            edges[5] = new Edge(2, 3);
 
             Face[] faces = new Face[4];
-            faces[0] = new Face(3, new Point3d[] { vertices[0], vertices[1], vertices[2] },
-                                new Vector3d(vertices[0], vertices[1]).Cross(new Vector3d(vertices[1], vertices[2])).Normalized);
-            faces[1] = new Face(3, new Point3d[] { vertices[0], vertices[1], vertices[3] },
-                                new Vector3d(vertices[0], vertices[1]).Cross(new Vector3d(vertices[1], vertices[3])).Normalized);
-            faces[2] = new Face(3, new Point3d[] { vertices[1], vertices[2], vertices[3] },
-                                new Vector3d(vertices[1], vertices[2]).Cross(new Vector3d(vertices[2], vertices[3])).Normalized);
-            faces[3] = new Face(3, new Point3d[] { vertices[2], vertices[0], vertices[3] },
-                                new Vector3d(vertices[2], vertices[0]).Cross(new Vector3d(vertices[0], vertices[3])).Normalized);
+            faces[0] = new Face(3, new int[] { 0, 1, 2 });
+            faces[1] = new Face(3, new int[] { 0, 1, 3 });
+            faces[2] = new Face(3, new int[] { 1, 2, 3 });
+            faces[3] = new Face(3, new int[] { 2, 0, 3 });
 
-            // Check orientation of faces
-            for (int i = 0; i < faces.Length; i++)
-            {
-                foreach (Point3d p in vertices)
-                {
-                    Vector3d v = new Vector3d(faces[i].vertex[0], p);
-                    if (faces[i].normal * v > GeometRi3D.Tolerance)
-                    {
-                        // Reverse face
-                        faces[i].normal = -faces[i].normal;
-                        Point3d tmp = faces[i].vertex[1];
-                        faces[i].vertex[1] = faces[i].vertex[2];
-                        faces[i].vertex[2] = tmp;
-                    }
-                }
-            }
+            ConvexPolyhedron cp = new ConvexPolyhedron(4, 6, 4, vertices, edges, faces);
+            cp.CheckFaceOrientation();
 
-            return new ConvexPolyhedron(4, 6, 4, vertices, edges, faces);
+            return cp;
         }
 
         public static ConvexPolyhedron FromBox(Box3d box)
@@ -142,34 +176,28 @@ namespace GeometRi
             vertices[7] = box.P8.Copy();
 
             Edge[] edges = new Edge[12];
-            edges[0] = new Edge(vertices[0], vertices[1]);
-            edges[1] = new Edge(vertices[1], vertices[2]);
-            edges[2] = new Edge(vertices[2], vertices[3]);
-            edges[3] = new Edge(vertices[3], vertices[0]);
+            edges[0] = new Edge(0, 1);
+            edges[1] = new Edge(1, 2);
+            edges[2] = new Edge(2, 3);
+            edges[3] = new Edge(3, 0);
             
-            edges[4] = new Edge(vertices[4], vertices[5]);
-            edges[5] = new Edge(vertices[5], vertices[6]);
-            edges[6] = new Edge(vertices[6], vertices[7]);
-            edges[7] = new Edge(vertices[7], vertices[4]);
+            edges[4] = new Edge(4, 5);
+            edges[5] = new Edge(5, 6);
+            edges[6] = new Edge(6, 7);
+            edges[7] = new Edge(7, 4);
             
-            edges[8] = new Edge(vertices[0], vertices[4]);
-            edges[9] = new Edge(vertices[1], vertices[5]);
-            edges[10] = new Edge(vertices[2], vertices[6]);
-            edges[11] = new Edge(vertices[3], vertices[7]);
+            edges[8] = new Edge(0, 4);
+            edges[9] = new Edge(1, 5);
+            edges[10] = new Edge(2, 6);
+            edges[11] = new Edge(3, 7);
 
             Face[] faces = new Face[6];
-            faces[0] = new Face(4, new Point3d[] { vertices[0], vertices[3], vertices[2], vertices[1] },
-                                -box.V3);
-            faces[1] = new Face(4, new Point3d[] { vertices[4], vertices[5], vertices[6], vertices[7] },
-                                box.V3);
-            faces[2] = new Face(4, new Point3d[] { vertices[0], vertices[1], vertices[5], vertices[4] },
-                                -box.V2);
-            faces[3] = new Face(4, new Point3d[] { vertices[2], vertices[3], vertices[7], vertices[6] },
-                                box.V2);
-            faces[4] = new Face(4, new Point3d[] { vertices[1], vertices[2], vertices[6], vertices[5] },
-                                box.V1);
-            faces[5] = new Face(4, new Point3d[] { vertices[0], vertices[4], vertices[7], vertices[3] },
-                                -box.V1);
+            faces[0] = new Face(4, new int[] { 0, 3, 2, 1 });
+            faces[1] = new Face(4, new int[] { 4, 5, 6, 7 });
+            faces[2] = new Face(4, new int[] { 0, 1, 5, 4 });
+            faces[3] = new Face(4, new int[] { 2, 3, 7, 6 });
+            faces[4] = new Face(4, new int[] { 1, 2, 6, 5 });
+            faces[5] = new Face(4, new int[] { 0, 4, 7, 3 });
 
             return new ConvexPolyhedron(8, 12, 6, vertices, edges, faces);
         }
@@ -191,30 +219,30 @@ namespace GeometRi
             vertices[5] = new Point3d(0, 0, -1);
 
             Edge[] edges = new Edge[12];
-            edges[0] = new Edge(vertices[0], vertices[2]);
-            edges[1] = new Edge(vertices[2], vertices[1]);
-            edges[2] = new Edge(vertices[1], vertices[3]);
-            edges[3] = new Edge(vertices[3], vertices[0]);
+            edges[0] = new Edge(0, 2);
+            edges[1] = new Edge(2, 1);
+            edges[2] = new Edge(1, 3);
+            edges[3] = new Edge(3, 0);
 
-            edges[4] = new Edge(vertices[0], vertices[4]);
-            edges[5] = new Edge(vertices[2], vertices[4]);
-            edges[6] = new Edge(vertices[1], vertices[4]);
-            edges[7] = new Edge(vertices[3], vertices[4]);
+            edges[4] = new Edge(0, 4);
+            edges[5] = new Edge(2, 4);
+            edges[6] = new Edge(1, 4);
+            edges[7] = new Edge(3, 4);
 
-            edges[8] = new Edge(vertices[0], vertices[5]);
-            edges[9] = new Edge(vertices[2], vertices[5]);
-            edges[10] = new Edge(vertices[1], vertices[5]);
-            edges[11] = new Edge(vertices[3], vertices[5]);
+            edges[8] = new Edge(0, 5);
+            edges[9] = new Edge(2, 5);
+            edges[10] = new Edge(1, 5);
+            edges[11] = new Edge(3, 5);
 
             Face[] faces = new Face[8];
-            faces[0] = new Face(3, new Point3d[] { vertices[0], vertices[2], vertices[4] });
-            faces[1] = new Face(3, new Point3d[] { vertices[2], vertices[1], vertices[4] });
-            faces[2] = new Face(3, new Point3d[] { vertices[1], vertices[3], vertices[4] });
-            faces[3] = new Face(3, new Point3d[] { vertices[3], vertices[0], vertices[4] });
-            faces[4] = new Face(3, new Point3d[] { vertices[0], vertices[3], vertices[5] });
-            faces[5] = new Face(3, new Point3d[] { vertices[3], vertices[1], vertices[5] });
-            faces[6] = new Face(3, new Point3d[] { vertices[1], vertices[2], vertices[5] });
-            faces[7] = new Face(3, new Point3d[] { vertices[2], vertices[0], vertices[5] });
+            faces[0] = new Face(3, new int[] { 0, 2, 4 });
+            faces[1] = new Face(3, new int[] { 2, 1, 4 });
+            faces[2] = new Face(3, new int[] { 1, 3, 4 });
+            faces[3] = new Face(3, new int[] { 3, 0, 4 });
+            faces[4] = new Face(3, new int[] { 0, 3, 5 });
+            faces[5] = new Face(3, new int[] { 3, 1, 5 });
+            faces[6] = new Face(3, new int[] { 1, 2, 5 });
+            faces[7] = new Face(3, new int[] { 2, 0, 5 });
 
             return new ConvexPolyhedron(6, 12, 8, vertices, edges, faces);
         }
@@ -248,70 +276,70 @@ namespace GeometRi
             vertices[11] = new Point3d(-1, 0, -f);
 
             Edge[] edges = new Edge[30];
-            edges[0] = new Edge(vertices[0], vertices[1]);
-            edges[1] = new Edge(vertices[0], vertices[4]);
-            edges[2] = new Edge(vertices[0], vertices[6]);
-            edges[3] = new Edge(vertices[0], vertices[8]);
-            edges[4] = new Edge(vertices[0], vertices[9]);
+            edges[0] = new Edge(0, 1);
+            edges[1] = new Edge(0, 4);
+            edges[2] = new Edge(0, 6);
+            edges[3] = new Edge(0, 8);
+            edges[4] = new Edge(0, 9);
 
-            edges[5] = new Edge(vertices[1], vertices[4]);
-            edges[6] = new Edge(vertices[1], vertices[6]);
-            edges[7] = new Edge(vertices[1], vertices[10]);
-            edges[8] = new Edge(vertices[1], vertices[11]);
+            edges[5] = new Edge(1, 4);
+            edges[6] = new Edge(1, 6);
+            edges[7] = new Edge(1, 10);
+            edges[8] = new Edge(1, 11);
 
-            edges[9] = new Edge(vertices[2], vertices[3]);
-            edges[10] = new Edge(vertices[2], vertices[5]);
-            edges[11] = new Edge(vertices[2], vertices[7]);
-            edges[12] = new Edge(vertices[2], vertices[8]);
-            edges[13] = new Edge(vertices[2], vertices[9]);
+            edges[9] = new Edge(2, 3);
+            edges[10] = new Edge(2, 5);
+            edges[11] = new Edge(2, 7);
+            edges[12] = new Edge(2, 8);
+            edges[13] = new Edge(2, 9);
 
-            edges[14] = new Edge(vertices[3], vertices[5]);
-            edges[15] = new Edge(vertices[3], vertices[7]);
-            edges[16] = new Edge(vertices[3], vertices[10]);
-            edges[17] = new Edge(vertices[3], vertices[11]);
+            edges[14] = new Edge(3, 5);
+            edges[15] = new Edge(3, 7);
+            edges[16] = new Edge(3, 10);
+            edges[17] = new Edge(3, 11);
 
-            edges[18] = new Edge(vertices[4], vertices[5]);
-            edges[19] = new Edge(vertices[4], vertices[8]);
-            edges[20] = new Edge(vertices[4], vertices[10]);
+            edges[18] = new Edge(4, 5);
+            edges[19] = new Edge(4, 8);
+            edges[20] = new Edge(4, 10);
 
-            edges[21] = new Edge(vertices[5], vertices[8]);
-            edges[22] = new Edge(vertices[5], vertices[10]);
+            edges[21] = new Edge(5, 8);
+            edges[22] = new Edge(5, 10);
 
-            edges[23] = new Edge(vertices[6], vertices[7]);
-            edges[24] = new Edge(vertices[6], vertices[9]);
-            edges[25] = new Edge(vertices[6], vertices[11]);
+            edges[23] = new Edge(6, 7);
+            edges[24] = new Edge(6, 9);
+            edges[25] = new Edge(6, 11);
 
-            edges[26] = new Edge(vertices[7], vertices[9]);
-            edges[27] = new Edge(vertices[7], vertices[11]);
+            edges[26] = new Edge(7, 9);
+            edges[27] = new Edge(7, 11);
 
-            edges[28] = new Edge(vertices[8], vertices[9]);
-            edges[29] = new Edge(vertices[10], vertices[11]);
+            edges[28] = new Edge(8, 9);
+            edges[29] = new Edge(10, 11);
 
             Face[] faces = new Face[20];
-            faces[0] = new Face(3, new Point3d[] { vertices[0], vertices[4], vertices[1] });
-            faces[1] = new Face(3, new Point3d[] { vertices[0], vertices[1], vertices[6] });
-            faces[2] = new Face(3, new Point3d[] { vertices[0], vertices[6], vertices[9] });
-            faces[3] = new Face(3, new Point3d[] { vertices[0], vertices[9], vertices[8] });
-            faces[4] = new Face(3, new Point3d[] { vertices[0], vertices[8], vertices[4] });
+            faces[0] = new Face(3, new int[] { 0, 4, 1 });
+            faces[1] = new Face(3, new int[] { 0, 1, 6 });
+            faces[2] = new Face(3, new int[] { 0, 6, 9 });
+            faces[3] = new Face(3, new int[] { 0, 9, 8 });
+            faces[4] = new Face(3, new int[] { 0, 8, 4 });
 
-            faces[5] = new Face(3, new Point3d[] { vertices[1], vertices[4], vertices[10] });
-            faces[6] = new Face(3, new Point3d[] { vertices[1], vertices[10], vertices[11] });
-            faces[7] = new Face(3, new Point3d[] { vertices[1], vertices[11], vertices[6] });
+            faces[5] = new Face(3, new int[] { 1, 4, 10 });
+            faces[6] = new Face(3, new int[] { 1, 10, 11 });
+            faces[7] = new Face(3, new int[] { 1, 11, 6 });
 
-            faces[8] = new Face(3, new Point3d[] { vertices[2], vertices[3], vertices[5] });
-            faces[9] = new Face(3, new Point3d[] { vertices[2], vertices[5], vertices[8] });
-            faces[10] = new Face(3, new Point3d[] { vertices[2], vertices[8], vertices[9] });
-            faces[11] = new Face(3, new Point3d[] { vertices[2], vertices[9], vertices[7] });
-            faces[12] = new Face(3, new Point3d[] { vertices[2], vertices[7], vertices[3] });
+            faces[8] = new Face(3, new int[] { 2, 3, 5 });
+            faces[9] = new Face(3, new int[] { 2, 5, 8 });
+            faces[10] = new Face(3, new int[] { 2, 8, 9 });
+            faces[11] = new Face(3, new int[] { 2, 9, 7 });
+            faces[12] = new Face(3, new int[] { 2, 7, 3 });
 
-            faces[13] = new Face(3, new Point3d[] { vertices[3], vertices[10], vertices[5] });
-            faces[14] = new Face(3, new Point3d[] { vertices[3], vertices[7], vertices[11] });
-            faces[15] = new Face(3, new Point3d[] { vertices[3], vertices[11], vertices[10] });
+            faces[13] = new Face(3, new int[] { 3, 10, 5 });
+            faces[14] = new Face(3, new int[] { 3, 7, 11 });
+            faces[15] = new Face(3, new int[] { 3, 11, 10 });
 
-            faces[16] = new Face(3, new Point3d[] { vertices[4], vertices[8], vertices[5] });
-            faces[17] = new Face(3, new Point3d[] { vertices[4], vertices[5], vertices[10] });
-            faces[18] = new Face(3, new Point3d[] { vertices[6], vertices[7], vertices[9] });
-            faces[19] = new Face(3, new Point3d[] { vertices[6], vertices[11], vertices[7] });
+            faces[16] = new Face(3, new int[] { 4, 8, 5 });
+            faces[17] = new Face(3, new int[] { 4, 5, 10 });
+            faces[18] = new Face(3, new int[] { 6, 7, 9 });
+            faces[19] = new Face(3, new int[] { 6, 11, 7 });
 
             return new ConvexPolyhedron(12, 30, 20, vertices, edges, faces);
         }
@@ -354,53 +382,53 @@ namespace GeometRi
             vertices[19] = new Point3d(-1 / f, 0, -f);
 
             Edge[] edges = new Edge[30];
-            edges[0] = new Edge(vertices[0], vertices[8]);
-            edges[1] = new Edge(vertices[0], vertices[14]);
-            edges[2] = new Edge(vertices[0], vertices[17]);
-            edges[3] = new Edge(vertices[1], vertices[9]);
-            edges[4] = new Edge(vertices[1], vertices[15]);
-            edges[5] = new Edge(vertices[1], vertices[17]);
-            edges[6] = new Edge(vertices[2], vertices[9]);
-            edges[7] = new Edge(vertices[2], vertices[13]);
-            edges[8] = new Edge(vertices[2], vertices[16]);
-            edges[9] = new Edge(vertices[3], vertices[8]);
-            edges[10] = new Edge(vertices[3], vertices[12]);
-            edges[11] = new Edge(vertices[3], vertices[16]);
+            edges[0] = new Edge(0, 8);
+            edges[1] = new Edge(0, 14);
+            edges[2] = new Edge(0, 17);
+            edges[3] = new Edge(1, 9);
+            edges[4] = new Edge(1, 15);
+            edges[5] = new Edge(1, 17);
+            edges[6] = new Edge(2, 9);
+            edges[7] = new Edge(2, 13);
+            edges[8] = new Edge(2, 16);
+            edges[9] = new Edge(3, 8);
+            edges[10] = new Edge(3, 12);
+            edges[11] = new Edge(3, 16);
 
-            edges[12] = new Edge(vertices[4], vertices[10]);
-            edges[13] = new Edge(vertices[4], vertices[14]);
-            edges[14] = new Edge(vertices[4], vertices[19]);
-            edges[15] = new Edge(vertices[5], vertices[11]);
-            edges[16] = new Edge(vertices[5], vertices[15]);
-            edges[17] = new Edge(vertices[5], vertices[19]);
-            edges[18] = new Edge(vertices[6], vertices[11]);
-            edges[19] = new Edge(vertices[6], vertices[13]);
-            edges[20] = new Edge(vertices[6], vertices[18]);
-            edges[21] = new Edge(vertices[7], vertices[10]);
-            edges[22] = new Edge(vertices[7], vertices[12]);
-            edges[23] = new Edge(vertices[7], vertices[18]);
+            edges[12] = new Edge(4, 10);
+            edges[13] = new Edge(4, 14);
+            edges[14] = new Edge(4, 19);
+            edges[15] = new Edge(5, 11);
+            edges[16] = new Edge(5, 15);
+            edges[17] = new Edge(5, 19);
+            edges[18] = new Edge(6, 11);
+            edges[19] = new Edge(6, 13);
+            edges[20] = new Edge(6, 18);
+            edges[21] = new Edge(7, 10);
+            edges[22] = new Edge(7, 12);
+            edges[23] = new Edge(7, 18);
 
-            edges[24] = new Edge(vertices[8], vertices[10]);
-            edges[25] = new Edge(vertices[9], vertices[11]);
-            edges[26] = new Edge(vertices[12], vertices[13]);
-            edges[27] = new Edge(vertices[14], vertices[15]);
-            edges[28] = new Edge(vertices[16], vertices[17]);
-            edges[29] = new Edge(vertices[18], vertices[19]);
+            edges[24] = new Edge(8, 10);
+            edges[25] = new Edge(9, 11);
+            edges[26] = new Edge(12, 13);
+            edges[27] = new Edge(14, 15);
+            edges[28] = new Edge(16, 17);
+            edges[29] = new Edge(18, 19);
 
             Face[] faces = new Face[12];
-            faces[0] = new Face(5, new Point3d[] { vertices[0], vertices[14], vertices[15], vertices[1], vertices[17] });
-            faces[1] = new Face(5, new Point3d[] { vertices[1], vertices[15], vertices[5], vertices[11], vertices[9] });
-            faces[2] = new Face(5, new Point3d[] { vertices[1], vertices[9], vertices[2], vertices[16], vertices[17] });
-            faces[3] = new Face(5, new Point3d[] { vertices[2], vertices[9], vertices[11], vertices[6], vertices[13] });
+            faces[0] = new Face(5, new int[] { 0, 14, 15, 1, 17 });
+            faces[1] = new Face(5, new int[] { 1, 15, 5, 11, 9 });
+            faces[2] = new Face(5, new int[] { 1, 9, 2, 16, 17 });
+            faces[3] = new Face(5, new int[] { 2, 9, 11, 6, 13 });
 
-            faces[4] = new Face(5, new Point3d[] { vertices[0], vertices[17], vertices[16], vertices[3], vertices[8] });
-            faces[5] = new Face(5, new Point3d[] { vertices[2], vertices[13], vertices[12], vertices[3], vertices[16] });
-            faces[6] = new Face(5, new Point3d[] { vertices[0], vertices[8], vertices[10], vertices[4], vertices[14] });
-            faces[7] = new Face(5, new Point3d[] { vertices[3], vertices[12], vertices[7], vertices[10], vertices[8] });
-            faces[8] = new Face(5, new Point3d[] { vertices[4], vertices[10], vertices[7], vertices[18], vertices[19] });
-            faces[9] = new Face(5, new Point3d[] { vertices[4], vertices[19], vertices[5], vertices[15], vertices[14] });
-            faces[10] = new Face(5, new Point3d[] { vertices[6], vertices[18], vertices[7], vertices[12], vertices[13] });
-            faces[11] = new Face(5, new Point3d[] { vertices[5], vertices[19], vertices[18], vertices[6], vertices[11] });
+            faces[4] = new Face(5, new int[] { 0, 17, 16, 3, 8 });
+            faces[5] = new Face(5, new int[] { 2, 13, 12, 3, 16 });
+            faces[6] = new Face(5, new int[] { 0, 8, 10, 4, 14 });
+            faces[7] = new Face(5, new int[] { 3, 12, 7, 10, 8 });
+            faces[8] = new Face(5, new int[] { 4, 10, 7, 18, 19 });
+            faces[9] = new Face(5, new int[] { 4, 19, 5, 15, 14 });
+            faces[10] = new Face(5, new int[] { 6, 18, 7, 12, 13 });
+            faces[11] = new Face(5, new int[] { 5, 19, 18, 6, 11 });
 
 
             return new ConvexPolyhedron(20, 30, 12, vertices, edges, faces);
@@ -439,9 +467,9 @@ namespace GeometRi
                 {
                     for (int i = 0; i < f.vertex.Length - 2; i++)
                     {
-                        Vector3d v1 = new Vector3d(this.vertex[0], f.vertex[i]);
-                        Vector3d v2 = new Vector3d(this.vertex[0], f.vertex[i + 1]);
-                        Vector3d v3 = new Vector3d(this.vertex[0], f.vertex[i + 2]);
+                        Vector3d v1 = new Vector3d(this.vertex[0], f.Vertex[i]);
+                        Vector3d v2 = new Vector3d(this.vertex[0], f.Vertex[i + 1]);
+                        Vector3d v3 = new Vector3d(this.vertex[0], f.Vertex[i + 2]);
                         volume += v1 * (v2.Cross(v3));
                     }
                 }
@@ -477,7 +505,7 @@ namespace GeometRi
                     _list_e = new List<Segment3d> { };
                     foreach (Edge e in edge)
                     {
-                        _list_e.Add(new Segment3d(e.p1, e.p2));
+                        _list_e.Add(new Segment3d(e.P1, e.P2));
                     }
                     return _list_e;
                 }
@@ -502,25 +530,23 @@ namespace GeometRi
 
             for (int i = 0; i < vertex.Length; i++)
             {
-                Point3d tmp = vertex[i].Copy();
-                dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
-                vertex_copy[i] = tmp;
+                vertex_copy[i] = vertex[i].Copy();
             }
 
             for (int i = 0; i < edge.Length; i++)
             {
-                edge_copy[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
-                edge_copy[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
+                edge_copy[i].p1 = edge[i].p1;
+                edge_copy[i].p2 = edge[i].p2;
             }
             for (int i = 0; i < face.Length; i++)
             {
                 face_copy[i].normal = face[i].normal;
                 face_copy[i].numVertices = face[i].numVertices;
-                face_copy[i].vertex = new Point3d[face[i].vertex.Length];
-                
+                face_copy[i].vertex = new int[face[i].vertex.Length];
+
                 for (int j = 0; j < face[i].vertex.Length; j++)
                 {
-                    face_copy[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
+                    face_copy[i].vertex[j] = face[i].vertex[j];
                 }
             }
             return new ConvexPolyhedron(numVertices, numEdges, numFaces, vertex_copy, edge_copy, face_copy);
@@ -531,7 +557,7 @@ namespace GeometRi
             for (int i = 0; i < face.Length; i++)
             {
                 Vector3d normal = face[i].normal;
-                Vector3d to_center = new Vector3d(face[i].vertex[0], this.Center);
+                Vector3d to_center = new Vector3d(face[i].Vertex[0], this.Center);
                 if (to_center * normal > 0)
                 {
                     face[i] = ReverseFace(face[i]);
@@ -541,12 +567,14 @@ namespace GeometRi
 
         private Face ReverseFace(Face face)
         {
-            Point3d[] points = new Point3d[face.numVertices];
+            int[] tmp = new int[face.numVertices];
             for (int j = 0; j < face.numVertices; j++)
             {
-                points[j] = face.vertex[face.numVertices - j - 1];
+                tmp[j] = face.vertex[face.numVertices - j - 1];
             }
-            return new Face(face.numVertices, points);
+            face.vertex = tmp;
+            face.UpdateNormal();
+            return face;
         }
 
 
@@ -605,14 +633,14 @@ namespace GeometRi
             for (int i = 0; i < numFaces; i++)
             {
                 // test only visible faces
-                if (face[i].normal * new Vector3d(face[i].vertex[0], p) < 0)
+                if (face[i].normal * new Vector3d(face[i].Vertex[0], p) < 0)
                 {
                     continue;
                 }
 
                 for (int j = 0; j < face[i].vertex.Length - 2; j++)
                 {
-                    Triangle t = new Triangle(face[i].vertex[0], face[i].vertex[j + 1], face[i].vertex[j + 2]);
+                    Triangle t = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
                     double tmp_dist = t.DistanceTo(p);
                     if (tmp_dist < dist)
                     {
@@ -650,7 +678,7 @@ namespace GeometRi
 
                 for (int j = 0; j < face[i].vertex.Length - 2; j++)
                 {
-                    Triangle t1 = new Triangle(face[i].vertex[0], face[i].vertex[j + 1], face[i].vertex[j + 2]);
+                    Triangle t1 = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
 
 
                     for (int k = 0; k < cp.numFaces; k++)
@@ -663,7 +691,7 @@ namespace GeometRi
 
                         for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
                         {
-                            Triangle t2 = new Triangle(cp.face[k].vertex[0], cp.face[k].vertex[l + 1], cp.face[k].vertex[l + 2]);
+                            Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
 
                             double tmp_dist = t1.DistanceTo(t2);
                             if (tmp_dist < dist)
@@ -696,7 +724,7 @@ namespace GeometRi
             {
                 for (int j = 0; j < face[i].vertex.Length - 2; j++)
                 {
-                    Triangle tmp = new Triangle(face[i].vertex[0], face[i].vertex[j + 1], face[i].vertex[j + 2]);
+                    Triangle tmp = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
                     double tmp_dist = t.DistanceTo(tmp);
                     if (tmp_dist < dist)
                     {
@@ -736,7 +764,7 @@ namespace GeometRi
 
                 for (int j = 0; j < face[i].vertex.Length - 2; j++)
                 {
-                    Triangle t1 = new Triangle(face[i].vertex[0], face[i].vertex[j + 1], face[i].vertex[j + 2]);
+                    Triangle t1 = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
 
                     for (int k = 0; k < cp.numFaces; k++)
                     {
@@ -748,7 +776,7 @@ namespace GeometRi
 
                         for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
                         {
-                            Triangle t2 = new Triangle(cp.face[k].vertex[0], cp.face[k].vertex[l + 1], cp.face[k].vertex[l + 2]);
+                            Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
 
                             if (t1.Intersects(t2))
                             {
@@ -777,7 +805,7 @@ namespace GeometRi
             // Determine whether 'c' is on the positive side of the line
             for (int i = 0; i < this.numFaces; i++)
             {
-                Vector3d P = this.face[i].vertex[0].ToVector;
+                Vector3d P = this.face[i].Vertex[0].ToVector;
                 Vector3d N = this.face[i].normal;
                 if (WhichSide(c.vertex, P, N) > 0)
                 {
@@ -791,7 +819,7 @@ namespace GeometRi
             // Determine whether this CP is on the positive side of the line
             for (int i = 0; i < c.numFaces; i++)
             {
-                Vector3d P = c.face[i].vertex[0].ToVector;
+                Vector3d P = c.face[i].Vertex[0].ToVector;
                 Vector3d N = c.face[i].normal;
                 if (WhichSide(this.vertex, P, N) > 0)
                 {
@@ -804,11 +832,11 @@ namespace GeometRi
             // one edge direction from each polyhedron
             for (int i = 0; i < this.numEdges; i++)
             {
-                Vector3d D0 = new Vector3d(this.edge[i].p1, this.edge[i].p2);
-                Vector3d P = this.edge[i].p1.ToVector;
+                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
+                Vector3d P = this.edge[i].P1.ToVector;
                 for (int j = 0; j < c.numEdges; j++)
                 {
-                    Vector3d D1 = new Vector3d(c.edge[j].p1, c.edge[j].p2);
+                    Vector3d D1 = new Vector3d(c.edge[j].P1, c.edge[j].P2);
                     Vector3d N = D0.Cross(D1);
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
@@ -904,7 +932,7 @@ namespace GeometRi
 
             foreach (Face f in face)
             {
-                int v = _SameSide(f.vertex[0], f.normal, p);
+                int v = _SameSide(f.Vertex[0], f.normal, p);
                 if (v < 0)
                 {
                     return -1; // Point is outside
@@ -952,22 +980,7 @@ namespace GeometRi
 
             for (int i = 0; i < vertex.Length; i++)
             {
-                Point3d tmp = vertex[i].Translate(v);
-                dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
-                vertex[i] = tmp;
-            }
-
-            for (int i = 0; i < edge.Length; i++)
-            {
-                edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
-                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
-            }
-            for (int i = 0; i < face.Length; i++)
-            {
-                for (int j = 0; j < face[i].vertex.Length; j++)
-                {
-                    face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
-                }
+                vertex[i] = vertex[i].Translate(v);
             }
 
             _list_e = null;
@@ -985,23 +998,12 @@ namespace GeometRi
 
             for (int i = 0; i < vertex.Length; i++)
             {
-                Point3d tmp = m * (vertex[i] - p) + p;
-                dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
-                vertex[i] = tmp;
+                vertex[i] = m * (vertex[i] - p) + p;
             }
 
-            for (int i = 0; i < edge.Length; i++)
-            {
-                edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
-                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
-            }
             for (int i = 0; i < face.Length; i++)
             {
                 face[i].normal = m * face[i].normal;
-                for (int j = 0; j < face[i].vertex.Length; j++)
-                {
-                    face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
-                }
             }
             _list_e = null;
             _aabb = null;
@@ -1018,23 +1020,9 @@ namespace GeometRi
 
             for (int i = 0; i < vertex.Length; i++)
             {
-                Point3d tmp = center + scale * (vertex[i] - center);
-                dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
-                vertex[i] = tmp;
+                vertex[i] = center + scale * (vertex[i] - center);
             }
 
-            for (int i = 0; i < edge.Length; i++)
-            {
-                edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
-                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
-            }
-            for (int i = 0; i < face.Length; i++)
-            {
-                for (int j = 0; j < face[i].vertex.Length; j++)
-                {
-                    face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
-                }
-            }
             _list_e = null;
             _aabb = null;
             return this;
@@ -1052,23 +1040,12 @@ namespace GeometRi
 
             for (int i = 0; i < vertex.Length; i++)
             {
-                Point3d tmp = center.Translate(m * (vertex[i] - center).ToVector);
-                dict[RuntimeHelpers.GetHashCode(vertex[i])] = tmp;
-                vertex[i] = tmp;
+                vertex[i] = center.Translate(m * (vertex[i] - center).ToVector); ;
             }
 
-            for (int i = 0; i < edge.Length; i++)
-            {
-                edge[i].p1 = dict[RuntimeHelpers.GetHashCode(edge[i].p1)];
-                edge[i].p2 = dict[RuntimeHelpers.GetHashCode(edge[i].p2)];
-            }
             for (int i = 0; i < face.Length; i++)
             {
                 face[i].normal = (Vector3d)(m_1 * face[i].normal).Normalized;
-                for (int j = 0; j < face[i].vertex.Length; j++)
-                {
-                    face[i].vertex[j] = dict[RuntimeHelpers.GetHashCode(face[i].vertex[j])];
-                }
             }
             _list_e = null;
             _aabb = null;

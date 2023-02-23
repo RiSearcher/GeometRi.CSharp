@@ -16,7 +16,7 @@ namespace GeometRi_Tests
             {
                 Tetrahedron t1 = Tetrahedron.Random();
                 ConvexPolyhedron c1 = ConvexPolyhedron.FromTetrahedron(t1);
-                Assert.AreEqual(t1.Area, c1.Area);
+                Assert.IsTrue(Abs(t1.Area - c1.Area) < GeometRi3D.Tolerance);
                 Assert.IsTrue(Abs(t1.Volume - c1.Volume) < GeometRi3D.Tolerance);
             }
         }
