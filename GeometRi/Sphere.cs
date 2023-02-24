@@ -687,6 +687,15 @@ namespace GeometRi
         {
             return new Sphere(this.Center.ReflectIn(s), this.R);
         }
+
+        /// <summary>
+        /// Scale sphere relative to given point
+        /// </summary>
+        public virtual Sphere Scale(double scale, Point3d scaling_center)
+        {
+            Point3d new_center = scaling_center + scale * (this.Center - scaling_center);
+            return new Sphere(new_center, _r * scale);
+        }
         #endregion
 
         /// <summary>

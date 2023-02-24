@@ -871,6 +871,16 @@ namespace GeometRi
         {
             return new Segment3d(P1.ReflectIn(s), P2.ReflectIn(s));
         }
+
+        /// <summary>
+        /// Scale segment relative to given point
+        /// </summary>
+        public virtual Segment3d Scale(double scale, Point3d scaling_center)
+        {
+            Point3d new_p1 = scaling_center + scale * (this._p1 - scaling_center);
+            Point3d new_p2 = scaling_center + scale * (this._p2 - scaling_center);
+            return new Segment3d(new_p1, new_p2);
+        }
         #endregion
 
         /// <summary>

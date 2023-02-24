@@ -918,7 +918,16 @@ namespace GeometRi
             return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
         }
 
-#endregion
+        /// <summary>
+        /// Scale box relative to given point
+        /// </summary>
+        public virtual Box3d Scale(double scale, Point3d scaling_center)
+        {
+            Point3d new_center = scaling_center + scale * (this.Center - scaling_center);
+            return new Box3d(new_center, scale * _lx, scale * _ly, scale * _lz, this._r);
+        }
+
+        #endregion
 
 
         /// <summary>

@@ -1011,16 +1011,22 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Scale polyhedron relative center point
+        /// Scale polyhedron relative to center point
         /// </summary>
-        public virtual ConvexPolyhedron Scale(double scale)
+        public ConvexPolyhedron Scale(double scale)
         {
-            Point3d center = this.Center;
-            Dictionary<Int32, Point3d> dict = new Dictionary<Int32, Point3d>();
+            this.Scale(scale, this.Center);
+            return this;
+        }
 
+        /// <summary>
+        /// Scale polyhedron relative to given point
+        /// </summary>
+        public ConvexPolyhedron Scale(double scale, Point3d scaling_center)
+        {
             for (int i = 0; i < vertex.Length; i++)
             {
-                vertex[i] = center + scale * (vertex[i] - center);
+                vertex[i] = scaling_center + scale * (vertex[i] - scaling_center);
             }
 
             _list_e = null;

@@ -1996,6 +1996,15 @@ namespace GeometRi
         {
             return new Circle3d(this.Center.ReflectIn(s), this.R, this.Normal.ReflectIn(s));
         }
+
+        /// <summary>
+        /// Scale circle relative to given point
+        /// </summary>
+        public virtual Circle3d Scale(double scale, Point3d scaling_center)
+        {
+            Point3d new_center = scaling_center + scale * (this.Center - scaling_center);
+            return new Circle3d(new_center, this._r * scale, this._normal);
+        }
         #endregion
 
         /// <summary>

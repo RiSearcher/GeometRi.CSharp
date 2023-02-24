@@ -707,6 +707,15 @@ namespace GeometRi
         {
             return new Ellipse(this.Center.ReflectIn(s), _v1.ReflectIn(s), _v2.ReflectIn(s));
         }
+
+        /// <summary>
+        /// Scale ellipse relative to given point
+        /// </summary>
+        public virtual Ellipse Scale(double scale, Point3d scaling_center)
+        {
+            Point3d new_center = scaling_center + scale * (this.Center - scaling_center);
+            return new Ellipse(new_center, _v1 * scale, _v2 * scale);
+        }
         #endregion
 
         /// <summary>

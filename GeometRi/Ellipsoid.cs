@@ -655,6 +655,15 @@ namespace GeometRi
         {
             return new Ellipsoid(this.Center.ReflectIn(s), _v1.ReflectIn(s), _v2.ReflectIn(s), _v3.ReflectIn(s));
         }
+
+        /// <summary>
+        /// Scale ellipsoid relative to given point
+        /// </summary>
+        public virtual Ellipsoid Scale(double scale, Point3d scaling_center)
+        {
+            Point3d new_center = scaling_center + scale * (this.Center - scaling_center);
+            return new Ellipsoid(new_center, _v1 * scale, _v2 * scale, _v3 * scale);
+        }
         #endregion
 
         /// <summary>

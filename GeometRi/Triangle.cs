@@ -1556,6 +1556,17 @@ namespace GeometRi
         {
             return new Triangle(_a.ReflectIn(s), _b.ReflectIn(s), _c.ReflectIn(s));
         }
+
+        /// <summary>
+        /// Scale triangle relative to given point
+        /// </summary>
+        public virtual Triangle Scale(double scale, Point3d scaling_center)
+        {
+            Point3d p1 = scaling_center + scale * (_a - scaling_center);
+            Point3d p2 = scaling_center + scale * (_b - scaling_center);
+            Point3d p3 = scaling_center + scale * (_c - scaling_center);
+            return new Triangle(p1, p2, p3);
+        }
         #endregion
 
         /// <summary>

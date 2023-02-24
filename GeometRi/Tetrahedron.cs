@@ -617,7 +617,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Scale tetrahedron
+        /// Scale tetrahedron relative to center point
         /// </summary>
         public virtual Tetrahedron Scale(double scale)
         {
@@ -626,6 +626,18 @@ namespace GeometRi
             Point3d p2 = center + scale * (vertices[1] - center);
             Point3d p3 = center + scale * (vertices[2] - center);
             Point3d p4 = center + scale * (vertices[3] - center);
+            return new Tetrahedron(p1, p2, p3, p4);
+        }
+
+        /// <summary>
+        /// Scale tetrahedron relative to given point
+        /// </summary>
+        public virtual Tetrahedron Scale(double scale, Point3d scaling_center)
+        {
+            Point3d p1 = scaling_center + scale * (vertices[0] - scaling_center);
+            Point3d p2 = scaling_center + scale * (vertices[1] - scaling_center);
+            Point3d p3 = scaling_center + scale * (vertices[2] - scaling_center);
+            Point3d p4 = scaling_center + scale * (vertices[3] - scaling_center);
             return new Tetrahedron(p1, p2, p3, p4);
         }
 
