@@ -558,16 +558,7 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.ToPlane);
 
-            double tol = GeometRi3D.Tolerance;
-            bool mode = GeometRi3D.UseAbsoluteTolerance;
-            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
-            GeometRi3D.UseAbsoluteTolerance = true;
-
             int code = _PointLocation(projection_point);
-
-            // Restore initial state
-            GeometRi3D.UseAbsoluteTolerance = mode;
-            GeometRi3D.Tolerance = tol;
 
             if (code >= 0)
             {
@@ -592,16 +583,7 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.ToPlane);
 
-            double tol = GeometRi3D.Tolerance;
-            bool mode = GeometRi3D.UseAbsoluteTolerance;
-            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
-            GeometRi3D.UseAbsoluteTolerance = true;
-
             int code = _PointLocation(projection_point);
-
-            // Restore initial state
-            GeometRi3D.UseAbsoluteTolerance = mode;
-            GeometRi3D.Tolerance = tol;
 
             if (code >= 0)
             {
@@ -655,16 +637,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            double tol = GeometRi3D.Tolerance;
-            bool mode = GeometRi3D.UseAbsoluteTolerance;
-            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
-            GeometRi3D.UseAbsoluteTolerance = true;
 
             double dist = _DistanceToSegment(s);
-
-            // Restore initial state
-            GeometRi3D.UseAbsoluteTolerance = mode;
-            GeometRi3D.Tolerance = tol;
 
             return dist;
         }
@@ -674,16 +648,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s, out Point3d point_on_triangle, out Point3d point_on_segment)
         {
-            double tol = GeometRi3D.Tolerance;
-            bool mode = GeometRi3D.UseAbsoluteTolerance;
-            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
-            GeometRi3D.UseAbsoluteTolerance = true;
-
             double dist = _DistanceToSegment_with_points(s, out point_on_triangle, out point_on_segment);
-
-            // Restore initial state
-            GeometRi3D.UseAbsoluteTolerance = mode;
-            GeometRi3D.Tolerance = tol;
 
             return dist;
         }
@@ -875,16 +840,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Triangle t)
         {
-            double tol = GeometRi3D.Tolerance;
-            bool mode = GeometRi3D.UseAbsoluteTolerance;
-            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
-            GeometRi3D.UseAbsoluteTolerance = true;
 
             double dist = _DistanceToTriangle(t);
-
-            // Restore initial state
-            GeometRi3D.UseAbsoluteTolerance = mode;
-            GeometRi3D.Tolerance = tol;
 
             return dist;
         }
@@ -894,16 +851,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Triangle t, out Point3d point_on_this_triangle, out Point3d point_on_target_triangle)
         {
-            double tol = GeometRi3D.Tolerance;
-            bool mode = GeometRi3D.UseAbsoluteTolerance;
-            GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
-            GeometRi3D.UseAbsoluteTolerance = true;
 
             double dist = _DistanceToTriangle(t, out point_on_this_triangle, out point_on_target_triangle);
-
-            // Restore initial state
-            GeometRi3D.UseAbsoluteTolerance = mode;
-            GeometRi3D.Tolerance = tol;
 
             return dist;
         }

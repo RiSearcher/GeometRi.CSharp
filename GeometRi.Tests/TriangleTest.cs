@@ -814,6 +814,36 @@ namespace GeometRi_Tests
             Assert.IsTrue(point_on_triangle2 == new Point3d(1, 1, 1));
         }
 
+        [TestMethod()]
+        public void PointDistanceToTriangleTest()
+        {
+            Triangle triangle = new Triangle(
+                new Point3d(0, 0, 0),
+                new Point3d(10000, 0, 0),
+                new Point3d(0, 10000, 0));
+
+            Point3d point = new Point3d(3286.5999999974479, 5000, 0);
+
+            double distance = triangle.DistanceTo(point);
+
+            Assert.AreEqual(distance, 0);
+        }
+
+        [TestMethod()]
+        public void PointDistanceToTriangleTest_02()
+        {
+            Triangle triangle = new Triangle(
+                new Point3d(0, 0, 0),
+                new Point3d(10, 0, 0),
+                new Point3d(0, 10, 0));
+
+            Point3d point = new Point3d(5, 5, 0);
+
+            double distance = triangle.DistanceTo(point);
+
+            Assert.AreEqual(distance, 0);
+        }
+
 
     }
 }
