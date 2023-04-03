@@ -202,7 +202,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Line3d l)
         {
-            if (l.PerpendicularTo(this.ToLine).BelongsTo(this))
+            Point3d p = l.PerpendicularTo(this.ToLine);
+            if (p != null && p.BelongsTo(this))
             {
                 return l.DistanceTo(this.ToLine);
             }
@@ -351,11 +352,9 @@ namespace GeometRi
 
 
             Point3d p1 = this.ToLine.PerpendicularTo(r.ToLine);
-            bool b1 = p1.BelongsTo(r);
             Point3d p2 = r.ToLine.PerpendicularTo(this.ToLine);
-            bool b2= p2.BelongsTo(this);
 
-            if (this.ToLine.PerpendicularTo(r.ToLine).BelongsTo(r) && r.ToLine.PerpendicularTo(this.ToLine).BelongsTo(this))
+            if (p1 != null && p2 != null && p1.BelongsTo(r) && p2.BelongsTo(this))
             {
                 return this.ToLine.DistanceTo(r.ToLine);
             }
