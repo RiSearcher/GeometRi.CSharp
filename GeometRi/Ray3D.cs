@@ -162,7 +162,7 @@ namespace GeometRi
             {
                 // Crossing lines
                 Point3d p = l.PerpendicularTo(new Line3d(this.Point, this.Direction));
-                if (p.BelongsTo(this))
+                if (p != null && p.BelongsTo(this))
                 {
                     return Abs((r2 - r1) * s1.Cross(s2)) / s1.Cross(s2).Norm;
                 }
@@ -192,10 +192,10 @@ namespace GeometRi
         public double DistanceTo(Ray3d r)
         {
 
-            if (this.Direction.IsParallelTo(r.Direction))
-                return this.ToLine.DistanceTo(r.ToLine);
+            Point3d p1 = this.ToLine.PerpendicularTo(r.ToLine);
+            Point3d p2 = r.ToLine.PerpendicularTo(this.ToLine);
 
-            if (this.ToLine.PerpendicularTo(r.ToLine).BelongsTo(r) && r.ToLine.PerpendicularTo(this.ToLine).BelongsTo(this))
+            if (p1 != null && p2 != null && p1.BelongsTo(r) && p2.BelongsTo(this))
             {
                 return this.ToLine.DistanceTo(r.ToLine);
             }
@@ -259,7 +259,7 @@ namespace GeometRi
             if (s1.Cross(s2).Norm > GeometRi3D.Tolerance)
             {
                 Point3d p = l.PerpendicularTo(new Line3d(this.Point, this.Direction));
-                if (p.BelongsTo(this))
+                if (p != null && p.BelongsTo(this))
                 {
                     r1 = r2 + (r2 - r1) * s1.Cross(s1.Cross(s2)) / (s1 * s2.Cross(s1.Cross(s2))) * s2;
                     return r1.ToPoint;

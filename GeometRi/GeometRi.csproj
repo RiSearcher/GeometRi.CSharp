@@ -19,7 +19,7 @@ Compatible with .Net Framework 2.0, .Net Standard 1.0, .Net Core 3.1 and .Net 5.
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <FileVersion>1.4.0.4</FileVersion>
+    <FileVersion>1.4.0.5</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

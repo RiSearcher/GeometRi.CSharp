@@ -256,7 +256,11 @@ namespace GeometRi
             }
 
             Point3d p = l.PerpendicularTo(this);
-            if (p.BelongsTo(l))
+            if (p == null)
+            {
+                return null;
+            }
+            else if (p.BelongsTo(l))
             {
                 return p;
             }

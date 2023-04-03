@@ -138,5 +138,14 @@ namespace GeometRi_Tests
             Assert.IsTrue(Abs(r1.DistanceTo(r2) - Sqrt(50)) < GeometRi3D.Tolerance);
         }
 
+        [TestMethod()]
+        public void RayDistanceToRayTest_02()
+        {
+            Ray3d r1 = new Ray3d(new Point3d(0, 0, 0), new Vector3d(1, 0, 0));
+            Ray3d r2 = new Ray3d(new Point3d(-1, 0, 0), new Vector3d(-1, 0, 0));
+            Assert.IsTrue(Abs(r1.DistanceTo(r2) - 1) < GeometRi3D.Tolerance);
+
+        }
+
     }
 }
