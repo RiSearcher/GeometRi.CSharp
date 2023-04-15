@@ -467,7 +467,7 @@ namespace GeometRi
                 {
                     for (int i = 0; i < f.vertex.Length - 2; i++)
                     {
-                        Vector3d v1 = new Vector3d(this.vertex[0], f.Vertex[i]);
+                        Vector3d v1 = new Vector3d(this.vertex[0], f.Vertex[0]);
                         Vector3d v2 = new Vector3d(this.vertex[0], f.Vertex[i + 1]);
                         Vector3d v3 = new Vector3d(this.vertex[0], f.Vertex[i + 2]);
                         volume += v1 * (v2.Cross(v3));
