@@ -220,7 +220,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// Return Bounding Box in given coordinate system.
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
@@ -231,6 +231,18 @@ namespace GeometRi
             double s3 = _r * Cos(coord.Zaxis.AngleTo(this));
 
             return new Box3d(_point, 2 * s1, 2 * s2, 2 * s3, coord);
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB()
+        {
+            double s1 = _r * Cos(Coord3d.GlobalCS.Xaxis.AngleTo(this));
+            double s2 = _r * Cos(Coord3d.GlobalCS.Yaxis.AngleTo(this));
+            double s3 = _r * Cos(Coord3d.GlobalCS.Zaxis.AngleTo(this));
+
+            return new AABB(_point, 2 * s1, 2 * s2, 2 * s3);
         }
 
         /// <summary>

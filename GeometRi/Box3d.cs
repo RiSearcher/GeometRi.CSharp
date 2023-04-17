@@ -481,7 +481,15 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB
+        {
+            get { return GeometRi.AABB.BoundingBox(this.ListOfPoints); }
+        }
+
+        /// <summary>
+        /// Return Bounding Box in given coordinate system.
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
@@ -516,9 +524,9 @@ namespace GeometRi
         #endregion
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) for a cloud of points.
+        /// Return Bounding Box for a cloud of points.
         /// </summary>
-        public static Box3d AABB(List<Point3d> points, Coord3d coord = null)
+        public static Box3d BoundingBox(IEnumerable<Point3d> points, Coord3d coord = null)
         {
             coord = (coord == null) ? Coord3d.GlobalCS : coord;
 
@@ -543,33 +551,6 @@ namespace GeometRi
             return new Box3d(new Point3d(0.5*(maxx-minx), 0.5 * (maxy - miny), 0.5 * (maxz - minz)), maxx - minx, maxy - miny, maxz - minz, coord);
         }
 
-        /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) for a cloud of points.
-        /// </summary>
-        public static Box3d AABB(Point3d[] points, Coord3d coord = null)
-        {
-            coord = (coord == null) ? Coord3d.GlobalCS : coord;
-
-            double maxx = double.NegativeInfinity;
-            double maxy = double.NegativeInfinity;
-            double maxz = double.NegativeInfinity;
-            double minx = double.PositiveInfinity;
-            double miny = double.PositiveInfinity;
-            double minz = double.PositiveInfinity;
-
-            foreach (Point3d p in points)
-            {
-                Point3d t = p.ConvertTo(coord);
-                if (t.X > maxx) { maxx = t.X; }
-                if (t.Y > maxy) { maxy = t.Y; }
-                if (t.Z > maxz) { maxz = t.Z; }
-                if (t.X < minx) { minx = t.X; }
-                if (t.Y < miny) { miny = t.Y; }
-                if (t.Z < minz) { minz = t.Z; }
-            }
-
-            return new Box3d(new Point3d(0.5 * (maxx + minx), 0.5 * (maxy + miny), 0.5 * (maxz + minz)), maxx - minx, maxy - miny, maxz - minz, coord);
-        }
 
         #region "Intersection"
         /// <summary>

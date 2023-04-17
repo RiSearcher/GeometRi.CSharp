@@ -518,7 +518,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// Return Bounding Box in given coordinate system.
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
@@ -539,6 +539,14 @@ namespace GeometRi
             lz = s.Length;
 
             return new Box3d(new Point3d(px, py, pz, coord), lx, ly, lz, coord);
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB()
+        {
+            return GeometRi.AABB.BoundingBox(new Point3d[] { A, B, C });
         }
 
         /// <summary>

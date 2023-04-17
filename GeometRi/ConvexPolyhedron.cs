@@ -15,7 +15,7 @@ namespace GeometRi
         public Edge[] edge;
         public Face[] face;
 
-        private Box3d _aabb = null;
+        private AABB _aabb = null;
         private List<Segment3d> _list_e = null;
         public struct Edge
         {
@@ -591,13 +591,21 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// Return Bounding Box in given coordinate system.
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
+            return Box3d.BoundingBox(vertex, coord);
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB()
+        {
             if (_aabb == null)
             {
-                _aabb = Box3d.AABB(vertex, coord);
+                _aabb = GeometRi.AABB.BoundingBox(vertex);
             }
             return _aabb;
         }

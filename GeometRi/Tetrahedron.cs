@@ -11,7 +11,7 @@ namespace GeometRi
         private Point3d[] vertices;
 
         private Coord3d _local_coord = null;
-        private Box3d _aabb = null;
+        private AABB _aabb = null;
 
         private List<Triangle> _list_t = null;
         private List<Segment3d> _list_e = null;
@@ -211,13 +211,21 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// Return Bounding Box in given coordinate system.
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
+            return Box3d.BoundingBox(vertices, coord);
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB()
+        {
             if (_aabb == null)
             {
-                _aabb = Box3d.AABB(vertices, coord);
+                _aabb = GeometRi.AABB.BoundingBox(vertices);
             }
             return _aabb;
         }

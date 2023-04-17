@@ -176,7 +176,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// Return Bounding Box in given coordinate system.
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
@@ -188,6 +188,20 @@ namespace GeometRi
             Segment3d s2 = this.ProjectionTo(l2);
             Segment3d s3 = this.ProjectionTo(l3);
             return new Box3d(_point, s1.Length, s2.Length, s3.Length, coord);
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB()
+        {
+            Line3d l1 = new Line3d(_point, Coord3d.GlobalCS.Xaxis);
+            Line3d l2 = new Line3d(_point, Coord3d.GlobalCS.Yaxis);
+            Line3d l3 = new Line3d(_point, Coord3d.GlobalCS.Zaxis);
+            Segment3d s1 = this.ProjectionTo(l1);
+            Segment3d s2 = this.ProjectionTo(l2);
+            Segment3d s3 = this.ProjectionTo(l3);
+            return new AABB(_point, s1.Length, s2.Length, s3.Length);
         }
 
         /// <summary>

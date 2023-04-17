@@ -258,12 +258,20 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) in given coordinate system.
+        /// Return Bounding Box in given coordinate system.
         /// </summary>
         public Box3d BoundingBox(Coord3d coord = null)
         {
             coord = (coord == null) ? Coord3d.GlobalCS : coord;
             return new Box3d(_point, 2.0 * _r, 2.0 * _r, 2.0 * _r, new Rotation(coord));
+        }
+
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB()
+        {
+            return new AABB(_point, 2.0 * _r, 2.0 * _r, 2.0 * _r);
         }
 
         /// <summary>
