@@ -5,18 +5,16 @@ using System.Collections.Generic;
 namespace GeometRi
 {
     /// <summary>
-    /// Arbitrary oriented 3D box, can be degenerated with one or more dimensions equal 0.
+    /// Axis aligned 3D box, can be degenerated with one or more dimensions equal 0. Defined only in Global CS.
     /// </summary>
 #if NET20
     [Serializable]
 #endif
-    public class Box3d : FiniteObject, IFiniteObject
+    public class AABB : FiniteObject, IFiniteObject
     {
 
         private Point3d _center;
         private double _lx, _ly, _lz;
-        private Rotation _r;
-        private Coord3d _local_coord = null;
 
         private List<Point3d> _list_p = null;
         private List<Triangle> _list_t = null;
@@ -28,92 +26,60 @@ namespace GeometRi
         /// <summary>
         /// Default constructor, initializes box in the origin of the global coordinate system aligned with coordinate axes.
         /// </summary>
-        public Box3d(Point3d center, double lx, double ly, double lz)
+        public AABB(Point3d center, double lx, double ly, double lz)
         {
-            _center = center.Copy();
+            _center = center.ConvertToGlobal().Copy();
             _lx = lx;
             _ly = ly;
             _lz = lz;
-            _r = new Rotation();
-            _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
         }
 
         /// <summary>
-        /// Initializes unit box in the origin of the reference coordinate system aligned with coordinate axes.
+        /// Initializes unit box in the origin of the global coordinate system aligned with coordinate axes.
         /// </summary>
-        /// <param name="coord">Reference coordinate system.</param>
-        public Box3d(Coord3d coord = null)
+        public AABB()
         {
-            _center = new Point3d(coord);
+            _center = new Point3d();
             _lx = _ly = _lz = 1.0;
-            _r = new Rotation(coord);
-            if (coord != null)
-            {
-                // do not set local_coord for box aligned with global CS
-                _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
-            }
-            coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
         /// <summary>
-        /// Initializes box with specified dimensions and orientation defined by rotation object.
+        /// Initializes axis aligned box by two points.
         /// </summary>
-        /// <param name="center">Center point of the box.</param>
-        /// <param name="lx">First dimension.</param>
-        /// <param name="ly">Second dimension.</param>
-        /// <param name="lz">Third dimension.</param>
-        /// <param name="r">Orientation of the box, defined as rotation from axis aligned position (in global CS) to final position.</param>
-        public Box3d(Point3d center, double lx, double ly, double lz, Rotation r)
+        public AABB(Point3d Pmin, Point3d Pmax)
         {
-            _center = center.Copy();
-            _lx = lx;
-            _ly = ly;
-            _lz = lz;
-            _r = r.Copy();
-            _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
+            Point3d p1 = Pmin.ConvertToGlobal();
+            Point3d p2 = Pmax.ConvertToGlobal();
+            _center = (p1 + p2) / 2;
+            _lx = Abs(p2.X - p1.X);
+            _ly = Abs(p2.Y - p1.Y);
+            _lz = Abs(p2.Z - p1.Z);
         }
 
-        /// <summary>
-        /// Initializes axis aligned box in local coordinate system.
-        /// </summary>
-        /// <param name="center">Center point of the box.</param>
-        /// <param name="lx">First dimension.</param>
-        /// <param name="ly">Second dimension.</param>
-        /// <param name="lz">Third dimension.</param>
-        /// <param name="coord">Local coordinate system.</param>
-        public Box3d(Point3d center, double lx, double ly, double lz, Coord3d coord)
-        {
-            _center = center.Copy();
-            _lx = lx;
-            _ly = ly;
-            _lz = lz;
-            _r = new Rotation(coord);
-            _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
-        }
-#endregion
+        #endregion
 
         /// <summary>
         /// Creates copy of the object
         /// </summary>
-        public Box3d Copy()
+        public AABB Copy()
         {
-            return new Box3d(_center, _lx, _ly, _lz, _r);
+            return new AABB(_center, _lx, _ly, _lz);
         }
 
-#region "Properties"
+        #region "Properties"
         /// <summary>
         /// Center point of the box.
         /// </summary>
         public Point3d Center
         {
             get { return _center.Copy(); }
-            set {
+            set
+            {
                 _center = value.Copy();
                 _list_p = null;
                 _list_t = null;
                 _list_e = null;
                 _list_plane = null;
-                _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
             }
         }
 
@@ -123,7 +89,8 @@ namespace GeometRi
         public double L1
         {
             get { return _lx; }
-            set {
+            set
+            {
                 _lx = value;
                 _list_p = null;
                 _list_t = null;
@@ -138,7 +105,8 @@ namespace GeometRi
         public double L2
         {
             get { return _ly; }
-            set {
+            set
+            {
                 _ly = value;
                 _list_p = null;
                 _list_t = null;
@@ -153,7 +121,8 @@ namespace GeometRi
         public double L3
         {
             get { return _lz; }
-            set {
+            set
+            {
                 _lz = value;
                 _list_p = null;
                 _list_t = null;
@@ -167,7 +136,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d V1
         {
-            get { return _r.ConvertToGlobal().ToRotationMatrix.Column1; }
+            get { return Coord3d.GlobalCS.Xaxis; }
         }
 
         /// <summary>
@@ -175,7 +144,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d V2
         {
-            get { return _r.ConvertToGlobal().ToRotationMatrix.Column2; }
+            get { return Coord3d.GlobalCS.Yaxis; }
         }
 
         /// <summary>
@@ -183,24 +152,9 @@ namespace GeometRi
         /// </summary>
         public Vector3d V3
         {
-            get { return _r.ConvertToGlobal().ToRotationMatrix.Column3; }
+            get { return Coord3d.GlobalCS.Zaxis; }
         }
 
-        /// <summary>
-        /// Orientation of the box, defined as rotation from axis aligned position (in global CS) to final position.
-        /// </summary>
-        public Rotation Orientation
-        {
-            get { return _r.Copy(); }
-            set {
-                _r = value.Copy();
-                _list_p = null;
-                _list_t = null;
-                _list_e = null;
-                _list_plane = null;
-                _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
-            }
-        }
 
         /// <summary>
         /// Corner point of the box.
@@ -209,10 +163,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    - _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X - 0.5 * _lx, _center.Y - 0.5 * _ly, _center.Z - 0.5 * _lz);
             }
         }
 
@@ -223,10 +174,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    + _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X + 0.5 * _lx, _center.Y - 0.5 * _ly, _center.Z - 0.5 * _lz);
             }
         }
 
@@ -237,10 +185,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    + _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X + 0.5 * _lx, _center.Y + 0.5 * _ly, _center.Z - 0.5 * _lz);
             }
         }
 
@@ -251,10 +196,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    - _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X - 0.5 * _lx, _center.Y + 0.5 * _ly, _center.Z - 0.5 * _lz);
             }
         }
 
@@ -265,10 +207,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    - _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X - 0.5 * _lx, _center.Y - 0.5 * _ly, _center.Z + 0.5 * _lz);
             }
         }
 
@@ -279,10 +218,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    + _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X + 0.5 * _lx, _center.Y - 0.5 * _ly, _center.Z + 0.5 * _lz);
             }
         }
 
@@ -293,10 +229,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    + _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X + 0.5 * _lx, _center.Y + 0.5 * _ly, _center.Z + 0.5 * _lz);
             }
         }
 
@@ -307,10 +240,7 @@ namespace GeometRi
         {
             get
             {
-                return _center.ConvertToGlobal() + 0.5 * (
-                    - _lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
-                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
-                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
+                return new Point3d(_center.X - 0.5 * _lx, _center.Y + 0.5 * _ly, _center.Z + 0.5 * _lz);
             }
         }
 
@@ -412,7 +342,7 @@ namespace GeometRi
         {
             get
             {
-                if (_list_e ==  null)
+                if (_list_e == null)
                 {
                     _list_e = new List<Segment3d> { };
                     _list_e.Add(new Segment3d(P1, P2));
@@ -450,7 +380,7 @@ namespace GeometRi
         /// </summary>
         public double Area
         {
-            get { return 2.0 * (_lx*_ly + _lx*_lz + _ly*_lz); }
+            get { return 2.0 * (_lx * _ly + _lx * _lz + _ly * _lz); }
         }
 
         /// <summary>
@@ -466,18 +396,18 @@ namespace GeometRi
         /// </summary>
         public bool IsAxisAligned
         {
-            get { return _r.ToRotationMatrix.IsIdentity; }
+            get { return true; }
         }
 
-#endregion
+        #endregion
 
-#region "BoundingBox"
+        #region "BoundingBox"
         /// <summary>
         /// Return minimum bounding box.
         /// </summary>
         public Box3d MinimumBoundingBox
         {
-            get { return this.Copy(); }
+            get { return new Box3d(_center, _lx, _ly, _lz); }
         }
 
         /// <summary>
@@ -518,10 +448,8 @@ namespace GeometRi
         /// <summary>
         /// Return Axis Aligned Bounding Box (AABB) for a cloud of points.
         /// </summary>
-        public static Box3d AABB(List<Point3d> points, Coord3d coord = null)
+        public static AABB BoundingBox(IEnumerable<Point3d> points)
         {
-            coord = (coord == null) ? Coord3d.GlobalCS : coord;
-
             double maxx = double.NegativeInfinity;
             double maxy = double.NegativeInfinity;
             double maxz = double.NegativeInfinity;
@@ -531,7 +459,7 @@ namespace GeometRi
 
             foreach (Point3d p in points)
             {
-                Point3d t = p.ConvertTo(coord);
+                Point3d t = p.ConvertToGlobal();
                 if (t.X > maxx) { maxx = t.X; }
                 if (t.Y > maxy) { maxy = t.Y; }
                 if (t.Z > maxz) { maxz = t.Z; }
@@ -540,36 +468,9 @@ namespace GeometRi
                 if (t.Z < minz) { minz = t.Z; }
             }
 
-            return new Box3d(new Point3d(0.5*(maxx-minx), 0.5 * (maxy - miny), 0.5 * (maxz - minz)), maxx - minx, maxy - miny, maxz - minz, coord);
+            return new AABB(new Point3d(0.5 * (maxx - minx), 0.5 * (maxy - miny), 0.5 * (maxz - minz)), maxx - minx, maxy - miny, maxz - minz);
         }
 
-        /// <summary>
-        /// Return Axis Aligned Bounding Box (AABB) for a cloud of points.
-        /// </summary>
-        public static Box3d AABB(Point3d[] points, Coord3d coord = null)
-        {
-            coord = (coord == null) ? Coord3d.GlobalCS : coord;
-
-            double maxx = double.NegativeInfinity;
-            double maxy = double.NegativeInfinity;
-            double maxz = double.NegativeInfinity;
-            double minx = double.PositiveInfinity;
-            double miny = double.PositiveInfinity;
-            double minz = double.PositiveInfinity;
-
-            foreach (Point3d p in points)
-            {
-                Point3d t = p.ConvertTo(coord);
-                if (t.X > maxx) { maxx = t.X; }
-                if (t.Y > maxy) { maxy = t.Y; }
-                if (t.Z > maxz) { maxz = t.Z; }
-                if (t.X < minx) { minx = t.X; }
-                if (t.Y < miny) { miny = t.Y; }
-                if (t.Z < minz) { minz = t.Z; }
-            }
-
-            return new Box3d(new Point3d(0.5 * (maxx + minx), 0.5 * (maxy + miny), 0.5 * (maxz + minz)), maxx - minx, maxy - miny, maxz - minz, coord);
-        }
 
         #region "Intersection"
         /// <summary>
@@ -637,7 +538,7 @@ namespace GeometRi
             // http://www.cs.utah.edu/~awilliam/box/box.pdf
 
             // Modified to allow tolerance based checks
-            
+
             // Relative tolerance ================================
             if (!GeometRi3D.UseAbsoluteTolerance)
             {
@@ -731,7 +632,7 @@ namespace GeometRi
                 return new Segment3d(l._point.Translate(tmin * l._dir), l._point.Translate(tmax * l._dir));
             }
         }
-#endregion
+        #endregion
 
 
         /// <summary>
@@ -739,27 +640,13 @@ namespace GeometRi
         /// </summary>
         public Coord3d LocalCoord()
         {
-            return _local_coord;
+            return Coord3d.GlobalCS;
         }
 
         /// <summary>
         /// Point on box (including interior points) closest to target point "p".
         /// </summary>
         public Point3d ClosestPoint(Point3d p)
-        {
-            Coord3d local_coord = this.LocalCoord();
-            p = p.ConvertTo(local_coord);
-            double x = GeometRi3D.Clamp(p.X, -_lx / 2, _lx / 2);
-            double y = GeometRi3D.Clamp(p.Y, -_ly / 2, _ly / 2);
-            double z = GeometRi3D.Clamp(p.Z, -_lz / 2, _lz / 2);
-
-            return new Point3d(x, y, z, local_coord);
-        }
-
-        /// <summary>
-        /// Point on axis aligned box (including interior points) closest to target point "p".
-        /// </summary>
-        public Point3d AABBClosestPoint(Point3d p)
         {
             p = p.ConvertToGlobal();
             double x = GeometRi3D.Clamp(p.X, this._center.X - _lx / 2, this._center.X + _lx / 2);
@@ -778,11 +665,17 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Distance from axis aligned box to point (zero will be returned for point located inside box)
+        /// Distance between two AABB
         /// </summary>
-        public double AABBDistanceTo(Point3d p)
+        public double DistanceTo(AABB box)
         {
-            return AABBClosestPoint(p).DistanceTo(p);
+            double dx = Abs(_center.X - box.Center.X) - 0.5 * (_lx + box._lx);
+            double dy = Abs(_center.Y - box.Center.Y) - 0.5 * (_ly + box._ly);
+            double dz = Abs(_center.Z - box.Center.Z) - 0.5 * (_lz + box._lz);
+            if (dx < 0) { dx = 0; }
+            if (dy < 0) { dy = 0; }
+            if (dz < 0) { dz = 0; }
+            return Sqrt(dx * dx + dy * dy + dz * dz);
         }
 
         /// <summary>
@@ -837,16 +730,18 @@ namespace GeometRi
             p = p.ConvertTo(coord);
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                if ( (Abs(p.X)-L1/2) <= GeometRi3D.Tolerance && (Abs(p.Y) - L2 / 2) <= GeometRi3D.Tolerance && (Abs(p.Z) - L3 / 2) <= GeometRi3D.Tolerance )
+                if ((Abs(p.X) - L1 / 2) <= GeometRi3D.Tolerance && (Abs(p.Y) - L2 / 2) <= GeometRi3D.Tolerance && (Abs(p.Z) - L3 / 2) <= GeometRi3D.Tolerance)
                 {
-                    if ( (Abs(p.X) - L1 / 2) < -GeometRi3D.Tolerance && (Abs(p.Y) - L2 / 2) < -GeometRi3D.Tolerance && (Abs(p.Z) - L3 / 2) < -GeometRi3D.Tolerance)
+                    if ((Abs(p.X) - L1 / 2) < -GeometRi3D.Tolerance && (Abs(p.Y) - L2 / 2) < -GeometRi3D.Tolerance && (Abs(p.Z) - L3 / 2) < -GeometRi3D.Tolerance)
                     {
                         return 1; // Point is strictly inside box
-                    } else
+                    }
+                    else
                     {
                         return 0; // Point is on boundary
                     }
-                } else
+                }
+                else
                 {
                     return -1; // Point is outside
                 }
@@ -863,68 +758,33 @@ namespace GeometRi
             }
         }
 
-#region "TranslateRotateReflect"
+        #region "TranslateRotateReflect"
         /// <summary>
         /// Translate box by a vector
         /// </summary>
-        public Box3d Translate(Vector3d v)
+        public AABB Translate(Vector3d v)
         {
-            return new Box3d(_center.Translate(v), _lx, _ly, _lz);
+            return new AABB(_center.Translate(v), _lx, _ly, _lz);
         }
 
-        /// <summary>
-        /// Rotate box around point 'p' as a rotation center.
-        /// </summary>
-        public Box3d Rotate(Rotation r, Point3d p)
-        {
-            Point3d new_center = r.ToRotationMatrix * (this._center - p) + p;
-            Rotation new_rotation = r * this.Orientation;
-            return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
-        }
 
         /// <summary>
         /// Reflect box in given point
         /// <para>The order of corner points will be changed during reflection operation.</para>
         /// </summary>
-        public virtual Box3d ReflectIn(Point3d p)
+        public virtual AABB ReflectIn(Point3d p)
         {
             Point3d new_center = this.Center.ReflectIn(p);
-            return new Box3d(new_center, _lx, _ly, _lz, this._r);
-        }
-
-        /// <summary>
-        /// Reflect box in given line
-        /// <para>The order of corner points will be changed during reflection operation.</para>
-        /// </summary>
-        public virtual Box3d ReflectIn(Line3d l)
-        {
-            Point3d new_center = this.Center.ReflectIn(l);
-            Rotation r = new GeometRi.Rotation(l.Direction, PI);
-            Rotation new_rotation = r * this.Orientation;
-            return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
-        }
-
-        /// <summary>
-        /// Reflect box in given plane
-        /// <para>The order of corner points will be changed during reflection operation.</para>
-        /// </summary>
-        public virtual Box3d ReflectIn(Plane3d s)
-        {
-            Point3d new_center = this.Center.ReflectIn(s);
-            Vector3d nV1 = this.V1.ReflectIn(s);
-            Vector3d nV2 = this.V2.ReflectIn(s);
-            Coord3d coord = new Coord3d(new_center, nV1, nV2);
-            Rotation new_rotation = new Rotation(coord);
-            return new Box3d(new_center, _lx, _ly, _lz, new_rotation);
+            return new AABB(new_center, _lx, _ly, _lz);
         }
 
         /// <summary>
         /// Scale box relative to given point
         /// </summary>
-        public virtual Box3d Scale(double scale, Point3d scaling_center)
+        public virtual AABB Scale(double scale, Point3d scaling_center)
         {
             Point3d new_center = scaling_center + scale * (this.Center - scaling_center);
-            return new Box3d(new_center, scale * _lx, scale * _ly, scale * _lz, this._r);
+            return new AABB(new_center, scale * _lx, scale * _ly, scale * _lz);
         }
 
         #endregion
@@ -943,7 +803,7 @@ namespace GeometRi
 
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                return this.Center == b.Center && _r == b.Orientation &&
+                return this.Center == b.Center &&
                        GeometRi3D.AlmostEqual(L1, b.L1) &&
                        GeometRi3D.AlmostEqual(L2, b.L2) &&
                        GeometRi3D.AlmostEqual(L3, b.L3);
@@ -967,7 +827,7 @@ namespace GeometRi
         public override int GetHashCode()
         {
             int hash_code = GeometRi3D.HashFunction(_lx.GetHashCode(), _ly.GetHashCode(), _lz.GetHashCode());
-            return GeometRi3D.HashFunction(_center.GetHashCode(), _r.GetHashCode(), hash_code);
+            return GeometRi3D.HashFunction(_center.GetHashCode(), hash_code);
         }
 
         /// <summary>
@@ -991,19 +851,18 @@ namespace GeometRi
             string str = string.Format("Box3d (reference coord.sys. ") + coord.Name + "):" + nl;
             str += string.Format("Center -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", p.X, p.Y, p.Z) + nl;
             str += string.Format("Lx, Ly, Lz -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", _lx, _ly, _lz) + nl;
-            str += _r.ToString(coord);
             return str;
         }
 
         // Operators overloads
         //-----------------------------------------------------------------
-        public static bool operator ==(Box3d b1, Box3d b2)
+        public static bool operator ==(AABB b1, AABB b2)
         {
             if (object.ReferenceEquals(b1, null))
                 return object.ReferenceEquals(b2, null);
             return b1.Equals(b2);
         }
-        public static bool operator !=(Box3d b1, Box3d b2)
+        public static bool operator !=(AABB b1, AABB b2)
         {
             if (object.ReferenceEquals(b1, null))
                 return !object.ReferenceEquals(b2, null);
@@ -1011,3 +870,4 @@ namespace GeometRi
         }
     }
 }
+

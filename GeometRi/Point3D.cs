@@ -269,6 +269,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Distance from AABB to point (zero will be returned for point located inside box)
+        /// </summary>
+        public double DistanceTo(AABB box)
+        {
+            return box.ClosestPoint(this).DistanceTo(this);
+        }
+
+        /// <summary>
         /// Shortest distance from point to triangle (including interior points)
         /// </summary>
         public double DistanceTo(Triangle t)

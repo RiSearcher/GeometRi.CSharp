@@ -75,6 +75,7 @@
     <Compile Include="TetrahedronTest.cs" />
     <Compile Include="NormalizeTest.cs" />
     <Compile Include="ConvexPolyhedronTest.cs" />
+    <Compile Include="AABBTest.cs" />
     <Compile Include="Vector3dTest.cs" />
   </ItemGroup>
   <ItemGroup>
