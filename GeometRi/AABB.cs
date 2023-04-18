@@ -530,6 +530,70 @@ namespace GeometRi
             return x && y && z;
         }
 
+        /// <summary>
+        /// Check intersection of two AABB
+        /// </summary>
+        public bool Intersects(AABB box)
+        {
+            bool x = Abs(this.Center.X - box.Center.X) <= 0.5 * (this.L1 + box.L1) ? true : false;
+            bool y = Abs(this.Center.Y - box.Center.Y) <= 0.5 * (this.L2 + box.L2) ? true : false;
+            bool z = Abs(this.Center.Z - box.Center.Z) <= 0.5 * (this.L3 + box.L3) ? true : false;
+
+            return x && y && z;
+        }
+
+        /// <summary>
+        /// Intersection of two AABB (null for non-intersecting AABB)
+        /// </summary>
+        public AABB IntersectionWith(AABB box)
+        {
+            double x1min = this.Center.X - 0.5 * this.L1;
+            double x1max = this.Center.X + 0.5 * this.L1;
+            double y1min = this.Center.Y - 0.5 * this.L2;
+            double y1max = this.Center.Y + 0.5 * this.L2;
+            double z1min = this.Center.Z - 0.5 * this.L3;
+            double z1max = this.Center.Z + 0.5 * this.L3;
+
+            double x2min = box.Center.X - 0.5 * box.L1;
+            double x2max = box.Center.X + 0.5 * box.L1;
+            double y2min = box.Center.Y - 0.5 * box.L2;
+            double y2max = box.Center.Y + 0.5 * box.L2;
+            double z2min = box.Center.Z - 0.5 * box.L3;
+            double z2max = box.Center.Z + 0.5 * box.L3;
+
+            double xmin, xmax, ymin, ymax, zmin, zmax;
+
+            xmin = Max(x1min, x2min);
+            xmax = Min(x1max, x2max);
+            if (xmax >= xmin)
+            {
+                ymin = Max(y1min, y2min);
+                ymax = Min(y1max, y2max);
+                if (ymax >= ymin)
+                {
+                    zmin = Max(z1min, z2min);
+                    zmax = Min(z1max, z2max);
+                    if (zmax >= zmin)
+                    {
+                        return new AABB(new Point3d(xmin, ymin, zmin), new Point3d(xmax, ymax, zmax));
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
         private object _line_intersection(Line3d l, double t0, double t1)
         {
             // Smith's algorithm:
@@ -799,7 +863,7 @@ namespace GeometRi
             {
                 return false;
             }
-            Box3d b = (Box3d)obj;
+            AABB b = (AABB)obj;
 
             if (GeometRi3D.UseAbsoluteTolerance)
             {
