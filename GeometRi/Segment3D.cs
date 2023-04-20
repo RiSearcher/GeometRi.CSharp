@@ -44,6 +44,11 @@ namespace GeometRi
             set { _p2 = value.Copy(); }
         }
 
+        public Point3d Center
+        {
+            get { return (_p1 + _p2) / 2; }
+        }
+
         public double Length
         {
             get { return _p1.DistanceTo(_p2); }
@@ -876,6 +881,17 @@ namespace GeometRi
         /// </summary>
         public virtual Segment3d Scale(double scale, Point3d scaling_center)
         {
+            Point3d new_p1 = scaling_center + scale * (this._p1 - scaling_center);
+            Point3d new_p2 = scaling_center + scale * (this._p2 - scaling_center);
+            return new Segment3d(new_p1, new_p2);
+        }
+
+        /// <summary>
+        /// Scale segment relative to its center
+        /// </summary>
+        public virtual Segment3d Scale(double scale)
+        {
+            Point3d scaling_center = this.Center;
             Point3d new_p1 = scaling_center + scale * (this._p1 - scaling_center);
             Point3d new_p2 = scaling_center + scale * (this._p2 - scaling_center);
             return new Segment3d(new_p1, new_p2);
