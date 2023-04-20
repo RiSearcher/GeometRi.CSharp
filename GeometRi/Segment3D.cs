@@ -401,6 +401,14 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Shortest distance between segment and sphere
+        /// </summary>
+        public double DistanceTo(Sphere s)
+        {
+            return s.DistanceTo(this);
+        }
+
+        /// <summary>
         /// Shortest distance between segment and circle (including interior points)
         /// </summary>
         /// <param name="c">Target circle</param>
