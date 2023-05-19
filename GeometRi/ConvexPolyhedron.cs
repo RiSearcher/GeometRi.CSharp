@@ -1043,6 +1043,24 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Non-uniform scaling of polyhedron relative to given point
+        /// </summary>
+        public ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z, Point3d scaling_center)
+        {
+            Point3d center = scaling_center.ConvertToGlobal();
+            for (int i = 0; i < vertex.Length; i++)
+            {
+                vertex[i].X = center.X + scale_x * (vertex[i].X - center.X);
+                vertex[i].Y = center.Y + scale_y * (vertex[i].Y - center.Y);
+                vertex[i].Z = center.Z + scale_z * (vertex[i].Z - center.Z);
+            }
+
+            _list_e = null;
+            _aabb = null;
+            return this;
+        }
+
+        /// <summary>
         /// Scale tetrahedron
         /// </summary>
         public virtual ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z)
