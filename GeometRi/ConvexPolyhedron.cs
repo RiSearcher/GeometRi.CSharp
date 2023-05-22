@@ -8,6 +8,9 @@ namespace GeometRi
     /// <summary>
     /// Convex polyhedron with counterclockwise oriented faces (seen from outside).
     /// </summary>
+#if NET20
+    [Serializable]
+#endif
     public class ConvexPolyhedron : FiniteObject, IFiniteObject
     {
         public int numVertices, numEdges, numFaces;

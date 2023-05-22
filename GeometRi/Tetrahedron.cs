@@ -5,6 +5,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+#if NET20
+    [Serializable]
+#endif
     public class Tetrahedron : FiniteObject, IFiniteObject
     {
 
