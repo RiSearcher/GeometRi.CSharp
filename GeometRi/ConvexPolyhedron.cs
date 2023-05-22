@@ -20,6 +20,10 @@ namespace GeometRi
 
         private AABB _aabb = null;
         private List<Segment3d> _list_e = null;
+
+#if NET20
+    [Serializable]
+#endif
         public struct Edge
         {
             public int p1, p2;
@@ -52,6 +56,9 @@ namespace GeometRi
             Point3d this[int index] { get; }
         }
 
+#if NET20
+    [Serializable]
+#endif
         public struct Face : IVertex
         {
             public int numVertices;
