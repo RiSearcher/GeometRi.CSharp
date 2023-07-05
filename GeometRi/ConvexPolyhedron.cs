@@ -727,6 +727,74 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Distance between two polyhedrons
+        /// <para> The output points may be not unique in case of intersecting objects.</para>
+        /// </summary>
+        /// <param name="cp">Target polyhedron</param>
+        /// <param name="point_on_this_cp">Closest point on this convex polyhedron</param>
+        /// <param name="point_on_target_cp">Closest point on target convex polyhedron</param>
+        public double DistanceTo(ConvexPolyhedron cp, out Point3d point_on_this_cp, out Point3d point_on_target_cp)
+        {
+            Point3d c1 = this.Center;
+            point_on_this_cp = c1;
+            point_on_target_cp = c1;
+            if (c1.BelongsTo(cp))
+            {
+                return 0;
+            }
+            Point3d c2 = cp.Center;
+            if (c2.BelongsTo(this))
+            {
+                point_on_this_cp = c2;
+                point_on_target_cp = c2;
+                return 0;
+            }
+
+            double dist = double.PositiveInfinity;
+
+            for (int i = 0; i < numFaces; i++)
+            {
+                // test only visible faces
+                //if (face[i].normal * new Vector3d(face[i].vertex[0], c2) < 0)
+                //{
+                //    continue;
+                //}
+
+                for (int j = 0; j < face[i].vertex.Length - 2; j++)
+                {
+                    Triangle t1 = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
+
+
+                    for (int k = 0; k < cp.numFaces; k++)
+                    {
+                        // test only visible faces
+                        //if (cp.face[k].normal * new Vector3d(cp.face[k].vertex[0], c1) < 0)
+                        //{
+                        //    continue;
+                        //}
+
+                        for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
+                        {
+                            Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
+
+                            double tmp_dist = t1.DistanceTo(t2, out c1, out c2);
+                            if (tmp_dist < dist)
+                            {
+                                point_on_this_cp = c1;
+                                point_on_target_cp = c2;
+                                dist = tmp_dist;
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+            return dist;
+        }
+
+        /// <summary>
         /// Distance from polyhedron to triangle
         /// </summary>
         public double DistanceTo(Triangle t)
