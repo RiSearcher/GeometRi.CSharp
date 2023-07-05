@@ -468,7 +468,7 @@ namespace GeometRi
                 if (t.Z < minz) { minz = t.Z; }
             }
 
-            return new AABB(new Point3d(0.5 * (maxx - minx), 0.5 * (maxy - miny), 0.5 * (maxz - minz)), maxx - minx, maxy - miny, maxz - minz);
+            return new AABB(new Point3d(0.5 * (maxx + minx), 0.5 * (maxy + miny), 0.5 * (maxz + minz)), maxx - minx, maxy - miny, maxz - minz);
         }
 
 
