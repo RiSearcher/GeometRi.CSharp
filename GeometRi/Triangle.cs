@@ -585,6 +585,44 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Shortest distance between triangle and point
+        /// </summary>
+        public double DistanceTo(Point3d p, out Point3d closest_point)
+        {
+            Point3d projection_point = p.ProjectionTo(this.ToPlane);
+
+            int code = _PointLocation(projection_point);
+
+            if (code >= 0)
+            {
+                closest_point = projection_point;
+                return p.DistanceTo(projection_point);
+            }
+
+            Segment3d AB = new Segment3d(this._a, this._b);
+            Segment3d BC = new Segment3d(this._b, this._c);
+            Segment3d AC = new Segment3d(this._a, this._c);
+
+            double dist = p.DistanceTo(AB);
+            Point3d tmp_closest_point = AB.ClosestPoint(p);
+            double dist2 = p.DistanceTo(BC);
+            if (dist2 < dist)
+            {
+                dist = dist2;
+                tmp_closest_point = BC.ClosestPoint(p);
+            }
+            dist2 = p.DistanceTo(AC);
+            if (dist2 < dist)
+            {
+                dist = dist2;
+                tmp_closest_point = AC.ClosestPoint(p);
+            }
+
+            closest_point = tmp_closest_point;
+            return dist;
+        }
+
+        /// <summary>
         /// Calculates the point on the triangle closest to given point.
         /// </summary>
         public Point3d ClosestPoint(Point3d p)

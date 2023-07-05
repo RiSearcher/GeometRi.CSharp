@@ -642,7 +642,7 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
-        public void TriangleDistanceToPointTest()
+        public void TriangleDistanceToPointTest_01()
         {
             Point3d p1 = new Point3d(0, 0, 0);
             Point3d p2 = new Point3d(2, 0, 0);
@@ -655,6 +655,18 @@ namespace GeometRi_Tests
             p = new Point3d(5, 0, 4);
             Assert.IsTrue(Abs(t.DistanceTo(p) - 5) < GeometRi3D.Tolerance);
 
+        }
+
+        [TestMethod()]
+        public void TriangleDistanceToPointTest_02()
+        {
+            Point3d p1 = new Point3d(2, 0, 0);
+            Point3d p2 = new Point3d(2, 1, 0);
+            Point3d p3 = new Point3d(2, 0, 1);
+            Triangle t = new Triangle(p1, p2, p3);
+
+            Point3d p = new Point3d(0, 0, 0);
+            Assert.IsTrue(Abs(t.DistanceTo(p) - 2) < GeometRi3D.Tolerance);
         }
 
         [TestMethod()]

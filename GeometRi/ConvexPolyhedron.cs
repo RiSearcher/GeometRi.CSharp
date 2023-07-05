@@ -670,60 +670,13 @@ namespace GeometRi
             return dist;
         }
 
-
         /// <summary>
         /// Distance between two polyhedrons
         /// </summary>
         public double DistanceTo(ConvexPolyhedron cp)
         {
-            Point3d c1 = this.Center;
-            Point3d c2 = cp.Center;
-
-            if (c1.BelongsTo(cp) || c2.BelongsTo(this))
-            {
-                return 0;
-            }
-
-            double dist = double.PositiveInfinity;
-
-            for (int i = 0; i < numFaces; i++)
-            {
-                // test only visible faces
-                //if (face[i].normal * new Vector3d(face[i].vertex[0], c2) < 0)
-                //{
-                //    continue;
-                //}
-
-                for (int j = 0; j < face[i].vertex.Length - 2; j++)
-                {
-                    Triangle t1 = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
-
-
-                    for (int k = 0; k < cp.numFaces; k++)
-                    {
-                        // test only visible faces
-                        //if (cp.face[k].normal * new Vector3d(cp.face[k].vertex[0], c1) < 0)
-                        //{
-                        //    continue;
-                        //}
-
-                        for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
-                        {
-                            Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
-
-                            double tmp_dist = t1.DistanceTo(t2);
-                            if (tmp_dist < dist)
-                            {
-                                dist = tmp_dist;
-                            }
-                        }
-
-                    }
-
-                }
-
-            }
-            return dist;
+            Point3d p1, p2;
+            return DistanceTo(cp, out p1, out p2);
         }
 
         /// <summary>
@@ -735,6 +688,7 @@ namespace GeometRi
         /// <param name="point_on_target_cp">Closest point on target convex polyhedron</param>
         public double DistanceTo(ConvexPolyhedron cp, out Point3d point_on_this_cp, out Point3d point_on_target_cp)
         {
+            // check if one CP is inside other CP
             Point3d c1 = this.Center;
             point_on_this_cp = c1;
             point_on_target_cp = c1;
@@ -752,45 +706,65 @@ namespace GeometRi
 
             double dist = double.PositiveInfinity;
 
-            for (int i = 0; i < numFaces; i++)
+            // test vertices of this cp
+            for (int i = 0; i < numVertices; i++)
             {
-                // test only visible faces
-                //if (face[i].normal * new Vector3d(face[i].vertex[0], c2) < 0)
-                //{
-                //    continue;
-                //}
-
-                for (int j = 0; j < face[i].vertex.Length - 2; j++)
+                for (int k = 0; k < cp.numFaces; k++)
                 {
-                    Triangle t1 = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
-
-
-                    for (int k = 0; k < cp.numFaces; k++)
+                    for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
                     {
-                        // test only visible faces
-                        //if (cp.face[k].normal * new Vector3d(cp.face[k].vertex[0], c1) < 0)
-                        //{
-                        //    continue;
-                        //}
+                        Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
 
-                        for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
+                        double tmp_dist = vertex[i].DistanceTo(t2, out c1);
+                        if (tmp_dist < dist)
                         {
-                            Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
-
-                            double tmp_dist = t1.DistanceTo(t2, out c1, out c2);
-                            if (tmp_dist < dist)
-                            {
-                                point_on_this_cp = c1;
-                                point_on_target_cp = c2;
-                                dist = tmp_dist;
-                            }
+                            point_on_this_cp = vertex[i];
+                            point_on_target_cp = c1;
+                            dist = tmp_dist;
                         }
-
                     }
 
                 }
-
             }
+
+            // test vertices of target cp
+            for (int i = 0; i < cp.numVertices; i++)
+            {
+                for (int k = 0; k < this.numFaces; k++)
+                {
+                    for (int l = 0; l < this.face[k].vertex.Length - 2; l++)
+                    {
+                        Triangle t2 = new Triangle(this.face[k].Vertex[0], this.face[k].Vertex[l + 1], this.face[k].Vertex[l + 2]);
+
+                        double tmp_dist = cp.vertex[i].DistanceTo(t2, out c1);
+                        if (tmp_dist < dist)
+                        {
+                            point_on_this_cp = c1;
+                            point_on_target_cp = cp.vertex[i];
+                            dist = tmp_dist;
+                        }
+                    }
+
+                }
+            }
+
+            // test edges
+            for (int i = 0; i < this.numEdges; i++)
+            {
+                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                for (int j = 0; j < cp.numEdges; j++)
+                {
+                    Segment3d s2 = new Segment3d(cp.vertex[cp.edge[j].p1], cp.vertex[cp.edge[j].p2]);
+                    double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
+                    if (tmp_dist < dist)
+                    {
+                        point_on_this_cp = c1;
+                        point_on_target_cp = c2;
+                        dist = tmp_dist;
+                    }
+                }
+            }
+
             return dist;
         }
 
