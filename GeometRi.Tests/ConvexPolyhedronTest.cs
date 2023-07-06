@@ -270,9 +270,8 @@ namespace GeometRi_Tests
         }
 
         [TestMethod]
-        public void BoxBoxDistanceTest()
+        public void BoxBoxDistanceTest_01()
         {
-            Tetrahedron t = new Tetrahedron();
             Box3d b1 = new Box3d(new Point3d(0, 0, 0), 1, 1, 1);
             Box3d b2 = new Box3d(new Point3d(2, 0, 0), 1, 1, 1);
             ConvexPolyhedron cp1 = ConvexPolyhedron.FromBox(b1);
@@ -280,6 +279,36 @@ namespace GeometRi_Tests
             Point3d p1, p2;
             double dist = cp1.DistanceTo(cp2, out p1, out p2);
             Assert.AreEqual(dist, 1);
+        }
+
+        [TestMethod]
+        public void BoxBoxDistanceTest_02()
+        {
+            // Touching boxes
+            Box3d b1 = new Box3d(new Point3d(0, 0, 0), 1, 1, 1);
+            Box3d b2 = new Box3d(new Point3d(1, 0.5, 0.5), 1, 1, 1);
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromBox(b1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromBox(b2);
+            Point3d p1, p2;
+            double dist = cp1.DistanceTo(cp2, out p1, out p2);
+            Assert.AreEqual(dist, 0);
+            Assert.IsTrue(p1.BelongsTo(cp1));
+            Assert.IsTrue(p2.BelongsTo(cp2));
+        }
+
+        [TestMethod]
+        public void BoxBoxDistanceTest_03()
+        {
+            // Partially intersecting boxes
+            Box3d b1 = new Box3d(new Point3d(0, 0, 0), 1, 1, 1);
+            Box3d b2 = new Box3d(new Point3d(0.5, 0.5, 0.5), 1, 1, 1);
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromBox(b1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromBox(b2);
+            Point3d p1, p2;
+            double dist = cp1.DistanceTo(cp2, out p1, out p2);
+            Assert.AreEqual(dist, 0);
+            Assert.IsTrue(p1.BelongsTo(cp1));
+            Assert.IsTrue(p2.BelongsTo(cp2));
         }
     }
 }
