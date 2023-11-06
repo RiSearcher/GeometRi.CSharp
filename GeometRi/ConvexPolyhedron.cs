@@ -21,6 +21,10 @@ namespace GeometRi
         private AABB _aabb = null;
         private List<Segment3d> _list_e = null;
 
+
+        /// <summary>
+        /// Edge of a convex polyhedron.
+        /// </summary>
 #if NET20
     [Serializable]
 #endif
@@ -118,6 +122,16 @@ namespace GeometRi
 
         #region "Constructors"
 
+        /// <summary>
+        /// Creates general convex polyhedron from a lists of vertices, edges, and faces
+        /// </summary>
+        /// <param name="numVertices">Number of vertices</param>
+        /// <param name="numEdges">Number of edges</param>
+        /// <param name="numFaces">Number of faces</param>
+        /// <param name="vertices">List of vertices</param>
+        /// <param name="edges">List of edges</param>
+        /// <param name="faces">List of faces</param>
+        /// <param name="check_face_orientation">Check and invert incorrectly oriented faces</param>
         public ConvexPolyhedron(int numVertices, int numEdges, int numFaces, Point3d[] vertices, Edge[] edges, Face[] faces, bool check_face_orientation = false)
         {
             this.numVertices = numVertices;
@@ -145,6 +159,9 @@ namespace GeometRi
 
         }
 
+        /// <summary>
+        /// Create ConvexPolyhedron object from a Tetrahedron object
+        /// </summary>
         public static ConvexPolyhedron FromTetrahedron(Tetrahedron t)
         {
             Point3d[] vertices = new Point3d[4];
@@ -173,6 +190,9 @@ namespace GeometRi
             return cp;
         }
 
+        /// <summary>
+        /// Create ConvexPolyhedron object from a Box3d object
+        /// </summary>
         public static ConvexPolyhedron FromBox(Box3d box)
         {
             Point3d[] vertices = new Point3d[8];
@@ -360,7 +380,7 @@ namespace GeometRi
         /// <para>( 0, ±φ, ±1/φ)</para>
         /// <para>(±φ, ±1/φ,  0)</para> 
         /// <para>(±1/φ,  0, ±φ)</para>
-        /// <para>with 'f' equal to golden ratio (1+Sqrt(5))/2</para>
+        /// <para>with 'φ' equal to golden ratio (1+Sqrt(5))/2</para>
         /// </summary>
         public static ConvexPolyhedron Dodecahedron()
         {
@@ -637,7 +657,7 @@ namespace GeometRi
         #region "Distance"
 
         /// <summary>
-        /// Distance from polyhedron to point (zero will be returned for point located inside box)
+        /// Distance from polyhedron to point (zero will be returned for point located inside polyhedron)
         /// </summary>
         public double DistanceTo(Point3d p)
         {
@@ -876,7 +896,7 @@ namespace GeometRi
         /// <summary>
         /// Intersection check between two polyhedrons.
         /// </summary>
-        public bool Intersects_Slow(ConvexPolyhedron cp)
+        internal bool Intersects_Slow(ConvexPolyhedron cp)
         {
             Point3d c1 = this.Center;
             Point3d c2 = cp.Center;
@@ -1108,8 +1128,6 @@ namespace GeometRi
         /// </summary>
         public ConvexPolyhedron Translate(Vector3d v)
         {
-            Dictionary<Int32, Point3d> dict = new Dictionary<Int32, Point3d>();
-
             for (int i = 0; i < vertex.Length; i++)
             {
                 vertex[i] = vertex[i].Translate(v);
@@ -1125,7 +1143,6 @@ namespace GeometRi
         /// </summary>
         public ConvexPolyhedron Rotate(Rotation r, Point3d p)
         {
-            Dictionary<Int32, Point3d> dict = new Dictionary<Int32, Point3d>();
             Matrix3d m = r.ToRotationMatrix;
 
             for (int i = 0; i < vertex.Length; i++)
@@ -1167,32 +1184,13 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Non-uniform scaling of polyhedron relative to given point
-        /// </summary>
-        public ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z, Point3d scaling_center)
-        {
-            Point3d center = scaling_center.ConvertToGlobal();
-            for (int i = 0; i < vertex.Length; i++)
-            {
-                vertex[i].X = center.X + scale_x * (vertex[i].X - center.X);
-                vertex[i].Y = center.Y + scale_y * (vertex[i].Y - center.Y);
-                vertex[i].Z = center.Z + scale_z * (vertex[i].Z - center.Z);
-            }
-
-            _list_e = null;
-            _aabb = null;
-            return this;
-        }
-
-        /// <summary>
-        /// Scale tetrahedron
+        /// Non-uniform scaling of polyhedron relative to center point
         /// </summary>
         public virtual ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z)
         {
             Point3d center = this.Center;
             Matrix3d m = Matrix3d.DiagonalMatrix(scale_x, scale_y, scale_z);
             Matrix3d m_1 = Matrix3d.DiagonalMatrix(1.0 / scale_x, 1.0 / scale_y, 1.0 / scale_z);
-            Dictionary<Int32, Point3d> dict = new Dictionary<Int32, Point3d>();
 
             for (int i = 0; i < vertex.Length; i++)
             {

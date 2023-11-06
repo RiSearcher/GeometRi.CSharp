@@ -455,17 +455,44 @@ Defines a tetrahedron in 3D space. Implements common translation, rotation and r
 * __Volume__ - volume of the tetrahedron
 ### Methods
 * __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB)
+* __BoundingBox__ - bounding box in given coordinate system
+* __AABB__ - Axis Aligned Bounding Box (AABB)
 * __DistanceTo__ - shortest distance to point and tetrahedron
 * __ClosestPoint__ - calculates the point on the terahedron's boundary closest to given point
 * __Intersects__ - intersection check with triangle, tetrahedron, line, ray, segment, box and sphere
 * __IsInside__ - check if object is located inside given box
-* __Translate__ - translate triangle by vector
-* __Rotate__ - rotate triangle around origin or other point
-* __Reflect__ - reflect triangle in point, line or plane
+* __Translate__ - translate tetrahedron by vector
+* __Rotate__ - rotate tetrahedron around origin or other point
+* __Reflect__ - reflect tetrahedron in point, line or plane
 * __Scale__ - scale tetrahedron
-* __Equals__ - check if two triangles are equals
-* __ToString__ - string representation of triangle in global or local coordinate system
+* __Equals__ - check if two tetrahedrons are equals
+* __ToString__ - string representation of tetrahedron in global or local coordinate system
+
+## ConvexPolyhedron
+
+Defines a convex polyhedron in 3D space with counterclockwise oriented faces (seen from outside).
+### Properties
+* __Center__ - center of the mass of polyhedron
+* __ListOfEdges__ - list of edges
+* __Area__ - area of the polyhedron
+* __Volume__ - volume of the polyhedron
+### Methods
+* __Copy__ - Creates copy of the object
+* __BoundingBox__ - bounding box in given coordinate system
+* __AABB__ - Axis Aligned Bounding Box (AABB)
+* __DistanceTo__ - shortest distance to point, triangle, and polyhedron
+* __Intersects__ - intersection check with polyhedron and box
+* __IsInside__ - check if object is located inside given box
+* __Translate__ - translate polyhedron by vector
+* __Rotate__ - rotate polyhedron around origin or other point
+* __Reflect__ - reflect polyhedron in point, line or plane
+* __Scale__ - scale polyhedron
+### Static Methods
+* __FromTetrahedron__ - Create ConvexPolyhedron object from a Tetrahedron object
+* __FromBox__ - Create ConvexPolyhedron object from a Box3d object
+* __Octahedron__ - Creates regular octahedron centered at origin
+* __Icosahedron__ - Creates regular icosahedron centered at origin
+* __Dodecahedron__ - Creates regular dodecahedron centered at origin
 
 ## Coord3d
 

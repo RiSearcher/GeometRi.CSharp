@@ -5,6 +5,9 @@ using static System.Math;
 
 namespace GeometRi
 {
+    /// <summary>
+    /// Tetrahedron in 3D space defined by four points.
+    /// </summary>
 #if NET20
     [Serializable]
 #endif
@@ -32,6 +35,9 @@ namespace GeometRi
             vertices[3] = new Point3d(1, 1, 0);
         }
 
+        /// <summary>
+        /// General tetrahedron defined by four points
+        /// </summary>
         public Tetrahedron(Point3d v1, Point3d v2, Point3d v3, Point3d v4)
         {
             this.vertices = new Point3d[4];
@@ -54,6 +60,9 @@ namespace GeometRi
             return new Tetrahedron(p1, p2, p3, p4);
         }
 
+        /// <summary>
+        /// Convert ConvexPolyhedron to Tetrahedron
+        /// </summary>
         static public Tetrahedron FromConvexPolyhedron(ConvexPolyhedron cp)
         {
             if (cp.numVertices == 4 && cp.numFaces == 4 && cp.numEdges == 6)
@@ -78,6 +87,9 @@ namespace GeometRi
 
         #region "Properties"
 
+        /// <summary>
+        /// Center of tetrahedron
+        /// </summary>
         public Point3d Center
         {
             get 
@@ -87,6 +99,9 @@ namespace GeometRi
 
         }
 
+        /// <summary>
+        /// Vertex of tetrahedron
+        /// </summary>
         public Point3d A
         {
             get
@@ -95,6 +110,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Vertex of tetrahedron
+        /// </summary>
         public Point3d B
         {
             get
@@ -103,6 +121,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Vertex of tetrahedron
+        /// </summary>
         public Point3d C
         {
             get
@@ -111,6 +132,9 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Vertex of tetrahedron
+        /// </summary>
         public Point3d D
         {
             get
