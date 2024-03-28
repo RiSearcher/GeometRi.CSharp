@@ -697,7 +697,7 @@ namespace GeometRi
         {
             if (this.Intersects(cp))
             {
-                //return 0;
+                return 0;
             }
             Point3d p1, p2;
             return _distance_to_not_intersecting(cp, out p1, out p2);
@@ -1164,8 +1164,7 @@ namespace GeometRi
         /// </summary>
         public ConvexPolyhedron Scale(double scale)
         {
-            this.Scale(scale, this.Center);
-            return this;
+            return Scale(scale, this.Center);
         }
 
         /// <summary>
@@ -1184,11 +1183,11 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Non-uniform scaling of polyhedron relative to center point
+        /// Non-uniform scaling of polyhedron relative to given point
         /// </summary>
-        public virtual ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z)
+        public virtual ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z, Point3d scaling_center)
         {
-            Point3d center = this.Center;
+            Point3d center = scaling_center;
             Matrix3d m = Matrix3d.DiagonalMatrix(scale_x, scale_y, scale_z);
             Matrix3d m_1 = Matrix3d.DiagonalMatrix(1.0 / scale_x, 1.0 / scale_y, 1.0 / scale_z);
 
@@ -1204,6 +1203,14 @@ namespace GeometRi
             _list_e = null;
             _aabb = null;
             return this;
+        }
+
+        /// <summary>
+        /// Non-uniform scaling of polyhedron relative to center point
+        /// </summary>
+        public virtual ConvexPolyhedron Scale(double scale_x, double scale_y, double scale_z)
+        {
+            return Scale(scale_x, scale_y, scale_z, this.Center);
         }
 
         #endregion
