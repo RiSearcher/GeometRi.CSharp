@@ -205,6 +205,36 @@ namespace GeometRi_Tests
 
         }
 
+        [TestMethod()]
+        public void TetrahedronDistanceToTetrahedronTest_01()
+        {
+            Point3d p0 = new Point3d(1.18847041209228, 0.104193542059284, 0.35298291672622);
+            Point3d p1 = new Point3d(0.649467768945706, 0.170331494522815, 0.72174959083238);
+            Point3d p2 = new Point3d(1.15947687723363, 0.573922428456402, 0.810586551138034);
+            Point3d p3 = new Point3d(0.793812982683988, 0.621719485201377, 0.267546685570428);
+            Tetrahedron t1 = new Tetrahedron(p0, p1, p2, p3);
+
+            Point3d s0 = new Point3d(0.216267039810085, 0.169909202890096, 0.859064204525464);
+            Point3d s1 = new Point3d(0.205044294164905, 0.659002041871181, 0.42140088318818);
+            Point3d s2 = new Point3d(0.66494259923399, 0.648073860241189, 0.889654085897164);
+            Point3d s3 = new Point3d(0.684153131501953, 0.210778895931041, 0.400480284835266);
+            Tetrahedron t2 = new Tetrahedron(s0, s1, s2, s3);
+
+            ConvexPolyhedron c1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron c2 = ConvexPolyhedron.FromTetrahedron(t2);
+
+            double dist = c1.DistanceTo(c2);
+            double dist2 = c2.DistanceTo(c1);
+
+            Assert.IsTrue(dist > 0.02562);
+            Assert.IsTrue(dist2 > 0.02562);
+
+            bool check1 = c1.Intersects(c2);
+            bool check2 = c2.Intersects(c1);
+            Assert.IsFalse(c1.Intersects(c2));
+            Assert.IsFalse(c2.Intersects(c1));
+        }
+
         [TestMethod]
         public void BoxIntersectionTest()
         {

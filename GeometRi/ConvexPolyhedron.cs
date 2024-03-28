@@ -697,7 +697,7 @@ namespace GeometRi
         {
             if (this.Intersects(cp))
             {
-                return 0;
+                //return 0;
             }
             Point3d p1, p2;
             return _distance_to_not_intersecting(cp, out p1, out p2);
@@ -993,12 +993,12 @@ namespace GeometRi
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
-                        int side0 = WhichSide(this.vertex, P, N);
+                        int side0 = WhichSide(this.vertex, P, N, 1e-16);
                         if (side0 == 0)
                         {
                             continue;
                         }
-                        int side1 = WhichSide(c.vertex, P, N);
+                        int side1 = WhichSide(c.vertex, P, N, 1e-16);
                         if (side1 == 0)
                         {
                             continue;
@@ -1017,7 +1017,7 @@ namespace GeometRi
         }
 
 
-        private int WhichSide(Point3d[] vertex, Vector3d P, Vector3d D)
+        private int WhichSide(Point3d[] vertex, Vector3d P, Vector3d D, double tolerance = 0)
         {
             // The vertices are projected to the form P+t*D.
             // The return value is:
@@ -1031,11 +1031,11 @@ namespace GeometRi
             {
                 // Project vertex onto the line
                 double t = D * (vertex[i].ToVector - P);
-                if (t > 0)
+                if (t > tolerance)
                 {
                     positive++;
                 }
-                else if (t < 0)
+                else if (t < -tolerance)
                 {
                     negative++;
                 }
