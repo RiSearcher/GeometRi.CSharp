@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using GeometRi;
 
 namespace GeometRi.Benchmarks
@@ -60,9 +61,43 @@ namespace GeometRi.Benchmarks
             Circle3d c3 = new Circle3d(new Point3d(0.3, 0.55, 0.3), 0.1, new Vector3d(0, 0, 2));
             Sphere sph = new Sphere(new Point3d(2.3, 1.55, 0.3), 0.1);
             double dist1 = sph.DistanceTo(box);
-            Profile("Test2", 2000000, () =>
+
+            List<ConvexPolyhedron> list = new List<ConvexPolyhedron>();
+            Random rnd = new Random();
+            for (int i=0; i < 5; i++)
             {
-                double dist = sph.DistanceTo(box);
+                ConvexPolyhedron cp = ConvexPolyhedron.Octahedron();
+                Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
+                cp = cp.Rotate(r, cp.Center);
+                cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
+                list.Add(cp);
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                ConvexPolyhedron cp = ConvexPolyhedron.Icosahedron();
+                Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
+                cp = cp.Rotate(r, cp.Center);
+                cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
+                list.Add(cp);
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                ConvexPolyhedron cp = ConvexPolyhedron.Dodecahedron();
+                Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
+                cp = cp.Rotate(r, cp.Center);
+                cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
+                list.Add(cp);
+            }
+
+            Profile("Test2", 50, () =>
+            {
+                foreach(ConvexPolyhedron cp1 in list)
+                {
+                    foreach(ConvexPolyhedron cp2 in list)
+                    {
+                        double dist = cp1.DistanceTo(cp2);
+                    }
+                }
             });
 
 

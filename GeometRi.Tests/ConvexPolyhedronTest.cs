@@ -340,5 +340,150 @@ namespace GeometRi_Tests
             Assert.IsTrue(p1.BelongsTo(cp1));
             Assert.IsTrue(p2.BelongsTo(cp2));
         }
+
+        [TestMethod]
+        public void TetTetDistanceTest_01()
+        {
+            // Vertex-Vertex distance
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, 0, 0), new Point3d(1, -1, -1), new Point3d(1, -1, 1), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_02()
+        {
+            // Vertex-Edge distance
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, -1, 0), new Point3d(0.5, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_03()
+        {
+            // Vertex-Face distance
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, -1, -1), new Point3d(0.5, 1, -1), new Point3d(0.5, 0, 1), new Point3d(1, 0, 0));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_04()
+        {
+            // Edge-Edge distance
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, -1), new Point3d(0, 0, 1), new Point3d(-1, -1, 0), new Point3d(-1, 1, 0));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, -1, 0), new Point3d(0.5, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_05()
+        {
+            // Vertex-Vertex touching
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(1, -1, -1), new Point3d(1, -1, 1), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_06()
+        {
+            // Vertex-Edge touching
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, -1, 0), new Point3d(0, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_07()
+        {
+            // Vertex-Face touching
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, -1, -1), new Point3d(0, 1, -1), new Point3d(0, 0, 1), new Point3d(1, 0, 0));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_08()
+        {
+            // Edge-Edge touching
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0, 0, -1), new Point3d(0, 0, 1), new Point3d(-1, -1, 0), new Point3d(-1, 1, 0));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, -1, 0), new Point3d(0, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_09()
+        {
+            // Vertex-Vertex penetration
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0.01, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, 0, 0), new Point3d(1, -1, -1), new Point3d(1, -1, 1), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_10()
+        {
+            // Vertex-Edge penetration
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0.01, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, -1, 0), new Point3d(0, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_11()
+        {
+            // Vertex-Face penetration
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0.1, 0, 0), new Point3d(-1, -1, -1), new Point3d(-1, -1, 1), new Point3d(-1, 1, 1));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, -1, -1), new Point3d(0, 1, -1), new Point3d(0, 0, 1), new Point3d(1, 0, 0));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
+        [TestMethod]
+        public void TetTetDistanceTest_12()
+        {
+            // Edge-Edge penetration
+            Tetrahedron t1 = new Tetrahedron(new Point3d(0.1, 0, -1), new Point3d(0.1, 0, 1), new Point3d(-1, -1, 0), new Point3d(-1, 1, 0));
+            Tetrahedron t2 = new Tetrahedron(new Point3d(0, -1, 0), new Point3d(0, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
+            ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
+            ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
+            double dist = cp1.DistanceTo(cp2);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
+        }
+
     }
 }
