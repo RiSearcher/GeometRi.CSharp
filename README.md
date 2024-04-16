@@ -33,6 +33,7 @@ Global tolerance property is used for proximity checking, not an exact robust al
     * [Box3d](https://github.com/RiSearcher/GeometRi.CSharp#box3d)
     * [Triangle](https://github.com/RiSearcher/GeometRi.CSharp#triangle)
     * [Tetrahedron](https://github.com/RiSearcher/GeometRi.CSharp#tetrahedron)
+	* [ConvexPolyhedron](https://github.com/RiSearcher/GeometRi.CSharp#convexpolyhedron)
     * [Coord3d](https://github.com/RiSearcher/GeometRi.CSharp#coord3d)
     * [Matrix3d](https://github.com/RiSearcher/GeometRi.CSharp#matrix3d)
     * [Quaternion](https://github.com/RiSearcher/GeometRi.CSharp#quaternion)
@@ -397,6 +398,31 @@ Box object defined by center point, three dimensions and orientation in space.
 ### Static Methods
 * __AABB__ - axis aligned bounding box for a cloud of points
 
+## AABB
+
+Axis aligned 3D box, can be degenerated with one or more dimensions equal 0. Defined only in Global CS.
+### Properties
+* __Center__ - center point of the box
+* __L1/L2/L3__ - dimensions of the box
+* __V1/V2/V3__ - orientation vectors of the box
+* __Orientation__ - box orientation
+* __P1/P2/P3/P4/P5/P6/P7/P8__ - corner points of the box
+* __ListOfPoints__ - list of corner points of the box
+* __ListOfTriangles__ - list of triangles forming the box's surface
+* __ListOfPlanes__ - list of planes forming the box's surface
+* __ListOfEdges__ - list of edges
+* __Area__ - area of the box
+* __Volume__ - volume of the box
+### Methods
+* __DistanceTo__ - shortest distance to point, circle or sphere
+* __Intersects__ - intersection check with box, circle, tetrahedron or triangle
+* __IntersectionWith__ - intersection of box with line, ray or segment
+* __Translate__ - translate box by vector
+* __Rotate__ - rotate box around origin or other point
+* __Reflect__ - reflect box in point, line or plane
+* __Equals__ - check if two ellipsoids are equals
+* __ToString__ - string representation of ellipsoid in global or local coordinate system
+
 ## Triangle
 
 Defines a triangle in 3D space. Implements common translation, rotation and reflection methods. Calculates most of the standard
@@ -485,7 +511,6 @@ Defines a convex polyhedron in 3D space with counterclockwise oriented faces (se
 * __IsInside__ - check if object is located inside given box
 * __Translate__ - translate polyhedron by vector
 * __Rotate__ - rotate polyhedron around origin or other point
-* __Reflect__ - reflect polyhedron in point, line or plane
 * __Scale__ - scale polyhedron
 ### Static Methods
 * __FromTetrahedron__ - Create ConvexPolyhedron object from a Tetrahedron object

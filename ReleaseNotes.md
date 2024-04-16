@@ -1,6 +1,10 @@
 # GeometRi
 ## Release notes
 
+### 1.4.1.0 (16/4/2024)
+* Convex polyhedron class.
+* Axis aligned bounding box (AABB) class.
+
 ### 1.4.0.1 (13/9/2022)
 * Fixed segment direction normalization.
 

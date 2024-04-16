@@ -979,54 +979,6 @@ namespace GeometRi
         /// <summary>
         /// Intersection check between two polyhedrons.
         /// </summary>
-        internal bool Intersects_Slow(ConvexPolyhedron cp)
-        {
-            Point3d c1 = this.Center;
-            Point3d c2 = cp.Center;
-
-            if (c1.BelongsTo(cp) || c2.BelongsTo(this))
-            {
-                return true;
-            }
-
-            for (int i = 0; i < numFaces; i++)
-            {
-                // test only visible faces
-                //if (face[i].normal * new Vector3d(face[i].vertex[0], c2) < 0)
-                //{
-                //    continue;
-                //}
-
-                for (int j = 0; j < face[i].vertex.Length - 2; j++)
-                {
-                    Triangle t1 = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
-
-                    for (int k = 0; k < cp.numFaces; k++)
-                    {
-                        // test only visible faces
-                        //if (cp.face[k].normal * new Vector3d(cp.face[k].vertex[0], c1) < 0)
-                        //{
-                        //    continue;
-                        //}
-
-                        for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
-                        {
-                            Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
-
-                            if (t1.Intersects(t2))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Intersection check between two polyhedrons.
-        /// </summary>
         public bool Intersects(ConvexPolyhedron c)
         {
 
