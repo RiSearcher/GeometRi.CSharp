@@ -693,21 +693,23 @@ namespace GeometRi
         /// <summary>
         /// Distance between two polyhedrons
         /// </summary>
-        public double DistanceTo_old(ConvexPolyhedron cp)
+        /// <param name="c">Target polyhedron</param>
+        public double DistanceTo(ConvexPolyhedron c)
         {
-            if (this.Intersects(cp))
-            {
-                return 0;
-            }
-            Point3d p1, p2;
-            return _distance_to_not_intersecting(cp, out p1, out p2);
+            Point3d c1 = new Point3d();
+            Point3d c2 = new Point3d();
+            return DistanceTo(c, out c1, out c2);
         }
+
 
         /// <summary>
         /// Distance between two polyhedrons
+        /// <para> The output points are valid only in case of non-intersecting objects.</para>
         /// </summary>
         /// <param name="c">Target polyhedron</param>
-        public double DistanceTo(ConvexPolyhedron c)
+        /// <param name="point_on_this_cp">Closest point on this convex polyhedron</param>
+        /// <param name="point_on_target_cp">Closest point on target convex polyhedron</param>
+        public double DistanceTo(ConvexPolyhedron c, out Point3d point_on_this_cp, out Point3d point_on_target_cp)
         {
             // Use "Method of Separating Axes" to test intersection combined with distance calculation
 
@@ -717,6 +719,10 @@ namespace GeometRi
 
             double dist = double.PositiveInfinity;
             bool intersecting = true;
+            Point3d c1 = new Point3d();
+            Point3d c2 = new Point3d();
+            point_on_this_cp = c1;
+            point_on_target_cp = c2;
 
             // Test faces of this CP for separation. Because of the counterclockwise ordering,
             // the projection interval for this CP is (-inf, 0].
@@ -732,6 +738,7 @@ namespace GeometRi
                     intersecting = false;
                     double square_proj_dist = double.PositiveInfinity;
                     Point3d best_proj_point = this.face[i].Vertex[0];
+                    Point3d target_point = this.face[i].Vertex[0];
 
                     Plane3d plane = new Plane3d(this.face[i].Vertex[0], this.face[i].normal);
                     foreach (Point3d point in c.vertex)
@@ -742,6 +749,7 @@ namespace GeometRi
                         {
                             square_proj_dist = tmp_dist;
                             best_proj_point = projection;
+                            target_point = point;
                         }
                     }
                     // test if best projection of c.vertex is inside the face
@@ -756,7 +764,7 @@ namespace GeometRi
                         Vector3d v = new Vector3d(this.face[i].Vertex[l], best_proj_point);
                         if (edge.Cross(v).Dot(this.face[i].normal) < 0)
                         {
-                            // projection ourside of face
+                            // projection outside of face
                             inside = false;
                             break;
                         }
@@ -765,7 +773,11 @@ namespace GeometRi
                     if (inside)
                     {
                         double tmp_dist = Math.Sqrt(square_proj_dist);
-                        if (tmp_dist < dist) { dist = tmp_dist; }
+                        if (tmp_dist < dist) { 
+                            dist = tmp_dist;
+                            point_on_this_cp = best_proj_point;
+                            point_on_target_cp = target_point;
+                        }
                     }
                 }
             }
@@ -784,6 +796,7 @@ namespace GeometRi
                     intersecting = false;
                     double square_proj_dist = double.PositiveInfinity;
                     Point3d best_proj_point = c.face[i].Vertex[0];
+                    Point3d target_point = c.face[i].Vertex[0];
 
                     Plane3d plane = new Plane3d(c.face[i].Vertex[0], c.face[i].normal);
                     foreach (Point3d point in this.vertex)
@@ -794,6 +807,7 @@ namespace GeometRi
                         {
                             square_proj_dist = tmp_dist;
                             best_proj_point = projection;
+                            target_point = point;
                         }
                     }
                     // test if best projection of c.vertex is inside the face
@@ -808,7 +822,7 @@ namespace GeometRi
                         Vector3d v = new Vector3d(c.face[i].Vertex[l], best_proj_point);
                         if (edge.Cross(v).Dot(c.face[i].normal) < 0)
                         {
-                            // projection ourside of face
+                            // projection outside of face
                             inside = false;
                             break;
                         }
@@ -817,7 +831,12 @@ namespace GeometRi
                     if (inside)
                     {
                         double tmp_dist = Math.Sqrt(square_proj_dist);
-                        if (tmp_dist < dist) { dist = tmp_dist; }
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            point_on_this_cp = best_proj_point;
+                            point_on_target_cp = target_point;
+                        }
                     }
 
                 }
@@ -854,8 +873,13 @@ namespace GeometRi
                         {
                             // The projections of this CP and 'c' onto the line P + t * N are on opposite sides of the projection of P.
                             intersecting = false;
-                            double tmp_dist = s1.DistanceTo(s2);
-                            if (tmp_dist < dist) {  dist = tmp_dist; }
+                            double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
+                            if (tmp_dist < dist)
+                            {
+                                dist = tmp_dist;
+                                point_on_this_cp = c1;
+                                point_on_target_cp = c2;
+                            }
                         }
                     }
                 }
@@ -871,115 +895,6 @@ namespace GeometRi
             }
         }
 
-        /// <summary>
-        /// Distance between two polyhedrons
-        /// <para> The output points may be not unique in case of intersecting objects.</para>
-        /// </summary>
-        /// <param name="cp">Target polyhedron</param>
-        /// <param name="point_on_this_cp">Closest point on this convex polyhedron</param>
-        /// <param name="point_on_target_cp">Closest point on target convex polyhedron</param>
-        public double DistanceTo(ConvexPolyhedron cp, out Point3d point_on_this_cp, out Point3d point_on_target_cp)
-        {
-            if (this.Intersects(cp))
-            {
-                // check if one CP is inside other CP
-                Point3d c1 = this.Center;
-                point_on_this_cp = c1;
-                point_on_target_cp = c1;
-                if (c1.BelongsTo(cp))
-                {
-                    return 0;
-                }
-                Point3d c2 = cp.Center;
-                if (c2.BelongsTo(this))
-                {
-                    point_on_this_cp = c2;
-                    point_on_target_cp = c2;
-                    return 0;
-                }
-
-                // If CPs are partially intersecting, return any common point
-                Point3d common_point = _get_common_point(cp);
-                if (common_point != null)
-                {
-                    point_on_this_cp = common_point;
-                    point_on_target_cp = common_point;
-                    return 0;
-                }
-            }
-
-            return _distance_to_not_intersecting(cp, out point_on_this_cp, out point_on_target_cp);
-        }
-
-        internal double _distance_to_not_intersecting(ConvexPolyhedron cp, out Point3d point_on_this_cp, out Point3d point_on_target_cp)
-        {
-            double dist = double.PositiveInfinity;
-            Point3d c1 = new Point3d();
-            Point3d c2 = new Point3d();
-            point_on_this_cp = c1;
-            point_on_target_cp = c1;
-
-            // test vertices of this cp
-            for (int i = 0; i < numVertices; i++)
-            {
-                for (int k = 0; k < cp.numFaces; k++)
-                {
-                    for (int l = 0; l < cp.face[k].vertex.Length - 2; l++)
-                    {
-                        Triangle t2 = new Triangle(cp.face[k].Vertex[0], cp.face[k].Vertex[l + 1], cp.face[k].Vertex[l + 2]);
-
-                        double tmp_dist = vertex[i].DistanceTo(t2, out c1);
-                        if (tmp_dist < dist)
-                        {
-                            point_on_this_cp = vertex[i];
-                            point_on_target_cp = c1;
-                            dist = tmp_dist;
-                        }
-                    }
-
-                }
-            }
-
-            // test vertices of target cp
-            for (int i = 0; i < cp.numVertices; i++)
-            {
-                for (int k = 0; k < this.numFaces; k++)
-                {
-                    for (int l = 0; l < this.face[k].vertex.Length - 2; l++)
-                    {
-                        Triangle t2 = new Triangle(this.face[k].Vertex[0], this.face[k].Vertex[l + 1], this.face[k].Vertex[l + 2]);
-
-                        double tmp_dist = cp.vertex[i].DistanceTo(t2, out c1);
-                        if (tmp_dist < dist)
-                        {
-                            point_on_this_cp = c1;
-                            point_on_target_cp = cp.vertex[i];
-                            dist = tmp_dist;
-                        }
-                    }
-
-                }
-            }
-
-            // test edges
-            for (int i = 0; i < this.numEdges; i++)
-            {
-                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
-                for (int j = 0; j < cp.numEdges; j++)
-                {
-                    Segment3d s2 = new Segment3d(cp.vertex[cp.edge[j].p1], cp.vertex[cp.edge[j].p2]);
-                    double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
-                    if (tmp_dist < dist)
-                    {
-                        point_on_this_cp = c1;
-                        point_on_target_cp = c2;
-                        dist = tmp_dist;
-                    }
-                }
-            }
-
-            return dist;
-        }
 
         internal Point3d _get_common_point(ConvexPolyhedron cp)
         {

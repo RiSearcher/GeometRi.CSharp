@@ -95,7 +95,9 @@ namespace GeometRi.Benchmarks
                 {
                     foreach(ConvexPolyhedron cp2 in list)
                     {
-                        double dist = cp1.DistanceTo(cp2);
+                        Point3d pp1 = new Point3d();
+                        Point3d pp2 = new Point3d();
+                        double dist = cp1.DistanceTo(cp2, out pp1, out pp2);
                     }
                 }
             });

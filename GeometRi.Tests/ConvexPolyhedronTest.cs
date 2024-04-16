@@ -349,8 +349,12 @@ namespace GeometRi_Tests
             Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, 0, 0), new Point3d(1, -1, -1), new Point3d(1, -1, 1), new Point3d(1, 1, 1));
             ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
             ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
-            double dist = cp1.DistanceTo(cp2);
+            Point3d p1 = new Point3d();
+            Point3d p2 = new Point3d();
+            double dist = cp1.DistanceTo(cp2, out p1, out p2);
             Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+            Assert.IsTrue(p1 == new Point3d(0, 0, 0));
+            Assert.IsTrue(p2 == new Point3d(0.5, 0, 0));
         }
 
         [TestMethod]
@@ -361,8 +365,12 @@ namespace GeometRi_Tests
             Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, -1, 0), new Point3d(0.5, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
             ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
             ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
-            double dist = cp1.DistanceTo(cp2);
+            Point3d p1 = new Point3d();
+            Point3d p2 = new Point3d();
+            double dist = cp1.DistanceTo(cp2, out p1, out p2);
             Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+            Assert.IsTrue(p1 == new Point3d(0, 0, 0));
+            Assert.IsTrue(p2 == new Point3d(0.5, 0, 0));
         }
 
         [TestMethod]
@@ -373,8 +381,12 @@ namespace GeometRi_Tests
             Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, -1, -1), new Point3d(0.5, 1, -1), new Point3d(0.5, 0, 1), new Point3d(1, 0, 0));
             ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
             ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
-            double dist = cp1.DistanceTo(cp2);
+            Point3d p1 = new Point3d();
+            Point3d p2 = new Point3d();
+            double dist = cp1.DistanceTo(cp2, out p1, out p2);
             Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+            Assert.IsTrue(p1 == new Point3d(0, 0, 0));
+            Assert.IsTrue(p2 == new Point3d(0.5, 0, 0));
         }
 
         [TestMethod]
@@ -385,8 +397,12 @@ namespace GeometRi_Tests
             Tetrahedron t2 = new Tetrahedron(new Point3d(0.5, -1, 0), new Point3d(0.5, 1, 0), new Point3d(1, 0, -1), new Point3d(1, 0, 1));
             ConvexPolyhedron cp1 = ConvexPolyhedron.FromTetrahedron(t1);
             ConvexPolyhedron cp2 = ConvexPolyhedron.FromTetrahedron(t2);
-            double dist = cp1.DistanceTo(cp2);
+            Point3d p1 = new Point3d();
+            Point3d p2 = new Point3d();
+            double dist = cp1.DistanceTo(cp2, out p1, out p2);
             Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0.5));
+            Assert.IsTrue(p1 == new Point3d(0, 0, 0));
+            Assert.IsTrue(p2 == new Point3d(0.5, 0, 0));
         }
 
         [TestMethod]
