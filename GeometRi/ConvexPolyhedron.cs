@@ -810,7 +810,7 @@ namespace GeometRi
                             target_point = point;
                         }
                     }
-                    // test if best projection of c.vertex is inside the face
+                    // test if best projection of this.vertex is inside the face
                     bool inside = true;
                     for (int l = 0; l < c.face[i].vertex.Length; l++)
                     {
@@ -834,8 +834,8 @@ namespace GeometRi
                         if (tmp_dist < dist)
                         {
                             dist = tmp_dist;
-                            point_on_this_cp = best_proj_point;
-                            point_on_target_cp = target_point;
+                            point_on_this_cp = target_point;
+                            point_on_target_cp = best_proj_point;
                         }
                     }
 
