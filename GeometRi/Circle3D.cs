@@ -1355,13 +1355,13 @@ namespace GeometRi
                 double delta1 = Abs(d * cos_angle1);
 
                 double sin_angle2 = this._normal.Cross(c._normal).Norm / this_norm / c_norm;
-                double delta2 = Abs(this.R * sin_angle2);
+                double delta2 = Abs(c.R * sin_angle2);
 
                 if (delta1 > delta2) return false;
 
                 cos_angle1 = c._normal * v / c_norm / d;
                 delta1 = Abs(d * cos_angle1);
-                delta2 = Abs(c.R * sin_angle2);
+                delta2 = Abs(this.R * sin_angle2);
 
                 if (delta1 > delta2) return false;
 
@@ -1840,13 +1840,13 @@ namespace GeometRi
                 double delta1 = Abs(d * cos_angle1);
 
                 double sin_angle2 = this._normal.Cross(c._normal).Norm / this_norm / c_norm;
-                double delta2 = Abs(this.R * sin_angle2);
+                double delta2 = Abs(c.R * sin_angle2);
 
                 if (delta1 > delta2) return null;
 
                 cos_angle1 = c._normal * v / c_norm / d;
                 delta1 = Abs(d * cos_angle1);
-                delta2 = Abs(c.R * sin_angle2);
+                delta2 = Abs(this.R * sin_angle2);
 
                 if (delta1 > delta2) return null;
 
