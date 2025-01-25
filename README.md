@@ -1,614 +1,614 @@
 # GeometRi
-### Simple and lightweight computational geometry library for .Net
+### 简单、轻量级的.Net 计算几何库
 
-Main purpose of the GeometRi library is manipulations with basic
-geometrical primitives, such as point, line, plane, sphere, triangle in 3D space:
-translation and rotation operations, distance calculation, intersections,
-orthogonal projections of one object into another, etc. The objects can be defined
-in global or in one of the local coordinate systems and converted form one coordinate
-system into another.
+GeometRi 库的主要目的是处理基本
+几何基元，例如三维空间中的点、线、平面、球体、三角形：
+平移和旋转运算、距离计算、交叉点、
+一个物体到另一个物体的正交投影等。物体可以定义为
+在全局或局部坐标系中并转换形成一个坐标
+系统转变为另一个系统。
 
-The library was build to be as simple and intuitive as posible. Users do not have to remember the reference coordinate
-system of each object. The objects store the coordinate system they are defined in and all transformations
-will be caried out implicitly when necessary.  
+该库的构建尽可能简单直观。用户不必记住参考坐标
+每个对象的系统。对象存储它们定义的坐标系和所有变换
+必要时将会隐性地执行。
 
-The main goal was simplisity and readability of the code, therefore speed and robustness was not a priority.
-Global tolerance property is used for proximity checking, not an exact robust algorithms.
+主要目标是代码的简单性和可读性，因此速度和稳健性不是优先考虑的。
+全局容差属性用于接近度检查，而不是精确的稳健算法。
 
-## [Release notes](./ReleaseNotes.md)
+## [发布说明](./ReleaseNotes.md)
 
-* [Installation](https://github.com/RiSearcher/GeometRi.CSharp#installation)
-* [Examples](https://github.com/RiSearcher/GeometRi.CSharp#examples)
-* [Classes](https://github.com/RiSearcher/GeometRi.CSharp#classes)
-    * [Point3d](https://github.com/RiSearcher/GeometRi.CSharp#point3d)
-    * [Vector3d](https://github.com/RiSearcher/GeometRi.CSharp#vector3d)
-    * [Line3d](https://github.com/RiSearcher/GeometRi.CSharp#line3d)
-    * [Ray3d](https://github.com/RiSearcher/GeometRi.CSharp#ray3d)
-    * [Segment3d](https://github.com/RiSearcher/GeometRi.CSharp#segment3d)
-    * [Plane3d](https://github.com/RiSearcher/GeometRi.CSharp#plane3d)
-    * [Sphere](https://github.com/RiSearcher/GeometRi.CSharp#sphere)
-    * [Circle3d](https://github.com/RiSearcher/GeometRi.CSharp#circle3d)
-    * [Ellipse](https://github.com/RiSearcher/GeometRi.CSharp#ellipse)
-    * [Ellipsoid](https://github.com/RiSearcher/GeometRi.CSharp#ellipsoid)
-    * [Box3d](https://github.com/RiSearcher/GeometRi.CSharp#box3d)
-    * [Triangle](https://github.com/RiSearcher/GeometRi.CSharp#triangle)
-    * [Tetrahedron](https://github.com/RiSearcher/GeometRi.CSharp#tetrahedron)
-	* [ConvexPolyhedron](https://github.com/RiSearcher/GeometRi.CSharp#convexpolyhedron)
-    * [Coord3d](https://github.com/RiSearcher/GeometRi.CSharp#coord3d)
-    * [Matrix3d](https://github.com/RiSearcher/GeometRi.CSharp#matrix3d)
-    * [Quaternion](https://github.com/RiSearcher/GeometRi.CSharp#quaternion)
-    * [Rotation](https://github.com/RiSearcher/GeometRi.CSharp#rotation)
-    * [GeometRi3D](https://github.com/RiSearcher/GeometRi.CSharp#geometri3d)
+* [安装](https://github.com/RiSearcher/GeometRi.CSharp#installation)
+* [示例](https://github.com/RiSearcher/GeometRi.CSharp#examples)
+* [类](https://github.com/RiSearcher/GeometRi.CSharp#classes)
+* [Point3d](https://github.com/RiSearcher/GeometRi.CSharp#point3d)
+* [Vector3d](https://github.com/RiSearcher/GeometRi.CSharp#vector3d)
+* [Line3d](https://github.com/RiSearcher/GeometRi.CSharp#line3d)
+* [Ray3d](https://github.com/RiSearcher/GeometRi.CSharp#ray3d)
+* [Segment3d](https://github.com/RiSearcher/GeometRi.CSharp#segment3d)
+* [Plane3d](https://github.com/RiSearcher/GeometRi.CSharp#plane3d)
+* [球体](https://github.com/RiSearcher/GeometRi.CSharp#sphere)
+* [Circle3d](https://github.com/RiSearcher/GeometRi.CSharp#circle3d)
+* [椭圆](https://github.com/RiSearcher/GeometRi.CSharp#ellipse)
+* [椭圆体](https://github.com/RiSearcher/GeometRi.CSharp#ellipsoid)
+* [Box3d](https://github.com/RiSearcher/GeometRi.CSharp#box3d)
+* [三角形](https://github.com/RiSearcher/GeometRi.CSharp#triangle)
+* [四面体](https://github.com/RiSearcher/GeometRi.CSharp#tetrahedron)
+* [凸多面体](https://github.com/RiSearcher/GeometRi.CSharp#convexpolyhedron)
+* [Coord3d](https://github.com/RiSearcher/GeometRi.CSharp#coord3d)
+* [Matrix3d](https://github.com/RiSearcher/GeometRi.CSharp#matrix3d)
+* [四元数](https://github.com/RiSearcher/GeometRi.CSharp#quaternion)
+* [旋转](https://github.com/RiSearcher/GeometRi.CSharp#rotation)
+* [GeometRi3D](https://github.com/RiSearcher/GeometRi.CSharp#geometri3d)
 
-## Installation
-Use NuGet to install library. Search for __GeometRi__ in NuGet package manager or type in the Package Manager Console:
+## 安装
+使用 NuGet 安装库。在 NuGet 包管理器中搜索 __GeometRi__ 或在包管理器控制台中输入：
 ```
 Install-Package GeometRi
 ```
 
-## Examples
+## 示例
 
-* Ptolemy's construction of a pentagon inside the circle: [C#](https://dotnetfiddle.net/0Is1ZV)
-* Mascheroni construction of a regular pentagon: [C#](https://dotnetfiddle.net/45iLTa)
-* Rytz's construction: [C#](https://dotnetfiddle.net/WqeS69), [VB.Net](https://dotnetfiddle.net/2c04c0)
+* 托勒密在圆内构造的五边形：[C#](https://dotnetfiddle.net/0Is1ZV)
+* 马斯切罗尼构造正五边形：[C#](https://dotnetfiddle.net/45iLTa)
+* Rytz 的构造：[C#](https://dotnetfiddle.net/WqeS69)、[VB.Net](https://dotnetfiddle.net/2c04c0)
 
-## Classes
+## 课程
 
-* __Point3d__ and __Vector3d__ are two base classes, representing points and vectors in 3D space.
-Objects of type Point3d or Vector3d can be defined in global or in local coordinate systems.
+* __Point3d__ 和 __Vector3d__ 是两个基类，分别表示三维空间中的点和向量。
+Point3d 或 Vector3d 类型的对象可以在全局或局部坐标系中定义。
 
-* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__, __Box3d__, __Triangle__ and __Tetrahedron__
-are compound classes, which are defined in terms of points and vectors.
+* __Line3d__、__Ray3d__、__Segment3d__、__Plane3d__、__Circle3d__、__Sphere__、__Ellipse__、__Ellipsoid__、__Box3d__、__Triangle__ 和 __Tetrahedron__
+是复合类，根据点和向量定义。
 
-* __Coord3d__, __Rotation__, __Quaternion__ and __Matrix3d__ are auxiliary classes.
+* __Coord3d__、__Rotation__、__Quaternion__ 和 __Matrix3d__ 是辅助类。
 
-* __GeometRi3d__ is an abstract class, which defines some common functionality, for example global tolerance property (GeometRi3d.Tolerance)
-used in proximity operations by other classes. Implements tolerance based equality methods: AlmostEqual(double, double), NotEqual(double,double),
-Greater(double, double) and Smaller(double, double).
+* __GeometRi3d__ 是一个抽象类，它定义了一些常见的功能，例如全局公差属性(GeometRi3d.Tolerance)
+用于其他类的邻近操作。实现基于容差的相等方法：AlmostEqual(double, double)、NotEqual(double,double)、
+大于(双精度，双精度)和小于(双精度，双精度)。
 
-## Point3d
+## Point3d – 点3D
 
-One of the base classes, can be constructed by three double numbers (X, Y and Z) or from double array.
-Each constructor has optional parameter 'coord' for local coordinate system in which point will be defined.
-By default all points are defined in global coordinate system.
-### Properties
-* __X__ - X coordinate in reference coordinate system
-* __Y__ - Y coordinate in reference coordinate system
-* __Z__ - Z coordinate in reference coordinate system
-* __Coord__ - reference coordinate system
-* __ToVector__ - radius vector of point
-### Methods
-* __Copy__ - Creates copy of the object
-* __ConvertTo__ - convert point to local coordinate system
-* __ConvertToGlobal__ - convert point to global coordinate system
-* __Add__ - add two points
-* __Subtract__ - subtract one point from other
-* __Scale__ - scale point by given number
-* __DistanceTo__ - shortest distance from point to point to other objects
-* __ClosestPoint__ - closest point on circle, box, triangle, sphere, ellipse, ellipsoid, tetrahedron
-* __ProjectionTo__ - orthogonal projection of point to line, plane or sphere
-* __BelongsTo__ - test if point is located in the epsilon neighborhood of the object
-* __IsInside__ - test if point is located strictly inside (not in the epsilon neighborhood of the boundary) of the object
-* __IsOutside__ - test if point is located outside of the epsilon neighborhood of the object
-* __IsOnBoundary__ - test if point is located in the epsilon neighborhood of the object's boundary
-* __Translate__ - translate point by vector
-* __Rotate__ - rotate point around origin or other point
-* __Reflect__ - reflect point in point, line or plane
-* __Equals__ - check if two points are equals
-* __ToString__ - string representation of point in global or local coordinate system
-### Static methods
-* __CollinearPoints__ - check if three points are collinear
-### Overloaded operators
-* __+__ - add two points
-* __-__ - subtract one point from other
-* __-__ - unary operator
-* __*__ - scale point by number
-* __/__ - scale point by number
-* __=__ - equality check
-* __<>__ - unequality check
+基类之一，可以由三个双精度数(X、Y 和 Z)或双精度数组构造。
+每个构造函数都有可选参数“coord”，用于定义点的局部坐标系。
+默认情况下，所有点都在全球坐标系中定义。
+### 特性
+* __X__ - 参考坐标系中的 X 坐标
+* __Y__ - 参考坐标系中的 Y 坐标
+* __Z__ - 参考坐标系中的 Z 坐标
+* __Coord__ - 参考坐标系
+* __ToVector__ - 点的半径向量
+### 方法
+* __Copy__ - 创建对象的副本
+* __ConvertTo__ - 将点转换为本地坐标系
+* __ConvertToGlobal__ - 将点转换为全局坐标系
+* __Add__ - 添加两个点
+* __Subtract__ - 从另一个点中减去一个点
+* __Scale__ - 按给定数字缩放点
+* __DistanceTo__ - 从点到其他物体的最短距离
+* __ClosestPoint__ - 圆、盒子、三角形、球体、椭圆、椭圆体、四面体上的最近点
+* __ProjectionTo__ - 点到线、平面或球体的正交投影
+* __BelongsTo__ - 测试点是否位于对象的 epsilon 邻域内
+* __IsInside__ - 测试点是否严格位于对象内部(不在边界的 epsilon 邻域内)
+* __IsOutside__ - 测试点是否位于对象的 epsilon 邻域之外
+* __IsOnBoundary__ - 测试点是否位于对象边界的 epsilon 邻域内
+* __Translate__ - 通过向量平移点
+* __Rotate__ - 围绕原点或其他点旋转点
+* __反射__ - 在点、线或面中反射点
+* __Equals__ - 检查两个点是否相等
+* __ToString__ - 全局或局部坐标系中点的字符串表示
+### 静态方法
+* __CollinearPoints__ - 检查三个点是否共线
+### 重载运算符
+* __+__ - 添加两点
+* __-__ - 从另一点中减去一分
+* __-__ - 一元运算符
+* __*__ - 按数字缩放点
+* __/__ - 按数字缩放点
+* __=__ - 平等检查
+* __<>__ - 不平等检查
 
-## Vector3d
+## Vector3d – 矢量3D
 
-Second base class, representing vector in 3D space. Constructed by three components (X, Y and Z) or from double array
-(with optional 'coord' parameter for local cordinate system). Additionally, can be constructed by point,
-representing radius vector of that point, or by two points, representing vector from first point to another. In this cases
-the vector will be defined in the same coordinate system as the first operand.
-### Properties
-* __X__ - X component in reference coordinate system
-* __Y__ - Y component in reference coordinate system
-* __Z__ - Z component in reference coordinate system
-* __Coord__ - reference coordinate system
-* __Norm__ - Norm of a vector
-* __ToPoint__ - point, represented by vector starting in origin
-* __OrthogonalVector__ - return arbitrary vector, orthogonal to the current vector
-### Methods
-* __Copy__ - Creates copy of the object
-* __ConvertTo__ - convert vector to local coordinate system
-* __ConvertToGlobal__ - convert vector to global coordinate system
-* __Normalize__ - normalize the current vector
-* __Normalized__ - return normalized vector
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Add__ - overloaded, add number or vector
-* __Subtract__ - oveloaded, subtract number or vector
-* __Mult__ - overloaded, multiply by number or vector
-* __Dot__ - dot product of two vectors
-* __ProjectionTo__ - return projection of the current vector to the second vector
-* __Rotate__ - rotate vector around origin
-* __Reflect__ - reflect vector in point, line or plane
-* __Equals__ - check if two vectors are equals
-* __ToString__ - string representation of vector in global or local coordinate system
+第二个基类，表示三维空间中的矢量。由三个分量(X、Y 和 Z)或双精度数组构成
+(带有可选的 'coord' 参数用于本地坐标系)。此外，可以通过点构建，
+表示该点的半径矢量，或者用两个点表示从第一点到另一点的矢量。在这种情况下
+该向量将在与第一个操作数相同的坐标系中定义。
+### 特性
+* __X__ - 参考坐标系中的 X 分量
+* __Y__ - 参考坐标系中的 Y 分量
+* __Z__ - 参考坐标系中的 Z 分量
+* __Coord__ - 参考坐标系
+* __Norm__ - 向量范数
+* __ToPoint__ - 点，由从原点开始的向量表示
+* __OrthogonalVector__ - 返回任意向量，与当前向量正交
+### 方法
+* __Copy__ - 创建对象的副本
+* __ConvertTo__ - 将矢量转换为局部坐标系
+* __ConvertToGlobal__ - 将向量转换为全局坐标系
+* __Normalize__ - 标准化当前向量
+* __Normalized__ - 返回标准化向量
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Add__ - 重载，添加数字或向量
+* __Subtract__ - 重载，减去数字或向量
+* __Mult__ - 重载，乘以数字或向量
+* __Dot__ - 两个向量的点积
+* __ProjectionTo__ - 返回当前向量到第二个向量的投影
+* __Rotate__ - 围绕原点旋转矢量
+* __Reflect__ - 在点、线或平面中反射矢量
+* __Equals__ - 检查两个向量是否相等
+* __ToString__ - 全局或局部坐标系中矢量的字符串表示
 
-## Line3d 
+## Line3d – 无限线3D
 
-Infinite line  in 3D space and defined by any point lying on the line and a direction vector.
-### Properties
-* __Point__ - base point of the line
-* __Direction__ - direction vector of the line
-### Methods
-* __Copy__ - Creates copy of the object
-* __DistanceTo__ - shortest distance to point, line, ray or segment
-* __PerpendicularTo__ - point on the perpendicular to the second line
-* __IntersectionWith__ - intersection of line with plane, ellipsoid, ellipse, circle, triangle, segment or sphere
-* __ProjectionTo__ - orthogonal projection of a line to the plane
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __IsCoplanarTo__ - check if line is coplanar to other linear or planar object
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Translate__ - translate line by vector
-* __Rotate__ - rotate line around origin or other point
-* __Reflect__ - reflect line in point, line or plane
-* __Equals__ - check if two lines are equals
-* __ToString__ - string representation of line in global or local coordinate system
+三维空间中的无限线，由线上的任意点和方向向量定义。
+### 特性
+* __Point__ - 线的基点
+* __Direction__ - 线的方向向量
+### 方法
+* __Copy__ - 创建对象的副本
+* __DistanceTo__ - 到点、线、射线或线段的最短距离
+* __PerpendicularTo__ - 指向第二条线的垂直点
+* __IntersectionWith__ - 线与平面、椭圆体、椭圆、圆、三角形、线段或球体的交点
+* __ProjectionTo__ - 直线到平面的正交投影
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __IsCoplanarTo__ - 检查线是否与其他线性或平面物体共面
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Translate__ - 通过向量翻译线
+* __Rotate__ - 围绕原点或其他点旋转线
+* __Reflect__ - 在点、线或平面中反射线
+* __Equals__ - 检查两行是否相等
+* __ToString__ - 全局或局部坐标系中线的字符串表示
 
-## Ray3d
+## Ray3d – 射线3D
 
-Represent ray in 3D space and is defined by starting point and direction vector.
-### Properties
-* __Point__ - base point of the ray
-* __Direction__ - direction vector of the ray
-* __ToLine__ - convert ray to line
-### Methods
-* __Copy__ - Creates copy of the object
-* __DistanceTo__ - shortest distance to point, line, segment or other ray
-* __PerpendicularTo__ - point on the perpendicular to the line
-* __IntersectionWith__ - intersection of ray with plane
-* __ProjectionTo__ - orthogonal projection of ray to the plane
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __IsCoplanarTo__ - check if ray is coplanar to other linear or planar object
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Translate__ - translate ray by vector
-* __Rotate__ - rotate ray around origin or other point
-* __Reflect__ - reflect ray in point, line or plane
-* __Equals__ - check if two rays are equals
-* __ToString__ - string representation of ray in global or local coordinate system
+表示三维空间中的射线，由起点和方向向量定义。
+### 特性
+* __Point__ - 射线基点
+* __Direction__ - 射线的方向向量
+* __ToLine__ - 将射线转换为线
+### 方法
+* __Copy__ - 创建对象的副本
+* __DistanceTo__ - 到点、线、线段或其他射线的最短距离
+* __PerpendicularTo__ - 垂直于线的点
+* __IntersectionWith__ - 射线与平面的交点
+* __ProjectionTo__ - 射线到平面的正交投影
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __IsCoplanarTo__ - 检查射线是否与其他线性或平面物体共面
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Translate__ - 通过矢量平移射线
+* __Rotate__ - 围绕原点或其他点旋转射线
+* __反射__ - 在点、线或平面上反射射线
+* __Equals__ - 检查两条射线是否相等
+* __ToString__ - 全局或局部坐标系中射线的字符串表示
 
-## Segment3d
+## Segment3d – 线段3D
 
-Represent a line segment in 3D space and is defined by two points.
-### Properties
-* __P1__ - first point of the segment
-* __P2__ - second point of the segment
-* __Length__ - length of the segment
-* __ToVector__ - convert segment to vector
-* __ToRay__ - convert segment to ray
-* __ToLine__ - convert segment to line
-* __MinimumBoundingBox__ - minimum bounding box of the object
-* __BoundingSphere__ - bounding sphere of the object
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __DistanceTo__ - shortest distance to point, line, ray, plane or other segment
-* __IntersectionWith__ - intersection of segment with line, plane, ellipse, triangle, ellipsoid, sphere, circle or other segment
-* __ProjectionTo__ - orthogonal projection of segment to the line or plane
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __IsCoplanarTo__ - check if segment is coplanar to other linear or planar object
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Translate__ - translate segment by vector
-* __Rotate__ - rotate segment around origin or other point
-* __Reflect__ - reflect segment in point, line or plane
-* __Equals__ - check if two segments are equals
-* __ToString__ - string representation of serment in global or local coordinate system
+表示三维空间中的一条线段，由两个点定义。
+### 特性
+* __P1__ - 线段的第一个点
+* __P2__ - 线段的第二个点
+* __Length__ - 段的长度
+* __ToVector__ - 将线段转换为向量
+* __ToRay__ - 将线段转换为射线
+* __ToLine__ - 将段转换为线
+* __MinimumBoundingBox__ - 对象的最小边界框
+* __BoundingSphere__ - 物体的边界球
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的轴对齐边界框 (AABB)
+* __DistanceTo__ - 到点、线、射线、平面或其他线段的最短距离
+* __IntersectionWith__ - 线段与线、平面、椭圆、三角形、椭圆体、球体、圆或其他线段的交点
+* __ProjectionTo__ - 线段到线或平面的正交投影
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __IsCoplanarTo__ - 检查线段是否与其他线性或平面物体共面
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Translate__ - 通过向量翻译片段
+* __Rotate__ - 围绕原点或其他点旋转线段
+* __反射__ - 在点、线或平面中反射线段
+* __Equals__ - 检查两个段是否相等
+* __ToString__ - 全局或局部坐标系中字符串的表示形式
 
-## Plane3d
+## Plane3d – 平面3D
 
-3D plane defined by arbutrary point on the plane and a normal vector. 
-Optionally can be defined by coefficients in general equation of plane (Ax + By + Cz + D = 0), by three points
-or by point and two vectors in the plane.
-### Properties
-* __Point__ - point on the plane
-* __Normal__ - normal vector of the plane
-* __A/B/C/D__ - coefficients A, B, C and D in the general plane equation
-### Methods
-* __Copy__ - Creates copy of the object
-* __SetCoord__ - set reference coordinate system for general plane equation
-* __IntersectionWith__ - intersection of plane with line, plane, segment, sphere, ellipse, ellipsoid, circle or two other planes
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __IsCoplanarTo__ - check if plane is coplanar to other linear or planar object
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Translate__ - translate plane by vector
-* __Rotate__ - rotate plane around origin or other point
-* __Reflect__ - reflect plane in point, line or plane
-* __Equals__ - check if two planes are equals
-* __ToString__ - string representation of plane in global or local coordinate system
+由平面上的任意点和法线向量定义的 3D 平面。
+也可以通过平面一般方程(Ax + By + Cz + D = 0)中的系数来定义，通过三个点
+或通过平面上的点和两个向量。
+### 特性
+* __Point__ - 平面上的点
+* __Normal__ - 平面的法线向量
+* __A/B/C/D__ - 一般平面方程中的系数 A、B、C 和 D
+### 方法
+* __Copy__ - 创建对象的副本
+* __SetCoord__ - 设置一般平面方程的参考坐标系
+* __IntersectionWith__ - 平面与线、平面、线段、球体、椭圆、椭圆体、圆或两个其他平面的交点
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __IsCoplanarTo__ - 检查平面是否与其他线性或平面物体共面
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Translate__ - 通过矢量平移平面
+* __Rotate__ - 围绕原点或其他点旋转平面
+* __反射__ - 在点、线或平面中反射平面
+* __Equals__ - 检查两个平面是否相等
+* __ToString__ - 全局或局部坐标系中平面的字符串表示
 
-## Sphere
+## Sphere - 球体
 
-Defines a sphere in 3D space. Implements intersection with line, plane and other sphere, projection to line and plane, as well as
-common translation, rotation and reflection methods.
-### Properties
-* __Center__ - center of the sphere
-* __R__ - radius of the sphere
-* __Area__ - area of the sphere
-* __Volume__ - volume of the sphere
-* __MinimumBoundingBox__ - minimum bounding box of the object
-* __BoundingSphere__ - bounding sphere of the object
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __IsInside__ - check if sphere is located inside box
-* __ClosestPoint__ - point on sphere's surface closest to target point
-* __DistanceTo__ - shortest distance to point, line, ray, segment, plane, circle, sphere or box
-* __Intersects__ - intersection check with circle and tetrahedron
-* __IntersectionWith__ - intersection of sphere with line, plane, segment or other sphere
-* __ProjectionTo__ - orthogonal projection of sphere to the line or plane
-* __Translate__ - translate sphere by vector
-* __Rotate__ - rotate sphere around origin or other point
-* __Reflect__ - reflect sphere in point, line or plane
-* __Equals__ - check if two spheres are equals
-* __ToString__ - string representation of sphere in global or local coordinate system
+定义三维空间中的球体。实现与线、平面和其他球体的相交、投影到线和平面，以及
+常见的平移、旋转和反射方法。
+### 特性
+* __Center__ - 球体的中心
+* __R__ - 球体的半径
+* __Area__ - 球体的面积
+* __Volume__ - 球体的体积
+* __MinimumBoundingBox__ - 对象的最小边界框
+* __BoundingSphere__ - 物体的边界球
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的轴对齐边界框 (AABB)
+* __IsInside__ - 检查球体是否位于盒子内部
+* __ClosestPoint__ - 球体表面上距离目标点最近的点
+* __DistanceTo__ - 到点、线、射线、线段、平面、圆、球体或盒子的最短距离
+* __Intersects__ - 与圆和四面体的相交检查
+* __IntersectionWith__ - 球面与线、平面、线段或其他球面的交点
+* __ProjectionTo__ - 球体到线或平面的正交投影
+* __Translate__ - 通过矢量平移球体
+* __Rotate__ - 围绕原点或其他点旋转球体
+* __Reflect__ - 在点、线或平面上反射球体
+* __Equals__ - 检查两个球体是否相等
+* __ToString__ - 全局或局部坐标系中球体的字符串表示
 
-## Circle3d
+## Circle3d - 圆形3d
 
-Defines a circle in 3D space by center point, radius and normal vector.
-### Properties
-* __Center__ - center of the circle
-* __R__ - radius of the circle
-* __Normal__ - normal of the circle
-* __Perimeter__ - perimeter of the circle
-* __Area__ - area of the circle
-* __ToEllipse__ - convert circle to equivalent ellipse
-* __MinimumBoundingBox__ - minimum bounding box of the object
-* __BoundingSphere__ - bounding sphere of the object
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __IsInside__ - check if circle is located inside box
-* __ClosestPoint__ - point on circle's surface closest to target point
-* __ParametricForm__ - return point on circle for given parameter 't'
-* __ProjectionTo__ - orthogonal projection of circle to plane or line
-* __DistanceTo__ - shortest distance to point, plane, circle, sphere, box or triangle
-* __Intersects__ - intersection check with box, triangle, circle and sphere
-* __IntersectionWith__ - intersection of circle with line, plane, segment or other circle
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __IsCoplanarTo__ - check if circle is coplanar to other linear or planar object
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Translate__ - translate circle by vector
-* __Rotate__ - rotate circle around origin or other point
-* __Reflect__ - reflect circle in point, line or plane
-* __Equals__ - check if two circles are equals
-* __ToString__ - string representation of circle in global or local coordinate system
+通过中心点、半径和法线向量在三维空间中定义一个圆。
+### 特性
+* __Center__ - 圆心
+* __R__ - 圆的半径
+* __Normal__ - 圆的法线
+* __Perimeter__ - 圆的周长
+* __Area__ - 圆的面积
+* __ToEllipse__ - 将圆转换为等效椭圆
+* __MinimumBoundingBox__ - 对象的最小边界框
+* __BoundingSphere__ - 物体的边界球
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的轴对齐边界框 (AABB)
+* __IsInside__ - 检查圆是否位于盒子内部
+* __ClosestPoint__ - 圆表面上距离目标点最近的点
+* __ParametricForm__ - 返回给定参数“t”的圆上的点
+* __ProjectionTo__ - 圆到平面或线的正交投影
+* __DistanceTo__ - 到点、平面、圆、球体、盒子或三角形的最短距离
+* __Intersects__ - 与盒子、三角形、圆形和球体进行相交检查
+* __IntersectionWith__ - 圆与线、平面、线段或其他圆的交点
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __IsCoplanarTo__ - 检查圆是否与其他线性或平面物体共面
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Translate__ - 通过矢量平移圆
+* __Rotate__ - 围绕原点或其他点旋转圆
+* __反射__ - 在点、线或平面上反射圆
+* __Equals__ - 检查两个圆是否相等
+* __ToString__ - 全局或局部坐标系中圆的字符串表示
 
-## Ellipse
+## Ellipse - 椭圆
 
-Ellipse in 3D space, defined by center point and two orthogonal vectors, major and minor semiaxes.
-### Properties
-* __Center__ - center of the ellipse
-* __MajorSemiaxis__ - major semiaxis of the ellipse
-* __MinorSemiaxis__ - minor semiaxis of the ellipse
-* __Normal__ - normal of the ellipse
-* __A__ - length of major semiaxis
-* __B__ - length of minor semiaxis
-* __F__ - distance from center to focus
-* __F1__ - first focus
-* __F2__ - second focus
-* __e__ - eccentricity of the ellipse
-* __Perimeter__ - approximate circumference of the ellipse
-* __Area__ - area of the ellipse
-* __MinimumBoundingBox__ - minimum bounding box of the object
-* __BoundingSphere__ - bounding sphere of the object
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __ParametricForm__ - return point on ellipse for given parameter 't'
-* __ProjectionTo__ - orthogonal projection of ellipse to plane or line
-* __IntersectionWith__ - intersection of ellipse with line, plane or segment
-* __ClosestPoint__ - calculates the point on the ellipse's boundary closest to given point
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __IsCoplanarTo__ - check if ellipse is coplanar to other linear or planar object
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Translate__ - translate ellipse by vector
-* __Rotate__ - rotate ellipse around origin or other point
-* __Reflect__ - reflect ellipse in point, line or plane
-* __Equals__ - check if two ellipses are equals
-* __ToString__ - string representation of ellipse in global or local coordinate system
+三维空间中的椭圆，由中心点和两个正交向量(长半轴和短半轴)定义。
+### 特性
+* __Center__ - 椭圆的中心
+* __MajorSemiaxis__ - 椭圆的长半轴
+* __MinorSemiaxis__ - 椭圆的短半轴
+* __Normal__ - 椭圆的法线
+* __A__ - 长半轴的长度
+* __B__ - 短半轴的长度
+* __F__ - 从中心到焦点的距离
+* __F1__ - 第一个焦点
+* __F2__ - 第二焦点
+* __e__ - 椭圆的偏心率
+* __周长__ - 椭圆的近似周长
+* __Area__ - 椭圆的面积
+* __MinimumBoundingBox__ - 对象的最小边界框
+* __BoundingSphere__ - 物体的边界球
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的轴对齐边界框 (AABB)
+* __ParametricForm__ - 返回给定参数“t”的椭圆上的点
+* __ProjectionTo__ - 椭圆到平面或线的正交投影
+* __IntersectionWith__ - 椭圆与线、平面或线段的交点
+* __ClosestPoint__ - 计算椭圆边界上距离给定点最近的点
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __IsCoplanarTo__ - 检查椭圆是否与其他线性或平面物体共面
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Translate__ - 通过矢量平移椭圆
+* __Rotate__ - 围绕原点或其他点旋转椭圆
+* __反射__ - 在点、线或平面上反射椭圆
+* __Equals__ - 检查两个椭圆是否相等
+* __ToString__ - 全局或局部坐标系中椭圆的字符串表示
 
-## Ellipsoid
+## Ellipsoid - 椭圆体
 
-Ellipsoid object defined by center point and three mutually orthogonal vectors.
-### Properties
-* __Center__ - center of the ellipsoid
-* __SemiaxisA/B/C__ - semiaxes of the ellipsoid
-* __A/B/C__ - length of the semiaxes of the ellipsoid
-* __Area__ - approximate surface area of the ellipsoid
-* __Volume__ - volume of the ellipsoid
-* __MinimumBoundingBox__ - minimum bounding box of the object
-* __BoundingSphere__ - bounding sphere of the object
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __ProjectionTo__ - orthogonal projection of ellipsoid to line
-* __IntersectionWith__ - intersection of ellipsoid with line, plane or segment
-* __ClosestPoint__ - calculates the point on the ellipsoid's boundary closest to given point
-* __Translate__ - translate ellipsoid by vector
-* __Rotate__ - rotate ellipsoid around origin or other point
-* __Reflect__ - reflect ellipsoid in point, line or plane
-* __Equals__ - check if two ellipsoids are equals
-* __ToString__ - string representation of ellipsoid in global or local coordinate system
+由中心点和三个相互正交的向量定义的椭圆体物体。
+### 特性
+* __Center__ - 椭圆体的中心
+* __SemiaxisA/B/C__ - 椭圆体的半轴
+* __A/B/C__ - 椭圆体半轴的长度
+* __Area__ - 椭圆体的近似表面积
+* __Volume__ - 椭圆体的体积
+* __MinimumBoundingBox__ - 对象的最小边界框
+* __BoundingSphere__ - 物体的边界球
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的轴对齐边界框 (AABB)
+* __ProjectionTo__ - 椭圆体到线的正交投影
+* __IntersectionWith__ - 椭圆体与线、平面或线段的交点
+* __ClosestPoint__ - 计算椭圆体边界上距离给定点最近的点
+* __Translate__ - 通过矢量平移椭圆体
+* __Rotate__ - 围绕原点或其他点旋转椭圆体
+* __Reflect__ - 在点、线或平面上反射椭圆体
+* __Equals__ - 检查两个椭圆体是否相等
+* __ToString__ - 全局或局部坐标系中椭圆体的字符串表示
 
-## Box3d
+## Box3d – 长方体
 
-Box object defined by center point, three dimensions and orientation in space.
-### Properties
-* __Center__ - center point of the box
-* __L1/L2/L3__ - dimensions of the box
-* __V1/V2/V3__ - orientation vectors of the box
-* __Orientation__ - box orientation
-* __P1/P2/P3/P4/P5/P6/P7/P8__ - corner points of the box
-* __ListOfPoints__ - list of corner points of the box
-* __ListOfTriangles__ - list of triangles forming the box's surface
-* __ListOfPlanes__ - list of planes forming the box's surface
-* __ListOfEdges__ - list of edges
-* __Area__ - area of the box
-* __Volume__ - volume of the box
-* __MinimumBoundingBox__ - minimum bounding box of the object
-* __BoundingSphere__ - bounding sphere of the object
-* __IsAxisAligned__ - check if box is AABB
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __DistanceTo__ - shortest distance to point, circle or sphere
-* __Intersects__ - intersection check with box, circle, tetrahedron or triangle
-* __IntersectionWith__ - intersection of box with line, ray or segment
-* __Translate__ - translate box by vector
-* __Rotate__ - rotate box around origin or other point
-* __Reflect__ - reflect box in point, line or plane
-* __Equals__ - check if two ellipsoids are equals
-* __ToString__ - string representation of ellipsoid in global or local coordinate system
-### Static Methods
-* __AABB__ - axis aligned bounding box for a cloud of points
+由中心点、三维尺寸和空间方向定义的盒子物体。
+### 特性
+* __Center__ - 盒子的中心点
+* __L1/L2/L3__ - 盒子的尺寸
+* __V1/V2/V3__ - 盒子的方向向量
+* __Orientation__ - 盒子方向
+* __P1/P2/P3/P4/P5/P6/P7/P8__ - 盒子的角点
+* __ListOfPoints__ - 框的角点列表
+* __ListOfTriangles__ - 构成盒子表面的三角形列表
+* __ListOfPlanes__ - 构成盒子表面的平面列表
+* __ListOfEdges__ - 边列表
+* __Area__ - 盒子的面积
+* __Volume__ - 盒子的体积
+* __MinimumBoundingBox__ - 对象的最小边界框
+* __BoundingSphere__ - 物体的边界球
+* __IsAxisAligned__ - 检查框是否为 AABB
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的轴对齐边界框 (AABB)
+* __DistanceTo__ - 到点、圆或球的最短距离
+* __Intersects__ - 与盒子、圆形、四面体或三角形进行交点检查
+* __IntersectionWith__ - 框与线、射线或线段的交点
+* __Translate__ - 通过矢量翻译框
+* __Rotate__ - 围绕原点或其他点旋转盒子
+* __Reflect__ - 在点、线或平面上反射框
+* __Equals__ - 检查两个椭圆体是否相等
+* __ToString__ - 全局或局部坐标系中椭圆体的字符串表示
+### 静态方法
+* __AABB__ - 点云的轴对齐边界框
 
-## AABB
+## 反义词
 
-Axis aligned 3D box, can be degenerated with one or more dimensions equal 0. Defined only in Global CS.
-### Properties
-* __Center__ - center point of the box
-* __L1/L2/L3__ - dimensions of the box
-* __V1/V2/V3__ - orientation vectors of the box
-* __Orientation__ - box orientation
-* __P1/P2/P3/P4/P5/P6/P7/P8__ - corner points of the box
-* __ListOfPoints__ - list of corner points of the box
-* __ListOfTriangles__ - list of triangles forming the box's surface
-* __ListOfPlanes__ - list of planes forming the box's surface
-* __ListOfEdges__ - list of edges
-* __Area__ - area of the box
-* __Volume__ - volume of the box
-### Methods
-* __DistanceTo__ - shortest distance to point, circle or sphere
-* __Intersects__ - intersection check with box, circle, tetrahedron or triangle
-* __IntersectionWith__ - intersection of box with line, ray or segment
-* __Translate__ - translate box by vector
-* __Rotate__ - rotate box around origin or other point
-* __Reflect__ - reflect box in point, line or plane
-* __Equals__ - check if two ellipsoids are equals
-* __ToString__ - string representation of ellipsoid in global or local coordinate system
+与轴对齐的 3D 框，可以退化为一个或多个等于 0 的维度。仅在 Global CS 中定义。
+### 特性
+* __Center__ - 盒子的中心点
+* __L1/L2/L3__ - 盒子的尺寸
+* __V1/V2/V3__ - 盒子的方向向量
+* __Orientation__ - 盒子方向
+* __P1/P2/P3/P4/P5/P6/P7/P8__ - 盒子的角点
+* __ListOfPoints__ - 框的角点列表
+* __ListOfTriangles__ - 构成盒子表面的三角形列表
+* __ListOfPlanes__ - 构成盒子表面的平面列表
+* __ListOfEdges__ - 边列表
+* __Area__ - 盒子的面积
+* __Volume__ - 盒子的体积
+### 方法
+* __DistanceTo__ - 到点、圆或球的最短距离
+* __Intersects__ - 与盒子、圆形、四面体或三角形进行交点检查
+* __IntersectionWith__ - 框与线、射线或线段的交点
+* __Translate__ - 通过矢量翻译框
+* __Rotate__ - 围绕原点或其他点旋转盒子
+* __Reflect__ - 在点、线或平面上反射框
+* __Equals__ - 检查两个椭圆体是否相等
+* __ToString__ - 全局或局部坐标系中椭圆体的字符串表示
 
-## Triangle
+## Triangle - 三角形
 
-Defines a triangle in 3D space. Implements common translation, rotation and reflection methods. Calculates most of the standard
-triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, centroid, orthocenter, etc.
-### Properties
-* __A/B/C__ - vertices of the triangle
-* __AB/AC/BC__ - length of the triangles' sides
-* __Perimeter__ - perimeter of the triangle
-* __Area__ - area of the triangle
-* __Circumcircle__ - circumcircle of the triangle
-* __Angle_A/B/C__ - angle at the vertex A/B/C
-* __Bisector_A/B/C__ - angle bisector at the vertex A/B/C
-* __Incenter__ - incenter of the triangle
-* __Centroid__ - centroid of the triangle
-* __Orthocenter__ - orthocenter of the triangle
-* __Circumcenter__ - circumcenter of the triangle
-* __Incircle__ - incircle of the triangle
-* __Altitude_A/B/C__ - altitude at the vertex A/B/C
-* __Median_A/B/C__ - median at the vertex A/B/C
-* __IsEquilateral__ - check if all sides of the triangle are the same length
-* __IsIsosceles__ - check if two sides of the triangle are the same length
-* __IsScalene__ - check if all sides are unequal
-* __IsRight__ - check if one angle is equal 90 degrees
-* __IsObtuse__ - check if one angle is greater than 90 degrees
-* __IsAcute__ - check if all angles are less than 90 degrees
-* __MinimumBoundingBox__ - minimum bounding box of the object
-* __BoundingSphere__ - bounding sphere of the object
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __DistanceTo__ - shortest distance to point, segment, triangle and circle
-* __IntersectionWith__ - intersection of triangle with line, plane, ray or segment
-* __Intersects__ - intersection check with triangle, box, tetrahedron, sphere or circle
-* __ProjectionTo__ - orthogonal projection of triangle to line
-* __IsParallelTo__ - check if two objects are parallel
-* __IsNotParallelTo__ - check if two objects are NOT parallel
-* __IsOrthogonalTo__ - check if two objects are orthogonal
-* __IsCoplanarTo__ - check if triangle is coplanar to other linear or planar object
-* __AngleTo__ - angle between two objects
-* __AngleToDeg__ - angle between two objects (in degrees)
-* __Translate__ - translate triangle by vector
-* __Rotate__ - rotate triangle around origin or other point
-* __Reflect__ - reflect triangle in point, line or plane
-* __Equals__ - check if two triangles are equals
-* __ToString__ - string representation of triangle in global or local coordinate system
+在三维空间中定义一个三角形。实现常见的平移、旋转和反射方法。计算大部分标准
+三角形属性：角平分线、中线、高、内心、外心、重心、垂心等。
+### 特性
+* __A/B/C__ - 三角形的顶点
+* __AB/AC/BC__ - 三角形边的长度
+* __周长__ - 三角形的周长
+* __Area__ - 三角形的面积
+* __Circumcircle__ - 三角形的外接圆
+* __Angle_A/B/C__ - 顶点 A/B/C 处的角度
+* __Bisector_A/B/C__ - 顶点 A/B/C 处的角平分线
+* __内心__ - 三角形内心
+* __Centroid__ - 三角形的质心
+* __垂心__ - 三角形的垂心
+* __外心__ - 三角形的外心
+* __Incircle__ - 三角形的内切圆
+* __Altitude_A/B/C__ - 顶点 A/B/C 处的高度
+* __Median_A/B/C__ - 顶点 A/B/C 处的中位数
+* __IsEquilateral__ - 检查三角形的所有边是否长度相同
+* __IsIsosceles__ - 检查三角形的两条边是否长度相同
+* __IsScalene__ - 检查所有边是否不相等
+* __IsRight__ - 检查一个角度是否等于 90 度
+* __IsObtuse__ - 检查一个角度是否大于 90 度
+* __IsAcute__ - 检查所有角度是否小于 90 度
+* __MinimumBoundingBox__ - 对象的最小边界框
+* __BoundingSphere__ - 物体的边界球
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的轴对齐边界框 (AABB)
+* __DistanceTo__ - 到点、线段、三角形和圆的最短距离
+* __IntersectionWith__ - 三角形与线、平面、射线或线段的交点
+* __Intersects__ - 与三角形、盒子、四面体、球体或圆形进行交点检查
+* __ProjectionTo__ - 三角形到线的正交投影
+* __IsParallelTo__ - 检查两个物体是否平行
+* __IsNotParallelTo__ - 检查两个物体是否不平行
+* __IsOrthogonalTo__ - 检查两个对象是否正交
+* __IsCoplanarTo__ - 检查三角形是否与其他线性或平面物体共面
+* __AngleTo__ - 两个物体之间的角度
+* __AngleToDeg__ - 两个物体之间的角度(以度为单位)
+* __Translate__ - 通过向量平移三角形
+* __Rotate__ - 围绕原点或其他点旋转三角形
+* __反射__ - 在点、线或平面上反射三角形
+* __Equals__ - 检查两个三角形是否相等
+* __ToString__ - 全局或局部坐标系中三角形的字符串表示
 
-## Tetrahedron
+## Tetrahedron - 四面体
 
-Defines a tetrahedron in 3D space. Implements common translation, rotation and reflection methods.
-### Properties
-* __A/B/C/D__ - vertices of the tetrahedron
-* __Center__ - center of the mass of tetrahedron
-* __ListOfEdges__ - list of edges
-* __ListOfFaces__ - list of faces
-* __Area__ - area of the tetrahedron
-* __Volume__ - volume of the tetrahedron
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - bounding box in given coordinate system
-* __AABB__ - Axis Aligned Bounding Box (AABB)
-* __DistanceTo__ - shortest distance to point and tetrahedron
-* __ClosestPoint__ - calculates the point on the terahedron's boundary closest to given point
-* __Intersects__ - intersection check with triangle, tetrahedron, line, ray, segment, box and sphere
-* __IsInside__ - check if object is located inside given box
-* __Translate__ - translate tetrahedron by vector
-* __Rotate__ - rotate tetrahedron around origin or other point
-* __Reflect__ - reflect tetrahedron in point, line or plane
-* __Scale__ - scale tetrahedron
-* __Equals__ - check if two tetrahedrons are equals
-* __ToString__ - string representation of tetrahedron in global or local coordinate system
+在三维空间中定义一个四面体。实现常见的平移、旋转和反射方法。
+### 特性
+* __A/B/C/D__ - 四面体的顶点
+* __中心__ - 四面体的质心
+* __ListOfEdges__ - 边列表
+* __ListOfFaces__ - 面孔列表
+* __Area__ - 四面体的面积
+* __Volume__ - 四面体的体积
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的边界框
+* __AABB__ - 轴对齐边界框 (AABB)
+* __DistanceTo__ - 到点和四面体的最短距离
+* __ClosestPoint__ - 计算四面体边界上距离给定点最近的点
+* __Intersects__ - 与三角形、四面体、直线、射线、线段、盒子和球体进行相交检查
+* __IsInside__ - 检查物体是否位于给定的框内
+* __Translate__ - 通过矢量平移四面体
+* __Rotate__ - 围绕原点或其他点旋转四面体
+* __反射__ - 在点、线或平面上反射四面体
+* __Scale__ - 比例四面体
+* __Equals__ - 检查两个四面体是否相等
+* __ToString__ - 全局或局部坐标系中四面体的字符串表示
 
-## ConvexPolyhedron
+## ConvexPolyhedron - 凸多面体
 
-Defines a convex polyhedron in 3D space with counterclockwise oriented faces (seen from outside).
-### Properties
-* __Center__ - center of the mass of polyhedron
-* __ListOfEdges__ - list of edges
-* __Area__ - area of the polyhedron
-* __Volume__ - volume of the polyhedron
-### Methods
-* __Copy__ - Creates copy of the object
-* __BoundingBox__ - bounding box in given coordinate system
-* __AABB__ - Axis Aligned Bounding Box (AABB)
-* __DistanceTo__ - shortest distance to point, triangle, and polyhedron
-* __Intersects__ - intersection check with polyhedron and box
-* __IsInside__ - check if object is located inside given box
-* __Translate__ - translate polyhedron by vector
-* __Rotate__ - rotate polyhedron around origin or other point
-* __Scale__ - scale polyhedron
-### Static Methods
-* __FromTetrahedron__ - Create ConvexPolyhedron object from a Tetrahedron object
-* __FromBox__ - Create ConvexPolyhedron object from a Box3d object
-* __Octahedron__ - Creates regular octahedron centered at origin
-* __Icosahedron__ - Creates regular icosahedron centered at origin
-* __Dodecahedron__ - Creates regular dodecahedron centered at origin
+在 3D 空间中定义一个凸多面体，其面沿逆时针方向(从外部看)。
+### 特性
+* __中心__ - 多面体的质心
+* __ListOfEdges__ - 边列表
+* __Area__ - 多面体的面积
+* __Volume__ - 多面体的体积
+### 方法
+* __Copy__ - 创建对象的副本
+* __BoundingBox__ - 给定坐标系中的边界框
+* __AABB__ - 轴对齐边界框 (AABB)
+* __DistanceTo__ - 到点、三角形和多面体的最短距离
+* __Intersects__ - 与多面体和盒子进行相交检查
+* __IsInside__ - 检查物体是否位于给定的框内
+* __Translate__ - 通过向量平移多面体
+* __Rotate__ - 围绕原点或其他点旋转多面体
+* __Scale__ - 比例多面体
+### 静态方法
+* __FromTetrahedron__ - 从 Tetrahedron 对象创建 ConvexPolyhedron 对象
+* __FromBox__ - 从 Box3d 对象创建 ConvexPolyhedron 对象
+* __Octahedron__ - 创建以原点为中心的正八面体
+* __二十面体__ - 创建以原点为中心的正二十面体
+* __Dodecahedron__ - 创建以原点为中心的正十二面体
 
-## Coord3d
+## Coord3d - 坐标3d
 
-Class representing orthogonal cartesian 3D coordinate system. Defined by an origin point and transformation matrix
-(three orthogonal unit vectors stored in row format). One global coordinate system (Coord3d.GlobalCS) is defined by default,
-any number of local coordinate systems can be defined by users.
-### Properties
-* __Origin__ - origin of the coordinate system
-* __Axes__ - unit vectors of the axes, stored as row-matrix(3x3)
-* __Name__ - name of the coordinate system
-* __Counts__ - total number of defined coordinate systems
-* __X/Y/Zaxis__ - X/Y/Z-axis of the coordinate system
-* __XY/XZ/YZ_plane__ - planes of the coordinate system
-### Methods
-* __Copy__ - Creates copy of the object
-* __Rotate/RotateDeg__ - rotate coordinate system around rotation axis
-* __Equals__ - check if two coordinate systems are equals
-* __ToString__ - string representation of coordinate system
+表示正交笛卡尔三维坐标系的类。由原点和变换矩阵定义
+(以行格式存储的三个正交单位向量)。默认定义一个全局坐标系(Coord3d.GlobalCS)，
+用户可以定义任意数量的局部坐标系。
+### 特性
+* __Origin__ - 坐标系的原点
+* __Axes__ - 轴的单位向量，存储为行矩阵(3x3)
+* __Name__ - 坐标系的名称
+* __Counts__ - 定义的坐标系总数
+* __X/Y/Zaxis__ - 坐标系的 X/Y/Z 轴
+* __XY/XZ/YZ_plane__ - 坐标系的平面
+### 方法
+* __Copy__ - 创建对象的副本
+* __Rotate/RotateDeg__ - 绕旋转轴旋转坐标系
+* __Equals__ - 检查两个坐标系是否相等
+* __ToString__ - 坐标系的字符串表示
 
-## Matrix3d
+## Matrix3d - 矩阵3d
 
-### Properties
-* __Item(i,j)__ - element of the matrix
-* __Row1/2/3__ - rows of the matrix
-* __Column1/2/3__ - columns of the matrix
-* __Det__ - determinant of the matrix
-* __MaxNorm__ - Max norm of the matrix
-* __IsZero__ - check if matrix is zero matrix
-* __IsIdentity__ - check if matrix is identity matrix
-* __IsOrthogonal__ - check if matrix is orthogonal
-### Methods
-* __Inverse__ - inverse of the matrix
-* __Transpose__ - transpose of the matrix
-* __RotationMatrix__ - rotation around given axis
-* __Equals__ - check if two matrix are equals
-* __ToString__ - string representation of matrix
-### Static methods
-* __Identity__ - creates new identity matrix
-* __DiagonalMatrix__ - creates diagonal matrix
+### 特性
+* __Item(i,j)__ - 矩阵元素
+* __Row1/2/3__ - 矩阵的行
+* __Column1/2/3__ - 矩阵的列
+* __Det__ - 矩阵的行列式
+* __MaxNorm__ - 矩阵的最大范数
+* __IsZero__ - 检查矩阵是否为零矩阵
+* __IsIdentity__ - 检查矩阵是否为单位矩阵
+* __IsOrthogonal__ - 检查矩阵是否正交
+### 方法
+* __Inverse__ - 矩阵的逆
+* __Transpose__ - 矩阵的转置
+* __RotationMatrix__ - 围绕给定轴旋转
+* __Equals__ - 检查两个矩阵是否相等
+* __ToString__ - 矩阵的字符串表示
+### 静态方法
+* __Identity__ - 创建新的单位矩阵
+* __DiagonalMatrix__ - 创建对角矩阵
 
-## Quaternion
-Unit quaternion (W + X*i + Y*j + Z*k)
-### Properties
-* __W/X/Y/Z__ - components of quaternion in reference coordinate system
-* __Coord__ - reference coordinate system
-* __Norm__ - norm of a quaternion
-* __SquareNorm__ - square of the norm of a quaternion
-* __Conjugate__ - conjugate of a quaternion
-* __ToAxis__ - axis of rotation in reference coordinate system
-* __ToAngle__ - angle of rotation in reference coordinate system
-* __Normalized__ - return normalized quaternion
-### Methods
-* __Copy__ - Creates copy of the object
-* __ConvertTo__ - convert quaternion to local coordinate system
-* __ConvertToGlobal__ - convert quaternion to global coordinate system
-* __Normalize__ - normalize the current quaternion
-* __Add/Subtract/Mult__ - arithmetic operations
-* __Scale__ - scale quaternion by number
-* __Inverse__ - inverse quaternion
-* __ToRotationMatrix__ - convert to rotation matrix
-* __Equals__ - check if two quaternions are equals
-* __ToString__ - string representation of quaternion in global or local coordinate system
-### Static methods
-* __SLERP__ - Spherical Linear intERPolation of two quaternions
+## Quaternion - 四元数
+单位四元数 (W + X*i + Y*j + Z*k)
+### 特性
+* __W/X/Y/Z__ - 参考坐标系中的四元数分量
+* __Coord__ - 参考坐标系
+* __Norm__ - 四元数的范数
+* __SquareNorm__ - 四元数范数的平方
+* __Conjugate__ - 四元数的共轭
+* __ToAxis__ - 参考坐标系中的旋转轴
+* __ToAngle__ - 参考坐标系中的旋转角度
+* __Normalized__ - 返回标准化四元数
+### 方法
+* __Copy__ - 创建对象的副本
+* __ConvertTo__ - 将四元数转换为局部坐标系
+* __ConvertToGlobal__ - 将四元数转换为全局坐标系
+* __Normalize__ - 标准化当前四元数
+* __Add/Subtract/Mult__ - 算术运算
+* __Scale__ - 按数字缩放四元数
+* __Inverse__ - 逆四元数
+* __ToRotationMatrix__ - 转换为旋转矩阵
+* __Equals__ - 检查两个四元数是否相等
+* __ToString__ - 全局或局部坐标系中四元数的字符串表示
+### 静态方法
+* __SLERP__ - 两个四元数的球面线性插值
 
-## Rotation
-Rotation in 3D space defined in global or local reference frame (internally represented by rotation matrix)
-### Properties
-* __Coord__ - reference coordinate system
-* __ToAxis__ - axis of rotation in reference coordinate system
-* __ToAngle__ - angle of rotation in reference coordinate system
-* __ToRotationMatrix__ - rotation matrix
-* __ToQuaternion__ - convert to quaternion
-### Methods
-* __Copy__ - Creates copy of the object
-* __ConvertTo__ - convert rotation to local coordinate system
-* __ConvertToGlobal__ - convert rotation to global coordinate system
-* __Mult__ - apply rotation to point or vector
-* __ToEulerAngles__ - factor rotation matrix as product of three elemental rotations
-* __Equals__ - check if two rotations are equals
-* __ToString__ - string representation of rotation in global or local coordinate system
-### Static methods
-* __FromEulerAngles__ - creates rotation object from Euler or Tait-Bryan angles
-* __SLERP__ - Spherical Linear intERPolation of two rotations
+## Rotation – 旋转
+在全局或局部参考系中定义的 3D 空间中的旋转(内部由旋转矩阵表示)
+### 特性
+* __Coord__ - 参考坐标系
+* __ToAxis__ - 参考坐标系中的旋转轴
+* __ToAngle__ - 参考坐标系中的旋转角度
+* __ToRotationMatrix__ - 旋转矩阵
+* __ToQuaternion__ - 转换为四元数
+### 方法
+* __Copy__ - 创建对象的副本
+* __ConvertTo__ - 将旋转转换为局部坐标系
+* __ConvertToGlobal__ - 将旋转转换为全局坐标系
+* __Mult__ - 对点或矢量应用旋转
+* __ToEulerAngles__ - 将旋转矩阵分解为三个元素旋转的乘积
+* __Equals__ - 检查两个旋转是否相等
+* __ToString__ - 全局或局部坐标系中旋转的字符串表示
+### 静态方法
+* __FromEulerAngles__ - 根据欧拉角或 Tait-Bryan 角创建旋转对象
+* __SLERP__ - 两个旋转的球面线性插值
 
-## GeometRi3D
+## GeometRi3D - 容差
 
-### Properties
-* __Tolerance__ - tolerance used for comparison operations (default 1e-12)
-### Methods
-* __AlmostEqual__ - tolerance based equality check
-* __NotEqual__ - tolerance based unequality check
-* __Greater__ - tolerance based comparison
-* __Smaller__ - tolerance based comparison
+### 特性
+* __Tolerance__ - 用于比较操作的容差(默认 1e-12)
+### 方法
+* __AlmostEqual__ - 基于容差的平等检查
+* __NotEqual__ - 基于容差的不平等检查
+* __Greater__ - 基于公差的比较
+* __Smaller__ - 基于公差的比较
