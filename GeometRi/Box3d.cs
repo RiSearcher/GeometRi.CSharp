@@ -13,8 +13,8 @@ namespace GeometRi
     public class Box3d : FiniteObject, IFiniteObject
     {
 
-        private Point3d _center;
-        private double _lx, _ly, _lz;
+        internal Point3d _center;
+        internal double _lx, _ly, _lz;
         private Rotation _r;
         private Coord3d _local_coord = null;
 

@@ -523,9 +523,9 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Box3d box)
         {
-            bool x = Abs(this.Center.X - box.Center.X) <= 0.5 * (this.L1 + box.L1) ? true : false;
-            bool y = Abs(this.Center.Y - box.Center.Y) <= 0.5 * (this.L2 + box.L2) ? true : false;
-            bool z = Abs(this.Center.Z - box.Center.Z) <= 0.5 * (this.L3 + box.L3) ? true : false;
+            bool x = Abs(this._center.X - box._center.X) <= 0.5 * (this.L1 + box.L1) ? true : false;
+            bool y = Abs(this._center.Y - box._center.Y) <= 0.5 * (this.L2 + box.L2) ? true : false;
+            bool z = Abs(this._center.Z - box._center.Z) <= 0.5 * (this.L3 + box.L3) ? true : false;
 
             return x && y && z;
         }
@@ -535,9 +535,9 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(AABB box)
         {
-            bool x = Abs(this.Center.X - box.Center.X) <= 0.5 * (this.L1 + box.L1) ? true : false;
-            bool y = Abs(this.Center.Y - box.Center.Y) <= 0.5 * (this.L2 + box.L2) ? true : false;
-            bool z = Abs(this.Center.Z - box.Center.Z) <= 0.5 * (this.L3 + box.L3) ? true : false;
+            bool x = Abs(this._center.X - box._center.X) <= 0.5 * (this.L1 + box.L1) ? true : false;
+            bool y = Abs(this._center.Y - box._center.Y) <= 0.5 * (this.L2 + box.L2) ? true : false;
+            bool z = Abs(this._center.Z - box._center.Z) <= 0.5 * (this.L3 + box.L3) ? true : false;
 
             return x && y && z;
         }
@@ -547,19 +547,19 @@ namespace GeometRi
         /// </summary>
         public AABB IntersectionWith(AABB box)
         {
-            double x1min = this.Center.X - 0.5 * this.L1;
-            double x1max = this.Center.X + 0.5 * this.L1;
-            double y1min = this.Center.Y - 0.5 * this.L2;
-            double y1max = this.Center.Y + 0.5 * this.L2;
-            double z1min = this.Center.Z - 0.5 * this.L3;
-            double z1max = this.Center.Z + 0.5 * this.L3;
+            double x1min = this._center.X - 0.5 * this.L1;
+            double x1max = this._center.X + 0.5 * this.L1;
+            double y1min = this._center.Y - 0.5 * this.L2;
+            double y1max = this._center.Y + 0.5 * this.L2;
+            double z1min = this._center.Z - 0.5 * this.L3;
+            double z1max = this._center.Z + 0.5 * this.L3;
 
-            double x2min = box.Center.X - 0.5 * box.L1;
-            double x2max = box.Center.X + 0.5 * box.L1;
-            double y2min = box.Center.Y - 0.5 * box.L2;
-            double y2max = box.Center.Y + 0.5 * box.L2;
-            double z2min = box.Center.Z - 0.5 * box.L3;
-            double z2max = box.Center.Z + 0.5 * box.L3;
+            double x2min = box._center.X - 0.5 * box.L1;
+            double x2max = box._center.X + 0.5 * box.L1;
+            double y2min = box._center.Y - 0.5 * box.L2;
+            double y2max = box._center.Y + 0.5 * box.L2;
+            double z2min = box._center.Z - 0.5 * box.L3;
+            double z2max = box._center.Z + 0.5 * box.L3;
 
             double xmin, xmax, ymin, ymax, zmin, zmax;
 
@@ -847,7 +847,7 @@ namespace GeometRi
         /// </summary>
         public virtual AABB Scale(double scale, Point3d scaling_center)
         {
-            Point3d new_center = scaling_center + scale * (this.Center - scaling_center);
+            Point3d new_center = scaling_center + scale * (this._center - scaling_center);
             return new AABB(new_center, scale * _lx, scale * _ly, scale * _lz);
         }
 
@@ -867,7 +867,7 @@ namespace GeometRi
 
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                return this.Center == b.Center &&
+                return this._center == b._center &&
                        GeometRi3D.AlmostEqual(L1, b.L1) &&
                        GeometRi3D.AlmostEqual(L2, b.L2) &&
                        GeometRi3D.AlmostEqual(L3, b.L3);
