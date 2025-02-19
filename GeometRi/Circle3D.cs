@@ -79,7 +79,7 @@ namespace GeometRi
         /// <summary>
         /// X component of the circles' center
         /// </summary>
-        private double X
+        public double X
         {
             get { return _point.X; }
             set { _point.X = value; }
@@ -88,7 +88,7 @@ namespace GeometRi
         /// <summary>
         /// Y component of the circles' center
         /// </summary>
-        private double Y
+        public double Y
         {
             get { return _point.Y; }
             set { _point.Y = value; }
@@ -97,7 +97,7 @@ namespace GeometRi
         /// <summary>
         /// Z component of the circles' center
         /// </summary>
-        private double Z
+        public double Z
         {
             get { return _point.Z; }
             set { _point.Z = value; }
