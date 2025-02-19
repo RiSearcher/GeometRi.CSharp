@@ -77,6 +77,33 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// X component of the circles' center
+        /// </summary>
+        private double X
+        {
+            get { return _point.X; }
+            set { _point.X = value; }
+        }
+
+        /// <summary>
+        /// Y component of the circles' center
+        /// </summary>
+        private double Y
+        {
+            get { return _point.Y; }
+            set { _point.Y = value; }
+        }
+
+        /// <summary>
+        /// Z component of the circles' center
+        /// </summary>
+        private double Z
+        {
+            get { return _point.Z; }
+            set { _point.Z = value; }
+        }
+
+        /// <summary>
         /// Radius of the circle
         /// </summary>
         public double R
