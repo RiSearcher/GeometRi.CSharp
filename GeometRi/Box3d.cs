@@ -224,7 +224,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (-_lx * _v1 - _ly * _v2 - _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    -_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
@@ -235,7 +238,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (+_lx * _v1 - _ly * _v2 - _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    +_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
@@ -246,7 +252,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (+_lx * _v1 + _ly * _v2 - _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    +_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
@@ -257,7 +266,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (-_lx * _v1 + _ly * _v2 - _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    -_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    - _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
@@ -268,7 +280,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (-_lx * _v1 - _ly * _v2 + _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    -_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
@@ -279,7 +294,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (+_lx * _v1 - _ly * _v2 + _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    +_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    - _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
@@ -290,7 +308,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (+_lx * _v1 + _ly * _v2 + _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    +_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
@@ -301,7 +322,10 @@ namespace GeometRi
         {
             get
             {
-                return _center.Translate(0.5 * (-_lx * _v1 + _ly * _v2 + _lz * _v3));
+                return _center.ConvertToGlobal() + 0.5 * (
+                    -_lx * _r.ConvertToGlobal().ToRotationMatrix.Column1.ToPoint
+                    + _ly * _r.ConvertToGlobal().ToRotationMatrix.Column2.ToPoint
+                    + _lz * _r.ConvertToGlobal().ToRotationMatrix.Column3.ToPoint);
             }
         }
 
