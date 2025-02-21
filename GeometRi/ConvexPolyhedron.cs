@@ -680,6 +680,10 @@ namespace GeometRi
                 {
                     Triangle t = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
                     double tmp_dist = t.DistanceTo(p);
+                    if (tmp_dist <= GeometRi3D.Tolerance)
+                    {
+                        return tmp_dist;
+                    }
                     if (tmp_dist < dist)
                     {
                         dist = tmp_dist;
@@ -961,6 +965,42 @@ namespace GeometRi
                 {
                     Triangle tmp = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
                     double tmp_dist = t.DistanceTo(tmp);
+                    if (tmp_dist <= GeometRi3D.Tolerance)
+                    {
+                        return tmp_dist;
+                    }
+                    if (tmp_dist < dist)
+                    {
+                        dist = tmp_dist;
+                    }
+                }
+
+            }
+            return dist;
+        }
+
+        /// <summary>
+        /// Distance from polyhedron to segment
+        /// </summary>
+        public double DistanceTo(Segment3d s)
+        {
+            if (s.P1.BelongsTo(this) || s.P2.BelongsTo(this))
+            {
+                return 0;
+            }
+
+            double dist = double.PositiveInfinity;
+
+            for (int i = 0; i < numFaces; i++)
+            {
+                for (int j = 0; j < face[i].vertex.Length - 2; j++)
+                {
+                    Triangle tmp = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
+                    double tmp_dist = s.DistanceTo(tmp);
+                    if (tmp_dist <= GeometRi3D.Tolerance) 
+                    { 
+                        return tmp_dist; 
+                    }
                     if (tmp_dist < dist)
                     {
                         dist = tmp_dist;

@@ -501,5 +501,35 @@ namespace GeometRi_Tests
             Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
         }
 
+        [TestMethod]
+        public void SegmentDistanceTest_01()
+        {
+            // Segment inside CP
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Segment3d s = new Segment3d(new Point3d(0.1, 0.1, 0.1), new Point3d(0.2, 0.2, 0.2));
+
+            Assert.IsTrue(cp.DistanceTo(s) == 0);
+        }
+
+        [TestMethod]
+        public void SegmentDistanceTest_02()
+        {
+            // Segment touch face
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Segment3d s = new Segment3d(new Point3d(0.3, 0.3, 0.0), new Point3d(0.7, 0.7, -1));
+
+            Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), 0));
+        }
+
+        [TestMethod]
+        public void SegmentDistanceTest_03()
+        {
+            // Segment outside of CP
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Segment3d s = new Segment3d(new Point3d(1, 0.3, 0.3), new Point3d(2, 0.3, 0.3));
+
+            Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), 0.5));
+        }
+
     }
 }

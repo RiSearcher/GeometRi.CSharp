@@ -434,6 +434,14 @@ namespace GeometRi
         {
             return t.DistanceTo(this, out point_on_triangle, out point_on_segment);
         }
+
+        /// <summary>
+        /// Shortest distance between segment and convex polyhedron
+        /// </summary>
+        public double DistanceTo(ConvexPolyhedron cp)
+        {
+            return cp.DistanceTo(this);
+        }
         #endregion
 
         /// <summary>
