@@ -246,6 +246,14 @@ namespace GeometRi
             return box.DistanceTo(this);
         }
 
+        /// <summary>
+        /// Distance from polyhedron to sphere
+        /// </summary>
+        public double DistanceTo(ConvexPolyhedron cp)
+        {
+            return cp.DistanceTo(this);
+        }
+
         #endregion
 
         #region "BoundingBox"

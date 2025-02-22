@@ -695,6 +695,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Distance from polyhedron to sphere
+        /// </summary>
+        public double DistanceTo(Sphere s)
+        {
+            double dist = this.DistanceTo(s.Center) - s.R;
+            return dist < 0 ? 0 : dist;
+        }
+
+        /// <summary>
         /// Distance between two polyhedrons
         /// </summary>
         /// <param name="c">Target polyhedron</param>
