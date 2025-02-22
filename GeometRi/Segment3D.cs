@@ -83,6 +83,14 @@ namespace GeometRi
             get { return false; }
         }
 
+        /// <summary>
+        /// Return Axis Aligned Bounding Box (AABB).
+        /// </summary>
+        public AABB AABB()
+        {
+            return new AABB(P1, P2);
+        }
+
         #region "ParallelMethods"
         /// <summary>
         /// Check if two objects are parallel
