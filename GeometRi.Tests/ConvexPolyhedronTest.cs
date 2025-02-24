@@ -531,5 +531,14 @@ namespace GeometRi_Tests
             Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), 0.5));
         }
 
+        [TestMethod]
+        public void CircleDistanceTest_01()
+        {
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Circle3d s = new Circle3d(new Point3d(1.5, 1.5, 1.5), 1, new Vector3d(1, 1, 1));
+            double d = cp.DistanceTo(s);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), Sqrt(3)));
+        }
+
     }
 }

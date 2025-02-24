@@ -1299,6 +1299,14 @@ namespace GeometRi
         {
             return box.DistanceTo(this);
         }
+
+        /// <summary>
+        /// Shortest distance from circle to convex polyhedron
+        /// </summary>
+        public double DistanceTo(ConvexPolyhedron cp)
+        {
+            return cp.DistanceTo(this);
+        }
         #endregion
 
         /// <summary>

@@ -695,6 +695,44 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Distance from polyhedron to circle (zero will be returned for circle located inside polyhedron)
+        /// </summary>
+        public double DistanceTo(Circle3d c)
+        {
+            if (c._point.BelongsTo(this))
+            {
+                return 0;
+            }
+
+            double dist = double.PositiveInfinity;
+
+            for (int i = 0; i < numFaces; i++)
+            {
+                // test only visible faces
+                if (face[i].normal * new Vector3d(face[i].Vertex[0], c._point) < 0)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < face[i].vertex.Length - 2; j++)
+                {
+                    Triangle t = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
+                    double tmp_dist = t.DistanceTo(c);
+                    if (tmp_dist <= GeometRi3D.Tolerance)
+                    {
+                        return tmp_dist;
+                    }
+                    if (tmp_dist < dist)
+                    {
+                        dist = tmp_dist;
+                    }
+                }
+
+            }
+            return dist;
+        }
+
+        /// <summary>
         /// Distance from polyhedron to sphere
         /// </summary>
         public double DistanceTo(Sphere s)
