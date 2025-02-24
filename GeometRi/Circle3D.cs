@@ -2090,13 +2090,21 @@ namespace GeometRi
         /// </summary>
         public override String ToString()
         {
-            return ToString(Coord3d.GlobalCS);
+            return ToString(Coord3d.GlobalCS, false);
+        }
+
+        /// <summary>
+        /// String representation of an object in global coordinate system.
+        /// </summary>
+        public String ToString(bool full_precision = false)
+        {
+            return ToString(Coord3d.GlobalCS, full_precision);
         }
 
         /// <summary>
         /// String representation of an object in reference coordinate system.
         /// </summary>
-        public String ToString(Coord3d coord)
+        public String ToString(Coord3d coord, bool full_precision = false)
         {
             string nl = System.Environment.NewLine;
 
@@ -2105,9 +2113,33 @@ namespace GeometRi
             Vector3d normal = _normal.ConvertTo(coord);
 
             string str = string.Format("Circle: ") + nl;
-            str += string.Format("  Center -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", P.X, P.Y, P.Z) + nl;
-            str += string.Format("  Radius -> {0,10:g5}", _r) + nl;
-            str += string.Format("  Normal -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", normal.X, normal.Y, normal.Z);
+            if (full_precision)
+            {
+                str += string.Format("  Center -> ({0}, {1}, {2})", P.X, P.Y, P.Z) + nl;
+                str += string.Format("  Radius -> {0}", _r) + nl;
+                str += string.Format("  Normal -> ({0}, {1}, {2})", normal.X, normal.Y, normal.Z);
+            }
+            else
+            {
+                str += string.Format("  Center -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", P.X, P.Y, P.Z) + nl;
+                str += string.Format("  Radius -> {0,10:g5}", _r) + nl;
+                str += string.Format("  Normal -> ({0,10:g5}, {1,10:g5}, {2,10:g5})", normal.X, normal.Y, normal.Z);
+            }
+
+            return str;
+        }
+
+        public String ToString(Coord3d coord, bool full_precision = false, bool code = true)
+        {
+            string nl = System.Environment.NewLine;
+
+            if (coord == null) { coord = Coord3d.GlobalCS; }
+            Point3d P = _point.ConvertTo(coord);
+            Vector3d normal = _normal.ConvertTo(coord);
+
+            string str = string.Format("Circle3d circle = new Circle3d(new Point3d({0}, {1}, {2}), {3}, new Vector3d({4}, {5}, {6}));",
+                   P.X, P.Y, P.Z, this.R, normal.X, normal.Y, normal.Z) + nl;
+
             return str;
         }
 
