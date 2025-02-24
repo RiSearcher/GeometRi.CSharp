@@ -1337,6 +1337,72 @@ namespace GeometRi
 
         #endregion
 
+        /// <summary>
+        /// String representation of an object in global coordinate system.
+        /// </summary>
+        public override string ToString()
+        {
+            return ToString(Coord3d.GlobalCS);
+        }
+
+        /// <summary>
+        /// String representation of an object in global coordinate system.
+        /// </summary>
+        public string ToString(bool full_precision = false)
+        {
+            return ToString(Coord3d.GlobalCS, full_precision);
+        }
+
+        /// <summary>
+        /// String representation of an object in reference coordinate system.
+        /// </summary>
+        public string ToString(Coord3d coord, bool full_precision = false)
+        {
+            string nl = System.Environment.NewLine;
+
+            if (coord == null) { coord = Coord3d.GlobalCS; }
+
+            string str = string.Format("Convex polyhedron (reference coord.sys. ") + coord.Name + "):" + nl;
+            str += string.Format("int numVertices = {0};", this.numVertices) + nl;
+            str += string.Format("int numEdges = {0};", this.numEdges) + nl;
+            str += string.Format("int numFaces = {0};", this.numFaces) + nl;
+
+            str += string.Format("Point3d[] vertices = new Point3d[{0}];", this.numVertices) + nl;
+            for (int i = 0; i < vertex.Length; i++)
+            {
+                Point3d p = vertex[i].ConvertTo(coord);
+                if (full_precision)
+                {
+                    str += string.Format("vertices[{0}] = new Point3d({1}, {2}, {3});", i, p.X, p.Y, p.Z) + nl;
+                }
+                else
+                {
+                    str += string.Format("vertices[{0}] = new Point3d({1,10:g5}, {2,10:g5}, {3,10:g5});", i, p.X, p.Y, p.Z) + nl;
+                }
+            }
+
+            str += string.Format("ConvexPolyhedron.Edge[] edges = new ConvexPolyhedron.Edge[{0}];", this.numEdges) + nl;
+            for (int i = 0; i < edge.Length; i++)
+            {
+                str += string.Format("edges[{0}] = new ConvexPolyhedron.Edge({1}, {2});", i, edge[i].p1, edge[i].p2) + nl;
+            }
+
+            str += string.Format("ConvexPolyhedron.Face[] faces = new ConvexPolyhedron.Face[{0}];", this.numFaces) + nl;
+            for (int i = 0; i < face.Length; i++)
+            {
+                str += string.Format("faces[{0}] = new ConvexPolyhedron.Face({1}, new int[] {{ {2}", i, face[i].numVertices, face[i].vertex[0]);
+                for (int j = 1; j < face[i].numVertices; j++)
+                {
+                    str += string.Format(", {0}", face[i].vertex[j]);
+                }
+                str += string.Format(" }});") + nl;
+            }
+
+            str += string.Format("ConvexPolyhedron cp = new ConvexPolyhedron(numVertices, numEdges, numFaces, vertices, edges, faces, true);") + nl;
+
+            return str;
+        }
+
 
     }
 }
