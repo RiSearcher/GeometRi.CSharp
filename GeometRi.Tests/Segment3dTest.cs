@@ -565,6 +565,19 @@ namespace GeometRi_Tests
             double dist = s.DistanceTo(c);
             Assert.IsTrue(dist > 0);
 
+        }
+
+        [TestMethod()]
+        public void SegmentDistanceToCircleTest_02()
+        {
+            Point3d p1 = new Point3d(0.301356040516408, 0.400483483427746, 0.583650524970757);
+            Point3d p2 = new Point3d(0.433915317785216, 0.662580513110059, 0.657843630090789);
+            Segment3d s = new Segment3d(p1, p2);
+
+            Circle3d c = new Circle3d(new Point3d(0.518083776391494, 0.532968496579738, 0.671849229166195), 0.175764204722922, new Vector3d(-0.308050408901554, -0.161312662726171, 0.93759435280924));
+
+            double dist = s.DistanceTo(c);
+            Assert.IsTrue(dist < GeometRi3D.Tolerance);
 
         }
     }

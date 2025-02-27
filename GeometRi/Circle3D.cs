@@ -1056,6 +1056,26 @@ namespace GeometRi
         /// <param name="point_on_segment">Closest point on segment</param>
         public double DistanceTo(Segment3d s, out Point3d point_on_circle, out Point3d point_on_segment)
         {
+            Line3d l = s.ToLine;
+            Plane3d plane = this.ToPlane;
+            if (l.IsNotParallelTo(plane._normal))
+            {
+                Line3d l_projection = (Line3d)l.ProjectionTo(plane);
+                Object obj = l_projection.IntersectionWith(this);
+                if (obj != null && obj.GetType() == typeof(Segment3d))
+                {
+                    Segment3d segm = (Segment3d)obj;
+                    return s.DistanceTo(segm, out point_on_segment, out point_on_circle);
+                }
+                if (obj != null && obj.GetType() == typeof(Point3d))
+                {
+                    point_on_circle = (Point3d)obj;
+                    point_on_segment = s.ClosestPoint(point_on_circle);
+                    return point_on_segment.DistanceTo(point_on_circle);
+                }
+            }
+            
+            
             double dist = _distance_circle_to_line(s.ToLine, out point_on_circle, out point_on_segment);
 
             if (point_on_segment.BelongsTo(s)) return dist;
@@ -1178,9 +1198,9 @@ namespace GeometRi
             double t1 = 0;
             Point3d p;
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
             {
-                double t = i * Math.PI / 8;
+                double t = i * Math.PI / 16;
                 p = this.ParametricForm(t);
                 double dist = p.DistanceTo(l);
                 if (dist < d1)
@@ -1189,10 +1209,10 @@ namespace GeometRi
                     t1 = t;
                 }
             }
-            double t2 = t1 - Math.PI / 8;
+            double t2 = t1 - Math.PI / 16;
             p = this.ParametricForm(t2);
             double d2 = p.DistanceTo(l);
-            double t3 = t1 + Math.PI / 8;
+            double t3 = t1 + Math.PI / 16;
             p = this.ParametricForm(t3);
             double d3 = p.DistanceTo(l);
 
