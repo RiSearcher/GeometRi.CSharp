@@ -260,11 +260,26 @@ namespace GeometRi
             b[2] = this.val[2, 0] * a[0] + this.val[2, 1] * a[1] + this.val[2, 2] * a[2];
             return b;
         }
+        internal Vector3d TransposeMult(Vector3d a)
+        {
+            Vector3d b = new Vector3d(0, 0, 0, a.Coord);
+            b[0] = this.val[0, 0] * a[0] + this.val[1, 0] * a[1] + this.val[2, 0] * a[2];
+            b[1] = this.val[0, 1] * a[0] + this.val[1, 1] * a[1] + this.val[2, 1] * a[2];
+            b[2] = this.val[0, 2] * a[0] + this.val[1, 2] * a[1] + this.val[2, 2] * a[2];
+            return b;
+        }
         public Point3d Mult(Point3d p)
         {
             double x = this.val[0, 0] * p.X + this.val[0, 1] * p.Y + this.val[0, 2] * p.Z;
             double y = this.val[1, 0] * p.X + this.val[1, 1] * p.Y + this.val[1, 2] * p.Z;
             double z = this.val[2, 0] * p.X + this.val[2, 1] * p.Y + this.val[2, 2] * p.Z;
+            return new Point3d(x, y, z, p.Coord);
+        }
+        internal Point3d TransposeMult(Point3d p)
+        {
+            double x = this.val[0, 0] * p.X + this.val[1, 0] * p.Y + this.val[2, 0] * p.Z;
+            double y = this.val[0, 1] * p.X + this.val[1, 1] * p.Y + this.val[2, 1] * p.Z;
+            double z = this.val[0, 2] * p.X + this.val[1, 2] * p.Y + this.val[2, 2] * p.Z;
             return new Point3d(x, y, z, p.Coord);
         }
         public Matrix3d Mult(Matrix3d a)

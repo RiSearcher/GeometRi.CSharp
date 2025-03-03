@@ -50,57 +50,77 @@ namespace GeometRi.Benchmarks
             //    bool test = c.Intersects(t);
             //});
 
-            Line3d s = new Line3d(new Point3d(1, 2, 0), new Vector3d(-5, 7, 0));
-            Point3d p1 = new Point3d(12, -22, 0);
-            Point3d p2 = new Point3d(3, 14, 0);
-            Point3d p3 = new Point3d(-12, 11, 0);
-            Triangle t = new Triangle(p1, p2, p3);
-            Circle3d c1 = new Circle3d(new Point3d(2, 22, 43), 50, new Vector3d(0, 0, 2));
-            Circle3d c2 = new Circle3d(new Point3d(22, -3, 8), 50, new Vector3d(-1, 2, -4));
-            Box3d box = new Box3d();
-            Circle3d c3 = new Circle3d(new Point3d(0.3, 0.55, 0.3), 0.1, new Vector3d(0, 0, 2));
-            Sphere sph = new Sphere(new Point3d(2.3, 1.55, 0.3), 0.1);
-            double dist1 = sph.DistanceTo(box);
+            //Line3d s = new Line3d(new Point3d(1, 2, 0), new Vector3d(-5, 7, 0));
+            //Point3d p1 = new Point3d(12, -22, 0);
+            //Point3d p2 = new Point3d(3, 14, 0);
+            //Point3d p3 = new Point3d(-12, 11, 0);
+            //Triangle t = new Triangle(p1, p2, p3);
+            //Circle3d c1 = new Circle3d(new Point3d(2, 22, 43), 50, new Vector3d(0, 0, 2));
+            //Circle3d c2 = new Circle3d(new Point3d(22, -3, 8), 50, new Vector3d(-1, 2, -4));
+            //Box3d box = new Box3d();
+            //Circle3d c3 = new Circle3d(new Point3d(0.3, 0.55, 0.3), 0.1, new Vector3d(0, 0, 2));
+            //Sphere sph = new Sphere(new Point3d(2.3, 1.55, 0.3), 0.1);
+            //double dist1 = sph.DistanceTo(box);
 
-            List<ConvexPolyhedron> list = new List<ConvexPolyhedron>();
+            //List<ConvexPolyhedron> list = new List<ConvexPolyhedron>();
+            //Random rnd = new Random();
+            //for (int i=0; i < 5; i++)
+            //{
+            //    ConvexPolyhedron cp = ConvexPolyhedron.Octahedron();
+            //    Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
+            //    cp = cp.Rotate(r, cp.Center);
+            //    cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
+            //    list.Add(cp);
+            //}
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    ConvexPolyhedron cp = ConvexPolyhedron.Icosahedron();
+            //    Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
+            //    cp = cp.Rotate(r, cp.Center);
+            //    cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
+            //    list.Add(cp);
+            //}
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    ConvexPolyhedron cp = ConvexPolyhedron.Dodecahedron();
+            //    Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
+            //    cp = cp.Rotate(r, cp.Center);
+            //    cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
+            //    list.Add(cp);
+            //}
+
+            //Profile("Test2", 50, () =>
+            //{
+            //    foreach(ConvexPolyhedron cp1 in list)
+            //    {
+            //        foreach(ConvexPolyhedron cp2 in list)
+            //        {
+            //            Point3d pp1 = new Point3d();
+            //            Point3d pp2 = new Point3d();
+            //            double dist = cp1.DistanceTo(cp2, out pp1, out pp2);
+            //        }
+            //    }
+            //});
+
+
             Random rnd = new Random();
-            for (int i=0; i < 5; i++)
+            List<Point3d> list = new List<Point3d>();
+            for (int i = 0; i < 300000; i++)
             {
-                ConvexPolyhedron cp = ConvexPolyhedron.Octahedron();
                 Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
-                cp = cp.Rotate(r, cp.Center);
-                cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
-                list.Add(cp);
-            }
-            for (int i = 0; i < 5; i++)
-            {
-                ConvexPolyhedron cp = ConvexPolyhedron.Icosahedron();
-                Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
-                cp = cp.Rotate(r, cp.Center);
-                cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
-                list.Add(cp);
-            }
-            for (int i = 0; i < 5; i++)
-            {
-                ConvexPolyhedron cp = ConvexPolyhedron.Dodecahedron();
-                Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
-                cp = cp.Rotate(r, cp.Center);
-                cp = cp.Translate(new Vector3d(5 * rnd.NextDouble(), 5 * rnd.NextDouble(), 5 * rnd.NextDouble()));
-                list.Add(cp);
+                Point3d origin = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
+                Coord3d coord = new Coord3d(origin, r.ToRotationMatrix.Column1, r.ToRotationMatrix.Column2);
+                list.Add(new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble(), coord));
             }
 
-            Profile("Test2", 50, () =>
+            Profile("Test2", 5, () =>
             {
-                foreach(ConvexPolyhedron cp1 in list)
+                foreach (Point3d p in list)
                 {
-                    foreach(ConvexPolyhedron cp2 in list)
-                    {
-                        Point3d pp1 = new Point3d();
-                        Point3d pp2 = new Point3d();
-                        double dist = cp1.DistanceTo(cp2, out pp1, out pp2);
-                    }
+                    Point3d p2 = p.ConvertToGlobal();
                 }
             });
+
 
 
 

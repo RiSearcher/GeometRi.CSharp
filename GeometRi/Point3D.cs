@@ -134,11 +134,10 @@ namespace GeometRi
             }
             else
             {
-                Vector3d v = new Vector3d(this.X, this.Y, this.Z);
-                v = _coord.Axes.Transpose() * v; // Orthogonal matrix: Inverse == Transpose
+                Point3d p = _coord.Axes.TransposeMult(this);
+                p._coord = Coord3d.GlobalCS;
 
-                return v.ToPoint + _coord.Origin;
-
+                return p + _coord.Origin;
             }
 
         }
