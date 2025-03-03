@@ -1074,29 +1074,39 @@ namespace GeometRi
                     return point_on_segment.DistanceTo(point_on_circle);
                 }
             }
-            
-            
-            double dist = _distance_circle_to_line(s.ToLine, out point_on_circle, out point_on_segment);
 
-            if (point_on_segment.BelongsTo(s)) return dist;
-
-            Point3d point_on_circle1 = this.ClosestPoint(s.P1);
-            Point3d point_on_circle2 = this.ClosestPoint(s.P2);
-            double dist1 = point_on_circle1.DistanceTo(s.P1);
-            double dist2 = point_on_circle2.DistanceTo(s.P2);
-
-            if (dist1 < dist2)
+            // Line is parallel
+            if (l.IsParallelTo(this))
             {
-                point_on_circle = point_on_circle1;
+                point_on_segment = this.Center.ProjectionTo(l);
+                if (s._AxialPointLocation(point_on_segment) >= 0)
+                {
+                    point_on_circle = this.ClosestPoint(point_on_segment);
+                    return point_on_circle.DistanceTo(point_on_segment);
+                }
+            }
+            
+            
+            double dist = _distance_circle_boundary_to_line(l, out point_on_circle, out point_on_segment);
+
+            int code = s._AxialPointLocation(point_on_segment);
+            if (code >= 0)
+            {
+                return dist;
+            }
+            else if (code == -1)
+            {
+                point_on_circle = this.ClosestPoint(s.P1);
                 point_on_segment = s.P1;
-                return dist1;
             }
             else
             {
-                point_on_circle = point_on_circle2;
+                point_on_circle = this.ClosestPoint(s.P2);
                 point_on_segment = s.P2;
-                return dist2;
             }
+
+            return point_on_circle.DistanceTo(point_on_segment);
+
         }
 
 
