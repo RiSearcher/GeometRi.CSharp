@@ -1198,9 +1198,9 @@ namespace GeometRi
             double t1 = 0;
             Point3d p;
 
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 16; i++)
             {
-                double t = i * Math.PI / 16;
+                double t = i * Math.PI / 8;
                 p = this.ParametricForm(t);
                 double dist = p.DistanceTo(l);
                 if (dist < d1)
@@ -1209,10 +1209,10 @@ namespace GeometRi
                     t1 = t;
                 }
             }
-            double t2 = t1 - Math.PI / 16;
+            double t2 = t1 - Math.PI / 8;
             p = this.ParametricForm(t2);
             double d2 = p.DistanceTo(l);
-            double t3 = t1 + Math.PI / 16;
+            double t3 = t1 + Math.PI / 8;
             p = this.ParametricForm(t3);
             double d3 = p.DistanceTo(l);
 
