@@ -450,7 +450,7 @@ namespace GeometRi
         /// </summary>        
         public bool IsOutside(FiniteObject obj)
         {
-            if (obj._PointLocation(this) == -1) { return true; }
+            if (obj._PointLocation(this) < 0) { return true; }
             return false;
         }
 
