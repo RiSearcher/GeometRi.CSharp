@@ -388,25 +388,17 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Point3d p)
         {
-            Point3d projection = p.ProjectionTo(this.ToPlane);
-            if (projection.Coord != this._point.Coord)
+            Vector3d delta = new Vector3d(this._point, p);
+            Point3d Q = p - (this._normal * delta) * this._normal;
+            double dist = this._point.DistanceTo(Q);
+            if (dist < this._r)
             {
-                projection = projection.ConvertTo(this._point.Coord);
-            }
-            double proj_dist_cent = projection.DistanceTo(this._point);
-
-            if (proj_dist_cent <= this.R)
-            {
-                return projection.DistanceTo(p);
+                return Q.DistanceTo(p); ;
             }
             else
             {
-                // find closest point on circle's boundary
-                double x = this._point.X + this.R / proj_dist_cent * (projection.X - this._point.X);
-                double y = this._point.Y + this.R / proj_dist_cent * (projection.Y - this._point.Y);
-                double z = this._point.Z + this.R / proj_dist_cent * (projection.Z - this._point.Z);
-
-                return Sqrt((x - p.X) * (x - p.X) + (y - p.Y) * (y - p.Y) + (z - p.Z) * (z - p.Z));
+                Point3d K = this._point + this._r / dist * (Q - this._point);
+                return K.DistanceTo(p); ;
             }
         }
 

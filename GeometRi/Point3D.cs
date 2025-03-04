@@ -152,7 +152,28 @@ namespace GeometRi
             tmp.Z += p.Z;
             return tmp;
         }
+
+        public Point3d Add(Vector3d p)
+        {
+            if ((this._coord != p._coord))
+                p = p.ConvertTo(this._coord);
+            Point3d tmp = this.Copy();
+            tmp.X += p.X;
+            tmp.Y += p.Y;
+            tmp.Z += p.Z;
+            return tmp;
+        }
         public Point3d Subtract(Point3d p)
+        {
+            if ((this._coord != p._coord))
+                p = p.ConvertTo(this._coord);
+            Point3d tmp = this.Copy();
+            tmp.X -= p.X;
+            tmp.Y -= p.Y;
+            tmp.Z -= p.Z;
+            return tmp;
+        }
+        public Point3d Subtract(Vector3d p)
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);
@@ -633,7 +654,15 @@ namespace GeometRi
         {
             return v.Add(a);
         }
+        public static Point3d operator +(Point3d v, Vector3d a)
+        {
+            return v.Add(a);
+        }
         public static Point3d operator -(Point3d v, Point3d a)
+        {
+            return v.Subtract(a);
+        }
+        public static Point3d operator -(Point3d v, Vector3d a)
         {
             return v.Subtract(a);
         }

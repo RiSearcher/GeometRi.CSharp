@@ -13,7 +13,7 @@ namespace GeometRi
     {
 
         private double[] val;
-        private Coord3d _coord;
+        internal Coord3d _coord;
 
         #region "Constructors"
         /// <summary>
