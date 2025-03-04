@@ -229,8 +229,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Plane3d s)
         {
-            s.SetCoord(this.Coord);
-            return Abs(X * s.A + Y * s.B + Z * s.C + s.D) / Sqrt(s.A * s.A + s.B * s.B + s.C * s.C);
+            return this.DistanceTo(this.ProjectionTo(s));
         }
 
         /// <summary>
@@ -353,11 +352,8 @@ namespace GeometRi
         /// </summary>
         public Point3d ProjectionTo(Plane3d s)
         {
-            Vector3d r0 = new Vector3d(this, _coord);
-            s.SetCoord(this.Coord);
-            Vector3d n = new Vector3d(s.A, s.B, s.C, _coord);
-            r0 = r0 - (r0 * n + s.D) / (n * n) * n;
-            return r0.ToPoint;
+            Vector3d delta = new Vector3d(s._point, this);
+            return this - (s._normal * delta) * s._normal;
         }
         /// <summary>
         /// Returns orthogonal projection of the point to the line
