@@ -252,10 +252,11 @@ namespace GeometRi
         public Box3d BoundingBox(Coord3d coord = null)
         {
             coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            Vector3d v = _normal.ConvertTo(coord);
 
-            double s1 = _r * Cos(coord.Xaxis.AngleTo(this));
-            double s2 = _r * Cos(coord.Yaxis.AngleTo(this));
-            double s3 = _r * Cos(coord.Zaxis.AngleTo(this));
+            double s1 = _r * Sqrt(1 - v.X * v.X);
+            double s2 = _r * Sqrt(1 - v.Y * v.Y);
+            double s3 = _r * Sqrt(1 - v.Z * v.Z);
 
             return new Box3d(_point, 2 * s1, 2 * s2, 2 * s3, coord);
         }
@@ -265,9 +266,11 @@ namespace GeometRi
         /// </summary>
         public AABB AABB()
         {
-            double s1 = _r * Cos(Coord3d.GlobalCS.Xaxis.AngleTo(this));
-            double s2 = _r * Cos(Coord3d.GlobalCS.Yaxis.AngleTo(this));
-            double s3 = _r * Cos(Coord3d.GlobalCS.Zaxis.AngleTo(this));
+            Vector3d v = _normal.ConvertToGlobal();
+
+            double s1 = _r * Sqrt(1 - v.X * v.X);
+            double s2 = _r * Sqrt(1 - v.Y * v.Y);
+            double s3 = _r * Sqrt(1 - v.Z * v.Z);
 
             return new AABB(_point, 2 * s1, 2 * s2, 2 * s3);
         }
