@@ -15,8 +15,8 @@ Compatible with .Net Framework 2.0, .Net Standard 1.0, .Net Core 3.1 and .Net 5.
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
     <Version>1.4.1.2</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes>Fixed closest points locations in ConvexPoly distance calculations.
-Fixed circle-circle intersection check.</PackageReleaseNotes>
+    <PackageReleaseNotes>Distance from convex polyhedron to segment, sphere, and circle.
+Several optimizations.</PackageReleaseNotes>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
