@@ -20,6 +20,7 @@ namespace GeometRi
         private List<Triangle> _list_t = null;
         private List<Segment3d> _list_e = null;
         private List<Plane3d> _list_plane = null;
+        private static object _lock = new object();
 
         #region "Constructors"
 
@@ -251,14 +252,17 @@ namespace GeometRi
         {
             get
             {
-                if (_list_p == null)
+                lock (_lock)
                 {
-                    _list_p = new List<Point3d> { P1, P2, P3, P4, P5, P6, P7, P8 };
-                    return _list_p;
-                }
-                else
-                {
-                    return _list_p;
+                    if (_list_p == null)
+                    {
+                        _list_p = new List<Point3d> { P1, P2, P3, P4, P5, P6, P7, P8 };
+                        return _list_p;
+                    }
+                    else
+                    {
+                        return _list_p;
+                    }
                 }
             }
         }
@@ -270,42 +274,44 @@ namespace GeometRi
         {
             get
             {
-                if (_list_t == null)
+                lock (_lock)
                 {
-                    Point3d P1 = this.P1;
-                    Point3d P2 = this.P2;
-                    Point3d P3 = this.P3;
-                    Point3d P4 = this.P4;
-                    Point3d P5 = this.P5;
-                    Point3d P6 = this.P6;
-                    Point3d P7 = this.P7;
-                    Point3d P8 = this.P8;
-                    _list_t = new List<Triangle> { };
-                    _list_t.Add(new Triangle(P1, P3, P2));
-                    _list_t.Add(new Triangle(P1, P4, P3));
+                    if (_list_t == null)
+                    {
+                        Point3d P1 = this.P1;
+                        Point3d P2 = this.P2;
+                        Point3d P3 = this.P3;
+                        Point3d P4 = this.P4;
+                        Point3d P5 = this.P5;
+                        Point3d P6 = this.P6;
+                        Point3d P7 = this.P7;
+                        Point3d P8 = this.P8;
+                        _list_t = new List<Triangle> { };
+                        _list_t.Add(new Triangle(P1, P3, P2));
+                        _list_t.Add(new Triangle(P1, P4, P3));
 
-                    _list_t.Add(new Triangle(P1, P2, P6));
-                    _list_t.Add(new Triangle(P1, P6, P5));
+                        _list_t.Add(new Triangle(P1, P2, P6));
+                        _list_t.Add(new Triangle(P1, P6, P5));
 
-                    _list_t.Add(new Triangle(P2, P3, P7));
-                    _list_t.Add(new Triangle(P2, P7, P6));
+                        _list_t.Add(new Triangle(P2, P3, P7));
+                        _list_t.Add(new Triangle(P2, P7, P6));
 
-                    _list_t.Add(new Triangle(P3, P4, P8));
-                    _list_t.Add(new Triangle(P3, P8, P7));
+                        _list_t.Add(new Triangle(P3, P4, P8));
+                        _list_t.Add(new Triangle(P3, P8, P7));
 
-                    _list_t.Add(new Triangle(P4, P1, P5));
-                    _list_t.Add(new Triangle(P4, P5, P8));
+                        _list_t.Add(new Triangle(P4, P1, P5));
+                        _list_t.Add(new Triangle(P4, P5, P8));
 
-                    _list_t.Add(new Triangle(P5, P6, P7));
-                    _list_t.Add(new Triangle(P5, P7, P8));
+                        _list_t.Add(new Triangle(P5, P6, P7));
+                        _list_t.Add(new Triangle(P5, P7, P8));
 
-                    return _list_t;
+                        return _list_t;
+                    }
+                    else
+                    {
+                        return _list_t;
+                    }
                 }
-                else
-                {
-                    return _list_t;
-                }
-
             }
         }
 
@@ -316,21 +322,24 @@ namespace GeometRi
         {
             get
             {
-                if (_list_plane == null)
+                lock (_lock)
                 {
-                    _list_plane = new List<Plane3d> { };
-                    _list_plane.Add(new Plane3d(P1, -V1));
-                    _list_plane.Add(new Plane3d(P2, V1));
-                    _list_plane.Add(new Plane3d(P1, -V2));
-                    _list_plane.Add(new Plane3d(P4, V2));
-                    _list_plane.Add(new Plane3d(P1, -V3));
-                    _list_plane.Add(new Plane3d(P5, V3));
+                    if (_list_plane == null)
+                    {
+                        _list_plane = new List<Plane3d> { };
+                        _list_plane.Add(new Plane3d(P1, -V1));
+                        _list_plane.Add(new Plane3d(P2, V1));
+                        _list_plane.Add(new Plane3d(P1, -V2));
+                        _list_plane.Add(new Plane3d(P4, V2));
+                        _list_plane.Add(new Plane3d(P1, -V3));
+                        _list_plane.Add(new Plane3d(P5, V3));
 
-                    return _list_plane;
-                }
-                else
-                {
-                    return _list_plane;
+                        return _list_plane;
+                    }
+                    else
+                    {
+                        return _list_plane;
+                    }
                 }
             }
         }
@@ -342,27 +351,30 @@ namespace GeometRi
         {
             get
             {
-                if (_list_e == null)
+                lock (_lock)
                 {
-                    _list_e = new List<Segment3d> { };
-                    _list_e.Add(new Segment3d(P1, P2));
-                    _list_e.Add(new Segment3d(P2, P3));
-                    _list_e.Add(new Segment3d(P3, P4));
-                    _list_e.Add(new Segment3d(P4, P1));
-                    _list_e.Add(new Segment3d(P5, P6));
-                    _list_e.Add(new Segment3d(P6, P7));
-                    _list_e.Add(new Segment3d(P7, P8));
-                    _list_e.Add(new Segment3d(P8, P5));
-                    _list_e.Add(new Segment3d(P1, P5));
-                    _list_e.Add(new Segment3d(P2, P6));
-                    _list_e.Add(new Segment3d(P3, P7));
-                    _list_e.Add(new Segment3d(P4, P8));
+                    if (_list_e == null)
+                    {
+                        _list_e = new List<Segment3d> { };
+                        _list_e.Add(new Segment3d(P1, P2));
+                        _list_e.Add(new Segment3d(P2, P3));
+                        _list_e.Add(new Segment3d(P3, P4));
+                        _list_e.Add(new Segment3d(P4, P1));
+                        _list_e.Add(new Segment3d(P5, P6));
+                        _list_e.Add(new Segment3d(P6, P7));
+                        _list_e.Add(new Segment3d(P7, P8));
+                        _list_e.Add(new Segment3d(P8, P5));
+                        _list_e.Add(new Segment3d(P1, P5));
+                        _list_e.Add(new Segment3d(P2, P6));
+                        _list_e.Add(new Segment3d(P3, P7));
+                        _list_e.Add(new Segment3d(P4, P8));
 
-                    return _list_e;
-                }
-                else
-                {
-                    return _list_e;
+                        return _list_e;
+                    }
+                    else
+                    {
+                        return _list_e;
+                    }
                 }
             }
         }
