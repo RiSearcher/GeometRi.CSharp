@@ -33,7 +33,7 @@ Global tolerance property is used for proximity checking, not an exact robust al
     * [Box3d](https://github.com/RiSearcher/GeometRi.CSharp#box3d)
     * [Triangle](https://github.com/RiSearcher/GeometRi.CSharp#triangle)
     * [Tetrahedron](https://github.com/RiSearcher/GeometRi.CSharp#tetrahedron)
-	* [ConvexPolyhedron](https://github.com/RiSearcher/GeometRi.CSharp#convexpolyhedron)
+    * [ConvexPolyhedron](https://github.com/RiSearcher/GeometRi.CSharp#convexpolyhedron)
     * [Coord3d](https://github.com/RiSearcher/GeometRi.CSharp#coord3d)
     * [Matrix3d](https://github.com/RiSearcher/GeometRi.CSharp#matrix3d)
     * [Quaternion](https://github.com/RiSearcher/GeometRi.CSharp#quaternion)
@@ -57,7 +57,7 @@ Install-Package GeometRi
 * __Point3d__ and __Vector3d__ are two base classes, representing points and vectors in 3D space.
 Objects of type Point3d or Vector3d can be defined in global or in local coordinate systems.
 
-* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__, __Box3d__, __Triangle__ and __Tetrahedron__
+* __Line3d__, __Ray3d__, __Segment3d__, __Plane3d__, __Circle3d__, __Sphere__, __Ellipse__, __Ellipsoid__, __Box3d__, __Triangle__, __AABB__, __Tetrahedron__, and __ConvexPolyhedron__
 are compound classes, which are defined in terms of points and vectors.
 
 * __Coord3d__, __Rotation__, __Quaternion__ and __Matrix3d__ are auxiliary classes.
@@ -206,8 +206,9 @@ Represent a line segment in 3D space and is defined by two points.
 ### Methods
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
-* __DistanceTo__ - shortest distance to point, line, ray, plane or other segment
-* __IntersectionWith__ - intersection of segment with line, plane, ellipse, triangle, ellipsoid, sphere, circle or other segment
+* __DistanceTo__ - shortest distance to point, line, ray, plane, circle, sphere, triangle, polyhedron or other segment
+* __IntersectionWith__ - intersection of segment with line, plane, ellipse, triangle, ellipsoid, sphere, circle, box or other segment
+* __Intersects__ - intersection check with circle
 * __ProjectionTo__ - orthogonal projection of segment to the line or plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -262,9 +263,9 @@ common translation, rotation and reflection methods.
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __IsInside__ - check if sphere is located inside box
 * __ClosestPoint__ - point on sphere's surface closest to target point
-* __DistanceTo__ - shortest distance to point, line, ray, segment, plane, circle, sphere or box
-* __Intersects__ - intersection check with circle and tetrahedron
-* __IntersectionWith__ - intersection of sphere with line, plane, segment or other sphere
+* __DistanceTo__ - shortest distance to point, line, ray, segment, plane, circle, sphere, polyhedron or box
+* __Intersects__ - intersection check with circle and triangle
+* __IntersectionWith__ - intersection of sphere with line, plane, segment, ray or other sphere
 * __ProjectionTo__ - orthogonal projection of sphere to the line or plane
 * __Translate__ - translate sphere by vector
 * __Rotate__ - rotate sphere around origin or other point
@@ -291,7 +292,7 @@ Defines a circle in 3D space by center point, radius and normal vector.
 * __ClosestPoint__ - point on circle's surface closest to target point
 * __ParametricForm__ - return point on circle for given parameter 't'
 * __ProjectionTo__ - orthogonal projection of circle to plane or line
-* __DistanceTo__ - shortest distance to point, plane, circle, sphere, box or triangle
+* __DistanceTo__ - shortest distance to point, plane, circle, sphere, box, polyhedron or triangle
 * __Intersects__ - intersection check with box, triangle, circle and sphere
 * __IntersectionWith__ - intersection of circle with line, plane, segment or other circle
 * __IsParallelTo__ - check if two objects are parallel
@@ -506,7 +507,7 @@ Defines a convex polyhedron in 3D space with counterclockwise oriented faces (se
 * __Copy__ - Creates copy of the object
 * __BoundingBox__ - bounding box in given coordinate system
 * __AABB__ - Axis Aligned Bounding Box (AABB)
-* __DistanceTo__ - shortest distance to point, triangle, and polyhedron
+* __DistanceTo__ - shortest distance to point, circle, sphere, segment, triangle, and polyhedron
 * __Intersects__ - intersection check with polyhedron and box
 * __IsInside__ - check if object is located inside given box
 * __Translate__ - translate polyhedron by vector
@@ -518,6 +519,8 @@ Defines a convex polyhedron in 3D space with counterclockwise oriented faces (se
 * __Octahedron__ - Creates regular octahedron centered at origin
 * __Icosahedron__ - Creates regular icosahedron centered at origin
 * __Dodecahedron__ - Creates regular dodecahedron centered at origin
+* __ToString__ - string representation of polyhedron in global or local coordinate system
+
 
 ## Coord3d
 
