@@ -464,6 +464,75 @@ namespace GeometRi
             return new ConvexPolyhedron(20, 30, 12, vertices, edges, faces);
         }
 
+        /// <summary>
+        /// Creates Rhombic dodecahedron
+        /// </summary>
+        public static ConvexPolyhedron RhombicDodecahedron()
+        {
+            Point3d[] vertices = new Point3d[14];
+            vertices[0] = new Point3d(-1, -1, -1);
+            vertices[1] = new Point3d(1, -1, -1);
+            vertices[2] = new Point3d(1, 1, -1);
+            vertices[3] = new Point3d(-1, 1, -1);
+            vertices[4] = new Point3d(-1, -1, 1);
+            vertices[5] = new Point3d(1, -1, 1);
+            vertices[6] = new Point3d(1, 1, 1);
+            vertices[7] = new Point3d(-1, 1, 1);
+            vertices[8] = new Point3d(0, -2, 0);
+            vertices[9] = new Point3d(2, 0, 0);
+            vertices[10] = new Point3d(0, 2, 0);
+            vertices[11] = new Point3d(-2, 0, 0);
+            vertices[12] = new Point3d(0, 0, -2);
+            vertices[13] = new Point3d(0, 0, 2);
+
+            Edge[] edges = new Edge[24];
+            edges[0] = new Edge(0, 8);
+            edges[1] = new Edge(1, 8);
+            edges[2] = new Edge(4, 8);
+            edges[3] = new Edge(5, 8);
+
+            edges[4] = new Edge(1, 9);
+            edges[5] = new Edge(2, 9);
+            edges[6] = new Edge(5, 9);
+            edges[7] = new Edge(6, 9);
+
+            edges[8] = new Edge(2, 10);
+            edges[9] = new Edge(3, 10);
+            edges[10] = new Edge(6, 10);
+            edges[11] = new Edge(7, 10);
+
+            edges[12] = new Edge(0, 11);
+            edges[13] = new Edge(3, 11);
+            edges[14] = new Edge(4, 11);
+            edges[15] = new Edge(7, 11);
+
+            edges[16] = new Edge(0, 12);
+            edges[17] = new Edge(1, 12);
+            edges[18] = new Edge(2, 12);
+            edges[19] = new Edge(3, 12);
+
+            edges[20] = new Edge(4, 13);
+            edges[21] = new Edge(5, 13);
+            edges[22] = new Edge(6, 13);
+            edges[23] = new Edge(7, 13);
+
+            Face[] faces = new Face[12];
+            faces[0] = new Face(4, new int[] { 0, 12, 1, 8 });
+            faces[1] = new Face(4, new int[] { 1, 12, 2, 9 });
+            faces[2] = new Face(4, new int[] { 2, 12, 3, 10 });
+            faces[3] = new Face(4, new int[] { 3, 12, 0, 11 });
+            faces[4] = new Face(4, new int[] { 4, 8, 5, 13 });
+            faces[5] = new Face(4, new int[] { 5, 9, 6, 13 });
+            faces[6] = new Face(4, new int[] { 6, 10, 7, 13 });
+            faces[7] = new Face(4, new int[] { 7, 11, 4, 13 });
+            faces[8] = new Face(4, new int[] { 0, 8, 4, 11 });
+            faces[9] = new Face(4, new int[] { 1, 9, 5, 8 });
+            faces[10] = new Face(4, new int[] { 2, 10, 6, 9 });
+            faces[11] = new Face(4, new int[] { 3, 11, 7, 10 });
+
+            return new ConvexPolyhedron(14, 24, 12, vertices, edges, faces);
+        }
+
 
         #endregion
 
