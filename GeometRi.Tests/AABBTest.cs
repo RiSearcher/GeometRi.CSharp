@@ -67,5 +67,36 @@ namespace GeometRi_Tests
             Assert.IsFalse(box1.Intersects(box2));
             Assert.IsFalse(box2.Intersects(box1));
         }
+
+        [TestMethod]
+        public void PointInAABBTest()
+        {
+            Point3d p = new Point3d(1, 1, 1);
+            AABB box = new AABB(p, 8, 6, 10);
+
+            p = new Point3d(2, 2, 2);  // Point inside
+            Assert.IsTrue(p.BelongsTo(box));
+            Assert.IsTrue(p.IsInside(box));
+            Assert.IsFalse(p.IsOutside(box));
+            Assert.IsFalse(p.IsOnBoundary(box));
+
+            p = new Point3d(2, 4, 2);  // Point on side
+            Assert.IsTrue(p.BelongsTo(box));
+            Assert.IsFalse(p.IsInside(box));
+            Assert.IsFalse(p.IsOutside(box));
+            Assert.IsTrue(p.IsOnBoundary(box));
+
+            p = new Point3d(5, 4, 6);  // Point in corner
+            Assert.IsTrue(p.BelongsTo(box));
+            Assert.IsFalse(p.IsInside(box));
+            Assert.IsFalse(p.IsOutside(box));
+            Assert.IsTrue(p.IsOnBoundary(box));
+
+            p = new Point3d(5, -5, 6);  // Point outside
+            Assert.IsFalse(p.BelongsTo(box));
+            Assert.IsFalse(p.IsInside(box));
+            Assert.IsTrue(p.IsOutside(box));
+            Assert.IsFalse(p.IsOnBoundary(box));
+        }
     }
 }

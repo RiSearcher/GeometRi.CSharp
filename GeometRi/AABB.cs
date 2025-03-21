@@ -716,7 +716,7 @@ namespace GeometRi
         /// </summary>
         public Coord3d LocalCoord()
         {
-            return Coord3d.GlobalCS;
+            return new Coord3d(this._center, V1, V2);
         }
 
         /// <summary>
