@@ -94,6 +94,55 @@ namespace GeometRi
                 }
             }
 
+            public ConvexPolyhedron Extrude(Vector3d direction, double distance, bool symmetrical = false)
+            {
+                Point3d[] new_vertices = new Point3d[numVertices * 2];
+                Edge[] edges = new Edge[numVertices * 3];
+                Face[] faces = new Face[numVertices + 2];
+                Vector3d traslation_vec = direction.Normalized * distance;
+                
+                for (int i = 0; i < numVertices; i++)
+                {
+                    new_vertices[i] = parent.vertex[vertex[i]].Copy();
+                    new_vertices[i + numVertices] = parent.vertex[vertex[i]].Translate(traslation_vec);
+                }
+
+                faces[0] = new Face(numVertices, new int[numVertices]);
+                faces[1] = new Face(numVertices, new int[numVertices]);
+
+                for (int i = 0; i < numVertices; i++)
+                {
+                    faces[0].vertex[i] = i;
+                    faces[1].vertex[i] = i + numVertices;
+                    if (i < numVertices - 1)
+                    {
+                        // regilar side face
+                        faces[i + 2] = new Face(4, new int[] { i, i + 1, i + 1 + numVertices, i + numVertices });
+                        edges[i] = new Edge(i, i + 1);
+                        edges[i + numVertices] = new Edge(i + numVertices, i + 1 + numVertices);
+                        edges[i + numVertices * 2] = new Edge(i, i + numVertices);
+                    }
+                    else
+                    {
+                        // last side face
+                        faces[i + 2] = new Face(4, new int[] { i, 0, numVertices, i + numVertices });
+                        edges[i] = new Edge(i, 0);
+                        edges[i + numVertices] = new Edge(i + numVertices, numVertices);
+                        edges[i + numVertices * 2] = new Edge(i, i + numVertices);
+                    }
+                }
+
+                ConvexPolyhedron cp = new ConvexPolyhedron(numVertices * 2, numVertices * 3, numVertices + 2, new_vertices, edges, faces);
+                cp.CheckFaceOrientation();
+
+                if (symmetrical)
+                {
+                    cp = cp.Translate(-traslation_vec / 2);
+                }
+
+                return cp;
+            }
+
             Point3d IVertex.this[int index]
             {
                 get

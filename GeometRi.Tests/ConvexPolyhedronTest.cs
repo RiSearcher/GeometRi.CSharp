@@ -540,5 +540,21 @@ namespace GeometRi_Tests
             Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), Sqrt(3)));
         }
 
+        [TestMethod]
+        public void ExtrudeTest_01()
+        {
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            ConvexPolyhedron extrude = cp.face[0].Extrude(cp.face[0].normal, 0.2);
+            Assert.IsTrue(extrude.Center == new Point3d(0.0, 0.0, -0.6));
+        }
+
+        [TestMethod]
+        public void ExtrudeTest_02()
+        {
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            ConvexPolyhedron extrude = cp.face[0].Extrude(cp.face[0].normal, 0.2, true);
+            Assert.IsTrue(extrude.Center == new Point3d(0.0, 0.0, -0.5));
+        }
+
     }
 }
