@@ -554,6 +554,7 @@ namespace GeometRi_Tests
             ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
             ConvexPolyhedron extrude = cp.face[0].Extrude(cp.face[0].normal, 0.2, true);
             Assert.IsTrue(extrude.Center == new Point3d(0.0, 0.0, -0.5));
+            Assert.IsTrue(extrude.Center == cp.face[0].Center);
         }
 
     }

@@ -94,6 +94,24 @@ namespace GeometRi
                 }
             }
 
+            public Point3d Center
+            {
+                get
+                {
+                    Point3d center = new Point3d(); ;
+                    foreach (int v in vertex)
+                    {
+                        center += parent.vertex[v];
+                    }
+                    return center / vertex.Length;
+                }
+            }
+
+            public ConvexPolyhedron Extrude(double distance, bool symmetrical = false)
+            {
+                return Extrude(normal, distance, symmetrical);
+            }
+
             public ConvexPolyhedron Extrude(Vector3d direction, double distance, bool symmetrical = false)
             {
                 Point3d[] new_vertices = new Point3d[numVertices * 2];
