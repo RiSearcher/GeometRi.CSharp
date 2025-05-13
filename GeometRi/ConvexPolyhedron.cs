@@ -600,6 +600,78 @@ namespace GeometRi
             return new ConvexPolyhedron(14, 24, 12, vertices, edges, faces);
         }
 
+        /// <summary>
+        /// Creates Cuboctahedron
+        /// </summary>
+        public static ConvexPolyhedron Cuboctahedron()
+        {
+            Point3d[] vertices = new Point3d[12];
+            vertices[0] = new Point3d(0, -0.5, -0.5);
+            vertices[1] = new Point3d(0.5, 0, -0.5);
+            vertices[2] = new Point3d(0, 0.5, -0.5);
+            vertices[3] = new Point3d(-0.5, 0, -0.5);
+            vertices[4] = new Point3d(0, -0.5, 0.5);
+            vertices[5] = new Point3d(0.5, 0, 0.5);
+            vertices[6] = new Point3d(0, 0.5, 0.5);
+            vertices[7] = new Point3d(-0.5, 0, 0.5);
+            vertices[8] = new Point3d(-0.5, -0.5, 0);
+            vertices[9] = new Point3d(0.5, -0.5, 0);
+            vertices[10] = new Point3d(0.5, 0.5, 0);
+            vertices[11] = new Point3d(-0.5, 0.5, 0);
+
+
+            Edge[] edges = new Edge[24];
+            edges[0] = new Edge(0, 1);
+            edges[1] = new Edge(1, 2);
+            edges[2] = new Edge(2, 3);
+            edges[3] = new Edge(3, 0);
+
+            edges[4] = new Edge(4, 5);
+            edges[5] = new Edge(5, 6);
+            edges[6] = new Edge(6, 7);
+            edges[7] = new Edge(7, 4);
+
+            edges[8] = new Edge(0, 9);
+            edges[9] = new Edge(9, 4);
+            edges[10] = new Edge(4, 8);
+            edges[11] = new Edge(8, 0);
+
+            edges[12] = new Edge(1, 10);
+            edges[13] = new Edge(10, 5);
+            edges[14] = new Edge(5, 9);
+            edges[15] = new Edge(9, 1);
+
+            edges[16] = new Edge(2, 11);
+            edges[17] = new Edge(11, 6);
+            edges[18] = new Edge(6, 10);
+            edges[19] = new Edge(10, 2);
+
+            edges[20] = new Edge(3, 8);
+            edges[21] = new Edge(8, 7);
+            edges[22] = new Edge(7, 11);
+            edges[23] = new Edge(11, 3);
+
+            Face[] faces = new Face[14];
+            faces[0] = new Face(4, new int[] { 0, 3, 2, 1 });
+            faces[1] = new Face(4, new int[] { 4, 5, 6, 7 });
+            faces[2] = new Face(4, new int[] { 0, 9, 4, 8 });
+            faces[3] = new Face(4, new int[] { 1, 10, 5, 9 });
+            faces[4] = new Face(4, new int[] { 2, 11, 6, 10 });
+            faces[5] = new Face(4, new int[] { 3, 8, 7, 11 });
+
+            faces[6] = new Face(3, new int[] { 0, 1, 9 });
+            faces[7] = new Face(3, new int[] { 1, 2, 10 });
+            faces[8] = new Face(3, new int[] { 2, 3, 11 });
+            faces[9] = new Face(3, new int[] { 3, 0, 8 });
+
+            faces[10] = new Face(3, new int[] { 9, 5, 4 });
+            faces[11] = new Face(3, new int[] { 10, 6, 5 });
+            faces[12] = new Face(3, new int[] { 11, 7, 6 });
+            faces[13] = new Face(3, new int[] { 8, 4, 7 });
+
+            return new ConvexPolyhedron(12, 24, 14, vertices, edges, faces);
+        }
+
 
         #endregion
 
