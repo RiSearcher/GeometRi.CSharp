@@ -672,6 +672,143 @@ namespace GeometRi
             return new ConvexPolyhedron(12, 24, 14, vertices, edges, faces);
         }
 
+        /// <summary>
+        /// Creates Rhombicuboctahedron
+        /// </summary>
+        public static ConvexPolyhedron Rhombicuboctahedron(double delta)
+        {
+            delta = delta / 2;
+
+            Point3d[] vertices = new Point3d[24];
+            vertices[0] = new Point3d(-0.5 + delta, -0.5 + delta, -0.5);
+            vertices[1] = new Point3d(0.5 - delta, -0.5 + delta, -0.5);
+            vertices[2] = new Point3d(0.5 - delta, 0.5 - delta, -0.5);
+            vertices[3] = new Point3d(-0.5 + delta, 0.5 - delta, -0.5);
+
+            vertices[4] = new Point3d(-0.5 + delta, -0.5 + delta, 0.5);
+            vertices[5] = new Point3d(0.5 - delta, -0.5 + delta, 0.5);
+            vertices[6] = new Point3d(0.5 - delta, 0.5 - delta, 0.5);
+            vertices[7] = new Point3d(-0.5 + delta, 0.5 - delta, 0.5);
+
+            vertices[8] = new Point3d(-0.5 + delta, -0.5, -0.5 + delta);
+            vertices[9] = new Point3d(0.5 - delta, -0.5, -0.5 + delta);
+            vertices[10] = new Point3d(0.5 - delta, -0.5, 0.5 - delta);
+            vertices[11] = new Point3d(-0.5 + delta, -0.5, 0.5 - delta);
+
+            vertices[12] = new Point3d(0.5, -0.5 + delta, -0.5 + delta);
+            vertices[13] = new Point3d(0.5, 0.5 - delta, -0.5 + delta);
+            vertices[14] = new Point3d(0.5, 0.5 - delta, 0.5 - delta);
+            vertices[15] = new Point3d(0.5, -0.5 + delta, 0.5 - delta);
+
+            vertices[16] = new Point3d(-0.5 + delta, 0.5, -0.5 + delta);
+            vertices[17] = new Point3d(0.5 - delta, 0.5, -0.5 + delta);
+            vertices[18] = new Point3d(0.5 - delta, 0.5, 0.5 - delta);
+            vertices[19] = new Point3d(-0.5 + delta, 0.5, 0.5 - delta);
+
+            vertices[20] = new Point3d(-0.5, -0.5 + delta, -0.5 + delta);
+            vertices[21] = new Point3d(-0.5, 0.5 - delta, -0.5 + delta);
+            vertices[22] = new Point3d(-0.5, 0.5 - delta, 0.5 - delta);
+            vertices[23] = new Point3d(-0.5, -0.5 + delta, 0.5 - delta);
+
+
+            Edge[] edges = new Edge[48];
+            edges[0] = new Edge(0, 1);
+            edges[1] = new Edge(1, 2);
+            edges[2] = new Edge(2, 3);
+            edges[3] = new Edge(3, 0);
+
+            edges[4] = new Edge(4, 5);
+            edges[5] = new Edge(5, 6);
+            edges[6] = new Edge(6, 7);
+            edges[7] = new Edge(7, 4);
+
+            edges[8] = new Edge(8, 9);
+            edges[9] = new Edge(9, 10);
+            edges[10] = new Edge(10, 11);
+            edges[11] = new Edge(11, 8);
+
+            edges[12] = new Edge(12, 13);
+            edges[13] = new Edge(13, 14);
+            edges[14] = new Edge(14, 15);
+            edges[15] = new Edge(15, 12);
+
+            edges[16] = new Edge(16, 17);
+            edges[17] = new Edge(17, 18);
+            edges[18] = new Edge(18, 19);
+            edges[19] = new Edge(19, 16);
+
+            edges[20] = new Edge(20, 21);
+            edges[21] = new Edge(21, 22);
+            edges[22] = new Edge(22, 23);
+            edges[23] = new Edge(23, 20);
+                        
+            edges[24] = new Edge(1, 12);
+            edges[25] = new Edge(12, 9);
+            edges[26] = new Edge(9, 1);
+
+            edges[27] = new Edge(2, 17);           
+            edges[28] = new Edge(17, 13);
+            edges[29] = new Edge(13, 2);
+
+            edges[30] = new Edge(3, 16);
+            edges[31] = new Edge(16, 21);        
+            edges[32] = new Edge(21, 3);
+
+            edges[33] = new Edge(0, 8);
+            edges[34] = new Edge(8, 20);
+            edges[35] = new Edge(20, 0); 
+            
+            edges[36] = new Edge(5, 10);
+            edges[37] = new Edge(10, 15);
+            edges[38] = new Edge(15, 5);
+
+            edges[39] = new Edge(6, 14);           
+            edges[40] = new Edge(14, 18);
+            edges[41] = new Edge(18, 6);
+
+            edges[42] = new Edge(7, 22);
+            edges[43] = new Edge(22, 19);           
+            edges[44] = new Edge(19, 7);
+
+            edges[45] = new Edge(4, 23);
+            edges[46] = new Edge(23, 11);
+            edges[47] = new Edge(11, 4);
+
+            Face[] faces = new Face[26];
+            faces[0] = new Face(4, new int[] { 0, 3, 2, 1 });
+            faces[1] = new Face(4, new int[] { 4, 5, 6, 7 });
+            faces[2] = new Face(4, new int[] { 8, 9, 10, 11 });
+            faces[3] = new Face(4, new int[] { 12, 13, 14, 15 });
+            faces[4] = new Face(4, new int[] { 17, 16, 19, 18 });
+            faces[5] = new Face(4, new int[] { 21, 20, 23, 22 });
+
+            faces[6] = new Face(4, new int[] { 0, 1, 9, 8 });
+            faces[7] = new Face(4, new int[] { 1, 2, 13, 12 });
+            faces[8] = new Face(4, new int[] { 2, 3, 16, 17 });
+            faces[9] = new Face(4, new int[] { 0, 20, 21, 3 });
+
+            faces[10] = new Face(4, new int[] { 11, 10, 5, 4 });
+            faces[11] = new Face(4, new int[] { 15, 14, 6, 5 });
+            faces[12] = new Face(4, new int[] { 18, 19, 7, 6 });
+            faces[13] = new Face(4, new int[] { 22, 23, 4, 7 });
+
+            faces[14] = new Face(4, new int[] { 9, 12, 15, 10 });
+            faces[15] = new Face(4, new int[] { 13, 17, 18, 14 });
+            faces[16] = new Face(4, new int[] { 16, 21, 22, 19 });
+            faces[17] = new Face(4, new int[] { 20, 8, 11, 23 });
+
+            faces[18] = new Face(3, new int[] { 0, 8, 20 });
+            faces[19] = new Face(3, new int[] { 1, 12, 9 });
+            faces[20] = new Face(3, new int[] { 2, 17, 13 });
+            faces[21] = new Face(3, new int[] { 3, 21, 16 });
+            faces[22] = new Face(3, new int[] { 4, 23, 11 });
+            faces[23] = new Face(3, new int[] { 5, 10, 15 });
+            faces[24] = new Face(3, new int[] { 6, 14, 18 });
+            faces[25] = new Face(3, new int[] { 7, 19, 22 });
+
+            return new ConvexPolyhedron(24, 48, 26, vertices, edges, faces);
+        }
+
 
         #endregion
 
