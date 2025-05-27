@@ -415,8 +415,9 @@ Axis aligned 3D box, can be degenerated with one or more dimensions equal 0. Def
 * __Area__ - area of the box
 * __Volume__ - volume of the box
 ### Methods
-* __DistanceTo__ - shortest distance to point, circle or sphere
-* __Intersects__ - intersection check with box, circle, tetrahedron or triangle
+* __DistanceTo__ - shortest distance to point, AABB, circle or sphere
+* __ClosestPoint__ - calculates the point on the AABB closest to given point
+* __Intersects__ - intersection check with AABB, box, circle, tetrahedron or triangle
 * __IntersectionWith__ - intersection of box with line, ray or segment
 * __Translate__ - translate box by vector
 * __Rotate__ - rotate box around origin or other point
