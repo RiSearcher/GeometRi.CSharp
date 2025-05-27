@@ -519,6 +519,9 @@ Defines a convex polyhedron in 3D space with counterclockwise oriented faces (se
 * __Octahedron__ - Creates regular octahedron centered at origin
 * __Icosahedron__ - Creates regular icosahedron centered at origin
 * __Dodecahedron__ - Creates regular dodecahedron centered at origin
+* __RhombicDodecahedron__ - Creates rhombic dodecahedron centered at origin
+* __Cuboctahedron__ - Creates cuboctahedron centered at origin
+* __Rhombicuboctahedron__ - Creates rhombicuboctahedron centered at origin
 * __ToString__ - string representation of polyhedron in global or local coordinate system
 
 

@@ -1,6 +1,10 @@
 # GeometRi
 ## Release notes
 
+### 1.4.1.3 (27/5/2025)
+* Fixed AABB local coordinate system.
+* Create prism by extruding face of convex polyhedron.
+
 ### 1.4.1.2 (5/3/2025)
 * Distance from convex polyhedron to segment, sphere, and circle.
 * Several optimizations.
