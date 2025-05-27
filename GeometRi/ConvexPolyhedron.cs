@@ -107,11 +107,17 @@ namespace GeometRi
                 }
             }
 
+            /// <summary>
+            /// Create prism by extruding face of convex polyhedron in the direction of face normal
+            /// </summary>
             public ConvexPolyhedron Extrude(double distance, bool symmetrical = false)
             {
                 return Extrude(normal, distance, symmetrical);
             }
 
+            /// <summary>
+            /// Create prism by extruding face of convex polyhedron
+            /// </summary>
             public ConvexPolyhedron Extrude(Vector3d direction, double distance, bool symmetrical = false)
             {
                 Point3d[] new_vertices = new Point3d[numVertices * 2];
