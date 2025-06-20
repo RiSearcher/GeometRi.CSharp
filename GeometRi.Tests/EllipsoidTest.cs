@@ -220,5 +220,60 @@ namespace GeometRi_Tests
             dist = Abs(Sqrt(3 * 5 * 5) - 10);
             Assert.IsTrue(Abs(e.ClosestPoint(p).DistanceTo(p) - dist) <= GeometRi3D.Tolerance);
         }
+
+        [TestMethod()]
+        public void IntersectsEllipsoid_01()
+        {
+            // Separate
+            Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
+            Sphere B = new Sphere(new Point3d(3.000000000001, 0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+
+            B = new Sphere(new Point3d(-3.000000000001, 0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+
+            B = new Sphere(new Point3d(0, 2.00001, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+
+            B = new Sphere(new Point3d(0, -2.00001, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+        }
+
+        [TestMethod()]
+        public void IntersectsEllipsoid_02()
+        {
+            // Externaly touch
+            Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
+            Sphere B = new Sphere(new Point3d(3.0, 0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+
+            B = new Sphere(new Point3d(-3.0, 0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+
+            B = new Sphere(new Point3d(0, 2.0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+
+            B = new Sphere(new Point3d(0, -2.0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+        }
+
+        [TestMethod()]
+        public void IntersectsEllipsoid_03()
+        {
+            // Overlap
+            Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
+            Sphere B = new Sphere(new Point3d(2.999, 0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+
+            B = new Sphere(new Point3d(-2.999, 0, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+
+            B = new Sphere(new Point3d(0, 1.999, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+
+            B = new Sphere(new Point3d(0, -1.999, 0), 1);
+            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+        }
+
     }
 }

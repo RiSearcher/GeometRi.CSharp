@@ -515,6 +515,122 @@ namespace GeometRi
 
         }
 
+        /// <summary>
+        /// Check intesection of ellipsoid and sphere.
+        /// </summary>
+        public bool Intersects(Sphere e, double accuracy)
+        {
+            return _Intersects(e, accuracy) == 1 ? false : true;
+        }
+
+        /// <summary>
+        /// Check intesection of ellipsoid and sphere.
+        /// </summary>
+        public bool Intersects(Sphere e)
+        {
+            return _Intersects(e, GeometRi3D.DefaultTolerance) == 1 ? false : true;
+        }
+
+        /// <summary>
+        /// Check intesection of ellipsoid and sphere. Return values:
+        /// 1 - separate
+        /// 0 - externaly touch
+        /// -1 - overlap
+        /// </summary>
+        public int IntersectionCheck(Sphere e)
+        {
+            return _Intersects(e, GeometRi3D.DefaultTolerance);
+        }
+
+        /// <summary>
+        /// Check intesection of ellipsoid and sphere. Return values:
+        /// 1 - separate
+        /// 0 - externaly touch
+        /// -1 - overlap
+        /// </summary>
+        public int IntersectionCheck(Sphere e, double accuracy)
+        {
+            return _Intersects(e, accuracy);
+        }
+
+        /// <summary>
+        /// Check intesection of ellipsoid and sphere. Return values:
+        /// 1 - separate;
+        /// 0 - externaly touch;
+        /// -1 - overlap
+        /// </summary>
+        internal int _Intersects(Sphere e, double accuracy)
+        {
+            // Wang, W., Wang, J., & Kim, M. S. (2001). An algebraic condition for the separation of two ellipsoids. Computer aided geometric design, 18(6), 531-539.
+            // Jia, X., Choi, Y. K., Mourrain, B., & Wang, W. (2011). An algebraic approach to continuous collision detection for ellipsoids. Computer aided geometric design, 28(3), 164-176.
+
+            // 0 < a <= b <= c
+            Coord3d lc = new Coord3d(this.Center, this.SemiaxisC, this.SemiaxisB);
+
+            Point3d p = e.Center.ConvertTo(lc);
+            double x = p.X;
+            double y = p.Y;
+            double z = p.Z;
+            double r = e.R;
+
+            // 0 < a <= b <= c
+            double a2 = 1.0 / (this.SemiaxisC * this.SemiaxisC);
+            double b2 = 1.0 / (this.SemiaxisB * this.SemiaxisB);
+            double c2 = 1.0 / (this.SemiaxisA * this.SemiaxisA);
+
+            //  f(l) = k4*l^4 + k3*l^3 + k2*l^2 + k1*l +k0
+            double k0 = -r * r;
+            double k1 = a2 * (x * x - r * r) + b2 * (y * y - r * r) + c2 * (z * z - r * r) - 1;
+            double k2 = -(a2 + b2 + c2) + a2 * b2 * (x * x + y * y - r * r) +
+                                          a2 * c2 * (x * x + z * z - r * r) +
+                                          b2 * c2 * (z * z + y * y - r * r);
+            double k3 = -(a2 * b2 + a2 * c2 + b2 * c2) + a2 * b2 * c2 * (x * x + y * y + z * z - r * r);
+            double k4 = -a2 * b2 * c2;
+
+            // f(l) = l^4 + a*l^3 + b*l^2 + c*l + d
+            double a = k3 / k4;
+            double b = k2 / k4;
+            double c = k1 / k4;
+            double d = k0 / k4;
+
+            int count = 0;
+            if (Sign(1) != Sign(a)) count++;
+            if (Sign(a) != Sign(b)) count++;
+            if (Sign(b) != Sign(c)) count++;
+            if (Sign(c) != Sign(d)) count++;
+
+            double bbar = -a / 4;
+            double cbar = b / 6;
+            double dbar = -c / 4;
+            double ebar = d;
+
+            double d2 = bbar * bbar - cbar;
+            double d3 = cbar * cbar - bbar * dbar;
+
+            double W1 = dbar - bbar * cbar;
+            double W2 = bbar * ebar - cbar * dbar;
+            double W3 = ebar - bbar * dbar;
+
+            double T = -9 * W1 * W1 + 27 * d2 * d3 - 3 * W3 * d2;
+            double A = W3 + 3 * d3;
+            double B = -dbar * W1 - ebar * d2 - cbar * d3;
+            double T2 = A * W1 - 3 * bbar * B;
+            double d1 = A * A * A - 27 * B * B;
+
+            double sr22 = d2;
+            double sr20 = -W3;
+            double sr11 = T;
+            double sr10 = T2;
+            double sr0 = d1;
+
+            if (count == 2 && sr22 > 0 && sr11 > accuracy && sr0 > accuracy) return 1;
+            if (count == 2 && sr22 > 0 && sr11 > accuracy && sr10 > 0 && Abs(sr0) <= accuracy) return 1;
+            if (sr22 > 0 && sr11 > accuracy && sr10 < 0 && Abs(sr0) <= accuracy) return 0;
+            if (sr22 > 0 && sr20 < 0 && Abs(sr11) <= accuracy && Abs(sr0) <= accuracy) return 0;
+
+            return -1;
+        }
+
         internal override int _PointLocation(Point3d p)
         {
 
