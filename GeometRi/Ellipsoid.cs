@@ -156,6 +156,22 @@ namespace GeometRi
                 return 4.0 * PI * Pow(tmp, 1/p);
             }
         }
+
+        /// <summary>
+        /// 3x3 covariance matrix
+        /// </summary>
+        public Matrix3d CovarianceMatrix
+        {
+            get
+            {
+                Vector3d v1 = _v1.Normalized;
+                Vector3d v2 = _v2.Normalized;
+                Vector3d v3 = _v3.Normalized;
+                Matrix3d m = new Matrix3d(v1, v2, v3);
+                Matrix3d D = Matrix3d.DiagonalMatrix(1 / (A * A), 1 / (B * B), 1 / (C * C));
+                return m * D * m.Transpose();
+            }
+        }
         #endregion
 
         #region "BoundingBox"
@@ -586,6 +602,147 @@ namespace GeometRi
                                           b2 * c2 * (z * z + y * y - r * r);
             double k3 = -(a2 * b2 + a2 * c2 + b2 * c2) + a2 * b2 * c2 * (x * x + y * y + z * z - r * r);
             double k4 = -a2 * b2 * c2;
+
+            // f(l) = l^4 + a*l^3 + b*l^2 + c*l + d
+            double a = k3 / k4;
+            double b = k2 / k4;
+            double c = k1 / k4;
+            double d = k0 / k4;
+
+            int count = 0;
+            if (Sign(1) != Sign(a)) count++;
+            if (Sign(a) != Sign(b)) count++;
+            if (Sign(b) != Sign(c)) count++;
+            if (Sign(c) != Sign(d)) count++;
+
+            double bbar = -a / 4;
+            double cbar = b / 6;
+            double dbar = -c / 4;
+            double ebar = d;
+
+            double d2 = bbar * bbar - cbar;
+            double d3 = cbar * cbar - bbar * dbar;
+
+            double W1 = dbar - bbar * cbar;
+            double W2 = bbar * ebar - cbar * dbar;
+            double W3 = ebar - bbar * dbar;
+
+            double T = -9 * W1 * W1 + 27 * d2 * d3 - 3 * W3 * d2;
+            double A = W3 + 3 * d3;
+            double B = -dbar * W1 - ebar * d2 - cbar * d3;
+            double T2 = A * W1 - 3 * bbar * B;
+            double d1 = A * A * A - 27 * B * B;
+
+            double sr22 = d2;
+            double sr20 = -W3;
+            double sr11 = T;
+            double sr10 = T2;
+            double sr0 = d1;
+
+            if (count == 2 && sr22 > 0 && sr11 > accuracy && sr0 > accuracy) return 1;
+            if (count == 2 && sr22 > 0 && sr11 > accuracy && sr10 > 0 && Abs(sr0) <= accuracy) return 1;
+            if (sr22 > 0 && sr11 > accuracy && sr10 < 0 && Abs(sr0) <= accuracy) return 0;
+            if (sr22 > 0 && sr20 < 0 && Abs(sr11) <= accuracy && Abs(sr0) <= accuracy) return 0;
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Check intesection of two ellipsoids.
+        /// </summary>
+        public bool Intersects(Ellipsoid e, double accuracy)
+        {
+            return _Intersects(e, accuracy) == 1 ? false : true;
+        }
+
+        /// <summary>
+        /// Check intesection of two ellipsoids.
+        /// </summary>
+        public bool Intersects(Ellipsoid e)
+        {
+            return _Intersects(e, GeometRi3D.DefaultTolerance) == 1 ? false : true;
+        }
+
+        /// <summary>
+        /// Check intesection of two ellipsoids. Return values:
+        /// 1 - separate
+        /// 0 - externaly touch
+        /// -1 - overlap
+        /// </summary>
+        public int IntersectionCheck(Ellipsoid e)
+        {
+            return _Intersects(e, GeometRi3D.DefaultTolerance);
+        }
+
+        /// <summary>
+        /// Check intesection of two ellipsoids. Return values:
+        /// 1 - separate
+        /// 0 - externaly touch
+        /// -1 - overlap
+        /// </summary>
+        public int IntersectionCheck(Ellipsoid e, double accuracy)
+        {
+            return _Intersects(e, accuracy);
+        }
+
+        /// <summary>
+        /// Check intesection of two ellipsoids. Return values:
+        /// 1 - separate;
+        /// 0 - externaly touch;
+        /// -1 - overlap
+        /// </summary>
+        internal int _Intersects(Ellipsoid e, double accuracy)
+        {
+            // Jia, X., Choi, Y. K., Mourrain, B., & Wang, W. (2011). An algebraic approach to continuous collision detection for ellipsoids. Computer aided geometric design, 28(3), 164-176.
+
+            Coord3d lc = new Coord3d(this.Center, this.SemiaxisA, this.SemiaxisB);
+
+            Vector3d v1 = e._v1.Normalized.ConvertTo(lc);
+            Vector3d v2 = e._v2.Normalized.ConvertTo(lc);
+            Vector3d v3 = e._v3.Normalized.ConvertTo(lc);
+            Matrix3d m = new Matrix3d(v1, v2, v3);
+            Matrix3d D = Matrix3d.DiagonalMatrix(1 / (e.A * e.A), 1 / (e.B * e.B), 1 / (e.C * e.C));
+            //Matrix3d C = m * D * m.Transpose();
+            Matrix3d C = m.Transpose() * D * m;
+
+            double b11 = C[0, 0];
+            double b12 = C[0, 1];
+            double b13 = C[0, 2];
+            double b22 = C[1, 1];
+            double b23 = C[1, 2];
+            double b33 = C[2, 2];
+
+            Point3d p = e.Center.ConvertTo(lc);
+            Point3d bv = -C * p;
+            double b14 = bv.X;
+            double b24 = bv.Y;
+            double b34 = bv.Z;
+            double b44 = p.X * p.X + p.Y * p.Y + p.Z * p.Z - 1;
+
+            double a11 = 1.0 / (this.SemiaxisA * this.SemiaxisA);
+            double a22 = 1.0 / (this.SemiaxisB * this.SemiaxisB);
+            double a33 = 1.0 / (this.SemiaxisC * this.SemiaxisC);
+            double a44 = -1;
+
+            //  f(l) = k4*l^4 + k3*l^3 + k2*l^2 + k1*l +k0
+            double k0 = b14 * b14 * b23 * b23 - 2 * b13 * b14 * b23 * b24 + b13 * b13 * b24 * b24 - b14 * b14 * b22 * b33 +
+                        2 * b12 * b14 * b24 * b33 - b11 * b24 * b24 * b33 + 2 * b13 * b14 * b22 * b34 -
+                        2 * b12 * b14 * b23 * b34 - 2 * b12 * b13 * b24 * b34 + 2 * b11 * b23 * b24 * b34 +
+                        b12 * b12 * b34 * b34 - b11 * b22 * b34 * b34 - b13 * b13 * b22 * b44 + 2 * b12 * b13 * b23 * b44 -
+                        b11 * b23 * b23 * b44 - b12 * b12 * b33 * b44 + b11 * b22 * b33 * b44;
+            double k1 = -a44 * b13 * b13 * b22 -
+                        a33 * b14 * b14 * b22 + 2 * a44 * b12 * b13 * b23 - a44 * b11 * b23 * b23 +
+                        2 * a33 * b12 * b14 * b24 - a33 * b11 * b24 * b24 - a44 * b12 * b12 * b33 - a22 * b14 * b14 * b33 +
+                        a44 * b11 * b22 * b33 - a11 * b24 * b24 * b33 + 2 * a22 * b13 * b14 * b34 +
+                        2 * a11 * b23 * b24 * b34 - a22 * b11 * b34 * b34 - a11 * b22 * b34 * b34 - a33 * b12 * b12 * b44 -
+                        a22 * b13 * b13 * b44 + a33 * b11 * b22 * b44 - a11 * b23 * b23 * b44 + a22 * b11 * b33 * b44 +
+                        a11 * b22 * b33 * b44;
+            double k2 = -a33 * a44 * b12 * b12 - a22 * a44 * b13 * b13 - a22 * a33 * b14 * b14 +
+                        a33 * a44 * b11 * b22 - a11 * a44 * b23 * b23 - a11 * a33 * b24 * b24 + a22 * a44 * b11 * b33 +
+                        a11 * a44 * b22 * b33 - a11 * a22 * b34 * b34 + a22 * a33 * b11 * b44 +
+                        a11 * a33 * b22 * b44 + a11 * a22 * b33 * b44;
+            double k3 = a22 * a33 * a44 * b11 + a11 * a33 * a44 * b22 + a11 * a22 * a44 * b33 + a11 * a22 * a33 * b44;
+            double k4 = a11 * a22 * a33 * a44;
 
             // f(l) = l^4 + a*l^3 + b*l^2 + c*l + d
             double a = k3 / k4;
