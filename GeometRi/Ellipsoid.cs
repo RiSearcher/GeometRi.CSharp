@@ -884,6 +884,41 @@ namespace GeometRi
             return n0;
         }
 
+
+        /// <summary>
+        /// Distance between two ellipsoids.
+        /// </summary>
+        public double DistanceTo(Ellipsoid e)
+        {
+            return this.DistanceTo(e, GeometRi3D.Tolerance);
+        }
+
+        /// <summary>
+        /// Distance between two ellipsoids.
+        /// </summary>
+        public double DistanceTo(Ellipsoid e, double tolerance)
+        {
+            int iter = 0;
+            int max_iter = 100;
+            Point3d p1 = this.ClosestPoint(e.Center);
+            Point3d p2 = e.ClosestPoint(p1);
+            double old_distance = p1.DistanceTo(p2);
+
+            while (iter < max_iter)
+            {
+                iter += 1;
+                p1 = this.ClosestPoint(p2);
+                p2 = e.ClosestPoint(p1);
+                double dist = p1.DistanceTo(p2);
+                if (Abs(dist-old_distance) < tolerance)
+                {
+                    return dist;
+                }
+                old_distance = dist;
+            }
+            return old_distance;
+        }
+
         #region "TranslateRotateReflect"
         /// <summary>
         /// Translate ellipsoid by a vector
