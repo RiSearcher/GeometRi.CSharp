@@ -555,6 +555,30 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Check if AABB is located inside box.
+        /// </summary>
+        public bool IsInside(Box3d box)
+        {
+            foreach (Point3d p in ListOfPoints)
+            {
+                if (!p.IsInside(box)) return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Check if AABB is located inside box.
+        /// </summary>
+        public bool IsInside(AABB box)
+        {
+            foreach (Point3d p in ListOfPoints)
+            {
+                if (!p.IsInside(box)) return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Intersection of two AABB (null for non-intersecting AABB)
         /// </summary>
         public AABB IntersectionWith(AABB box)
