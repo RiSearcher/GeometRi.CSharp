@@ -11,11 +11,37 @@ namespace GeometRi
 #endif
     public class Triangle : FiniteObject, IPlanarObject
     {
+        private Point3d _a, _b, _c;
+        private double? _ab, _ac, _bc, _perimeter, _area;
+        private Vector3d _normal;
+        private Circle3d _circumcircle;
+        private double? _angleA, _angleB, _angleC;
 
-        internal Point3d _a;
-        internal Point3d _b;
-        internal Point3d _c;
-
+        private bool HasChanged => _a.HasChanged || _b.HasChanged || _c.HasChanged;
+        private void CheckFields()
+        {
+            if (HasChanged)
+            {
+                _a = _a.Copy();
+                _b = _b.Copy();
+                _c = _c.Copy();
+                ClearCache();
+            }
+        }
+        private void ClearCache()
+        {
+            _ab = null;
+            _ac = null;
+            _bc = null;
+            _perimeter = null;
+            _area = null;
+            _normal = null;
+            _circumcircle = null;
+            _angleA = null;
+            _angleB = null;
+            _angleC = null;
+        }
+  
         /// <summary>
         /// Initializes triangle object using three points.
         /// </summary>
@@ -44,7 +70,7 @@ namespace GeometRi
         /// </summary>
         public Point3d A
         {
-            get { return _a.Copy(); }
+            get { return _a; }
             set
             {
                 if (Point3d.CollinearPoints(value, _b, _c))
@@ -52,6 +78,7 @@ namespace GeometRi
                     throw new Exception("Collinear points");
                 }
                 _a = value.Copy();
+                ClearCache();
             }
         }
 
@@ -60,7 +87,7 @@ namespace GeometRi
         /// </summary>
         public Point3d B
         {
-            get { return _b.Copy(); }
+            get { return _b; }
             set
             {
                 if (Point3d.CollinearPoints(_a, value, _c))
@@ -68,6 +95,7 @@ namespace GeometRi
                     throw new Exception("Collinear points");
                 }
                 _b = value.Copy();
+                ClearCache();
             }
         }
 
@@ -76,7 +104,7 @@ namespace GeometRi
         /// </summary>
         public Point3d C
         {
-            get { return _c.Copy(); }
+            get { return _c; }
             set
             {
                 if (Point3d.CollinearPoints(_a, _b, value))
@@ -84,6 +112,7 @@ namespace GeometRi
                     throw new Exception("Collinear points");
                 }
                 _c = value.Copy();
+                ClearCache();
             }
         }
 
@@ -92,7 +121,14 @@ namespace GeometRi
         /// </summary>
         public double AB
         {
-            get { return _a.DistanceTo(_b); }
+            get {
+                CheckFields();
+                if (_ab == null)
+                {
+                    _ab = _a.DistanceTo(_b);
+                }
+                return _ab.Value;
+            }
         }
 
         /// <summary>
@@ -100,7 +136,14 @@ namespace GeometRi
         /// </summary>
         public double AC
         {
-            get { return _a.DistanceTo(_c); }
+            get {
+                CheckFields();
+                if (_ac == null)
+                {
+                    _ac = _a.DistanceTo(_c);
+                }
+                return _ac.Value;
+            }
         }
 
         /// <summary>
@@ -108,7 +151,14 @@ namespace GeometRi
         /// </summary>
         public double BC
         {
-            get { return _b.DistanceTo(_c); }
+            get {
+                CheckFields();
+                if (_bc == null)
+                {
+                    _bc = _b.DistanceTo(_c);
+                }
+                return _bc.Value;
+            }
         }
 
         /// <summary>
@@ -116,7 +166,14 @@ namespace GeometRi
         /// </summary>
         public double Perimeter
         {
-            get { return AB + BC + AC; }
+            get {
+                CheckFields();
+                if (_perimeter == null)
+                {
+                    _perimeter = AB + BC + AC;
+                }
+                return _perimeter.Value;
+            }
         }
 
         /// <summary>
@@ -126,15 +183,27 @@ namespace GeometRi
         {
             get
             {
-                Vector3d v1 = new Vector3d(_a, _b);
-                Vector3d v2 = new Vector3d(_a, _c);
-                return 0.5 * v1.Cross(v2).Norm;
+                CheckFields();
+                if (_area == null)
+                {
+                    // Using Heron's formula
+                    double s = Perimeter / 2;
+                    _area = Sqrt(s * (s - AB) * (s - AC) * (s - BC));
+                }
+                return _area.Value;
             }
         }
 
         public Vector3d Normal
         {
-            get { return new Vector3d(_a, _b).Cross(new Vector3d(_a, _c)).Normalized; }
+            get {
+                CheckFields();
+                if (_normal == null)
+                {
+                    _normal = new Vector3d(_a, _b).Cross(new Vector3d(_a, _c)).Normalized;
+                }
+                return _normal;
+             }
         }
 
         public bool IsOriented
@@ -143,7 +212,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Convert triangle to plane object.
+        /// Convert triangle to a new plane object.
         /// </summary>
         public Plane3d ToPlane
         {
@@ -158,7 +227,14 @@ namespace GeometRi
         /// </summary>
         public Circle3d Circumcircle
         {
-            get { return new Circle3d(_a, _b, _c); }
+            get {
+                CheckFields();
+                if (_circumcircle == null)
+                {
+                    _circumcircle = new Circle3d(_a, _b, _c);
+                }
+                return _circumcircle;
+            }
         }
 
         /// <summary>
@@ -166,7 +242,14 @@ namespace GeometRi
         /// </summary>
         public double Angle_A
         {
-            get { return new Vector3d(_a, _b).AngleTo(new Vector3d(_a, _c)); }
+            get {
+                CheckFields();
+                if (_angleA == null)
+                {
+                    _angleA = new Vector3d(_a, _b).AngleTo(new Vector3d(_a, _c));
+                }
+                return _angleA.Value;
+            }
         }
 
         /// <summary>
@@ -174,7 +257,14 @@ namespace GeometRi
         /// </summary>
         public double Angle_B
         {
-            get { return new Vector3d(_b, _a).AngleTo(new Vector3d(_b, _c)); }
+            get {
+                CheckFields();
+                if (_angleB == null)
+                {
+                    _angleB = new Vector3d(_b, _a).AngleTo(new Vector3d(_b, _c));
+                }
+                return _angleB.Value;
+            }
         }
 
         /// <summary>
@@ -182,7 +272,14 @@ namespace GeometRi
         /// </summary>
         public double Angle_C
         {
-            get { return new Vector3d(_c, _a).AngleTo(new Vector3d(_c, _b)); }
+            get {
+                CheckFields();
+                if (_angleC == null)
+                {
+                    _angleC = new Vector3d(_c, _a).AngleTo(new Vector3d(_c, _b));
+                }
+                return _angleC.Value;
+            }
         }
 
         /// <summary>

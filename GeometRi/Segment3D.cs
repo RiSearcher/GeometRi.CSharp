@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using static System.Math;
 
 namespace GeometRi
@@ -11,9 +12,30 @@ namespace GeometRi
 #endif
     public class Segment3d : FiniteObject, ILinearObject, IFiniteObject
     {
-
         private Point3d _p1;
         private Point3d _p2;
+
+        private Point3d _center;
+        private double? _length;
+        private Vector3d _dir;
+        private bool HasChanged => _p1.HasChanged || _p2.HasChanged;
+        private void CheckFields()
+        {
+            if (HasChanged)
+            {
+                _p1 = _p1.Copy();
+                _p2 = _p2.Copy();
+
+                ClearCache();
+            }
+        }
+        private void ClearCache()
+        {
+            _center = null;
+            _length = null;
+            _dir = null;
+        }
+
 
         /// <summary>
         /// Initializes line segment using two points.
@@ -34,36 +56,60 @@ namespace GeometRi
 
         public Point3d P1
         {
-            get { return _p1.Copy(); }
-            set { _p1 = value.Copy(); }
+            get { return _p1; }
+            set { _p1 = value.Copy(); ClearCache();}
         }
 
         public Point3d P2
         {
-            get { return _p2.Copy(); }
-            set { _p2 = value.Copy(); }
+            get { return _p2; }
+            set { _p2 = value.Copy(); ClearCache(); }
         }
 
         public Point3d Center
         {
-            get { return (_p1 + _p2) / 2; }
+            get
+            {
+                CheckFields();
+                if (_center == null)
+                {
+                    _center = (_p1 + _p2) / 2;
+                }
+                return _center;
+            }
         }
 
         public double Length
         {
-            get { return _p1.DistanceTo(_p2); }
+            get {
+                CheckFields();
+                if (_length == null)
+                {
+                    _length = _p1.DistanceTo(_p2);
+                }
+                return _length.Value;
+            }
         }
 
+        /// <summary>
+        /// returns a new vector from P1 to P2.
+        /// </summary>
         public Vector3d ToVector
         {
             get { return new Vector3d(_p1, _p2); }
         }
 
+        /// <summary>
+        /// Returns a new ray starting at P1 and directed towards P2.
+        /// </summary>
         public Ray3d ToRay
         {
             get { return new Ray3d(_p1, new Vector3d(_p1, _p2)); }
         }
 
+        /// <summary>
+        /// Returns a new line.
+        /// </summary>
         public Line3d ToLine
         {
             get { return new Line3d(_p1, _p2); }
@@ -75,7 +121,14 @@ namespace GeometRi
         /// <returns></returns>
         public Vector3d Direction
         {
-            get { return this.ToVector.Normalized; }
+            get {
+                CheckFields();
+                if (_dir == null)
+                {
+                    _dir = ToVector.Normalized;
+                }
+                return _dir;
+            }
         }
 
         public bool IsOriented

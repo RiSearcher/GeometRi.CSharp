@@ -1502,16 +1502,15 @@ namespace GeometRi
 
             if (this.IsCoplanarTo(t))
             {
-                if (t._a.DistanceTo(this._point) <= this._r) return true;
-                if (t._b.DistanceTo(this._point) <= this._r) return true;
-                if (t._c.DistanceTo(this._point) <= this._r) return true;
+                if (t.A.DistanceTo(this._point) <= this._r) return true;
+                if (t.B.DistanceTo(this._point) <= this._r) return true;
+                if (t.C.DistanceTo(this._point) <= this._r) return true;
 
                 if (this._point.BelongsTo(t)) return true;
-                if (this.IntersectionWith(new Segment3d(t._a, t._b)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t._b, t._c)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t._c, t._a)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.A, t.B)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.B, t.C)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.C, t.A)) != null) return true;
             }
-
             object obj = this.IntersectionWith(t_plane);
             if (obj != null && obj.GetType() == typeof(Point3d))
             {
