@@ -1421,8 +1421,8 @@ namespace GeometRi
                 Plane3d plane_this = new Plane3d(this._point, this._normal);
 
                 Line3d l = (Line3d)plane_this.IntersectionWith(new Plane3d(c._point, c._normal));
-                Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
-                Point3d p = l._point.ConvertTo(local_coord);
+                Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
+                Point3d p = l.Point.ConvertTo(local_coord);
 
                 if (GeometRi3D.Greater(Abs(p.Y), this.R))
                 {
@@ -1453,7 +1453,7 @@ namespace GeometRi
 
                     // Now check if segment (p1,p2) intrsects circle "c"
                     // Use local coord with center in c.Point and X-axis aligned with segment
-                    local_coord = new Coord3d(c._point, l._dir, c._normal.Cross(l._dir));
+                    local_coord = new Coord3d(c._point, l.Direction, c._normal.Cross(l.Direction));
                     p1 = p1.ConvertTo(local_coord);
                     p2 = p2.ConvertTo(local_coord);
 
@@ -1580,16 +1580,16 @@ namespace GeometRi
             //====================================================
 
 
-            if (l._dir.IsOrthogonalTo(this._normal))
+            if (l.Direction.IsOrthogonalTo(this._normal))
             {
-                if (l._point.BelongsTo(new Plane3d(this._point, this._normal)))
+                if (l.Point.BelongsTo(new Plane3d(this._point, this._normal)))
                 {
                     // coplanar objects
                     // Find intersection of line and circle (2D)
 
                     // Local coord: X - line direction, Z - circle normal
-                    Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
-                    Point3d p = l._point.ConvertTo(local_coord);
+                    Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
+                    Point3d p = l.Point.ConvertTo(local_coord);
 
                     double c = p.Y;
 
@@ -1758,8 +1758,8 @@ namespace GeometRi
             else
             {
                 Line3d l = (Line3d)s.IntersectionWith(new Plane3d(this._point, this._normal));
-                Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
-                Point3d p = l._point.ConvertTo(local_coord);
+                Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
+                Point3d p = l.Point.ConvertTo(local_coord);
 
                 if (GeometRi3D.Greater(Abs(p.Y), this.R))
                 {

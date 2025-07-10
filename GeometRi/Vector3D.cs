@@ -14,6 +14,7 @@ namespace GeometRi
 
         private double[] val;
         internal Coord3d _coord;
+        internal bool HasChanged { get; private set; }
 
         #region "Constructors"
         /// <summary>
@@ -128,7 +129,7 @@ namespace GeometRi
         public double X
         {
             get { return val[0]; }
-            set { val[0] = value; }
+            set { val[0] = value; HasChanged = true; }
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace GeometRi
         public double Y
         {
             get { return val[1]; }
-            set { val[1] = value; }
+            set { val[1] = value;  HasChanged = true;}
         }
 
         /// <summary>
@@ -146,7 +147,7 @@ namespace GeometRi
         public double Z
         {
             get { return val[2]; }
-            set { val[2] = value; }
+            set { val[2] = value;  HasChanged = true;}
         }
 
         /// <summary>

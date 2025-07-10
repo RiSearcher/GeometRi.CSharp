@@ -12,8 +12,10 @@ namespace GeometRi
     public class Line3d : ILinearObject
     {
 
-        internal Point3d _point;
-        internal Vector3d _dir;
+        private Point3d _point;
+        private Vector3d _dir;
+
+        internal bool HasChanged => _point.HasChanged || _dir.HasChanged;
 
         #region "Constructors"
         /// <summary>
@@ -61,7 +63,7 @@ namespace GeometRi
         /// </summary>
         public Point3d Point
         {
-            get { return _point.Copy(); }
+            get { return _point; }
             set { _point = value.Copy(); }
         }
 
@@ -70,7 +72,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d Direction
         {
-            get { return _dir.Copy(); }
+            get { return _dir; }
             set { _dir = value.Copy(); }
         }
 
@@ -80,7 +82,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns copy the object
+        /// Returns copy of the object
         /// </summary>
         public Line3d ToLine
         {

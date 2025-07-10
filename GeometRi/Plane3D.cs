@@ -16,6 +16,30 @@ namespace GeometRi
         internal Vector3d _normal;
         private Coord3d _coord;
 
+        private double? _a;
+        private double? _b;
+        private double? _c;
+        private double? _d;
+
+        internal bool HasChanged => _point.HasChanged || _normal.HasChanged;
+        private void CheckFields()
+        {
+            if (HasChanged)
+            {
+                _point = _point.Copy();
+                _normal = _normal.Copy();
+
+                ClearCache();
+            }
+        }
+        private void ClearCache()
+        {
+            _a = null;
+            _b = null;
+            _c = null;
+            _d = null;
+        }
+
         #region "Constructors"
         /// <summary>
         /// Default constructor, initializes XY plane in global cordinate system.
@@ -136,7 +160,15 @@ namespace GeometRi
         /// </summary>
         public double A
         {
-            get { return _normal.ConvertTo(_coord).X; }
+            get
+            {
+                CheckFields();
+                if (_a == null)
+                {
+                    _a = _normal.ConvertTo(_coord).X;
+                }
+                return _a.Value;
+            }
         }
 
         /// <summary>
@@ -144,7 +176,16 @@ namespace GeometRi
         /// </summary>
         public double B
         {
-            get { return _normal.ConvertTo(_coord).Y; }
+            get
+            {
+                CheckFields();
+                if (_b == null)
+                {
+                    _b = _normal.ConvertTo(_coord).Y;
+                }
+
+                return _b.Value;
+            }
         }
 
         /// <summary>
@@ -152,7 +193,15 @@ namespace GeometRi
         /// </summary>
         public double C
         {
-            get { return _normal.ConvertTo(_coord).Z; }
+            get
+            {
+                CheckFields();
+                if (_c == null)
+                {
+                    _c = _normal.ConvertTo(_coord).Z;
+                }
+                return _c.Value;
+            }
         }
 
         /// <summary>
@@ -162,16 +211,17 @@ namespace GeometRi
         {
             get
             {
-                Point3d p = _point.ConvertTo(_coord);
-                Vector3d v = _normal.ConvertTo(_coord);
-                return -v.X * p.X - v.Y * p.Y - v.Z * p.Z;
+                CheckFields();
+                if (_d == null)
+                {
+                    Point3d p = _point.ConvertTo(_coord);
+                    Vector3d v = _normal.ConvertTo(_coord);
+                    _d = -v.X * p.X - v.Y * p.Y - v.Z * p.Z;
+                }
+
+                return _d.Value;
             }
         }
-
-        /// <summary>
-        /// Return this object
-        /// </summary>
-        public Plane3d Plane => this;
 
         /// <summary>
         /// Returns copy of the object
