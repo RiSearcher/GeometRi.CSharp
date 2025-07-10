@@ -12,4 +12,8 @@ namespace GeometRi
     {
         abstract internal int _PointLocation(Point3d p);
     }
+    abstract public class PlanarFiniteObject : FiniteObject
+    {
+        abstract internal Plane3d Plane { get; }
+    }
 }

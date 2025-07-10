@@ -1279,7 +1279,7 @@ namespace GeometRi
         /// <param name="point_on_triangle">Closest point on triangle</param>
         public double DistanceTo(Triangle t, out Point3d point_on_circle, out Point3d point_on_triangle)
         {
-            double dist = this.DistanceTo(t.ToPlane, out point_on_circle, out point_on_triangle);
+            double dist = this.DistanceTo(t.Plane, out point_on_circle, out point_on_triangle);
             if (t.DistanceTo(point_on_triangle) <= GeometRi3D.DefaultTolerance)
             {
                 return dist;
@@ -1497,7 +1497,7 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Triangle t)
         {
-            Plane3d t_plane = t.ToPlane;
+            Plane3d t_plane = t.Plane;
             if (this.DistanceTo(t_plane) > 0) return false;
 
             if (this.IsCoplanarTo(t))

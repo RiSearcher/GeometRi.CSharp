@@ -169,6 +169,11 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Return this object
+        /// </summary>
+        public Plane3d Plane => this;
+
+        /// <summary>
         /// Returns copy of the object
         /// </summary>
         public Plane3d ToPlane
