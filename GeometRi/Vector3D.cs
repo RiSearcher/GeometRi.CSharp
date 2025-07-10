@@ -14,7 +14,25 @@ namespace GeometRi
 
         private double[] val;
         internal Coord3d _coord;
+        private double? _norm;
+        private Vector3d _normalized;
+
         internal bool HasChanged { get; private set; }
+       private void CheckFields()
+        {
+            if (HasChanged)
+            {
+                HasChanged = false;
+                ClearCache();
+            }
+        }
+        private void ClearCache()
+        {
+            _norm = null;
+            _normalized = null;
+        }
+  
+
 
         #region "Constructors"
         /// <summary>
@@ -155,7 +173,15 @@ namespace GeometRi
         /// </summary>
         public double Norm
         {
-            get { return Sqrt(val[0]*val[0] + val[1]*val[1] + val[2]*val[2]); }
+            get
+            {
+                CheckFields();
+                if (_norm == null)
+                {
+                    _norm = Sqrt(val[0] * val[0] + val[1] * val[1] + val[2] * val[2]);
+                }
+                return _norm.Value;
+            }
         }
 
         /// <summary>
@@ -279,12 +305,13 @@ namespace GeometRi
         {
             get
             {
-                Vector3d tmp = this.Copy();
-                double tmp_norm = this.Norm;
-                tmp[0] = val[0] / tmp_norm;
-                tmp[1] = val[1] / tmp_norm;
-                tmp[2] = val[2] / tmp_norm;
-                return tmp;
+                CheckFields();
+                if (_normalized == null)
+                {
+                _normalized = this.Copy();
+                _normalized.Normalize();
+                }
+                return _normalized;
             }
         }
 

@@ -189,10 +189,11 @@ namespace GeometRi
             Vector3d r2 = l.Point.ToVector;
             Vector3d s1 = this.Direction;
             Vector3d s2 = l.Direction;
-            if (s1.Cross(s2).Norm > GeometRi3D.Tolerance)
+            Vector3d s1CrossS2 = s1.Cross(s2);
+            if (s1CrossS2.Norm > GeometRi3D.Tolerance)
             {
                 // Crossing lines
-                return Abs((r2 - r1) * s1.Cross(s2)) / s1.Cross(s2).Norm;
+                return Abs((r2 - r1) * s1CrossS2) / s1CrossS2.Norm;
             }
             else
             {
@@ -231,9 +232,10 @@ namespace GeometRi
             Vector3d r2 = l.Point.ToVector;
             Vector3d s1 = this.Direction;
             Vector3d s2 = l.Direction;
-            if (s1.Cross(s2).Norm > GeometRi3D.Tolerance)
+            Vector3d s1CrossS2 = s1.Cross(s2);
+            if (s1CrossS2.Norm > GeometRi3D.Tolerance)
             {
-                r1 = r2 + (r2 - r1) * s1.Cross(s1.Cross(s2)) / (s1 * s2.Cross(s1.Cross(s2))) * s2;
+                r1 = r2 + (r2 - r1) * s1.Cross(s1CrossS2) / (s1 * s2.Cross(s1CrossS2)) * s2;
                 return r1.ToPoint;
             }
             else
