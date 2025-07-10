@@ -14,6 +14,7 @@ namespace GeometRi
 
         private Point3d _point;
         private Vector3d _dir;
+        internal bool HasChanged => _point.HasChanged || _dir.HasChanged;
 
         /// <summary>
         /// Default constructor, initializes ray starting from origin and aligned with X-axis (in global coordinate system).
@@ -47,7 +48,7 @@ namespace GeometRi
         /// <returns></returns>
         public Point3d Point
         {
-            get { return _point.Copy(); }
+            get { return _point; }
             set { _point = value.Copy(); }
         }
 
@@ -57,7 +58,7 @@ namespace GeometRi
         /// <returns></returns>
         public Vector3d Direction
         {
-            get { return _dir.Copy(); }
+            get { return _dir; }
             set { _dir = value.Copy(); }
         }
 

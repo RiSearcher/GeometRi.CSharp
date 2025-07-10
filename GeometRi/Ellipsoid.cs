@@ -351,7 +351,7 @@ namespace GeometRi
             }
             //====================================================
 
-            object obj = this.IntersectionWith(s.ToLine);
+            object obj = this.IntersectionWith(s.Line);
 
             if (obj == null)
             {

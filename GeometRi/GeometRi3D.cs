@@ -272,23 +272,28 @@ namespace GeometRi
 
         static internal bool _coplanar(IPlanarObject obj1, IPlanarObject obj2)
         {
+            Plane3d plane1 = obj1 is PlanarFiniteObject pl1 ? pl1.Plane : obj1 is Plane3d p1? p1 : obj1.ToPlane;
+            Plane3d plane2 = obj2 is PlanarFiniteObject pl2 ? pl2.Plane : obj2 is Plane3d p2? p2 : obj2.ToPlane;
 
-            return obj1.ToPlane.Equals(obj2.ToPlane);
-
+            return plane1.Equals(plane2);
         }
 
         static internal bool _coplanar(ILinearObject obj1, ILinearObject obj2)
         {
-            if (obj1.ToLine.IsParallelTo(obj2.ToLine))
+            Line3d l1 = obj1 is LinearFiniteObject lin1 ? lin1.Line : obj1 is Line3d ? (Line3d)obj1 : obj1.ToLine;
+            Line3d l2 = obj2 is LinearFiniteObject lin2 ? lin2.Line : obj2 is Line3d ? (Line3d)obj2 : obj2.ToLine;
+            if (l1.IsParallelTo(l2))
             {
                 return true;
             }
-            return AlmostEqual(obj1.ToLine.DistanceTo(obj2.ToLine), 0.0);
+            return AlmostEqual(l1.DistanceTo(l2), 0.0);
         }
 
         static internal bool _coplanar(IPlanarObject obj1, ILinearObject obj2)
         {
-            return obj1.Normal.IsOrthogonalTo(obj2.Direction) && obj2.ToLine.Point.BelongsTo(obj1.ToPlane);
+            Plane3d plane1 = obj1 is PlanarFiniteObject pl1 ? pl1.Plane : obj1 is Plane3d p1? p1 : obj1.ToPlane;
+
+            return obj1.Normal.IsOrthogonalTo(obj2.Direction) && obj2.ToLine.Point.BelongsTo(plane1);
         }
 
         static internal bool _coplanar(ILinearObject obj1, IPlanarObject obj2)

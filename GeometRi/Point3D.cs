@@ -65,13 +65,15 @@ namespace GeometRi
             return new Point3d(_x,_y,_z,_coord);
         }
 
+        internal bool HasChanged { get; private set; }
+
         /// <summary>
         /// X coordinate in reference coordinate system
         /// </summary>
         public double X
         {
             get { return _x; }
-            set { _x = value; }
+            set { _x = value; HasChanged = true; }
         }
         /// <summary>
         /// Y coordinate in reference coordinate system
@@ -79,7 +81,7 @@ namespace GeometRi
         public double Y
         {
             get { return _y; }
-            set { _y = value; }
+            set { _y = value; HasChanged = true;}
         }
         /// <summary>
         /// Z coordinate in reference coordinate system
@@ -87,7 +89,7 @@ namespace GeometRi
         public double Z
         {
             get { return _z; }
-            set { _z = value; }
+            set { _z = value; HasChanged = true;}
         }
 
         /// <summary>
@@ -220,8 +222,8 @@ namespace GeometRi
         /// <returns></returns>
         public double DistanceTo(Line3d l)
         {
-            Vector3d v = new Vector3d(this, l._point);
-            return v.Cross(l._dir).Norm / l._dir.Norm;
+            Vector3d v = new Vector3d(this, l.Point);
+            return v.Cross(l.Direction).Norm / l.Direction.Norm;
         }
 
         /// <summary>
@@ -252,7 +254,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            Point3d projection = this.ProjectionTo(s.ToLine);
+            Point3d projection = this.ProjectionTo(s.Line);
             if (s._AxialPointLocation(projection) > 0)
             {
                 return this.DistanceTo(projection);
@@ -598,21 +600,19 @@ namespace GeometRi
 
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                return this.DistanceTo(p) < GeometRi3D.Tolerance;
+                return this.DistanceSquared(p) < GeometRi3D.Tolerance * GeometRi3D.Tolerance;
             }
             else
             {
-                if (this.DistanceTo(_coord.Origin) < GeometRi3D.Tolerance)
+                if (this.DistanceSquared(_coord.Origin) < GeometRi3D.Tolerance * GeometRi3D.Tolerance)
                 {
-                    return this.DistanceTo(p) < GeometRi3D.Tolerance;
+                    return this.DistanceSquared(p) < GeometRi3D.Tolerance * GeometRi3D.Tolerance;
                 }
                 else
                 {
-                    return this.DistanceTo(p) < GeometRi3D.Tolerance * this.DistanceTo(_coord.Origin);
+                    return this.DistanceSquared(p) < Math.Pow(GeometRi3D.Tolerance * this.DistanceTo(_coord.Origin), 2);
                 }
             }
-
-
         }
 
         /// <summary>

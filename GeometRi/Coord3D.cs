@@ -325,7 +325,7 @@ namespace GeometRi
 
         // Operators overloads
         //-----------------------------------------------------------------
-        public static bool operator ==(Coord3d c1, Coord3d c2)
+     /*   public static bool operator ==(Coord3d c1, Coord3d c2)
         {
 
             if ((object)c1 != null)
@@ -356,6 +356,7 @@ namespace GeometRi
                 return true;
             }
         }
+     */
 
     }
 }

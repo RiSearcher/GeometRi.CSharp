@@ -23,6 +23,7 @@ namespace GeometRi
         Plane3d ToPlane { get; }
     }
 
+
     /// <summary>
     /// Interface for finite objects
     /// </summary>
