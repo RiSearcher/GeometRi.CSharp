@@ -254,7 +254,7 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            Point3d projection = this.ProjectionTo(s.ToLine);
+            Point3d projection = this.ProjectionTo(s.Line);
             if (s._AxialPointLocation(projection) > 0)
             {
                 return this.DistanceTo(projection);

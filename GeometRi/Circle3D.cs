@@ -1042,7 +1042,7 @@ namespace GeometRi
         /// <param name="point_on_segment">Closest point on segment</param>
         public double DistanceTo(Segment3d s, out Point3d point_on_circle, out Point3d point_on_segment)
         {
-            Line3d l = s.ToLine;
+            Line3d l = s.Line;
             Plane3d plane = this.ToPlane;
             if (l.IsNotParallelTo(plane._normal))
             {
@@ -1654,7 +1654,7 @@ namespace GeometRi
             }
             //====================================================
 
-            object obj = this.IntersectionWith(s.ToLine);
+            object obj = this.IntersectionWith(s.Line);
 
             if (obj == null)
             {

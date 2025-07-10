@@ -9,7 +9,7 @@ namespace GeometRi
 #if NET20
     [Serializable]
 #endif
-    public class Segment3d : FiniteObject, ILinearObject, IFiniteObject
+    public class Segment3d : LinearFiniteObject, ILinearObject, IFiniteObject
     {
         private Point3d _p1;
         private Point3d _p2;
@@ -17,6 +17,9 @@ namespace GeometRi
         private Point3d _center;
         private double? _length;
         private Vector3d _dir;
+        private Vector3d _vector;
+        private Line3d _line;
+        private Ray3d _ray;
         private bool HasChanged => _p1.HasChanged || _p2.HasChanged;
         private void CheckFields()
         {
@@ -33,6 +36,9 @@ namespace GeometRi
             _center = null;
             _length = null;
             _dir = null;
+            _vector = null;
+            _line = null;
+            _ray = null;
         }
 
 
@@ -90,28 +96,66 @@ namespace GeometRi
             }
         }
 
+        internal override Vector3d Vector
+           {
+               get
+               {
+                   CheckFields();
+                   if (_vector == null)
+                   {
+                       _vector = new Vector3d(_p1, _p2);
+                   }
+                   return _vector;
+               }
+           }  
+        
         /// <summary>
         /// returns a new vector from P1 to P2.
         /// </summary>
         public Vector3d ToVector
         {
-            get { return new Vector3d(_p1, _p2); }
+            get { return Vector.Copy(); }
         }
 
+    
+        internal override Ray3d Ray
+        {
+            get
+            {
+                CheckFields();
+                if (_ray == null)
+                {
+                    _ray = new Ray3d(_p1, new Vector3d(_p1, _p2));
+                }
+                return _ray;
+            }
+        }
         /// <summary>
         /// Returns a new ray starting at P1 and directed towards P2.
         /// </summary>
         public Ray3d ToRay
         {
-            get { return new Ray3d(_p1, new Vector3d(_p1, _p2)); }
+            get { return Ray.Copy(); }
         }
 
+        internal override Line3d Line
+        {
+            get
+            {
+                CheckFields();
+                if (_line == null)
+                {
+                    _line = new Line3d(_p1, _p2);
+                }
+                return _line;
+            }
+        }
         /// <summary>
         /// Returns a new line.
         /// </summary>
         public Line3d ToLine
         {
-            get { return new Line3d(_p1, _p2); }
+            get { return Line.Copy(); }
         }
 
         /// <summary>
@@ -124,7 +168,7 @@ namespace GeometRi
                 CheckFields();
                 if (_dir == null)
                 {
-                    _dir = ToVector.Normalized;
+                    _dir = Vector.Normalized;
                 }
                 return _dir;
             }
@@ -223,7 +267,7 @@ namespace GeometRi
         /// </summary>
         public Point3d ClosestPoint(Point3d p)
         {
-            Point3d projection_point = p.ProjectionTo(this.ToLine);
+            Point3d projection_point = p.ProjectionTo(this.Line);
             if (projection_point.BelongsTo(this))
             {
                 return projection_point;
@@ -267,10 +311,10 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Line3d l)
         {
-            Point3d p = l.PerpendicularTo(this.ToLine);
+            Point3d p = l.PerpendicularTo(this.Line);
             if (p != null && p.BelongsTo(this))
             {
-                return l.DistanceTo(this.ToLine);
+                return l.DistanceTo(this.Line);
             }
             else
             {
@@ -416,12 +460,12 @@ namespace GeometRi
         {
 
 
-            Point3d p1 = this.ToLine.PerpendicularTo(r.ToLine);
-            Point3d p2 = r.ToLine.PerpendicularTo(this.ToLine);
+            Point3d p1 = this.Line.PerpendicularTo(r.ToLine);
+            Point3d p2 = r.ToLine.PerpendicularTo(this.Line);
 
             if (p1 != null && p2 != null && p1.BelongsTo(r) && p2.BelongsTo(this))
             {
-                return this.ToLine.DistanceTo(r.ToLine);
+                return this.Line.DistanceTo(r.ToLine);
             }
 
             double d1 = double.PositiveInfinity;
@@ -429,9 +473,9 @@ namespace GeometRi
             double d3 = double.PositiveInfinity;
             bool flag = false;
 
-            if (r.Point.ProjectionTo(this.ToLine).BelongsTo(this))
+            if (r.Point.ProjectionTo(this.Line).BelongsTo(this))
             {
-                d1 = r.Point.DistanceTo(this.ToLine);
+                d1 = r.Point.DistanceTo(this.Line);
                 flag = true;
             }
             if (this.P1.ProjectionTo(r.ToLine).BelongsTo(r))
@@ -580,7 +624,7 @@ namespace GeometRi
         public object IntersectionWith(Plane3d s)
         {
 
-            object obj = this.ToRay.IntersectionWith(s);
+            object obj = this.Ray.IntersectionWith(s);
 
             if (obj == null)
             {
@@ -617,7 +661,7 @@ namespace GeometRi
 
             if (this.BelongsTo(l)) { return this.Copy(); }
 
-            Point3d p = l.PerpendicularTo(this.ToLine);
+            Point3d p = l.PerpendicularTo(Line);
             if (p != null && p.BelongsTo(this) && p.BelongsTo(l))
             {
                 return p;
@@ -638,8 +682,8 @@ namespace GeometRi
 
             if (this == s) { return this.Copy(); }
 
-            Line3d l1 = this.ToLine;
-            Line3d l2 = s.ToLine;
+            Line3d l1 = this.Line;
+            Line3d l2 = s.Line;
 
             if (this.BelongsTo(l2) || s.BelongsTo(l1))
             {
@@ -799,7 +843,7 @@ namespace GeometRi
         {
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                Point3d proj = p.ProjectionTo(this.ToLine);
+                Point3d proj = p.ProjectionTo(this.Line);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj),0))
                 {
                     return _AxialPointLocation(p);

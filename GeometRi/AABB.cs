@@ -509,7 +509,7 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Segment3d s)
         {
-            return _line_intersection(s.ToLine, 0.0, s.Length);
+            return _line_intersection(s.Line, 0.0, s.Length);
         }
 
         /// <summary>

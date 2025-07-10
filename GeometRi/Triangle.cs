@@ -378,7 +378,7 @@ namespace GeometRi
         /// </summary>
         public Point3d Incenter
         {
-            get { return Bisector_A.ToLine.PerpendicularTo(Bisector_B.ToLine); }
+            get { return Bisector_A.Line.PerpendicularTo(Bisector_B.Line); }
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace GeometRi
         /// </summary>
         public Point3d Orthocenter
         {
-            get { return Altitude_A.ToLine.PerpendicularTo(Altitude_B.ToLine); }
+            get { return Altitude_A.Line.PerpendicularTo(Altitude_B.Line); }
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace GeometRi
         {
             get
             {
-                Point3d p = Bisector_A.ToLine.PerpendicularTo(Bisector_B.ToLine);
+                Point3d p = Bisector_A.Line.PerpendicularTo(Bisector_B.Line);
                 double r = 2 * Area / Perimeter;
                 Vector3d v = new Vector3d(_a, _b).Cross(new Vector3d(_a, _c));
                 return new Circle3d(p, r, v);
@@ -1301,8 +1301,8 @@ namespace GeometRi
         internal object _coplanar_IntersectionWith(Line3d l)
         {
             // Check intersection with first two sides
-            Point3d onAB = l.PerpendicularTo(new Segment3d(_a, _b).ToLine);
-            Point3d onBC = l.PerpendicularTo(new Segment3d(_b, _c).ToLine);
+            Point3d onAB = l.PerpendicularTo(new Segment3d(_a, _b).Line);
+            Point3d onBC = l.PerpendicularTo(new Segment3d(_b, _c).Line);
             if (onAB != null && onBC != null)
             {
                 double pos_onAB = new Vector3d(_a, onAB).Dot(new Vector3d(_a, _b)) / (AB * AB);
@@ -1321,7 +1321,7 @@ namespace GeometRi
             }
 
             //Check intersection with third side
-            Point3d onAC = l.PerpendicularTo(new Segment3d(_a, _c).ToLine);
+            Point3d onAC = l.PerpendicularTo(new Segment3d(_a, _c).Line);
             if (onAB != null && onAC != null)
             {
                 double pos_onAB = new Vector3d(_a, onAB).Dot(new Vector3d(_a, _b)) / (AB * AB);
@@ -1380,7 +1380,7 @@ namespace GeometRi
             }
             //====================================================
 
-            object obj = this.IntersectionWith(s.ToLine);
+            object obj = this.IntersectionWith(s.Line);
 
             if (obj == null)
             {

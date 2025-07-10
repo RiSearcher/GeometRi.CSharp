@@ -280,11 +280,13 @@ namespace GeometRi
 
         static internal bool _coplanar(ILinearObject obj1, ILinearObject obj2)
         {
-            if (obj1.ToLine.IsParallelTo(obj2.ToLine))
+            Line3d l1 = obj1 is LinearFiniteObject lin1 ? lin1.Line : obj1 is Line3d ? (Line3d)obj1 : obj1.ToLine;
+            Line3d l2 = obj2 is LinearFiniteObject lin2 ? lin2.Line : obj2 is Line3d ? (Line3d)obj2 : obj2.ToLine;
+            if (l1.IsParallelTo(l2))
             {
                 return true;
             }
-            return AlmostEqual(obj1.ToLine.DistanceTo(obj2.ToLine), 0.0);
+            return AlmostEqual(l1.DistanceTo(l2), 0.0);
         }
 
         static internal bool _coplanar(IPlanarObject obj1, ILinearObject obj2)
