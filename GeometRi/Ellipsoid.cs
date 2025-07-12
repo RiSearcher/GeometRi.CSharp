@@ -650,7 +650,7 @@ namespace GeometRi
         /// <summary>
         /// Check intesection of two ellipsoids.
         /// </summary>
-        public bool Intersects(Ellipsoid e, double accuracy)
+        private bool Intersects(Ellipsoid e, double accuracy)
         {
             return _Intersects(e, accuracy) == 1 ? false : true;
         }
@@ -658,7 +658,7 @@ namespace GeometRi
         /// <summary>
         /// Check intesection of two ellipsoids.
         /// </summary>
-        public bool Intersects(Ellipsoid e)
+        private bool Intersects(Ellipsoid e)
         {
             return _Intersects(e, GeometRi3D.DefaultTolerance) == 1 ? false : true;
         }
@@ -669,7 +669,7 @@ namespace GeometRi
         /// 0 - externaly touch
         /// -1 - overlap
         /// </summary>
-        public int IntersectionCheck(Ellipsoid e)
+        private int IntersectionCheck(Ellipsoid e)
         {
             return _Intersects(e, GeometRi3D.DefaultTolerance);
         }
@@ -680,7 +680,7 @@ namespace GeometRi
         /// 0 - externaly touch
         /// -1 - overlap
         /// </summary>
-        public int IntersectionCheck(Ellipsoid e, double accuracy)
+        private int IntersectionCheck(Ellipsoid e, double accuracy)
         {
             return _Intersects(e, accuracy);
         }
@@ -826,6 +826,14 @@ namespace GeometRi
         /// </summary>
         public Point3d ClosestPoint(Point3d p)
         {
+            return this.ClosestPoint(p, GeometRi3D.Tolerance);
+        }
+
+        /// <summary>
+        /// Calculates the point on the ellipsoid's boundary closest to given point.
+        /// </summary>
+        public Point3d ClosestPoint(Point3d p, double tolerance)
+        {
 
             // Algorithm by Dr. Robert Nurnberg
             // http://wwwf.imperial.ac.uk/~rn/distance2ellipse.pdf
@@ -874,7 +882,7 @@ namespace GeometRi
 
                 Point3d n = new Point3d(A * Cos(phi)*Cos(theta), B * Cos(phi)*Sin(theta), C*Sin(phi), local_coord);
 
-                if (n0.DistanceTo(n) < GeometRi3D.Tolerance)
+                if (n0.DistanceTo(n) < tolerance)
                 {
                     return n;
                 }
@@ -900,15 +908,15 @@ namespace GeometRi
         {
             int iter = 0;
             int max_iter = 100;
-            Point3d p1 = this.ClosestPoint(e.Center);
-            Point3d p2 = e.ClosestPoint(p1);
+            Point3d p1 = this.ClosestPoint(e.Center, tolerance);
+            Point3d p2 = e.ClosestPoint(p1, tolerance);
             double old_distance = p1.DistanceTo(p2);
 
             while (iter < max_iter)
             {
                 iter += 1;
-                p1 = this.ClosestPoint(p2);
-                p2 = e.ClosestPoint(p1);
+                p1 = this.ClosestPoint(p2, tolerance);
+                p2 = e.ClosestPoint(p1, tolerance);
                 double dist = p1.DistanceTo(p2);
                 if (Abs(dist-old_distance) < tolerance)
                 {
