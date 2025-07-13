@@ -1,6 +1,10 @@
 # GeometRi
 ## Release notes
 
+### 1.4.1.4 (13/7/2025)
+* Intersection check of ellipsoid and sphere.
+* Distance between two ellipsoids.
+
 ### 1.4.1.3 (27/5/2025)
 * Fixed AABB local coordinate system.
 * Create prism by extruding face of convex polyhedron.

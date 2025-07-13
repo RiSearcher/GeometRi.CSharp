@@ -360,6 +360,8 @@ Ellipsoid object defined by center point and three mutually orthogonal vectors.
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __ProjectionTo__ - orthogonal projection of ellipsoid to line
 * __IntersectionWith__ - intersection of ellipsoid with line, plane or segment
+* __Intersects__ - intersection check with sphere
+* __DistanceTo__ - distance to other ellipsoid
 * __ClosestPoint__ - calculates the point on the ellipsoid's boundary closest to given point
 * __Translate__ - translate ellipsoid by vector
 * __Rotate__ - rotate ellipsoid around origin or other point
