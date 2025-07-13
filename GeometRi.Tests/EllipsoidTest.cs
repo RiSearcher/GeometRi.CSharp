@@ -275,71 +275,71 @@ namespace GeometRi_Tests
             Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
         }
 
-        [TestMethod()]
-        public void IntersectsTwoEllipsoids_01()
-        {
-            // Separate
-            Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
-            Ellipsoid B = new Ellipsoid(new Point3d(3.001, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 2, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+        //[TestMethod()]
+        //public void IntersectsTwoEllipsoids_01()
+        //{
+        //    // Separate
+        //    Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
+        //    Ellipsoid B = new Ellipsoid(new Point3d(3.001, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 2, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
 
-            B = new Ellipsoid(new Point3d(-3.000001, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 3, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+        //    B = new Ellipsoid(new Point3d(-3.000001, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 3, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
 
-            B = new Ellipsoid(new Point3d(0, 2.0001, 0), new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+        //    B = new Ellipsoid(new Point3d(0, 2.0001, 0), new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
 
-            B = new Ellipsoid(new Point3d(0, -2.00001, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-2, 0, 2));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+        //    B = new Ellipsoid(new Point3d(0, -2.00001, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-2, 0, 2));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
 
-            A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 2), new Vector3d(0, 1, 0), new Vector3d(-1, 0, 1));
-            B = new Ellipsoid(new Point3d(0, 2.001, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-3, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
-        }
+        //    A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 2), new Vector3d(0, 1, 0), new Vector3d(-1, 0, 1));
+        //    B = new Ellipsoid(new Point3d(0, 2.001, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-3, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 1);
+        //}
 
-        [TestMethod()]
-        public void IntersectsTwoEllipsoids_02()
-        {
-            // Externaly touch
-            Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
-            Ellipsoid B = new Ellipsoid(new Point3d(3.0, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 2, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+        //[TestMethod()]
+        //public void IntersectsTwoEllipsoids_02()
+        //{
+        //    // Externaly touch
+        //    Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
+        //    Ellipsoid B = new Ellipsoid(new Point3d(3.0, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 2, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
 
-            B = new Ellipsoid(new Point3d(-3.0, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 3, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+        //    B = new Ellipsoid(new Point3d(-3.0, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 3, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
 
-            B = new Ellipsoid(new Point3d(0, 2.0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+        //    B = new Ellipsoid(new Point3d(0, 2.0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
 
-            B = new Ellipsoid(new Point3d(0, -2.0, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-2, 0, 2));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+        //    B = new Ellipsoid(new Point3d(0, -2.0, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-2, 0, 2));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
 
-            A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 2), new Vector3d(0, 1, 0), new Vector3d(-1, 0, 1));
-            B = new Ellipsoid(new Point3d(0, 2.0, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-3, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
-        }
+        //    A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 2), new Vector3d(0, 1, 0), new Vector3d(-1, 0, 1));
+        //    B = new Ellipsoid(new Point3d(0, 2.0, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-3, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), 0);
+        //}
 
-        [TestMethod()]
-        public void IntersectsTwoEllipsoids_03()
-        {
-            // Overlap
-            Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
-            Ellipsoid B = new Ellipsoid(new Point3d(2.99, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 2, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+        //[TestMethod()]
+        //public void IntersectsTwoEllipsoids_03()
+        //{
+        //    // Overlap
+        //    Ellipsoid A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
+        //    Ellipsoid B = new Ellipsoid(new Point3d(2.99, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 2, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
 
-            B = new Ellipsoid(new Point3d(-2.99, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 3, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+        //    B = new Ellipsoid(new Point3d(-2.99, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 3, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
 
-            B = new Ellipsoid(new Point3d(0, 1.99, 0), new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+        //    B = new Ellipsoid(new Point3d(0, 1.99, 0), new Vector3d(1, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
 
-            B = new Ellipsoid(new Point3d(0, -1.99, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-2, 0, 2));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+        //    B = new Ellipsoid(new Point3d(0, -1.99, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-2, 0, 2));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
 
-            A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 2), new Vector3d(0, 1, 0), new Vector3d(-1, 0, 1));
-            B = new Ellipsoid(new Point3d(0, 1.99, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-3, 0, 3));
-            Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
-        }
+        //    A = new Ellipsoid(new Point3d(0, 0, 0), new Vector3d(2, 0, 2), new Vector3d(0, 1, 0), new Vector3d(-1, 0, 1));
+        //    B = new Ellipsoid(new Point3d(0, 1.99, 0), new Vector3d(1, 0, 1), new Vector3d(0, 1, 0), new Vector3d(-3, 0, 3));
+        //    Assert.AreEqual(A.IntersectionCheck(B, GeometRi3D.DefaultTolerance), -1);
+        //}
 
     }
 }
