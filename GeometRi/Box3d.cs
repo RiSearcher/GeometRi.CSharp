@@ -604,7 +604,7 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Segment3d s)
         {
-            return _line_intersection(s.ToLine, 0.0, s.Length);
+            return _line_intersection(s.Line, 0.0, s.Length);
         }
 
         /// <summary>
@@ -665,31 +665,31 @@ namespace GeometRi
             Point3d Pmin = this.P1.ConvertTo(local_CS);
             Point3d Pmax = this.P7.ConvertTo(local_CS);
 
-            l = new Line3d(l._point.ConvertTo(local_CS), l._dir.ConvertTo(local_CS).Normalized);
+            l = new Line3d(l.Point.ConvertTo(local_CS), l.Direction.ConvertTo(local_CS).Normalized);
 
             double tmin, tmax, tymin, tymax, tzmin, tzmax;
-            double divx = 1 / l._dir.X;
+            double divx = 1 / l.Direction.X;
             if (divx >= 0)
             {
-                tmin = (Pmin.X - l._point.X) * divx;
-                tmax = (Pmax.X - l._point.X) * divx;
+                tmin = (Pmin.X - l.Point.X) * divx;
+                tmax = (Pmax.X - l.Point.X) * divx;
             }
             else
             {
-                tmin = (Pmax.X - l._point.X) * divx;
-                tmax = (Pmin.X - l._point.X) * divx;
+                tmin = (Pmax.X - l.Point.X) * divx;
+                tmax = (Pmin.X - l.Point.X) * divx;
             }
 
-            double divy = 1 / l._dir.Y;
+            double divy = 1 / l.Direction.Y;
             if (divy >= 0)
             {
-                tymin = (Pmin.Y - l._point.Y) * divy;
-                tymax = (Pmax.Y - l._point.Y) * divy;
+                tymin = (Pmin.Y - l.Point.Y) * divy;
+                tymax = (Pmax.Y - l.Point.Y) * divy;
             }
             else
             {
-                tymin = (Pmax.Y - l._point.Y) * divy;
-                tymax = (Pmin.Y - l._point.Y) * divy;
+                tymin = (Pmax.Y - l.Point.Y) * divy;
+                tymax = (Pmin.Y - l.Point.Y) * divy;
             }
 
             if (GeometRi3D.Greater(tmin, tymax) || GeometRi3D.Greater(tymin, tmax))
@@ -699,16 +699,16 @@ namespace GeometRi
             if (GeometRi3D.Smaller(tymax, tmax))
                 tmax = tymax;
 
-            double divz = 1 / l._dir.Z;
+            double divz = 1 / l.Direction.Z;
             if (divz >= 0)
             {
-                tzmin = (Pmin.Z - l._point.Z) * divz;
-                tzmax = (Pmax.Z - l._point.Z) * divz;
+                tzmin = (Pmin.Z - l.Point.Z) * divz;
+                tzmax = (Pmax.Z - l.Point.Z) * divz;
             }
             else
             {
-                tzmin = (Pmax.Z - l._point.Z) * divz;
-                tzmax = (Pmin.Z - l._point.Z) * divz;
+                tzmin = (Pmax.Z - l.Point.Z) * divz;
+                tzmax = (Pmin.Z - l.Point.Z) * divz;
             }
 
             if (GeometRi3D.Greater(tmin, tzmax) || GeometRi3D.Greater(tzmin, tmax))
@@ -732,11 +732,11 @@ namespace GeometRi
 
             if (GeometRi3D.AlmostEqual(tmin, tmax))
             {
-                return l._point.Translate(tmin * l._dir);
+                return l.Point.Translate(tmin * l.Direction);
             }
             else
             {
-                return new Segment3d(l._point.Translate(tmin * l._dir), l._point.Translate(tmax * l._dir));
+                return new Segment3d(l.Point.Translate(tmin * l.Direction), l.Point.Translate(tmax * l.Direction));
             }
         }
 #endregion

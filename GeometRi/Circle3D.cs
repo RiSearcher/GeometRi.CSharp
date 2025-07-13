@@ -1042,7 +1042,7 @@ namespace GeometRi
         /// <param name="point_on_segment">Closest point on segment</param>
         public double DistanceTo(Segment3d s, out Point3d point_on_circle, out Point3d point_on_segment)
         {
-            Line3d l = s.ToLine;
+            Line3d l = s.Line;
             Plane3d plane = this.ToPlane;
             if (l.IsNotParallelTo(plane._normal))
             {
@@ -1279,7 +1279,7 @@ namespace GeometRi
         /// <param name="point_on_triangle">Closest point on triangle</param>
         public double DistanceTo(Triangle t, out Point3d point_on_circle, out Point3d point_on_triangle)
         {
-            double dist = this.DistanceTo(t.ToPlane, out point_on_circle, out point_on_triangle);
+            double dist = this.DistanceTo(t.Plane, out point_on_circle, out point_on_triangle);
             if (t.DistanceTo(point_on_triangle) <= GeometRi3D.DefaultTolerance)
             {
                 return dist;
@@ -1421,8 +1421,8 @@ namespace GeometRi
                 Plane3d plane_this = new Plane3d(this._point, this._normal);
 
                 Line3d l = (Line3d)plane_this.IntersectionWith(new Plane3d(c._point, c._normal));
-                Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
-                Point3d p = l._point.ConvertTo(local_coord);
+                Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
+                Point3d p = l.Point.ConvertTo(local_coord);
 
                 if (GeometRi3D.Greater(Abs(p.Y), this.R))
                 {
@@ -1453,7 +1453,7 @@ namespace GeometRi
 
                     // Now check if segment (p1,p2) intrsects circle "c"
                     // Use local coord with center in c.Point and X-axis aligned with segment
-                    local_coord = new Coord3d(c._point, l._dir, c._normal.Cross(l._dir));
+                    local_coord = new Coord3d(c._point, l.Direction, c._normal.Cross(l.Direction));
                     p1 = p1.ConvertTo(local_coord);
                     p2 = p2.ConvertTo(local_coord);
 
@@ -1497,21 +1497,20 @@ namespace GeometRi
         /// </summary>
         public bool Intersects(Triangle t)
         {
-            Plane3d t_plane = t.ToPlane;
+            Plane3d t_plane = t.Plane;
             if (this.DistanceTo(t_plane) > 0) return false;
 
             if (this.IsCoplanarTo(t))
             {
-                if (t._a.DistanceTo(this._point) <= this._r) return true;
-                if (t._b.DistanceTo(this._point) <= this._r) return true;
-                if (t._c.DistanceTo(this._point) <= this._r) return true;
+                if (t.A.DistanceTo(this._point) <= this._r) return true;
+                if (t.B.DistanceTo(this._point) <= this._r) return true;
+                if (t.C.DistanceTo(this._point) <= this._r) return true;
 
                 if (this._point.BelongsTo(t)) return true;
-                if (this.IntersectionWith(new Segment3d(t._a, t._b)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t._b, t._c)) != null) return true;
-                if (this.IntersectionWith(new Segment3d(t._c, t._a)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.A, t.B)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.B, t.C)) != null) return true;
+                if (this.IntersectionWith(new Segment3d(t.C, t.A)) != null) return true;
             }
-
             object obj = this.IntersectionWith(t_plane);
             if (obj != null && obj.GetType() == typeof(Point3d))
             {
@@ -1581,16 +1580,16 @@ namespace GeometRi
             //====================================================
 
 
-            if (l._dir.IsOrthogonalTo(this._normal))
+            if (l.Direction.IsOrthogonalTo(this._normal))
             {
-                if (l._point.BelongsTo(new Plane3d(this._point, this._normal)))
+                if (l.Point.BelongsTo(new Plane3d(this._point, this._normal)))
                 {
                     // coplanar objects
                     // Find intersection of line and circle (2D)
 
                     // Local coord: X - line direction, Z - circle normal
-                    Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
-                    Point3d p = l._point.ConvertTo(local_coord);
+                    Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
+                    Point3d p = l.Point.ConvertTo(local_coord);
 
                     double c = p.Y;
 
@@ -1655,7 +1654,7 @@ namespace GeometRi
             }
             //====================================================
 
-            object obj = this.IntersectionWith(s.ToLine);
+            object obj = this.IntersectionWith(s.Line);
 
             if (obj == null)
             {
@@ -1759,8 +1758,8 @@ namespace GeometRi
             else
             {
                 Line3d l = (Line3d)s.IntersectionWith(new Plane3d(this._point, this._normal));
-                Coord3d local_coord = new Coord3d(this._point, l._dir, this._normal.Cross(l._dir));
-                Point3d p = l._point.ConvertTo(local_coord);
+                Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
+                Point3d p = l.Point.ConvertTo(local_coord);
 
                 if (GeometRi3D.Greater(Abs(p.Y), this.R))
                 {

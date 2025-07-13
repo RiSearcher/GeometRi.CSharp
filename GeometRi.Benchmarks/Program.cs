@@ -5,7 +5,7 @@ using GeometRi;
 
 namespace GeometRi.Benchmarks
 {
-    class Program
+    class IntersectionBenchmark
     {
         static void Main(string[] args)
         {

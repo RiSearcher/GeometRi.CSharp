@@ -16,6 +16,21 @@ namespace GeometRi
         internal Vector3d _normal;
         private Coord3d _coord;
 
+        internal bool HasChanged => _point.HasChanged || _normal.HasChanged;
+        private void CheckFields()
+        {
+            if (HasChanged)
+            {
+                _point = _point.Copy();
+                _normal = _normal.Copy();
+
+                ClearCache();
+            }
+        }
+        private void ClearCache()
+        {
+        }
+
         #region "Constructors"
         /// <summary>
         /// Default constructor, initializes XY plane in global cordinate system.
@@ -134,26 +149,18 @@ namespace GeometRi
         /// <summary>
         /// Coefficient A in the general plane equation
         /// </summary>
-        public double A
-        {
-            get { return _normal.ConvertTo(_coord).X; }
-        }
+        public double A => Normal.ConvertTo(_coord).X;
 
         /// <summary>
         /// Coefficient B in the general plane equation
         /// </summary>
-        public double B
-        {
-            get { return _normal.ConvertTo(_coord).Y; }
-        }
+        public double B => Normal.ConvertTo(_coord).Y;
+      
 
         /// <summary>
         /// Coefficient C in the general plane equation
         /// </summary>
-        public double C
-        {
-            get { return _normal.ConvertTo(_coord).Z; }
-        }
+        public double C => Normal.ConvertTo(_coord).Z;
 
         /// <summary>
         /// Coefficient D in the general plane equation
@@ -162,10 +169,11 @@ namespace GeometRi
         {
             get
             {
-                Point3d p = _point.ConvertTo(_coord);
-                Vector3d v = _normal.ConvertTo(_coord);
-                return -v.X * p.X - v.Y * p.Y - v.Z * p.Z;
-            }
+                    Point3d p = _point.ConvertTo(_coord);
+                    Vector3d v = _normal.ConvertTo(_coord);
+                    return -v.X * p.X - v.Y * p.Y - v.Z * p.Z;
+                }
+           
         }
 
         /// <summary>

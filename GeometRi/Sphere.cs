@@ -142,9 +142,9 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            if (this._point.ProjectionTo(s.ToLine).BelongsTo(s))
+            if (this._point.ProjectionTo(s.Line).BelongsTo(s))
             {
-                return this.DistanceTo(s.ToLine);
+                return this.DistanceTo(s.Line);
             }
             else
             {
@@ -400,7 +400,7 @@ namespace GeometRi
             }
             //====================================================
 
-            object obj = this.IntersectionWith(s.ToLine);
+            object obj = this.IntersectionWith(s.Line);
 
             if (obj == null)
             {
