@@ -12,10 +12,16 @@ namespace GeometRi
     {
         abstract internal int _PointLocation(Point3d p);
     }
+#if NET20
+    [Serializable]
+#endif
     abstract public class PlanarFiniteObject : FiniteObject
     {
         abstract internal Plane3d Plane { get; }
     }
+#if NET20
+    [Serializable]
+#endif
     abstract public class LinearFiniteObject : FiniteObject
     {
         abstract internal Line3d Line { get; }
