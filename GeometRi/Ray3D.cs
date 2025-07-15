@@ -59,7 +59,7 @@ namespace GeometRi
         public Vector3d Direction
         {
             get { return _dir; }
-            set { _dir = value.Copy(); }
+            set { _dir = value.Normalized.Copy(); }
         }
 
         public bool IsOriented
@@ -408,7 +408,6 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Segment3d s)
         {
-
             // Relative tolerance ================================
             if (!GeometRi3D.UseAbsoluteTolerance)
             {
@@ -420,8 +419,7 @@ namespace GeometRi
                 GeometRi3D.Tolerance = tol;
                 return result;
             }
-            //====================================================
-
+  
             object obj = this.ToLine.IntersectionWith(s);
             if (obj == null)
             {

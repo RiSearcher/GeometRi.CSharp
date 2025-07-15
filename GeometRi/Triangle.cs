@@ -44,7 +44,7 @@ namespace GeometRi
             _angleC = null;
             _plane = null;
         }
-  
+
         /// <summary>
         /// Initializes triangle object using three points.
         /// </summary>
@@ -124,7 +124,8 @@ namespace GeometRi
         /// </summary>
         public double AB
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_ab == null)
                 {
@@ -139,7 +140,8 @@ namespace GeometRi
         /// </summary>
         public double AC
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_ac == null)
                 {
@@ -154,7 +156,8 @@ namespace GeometRi
         /// </summary>
         public double BC
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_bc == null)
                 {
@@ -169,7 +172,8 @@ namespace GeometRi
         /// </summary>
         public double Perimeter
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_perimeter == null)
                 {
@@ -199,14 +203,15 @@ namespace GeometRi
 
         public Vector3d Normal
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_normal == null)
                 {
                     _normal = new Vector3d(_a, _b).Cross(new Vector3d(_a, _c)).Normalized;
                 }
                 return _normal;
-             }
+            }
         }
 
         public bool IsOriented
@@ -246,7 +251,8 @@ namespace GeometRi
         /// </summary>
         public Circle3d Circumcircle
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_circumcircle == null)
                 {
@@ -261,7 +267,8 @@ namespace GeometRi
         /// </summary>
         public double Angle_A
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_angleA == null)
                 {
@@ -276,7 +283,8 @@ namespace GeometRi
         /// </summary>
         public double Angle_B
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_angleB == null)
                 {
@@ -291,7 +299,8 @@ namespace GeometRi
         /// </summary>
         public double Angle_C
         {
-            get {
+            get
+            {
                 CheckFields();
                 if (_angleC == null)
                 {
@@ -697,7 +706,7 @@ namespace GeometRi
             double dist2 = p.DistanceTo(BC);
             double dist3 = p.DistanceTo(AC);
 
-            return Min(dist,Min(dist2, dist3));
+            return Min(dist, Min(dist2, dist3));
         }
 
         /// <summary>
@@ -851,7 +860,7 @@ namespace GeometRi
 
             Point3d projection_1 = s.P1.ProjectionTo(p);
             Point3d projection_2 = s.P2.ProjectionTo(p);
-            
+
             double dist = double.PositiveInfinity;
             if (projection_1.BelongsTo(this))
             {
@@ -866,7 +875,7 @@ namespace GeometRi
                 }
             }
 
-            double tmp = s.DistanceTo(new Segment3d(this._a,this._b));
+            double tmp = s.DistanceTo(new Segment3d(this._a, this._b));
             if (tmp < dist)
             {
                 dist = tmp;
@@ -1026,7 +1035,7 @@ namespace GeometRi
         {
             double dist = double.PositiveInfinity;
             double tmp;
-            
+
             tmp = t.DistanceTo(new Segment3d(this._a, this._b));
             if (tmp <= GeometRi3D.Tolerance)
             {
@@ -1392,7 +1401,8 @@ namespace GeometRi
                 if (p.BelongsTo(s))
                 {
                     return p;
-                } else
+                }
+                else
                 {
                     return null;
                 }
@@ -1409,20 +1419,28 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Ray3d r)
         {
-
             // Relative tolerance ================================
             if (!GeometRi3D.UseAbsoluteTolerance)
             {
                 double tol = GeometRi3D.Tolerance;
                 GeometRi3D.Tolerance = tol * Max(AB, Max(BC, AC));
                 GeometRi3D.UseAbsoluteTolerance = true;
-                object result = this.IntersectionWith(r);
+                object result = this.IntersectionWith_Moller(r);
                 GeometRi3D.UseAbsoluteTolerance = false;
                 GeometRi3D.Tolerance = tol;
                 return result;
             }
             //====================================================
+            return IntersectionWith_Moller(r);
+        }
 
+
+        /// <summary>
+        /// Get intersection of ray with triangle.
+        /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
+        /// </summary>
+        public object IntersectionWith_original(Ray3d r)
+        {
             object obj = this.IntersectionWith(r.ToLine);
 
             if (obj == null)
@@ -1444,6 +1462,101 @@ namespace GeometRi
             else
             {
                 return r.IntersectionWith((Segment3d)obj);
+            }
+        }
+
+
+        /// <summary>
+        /// acc. to https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <returns></returns>
+        public object IntersectionWith_Moller(Ray3d ray)
+        {
+            double tolerance = GeometRi3D.Tolerance;
+
+            Point3d vertex0 = A;
+            Point3d vertex1 = B;
+            Point3d vertex2 = C;
+
+            Vector3d edge1 = new Vector3d(vertex0, vertex1);
+            Vector3d edge2 = new Vector3d(vertex0, vertex2);
+            Vector3d h = ray.Direction.Cross(edge2);
+            double a = edge1.Dot(h);
+
+            if (a > -tolerance && a < tolerance)
+            {
+                // The ray is parallel to the triangle
+                // Check if the ray is in the plane of the triangle
+                Plane3d plane = ToPlane;
+                if (Math.Abs(plane.Normal.Dot(ray.Direction)) < tolerance && ray.Point.BelongsTo(plane))
+                {
+                    // Ray in the plane of the triangle: intersection = segment (portion of the ray inside the triangle)
+                    // We look for the intersections of the ray with the 3 edges of the triangle
+                    Point3d[] intersections = new Point3d[2];
+                    int count = 0;
+                    Segment3d[] edges = new Segment3d[] {
+                        new Segment3d(vertex0, vertex1),
+                        new Segment3d(vertex1, vertex2),
+                        new Segment3d(vertex2, vertex0)
+                    };
+                    foreach (var edge in edges)
+                    {
+                        object inter = ray.IntersectionWith(edge);
+                        if (inter is Point3d p && count < 2)
+                        {
+                            // Check that the point is actually inside the triangle
+                            if (p.BelongsTo(this))
+                                intersections[count++] = p;
+                        }
+                    }
+                    if (count == 2 && intersections[0] != intersections[1])
+                    {
+                        return new Segment3d(intersections[0], intersections[1]);
+                    }
+                    else if (count == 1)
+                    {
+                        if (intersections[0] == ray.Point)
+                            return intersections[0];
+                        else
+                            return new Segment3d(ray.Point, intersections[0]);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            double f = 1.0 / a;
+            Vector3d s = new Vector3d(vertex0, ray.Point);
+            double u = f * s.Dot(h);
+            if (u < 0.0 || u > 1.0)
+            {
+                return null;
+            }
+
+            Vector3d q = s.Cross(edge1);
+            double v = f * ray.Direction.Dot(q);
+            if (v < 0.0 && Math.Abs(v) > tolerance || u + v > 1.0 && Math.Abs(u + v - 1) > tolerance)
+            {
+                return null;
+            }
+
+            double t = f * edge2.Dot(q);
+            if (t > tolerance)
+            {
+                // intersectionPoint = rayOrigin + t * rayVector
+                Point3d intersectionPoint = ray.Point + ray.Direction.Mult(t);
+                return intersectionPoint;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -1469,7 +1582,7 @@ namespace GeometRi
         public bool Intersects(Sphere s)
         {
             Point3d projection_point = s.Center.ProjectionTo(Plane);
-            
+
             if (s.Center.DistanceTo(projection_point) > s.R)
             {
                 return false;
@@ -1535,7 +1648,7 @@ namespace GeometRi
                 Point3d proj = p.ProjectionTo(s);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
                 {
-                    if (p.BelongsTo(new Segment3d(_a,_b)) || p.BelongsTo(new Segment3d(_a, _c)) || p.BelongsTo(new Segment3d(_c, _b)))
+                    if (p.BelongsTo(new Segment3d(_a, _b)) || p.BelongsTo(new Segment3d(_a, _c)) || p.BelongsTo(new Segment3d(_c, _b)))
                     {
                         return 0; // Point is on boundary
                     }
@@ -1566,7 +1679,7 @@ namespace GeometRi
             else
             {
                 double tol = GeometRi3D.Tolerance;
-                GeometRi3D.Tolerance = tol * (AB+BC+AC) / 3;
+                GeometRi3D.Tolerance = tol * (AB + BC + AC) / 3;
                 GeometRi3D.UseAbsoluteTolerance = true;
                 int result = this._PointLocation(p);
                 GeometRi3D.UseAbsoluteTolerance = false;

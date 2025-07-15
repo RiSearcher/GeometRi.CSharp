@@ -299,7 +299,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return a new normalized vector
+        /// Return a normalized vector
         /// </summary>
         public Vector3d Normalized
         {
