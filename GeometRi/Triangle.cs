@@ -1431,10 +1431,13 @@ namespace GeometRi
                 return result;
             }
             //====================================================
-            return IntersectionWith_Moller(r);
+            else
+            {
+                return IntersectionWith_Moller(r);
+            }
         }
 
-
+[Obsolete("this method is not optimzed. For better performance use IntersectionWith_Moller() method instead.")]
         /// <summary>
         /// Get intersection of ray with triangle.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
