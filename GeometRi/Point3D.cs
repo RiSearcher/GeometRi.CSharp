@@ -223,7 +223,7 @@ namespace GeometRi
         public double DistanceTo(Line3d l)
         {
             Vector3d v = new Vector3d(this, l.Point);
-            return v.Cross(l.Direction).Norm / l.Direction.Norm;
+            return v.Cross(l.Direction.Normalized).Norm;
         }
 
         /// <summary>
