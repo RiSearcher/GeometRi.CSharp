@@ -1442,7 +1442,7 @@ namespace GeometRi
         /// Get intersection of ray with triangle.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
         /// </summary>
-        public object IntersectionWith_original(Ray3d r)
+        private object IntersectionWith_original(Ray3d r)
         {
             object obj = this.IntersectionWith(r.ToLine);
 
@@ -1474,7 +1474,7 @@ namespace GeometRi
         /// </summary>
         /// <param name="ray"></param>
         /// <returns></returns>
-        public object IntersectionWith_Moller(Ray3d ray)
+        private object IntersectionWith_Moller(Ray3d ray)
         {
             double tolerance = GeometRi3D.Tolerance;
 
