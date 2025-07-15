@@ -549,7 +549,7 @@ namespace GeometRi
                 else
                 {
                     var v = new Vector3d(this.Point, s.Point).Normalized;
-                    double a = v.Dot(s.Normal);
+                    double a = v.Dot(s.Normal.Normalized);
                     isCoplanar = Abs(a) <= GeometRi3D.DefaultTolerance;
                 }
             }

@@ -299,7 +299,7 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Return a new normalized vector
+        /// Return a normalized vector
         /// </summary>
         public Vector3d Normalized
         {
@@ -324,6 +324,7 @@ namespace GeometRi
             val[0] = val[0] * tmp;
             val[1] = val[1] * tmp;
             val[2] = val[2] * tmp;
+            _norm = 1.0; //if we do not reset the _norm field, it is wrongly kept to it's original value (before it has been normalized)
         }
 
         public Vector3d Add(double a)

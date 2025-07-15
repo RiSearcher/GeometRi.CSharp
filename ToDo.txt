@@ -1,7 +1,3 @@
-Möller–Trumbore ray-triangle intersection algorithm:
-https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
-https://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/code/
-
 Watertight Ray/Triangle Intersection:
 https://jcgt.org/published/0002/01/05/paper.pdf
 
