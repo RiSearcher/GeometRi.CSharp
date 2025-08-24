@@ -8,19 +8,21 @@
 
 Compatible with .Net Framework 2.0, .Net Standard 1.0, .Net Core 3.1 and .Net 5.</Description>
     <Copyright>Copyright (c) 2017 Sergey Tarasov</Copyright>
-    <AssemblyVersion>1.4.1.5</AssemblyVersion>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Sergey Tarasov</Authors>
     <Company />
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
-    <Version>1.4.1.4</Version>
+    <Version>1.5.0</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes>Intersection check of ellipsoid and sphere.
-Distance between two ellipsoids.</PackageReleaseNotes>
+    <PackageReleaseNotes>Caching of some computed object's properties.
+Reference is returned instead of object's copy.
+Möller-Trumbore triangle-ray intersection algorithm.
+Other optimizations.</PackageReleaseNotes>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <FileVersion>1.4.1.5</FileVersion>
+    <FileVersion>1.5.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
