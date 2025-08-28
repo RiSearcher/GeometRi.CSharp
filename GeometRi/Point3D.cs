@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using static System.Math;
 
 namespace GeometRi
@@ -114,9 +113,7 @@ namespace GeometRi
         /// </summary>
         public Point3d ConvertTo(Coord3d coord)
         {
-            Point3d p = this.Copy();
-
-            p = p.ConvertToGlobal();
+            Point3d p = this.ConvertToGlobal();
             if (coord == null || object.ReferenceEquals(coord, Coord3d.GlobalCS))
                 return p;
 
