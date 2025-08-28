@@ -747,6 +747,28 @@ namespace GeometRi
             return dist;
         }
 
+        public double DistanceSquared(Point3d p)
+        {
+            Point3d projection_point = p.ProjectionTo(this.Plane);
+
+            int code = _PointLocation(projection_point);
+
+            if (code >= 0)
+            {
+                return p.DistanceSquared(projection_point);
+            }
+
+            Segment3d AB = new Segment3d(this._a, this._b);
+            Segment3d BC = new Segment3d(this._b, this._c);
+            Segment3d AC = new Segment3d(this._a, this._c);
+
+            double dist = p.DistanceSquared(AB);
+            double dist2 = p.DistanceSquared(BC);
+            double dist3 = p.DistanceSquared(AC);
+
+            return Min(dist, Min(dist2, dist3));
+        }
+
         /// <summary>
         /// Calculates the point on the triangle closest to given point.
         /// </summary>
@@ -1437,7 +1459,7 @@ namespace GeometRi
             }
         }
 
-[Obsolete("this method is not optimzed. For better performance use IntersectionWith_Moller() method instead.")]
+        [Obsolete("this method is not optimzed. For better performance use IntersectionWith_Moller() method instead.")]
         /// <summary>
         /// Get intersection of ray with triangle.
         /// Returns 'null' (no intersection) or object of type 'Point3d' or 'Segment3d'.
@@ -1876,6 +1898,7 @@ namespace GeometRi
                 return !object.ReferenceEquals(t2, null);
             return !t1.Equals(t2);
         }
+   
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using static System.Math;
 
 namespace GeometRi
@@ -226,12 +227,23 @@ namespace GeometRi
             return v.Cross(l.Direction.Normalized).Norm;
         }
 
+        public double DistanceSquared(Line3d l)
+        {
+            Vector3d v = new Vector3d(this, l.Point);
+            return v.Cross(l.Direction.Normalized).NormSquared;
+        }
+
         /// <summary>
         /// Returns shortest distance from point to the plane
         /// </summary>
         public double DistanceTo(Plane3d s)
         {
             return this.DistanceTo(this.ProjectionTo(s));
+        }
+
+        public double DistanceSquared(Plane3d s)
+        {
+            return DistanceSquared(this.ProjectionTo(s));
         }
 
         /// <summary>
@@ -249,6 +261,18 @@ namespace GeometRi
             }
         }
 
+        public double DistanceSquared(Ray3d r)
+        {
+            if (this.ProjectionTo(r.ToLine).BelongsTo(r))
+            {
+                return this.DistanceSquared(r.ToLine);
+            }
+            else
+            {
+                return this.DistanceSquared(r.Point);
+            }
+        }
+
         /// <summary>
         /// Returns shortest distance from point to the segment
         /// </summary>
@@ -262,6 +286,19 @@ namespace GeometRi
             else
             {
                 return Min(this.DistanceTo(s.P1), this.DistanceTo(s.P2));
+            }
+        }
+
+        public double DistanceSquared(Segment3d s)
+        {
+            Point3d projection = this.ProjectionTo(s.Line);
+            if (s._AxialPointLocation(projection) > 0)
+            {
+                return this.DistanceSquared(projection);
+            }
+            else
+            {
+                return Min(this.DistanceSquared(s.P1), this.DistanceSquared(s.P2));
             }
         }
 
@@ -303,6 +340,11 @@ namespace GeometRi
         public double DistanceTo(Triangle t)
         {
             return t.DistanceTo(this);
+        }
+
+        public double DistanceSquared(Triangle t)
+        {
+            return t.DistanceSquared(this);
         }
 
         /// <summary>
