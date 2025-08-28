@@ -651,9 +651,12 @@ namespace GeometRi_Tests
 
             Point3d p = new Point3d(1, 1, 8);
             Assert.IsTrue(Abs(t.DistanceTo(p) - 8) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(t.DistanceSquared(p) - 64) < GeometRi3D.Tolerance);
 
             p = new Point3d(5, 0, 4);
             Assert.IsTrue(Abs(t.DistanceTo(p) - 5) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(t.DistanceSquared(p) - 25) < GeometRi3D.Tolerance);
+
 
         }
 
@@ -667,6 +670,8 @@ namespace GeometRi_Tests
 
             Point3d p = new Point3d(0, 0, 0);
             Assert.IsTrue(Abs(t.DistanceTo(p) - 2) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(t.DistanceSquared(p) - 4) < GeometRi3D.Tolerance);
+
         }
 
         [TestMethod()]
@@ -839,6 +844,7 @@ namespace GeometRi_Tests
             double distance = triangle.DistanceTo(point);
 
             Assert.AreEqual(distance, 0);
+            Assert.AreEqual(triangle.DistanceSquared(point), 0);
         }
 
         [TestMethod()]
@@ -854,6 +860,7 @@ namespace GeometRi_Tests
             double distance = triangle.DistanceTo(point);
 
             Assert.AreEqual(distance, 0);
+            Assert.AreEqual(triangle.DistanceSquared(point), 0);
         }
 
         [TestMethod()]
