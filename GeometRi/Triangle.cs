@@ -1560,7 +1560,7 @@ namespace GeometRi
             double f = 1.0 / a;
             Vector3d s = new Vector3d(vertex0, ray.Point);
             double u = f * s.Dot(h);
-            if (u < 0.0 || u > 1.0)
+            if (u < 0.0 - tolerance || u > 1.0 + tolerance)
             {
                 return null;
             }
