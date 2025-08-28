@@ -839,7 +839,7 @@ namespace GeometRi_Tests
                 new Point3d(10000, 0, 0),
                 new Point3d(0, 10000, 0));
 
-            Point3d point = new Point3d(3286.5999999974479, 5000, 0);
+            Point3d point = new Point3d(3286.59, 5000, 0);
 
             double distance = triangle.DistanceTo(point);
 
