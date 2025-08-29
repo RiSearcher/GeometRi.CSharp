@@ -262,6 +262,11 @@ namespace GeometRi
             return p.DistanceTo(this);
         }
 
+        public double DistanceSquared(Point3d p)
+        {
+            return p.DistanceSquared(this);
+        }
+
         /// <summary>
         /// Point on segment closest to target point "p".
         /// </summary>
