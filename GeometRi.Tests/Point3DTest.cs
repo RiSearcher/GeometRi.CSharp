@@ -44,6 +44,8 @@ namespace GeometRi_Tests
             Vector3d v2 = new Vector3d(-2, 3, 4);
             Line3d l1 = new Line3d(p2, v2);
             Assert.IsTrue(Abs(p1.DistanceTo(l1) - 3) < GeometRi3D.Tolerance);
+
+            Assert.IsTrue(Abs(p1.DistanceSquared(l1) - 3*3) < GeometRi3D.Tolerance);
         }
 
         [TestMethod()]
@@ -52,6 +54,7 @@ namespace GeometRi_Tests
             Point3d p1 = new Point3d(-4, 3, 5);
             Plane3d s1 = new Plane3d(-1, 2, -2, 9);
             Assert.IsTrue(Abs(p1.DistanceTo(s1) - 3) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(p1.DistanceSquared(s1) - 3*3) < GeometRi3D.Tolerance);
         }
 
         [TestMethod()]
@@ -61,8 +64,13 @@ namespace GeometRi_Tests
             Ray3d r = new Ray3d(new Point3d(1, 1, 0), new Vector3d(1, 0, 0));
             Assert.IsTrue(Abs(p.DistanceTo(r) - Sqrt(2)) < GeometRi3D.Tolerance);
 
+            Assert.IsTrue(Abs(p.DistanceSquared  (r) - 2) < GeometRi3D.Tolerance);
+
+
             p = new Point3d(2, 0, 0);
             Assert.IsTrue(Abs(p.DistanceTo(r) - 1) < GeometRi3D.Tolerance);
+
+            Assert.IsTrue(Abs(p.DistanceSquared(r) - 1) < GeometRi3D.Tolerance);
         }
 
         [TestMethod()]
@@ -71,13 +79,19 @@ namespace GeometRi_Tests
             Point3d p = new Point3d(0, 0, 0);
             Segment3d s = new Segment3d(new Point3d(1, 1, 0), new Point3d(3, 3, 0));
             Assert.IsTrue(Abs(p.DistanceTo(s) - Sqrt(2)) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(p.DistanceSquared(s) - 2) < GeometRi3D.Tolerance);
 
             p = new Point3d(1, 1, 0);
             Assert.IsTrue(Abs(p.DistanceTo(s) - 0) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(p.DistanceSquared(s) - 0) < GeometRi3D.Tolerance);
+
             p = new Point3d(4, 4, 0);
             Assert.IsTrue(Abs(p.DistanceTo(s) - Sqrt(2)) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(p.DistanceSquared(s) - 2) < GeometRi3D.Tolerance);
+
             p = new Point3d(1, 3, 0);
             Assert.IsTrue(Abs(p.DistanceTo(s) - Sqrt(2)) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(p.DistanceSquared(s) - 2) < GeometRi3D.Tolerance);
         }
 
         [TestMethod()]

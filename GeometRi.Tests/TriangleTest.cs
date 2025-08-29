@@ -651,9 +651,12 @@ namespace GeometRi_Tests
 
             Point3d p = new Point3d(1, 1, 8);
             Assert.IsTrue(Abs(t.DistanceTo(p) - 8) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(t.DistanceSquared(p) - 64) < GeometRi3D.Tolerance);
 
             p = new Point3d(5, 0, 4);
             Assert.IsTrue(Abs(t.DistanceTo(p) - 5) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(t.DistanceSquared(p) - 25) < GeometRi3D.Tolerance);
+
 
         }
 
@@ -667,6 +670,8 @@ namespace GeometRi_Tests
 
             Point3d p = new Point3d(0, 0, 0);
             Assert.IsTrue(Abs(t.DistanceTo(p) - 2) < GeometRi3D.Tolerance);
+            Assert.IsTrue(Abs(t.DistanceSquared(p) - 4) < GeometRi3D.Tolerance);
+
         }
 
         [TestMethod()]
@@ -694,7 +699,7 @@ namespace GeometRi_Tests
             Triangle t = new Triangle(p1, p2, p3);
 
             // Segment is coplanar and belongs to triangle
-            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, 0), new Point3d(1,1,0));
+            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, 0), new Point3d(1, 1, 0));
             double dist = t.DistanceTo(s, out Point3d point_on_triangle, out Point3d point_on_segment);
             Assert.IsTrue(Abs(dist - 0) < GeometRi3D.Tolerance);
             Assert.IsTrue(point_on_triangle == new Point3d(0.5, 0.5, 0));
@@ -834,11 +839,12 @@ namespace GeometRi_Tests
                 new Point3d(10000, 0, 0),
                 new Point3d(0, 10000, 0));
 
-            Point3d point = new Point3d(3286.5999999974479, 5000, 0);
+            Point3d point = new Point3d(3286.59, 5000, 0);
 
             double distance = triangle.DistanceTo(point);
 
             Assert.AreEqual(distance, 0);
+            Assert.AreEqual(triangle.DistanceSquared(point), 0);
         }
 
         [TestMethod()]
@@ -854,8 +860,56 @@ namespace GeometRi_Tests
             double distance = triangle.DistanceTo(point);
 
             Assert.AreEqual(distance, 0);
+            Assert.AreEqual(triangle.DistanceSquared(point), 0);
         }
 
+        [TestMethod()]
+        public void TriangleRayIntersectionTest()
+        {
+            Point3d A = new Point3d(2000, 240, -30);
+            Point3d B = new Point3d(2000, 280, -30);
+            Point3d C = new Point3d(2000, 240, 30);
 
+            // Coord3d coord = new Coord3d(new Point3d(1000, 280, 0), new Vector3d(1, 0, 0), new Vector3d(0, 1, 0));
+            // Segment3d seg = new Segment3d(
+            //     new Point3d(1000, 0, 0, coord),
+            //     new Point3d(1000, 1000, 0, coord));
+            //
+            // Rotation r = new Rotation(Coord3d.GlobalCS.Zaxis, 67 * Math.PI / 180);
+            // coord.Rotate(Coord3d.GlobalCS.Zaxis, 67 * Math.PI / 180);
+            // //seg = seg.Rotate(r, seg.P1);
+            //
+            //      //   coord.Rotate(coord.Zaxis, - 67 * Math.PI / 180);
+            //
+            // Line3d ltemp = new Line3d(new Point3d(2000, 260, 0), new Vector3d(1, 0, 0));
+            // Point3d pt = seg.IntersectionWith(ltemp) as Point3d;
+            // Ray3d ray = new Ray3d(pt, new Vector3d(1, 0, 0));
+            // Triangle t = new Triangle(A, B, C);
+            //
+            // Assert.IsTrue(t.IntersectionWith(ray).Equals(new Point3d(2000, 260, 0)));
+
+            //            Segment3d seg1 = new Segment3d(
+            //new Point3d(760.73, 716.34, 0)
+            //, new Point3d(726.03, 742.49, 0));
+            //
+            //            Segment3d seg2 = new Segment3d(
+            //new Point3d(726.03, 742.49, 0)
+            //, new Point3d(813.88, 676.29, 0));
+
+            Segment3d seg1 = new Segment3d(
+new Point3d(10, 10, 0)
+, new Point3d(20, 20, 0));
+
+            Segment3d seg2 = new Segment3d(
+new Point3d(15, 15, 0)
+, new Point3d(25, 25, 0));
+
+            var inter = (Segment3d)seg1.IntersectionWith(seg2);
+
+            inter.P1 = inter.P1.ConvertToGlobal();
+            ;
+
+        }
     }
 }
+

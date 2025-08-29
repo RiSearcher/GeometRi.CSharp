@@ -15,6 +15,7 @@ namespace GeometRi
         private double[] val;
         internal Coord3d _coord;
         private double? _norm;
+        private double? _squaredNorm;
         private Vector3d _normalized;
 
         internal bool HasChanged { get; private set; }
@@ -29,6 +30,7 @@ namespace GeometRi
         private void ClearCache()
         {
             _norm = null;
+            _squaredNorm = null;
             _normalized = null;
         }
   
@@ -181,6 +183,19 @@ namespace GeometRi
                     _norm = Sqrt(val[0] * val[0] + val[1] * val[1] + val[2] * val[2]);
                 }
                 return _norm.Value;
+            }
+        }
+
+        public double NormSquared
+        {
+            get
+            {
+                CheckFields();
+                if (_squaredNorm == null)
+                {
+                    _squaredNorm = val[0] * val[0] + val[1] * val[1] + val[2] * val[2];
+                }
+                return _squaredNorm.Value;
             }
         }
 
