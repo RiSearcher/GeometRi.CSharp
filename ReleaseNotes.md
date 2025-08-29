@@ -1,6 +1,15 @@
 # GeometRi
 ## Release notes
 
+### 1.5.0.1 (29/8/2025)
+* Added DistanceSquared() method for primitive objects.
+
+### 1.5.0 (24/8/2025)
+* Caching of some computed object's properties.
+* Reference is returned instead of object's copy.
+* Möller-Trumbore triangle-ray intersection algorithm.
+* Other optimizations.
+
 ### 1.4.1.4 (13/7/2025)
 * Intersection check of ellipsoid and sphere.
 * Distance between two ellipsoids.
