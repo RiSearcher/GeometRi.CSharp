@@ -1017,31 +1017,54 @@ namespace GeometRi
                 return 0;
             }
 
-            double dist = double.PositiveInfinity;
-
+            // test faces
             for (int i = 0; i < numFaces; i++)
             {
                 // test only visible faces
-                if (face[i].normal * new Vector3d(face[i].Vertex[0], p) < 0)
+                double point_face_plane_dist = face[i].normal * new Vector3d(face[i].Vertex[0], p);
+                if (point_face_plane_dist < 0)
                 {
                     continue;
                 }
 
-                for (int j = 0; j < face[i].vertex.Length - 2; j++)
+                Point3d projection_point =  p - point_face_plane_dist * face[i].normal;
+                
+                // test if projection of point is inside the face
+                bool inside = true;
+                for (int l = 0; l < this.face[i].vertex.Length; l++)
                 {
-                    Triangle t = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
-                    double tmp_dist = t.DistanceTo(p);
-                    if (tmp_dist <= GeometRi3D.Tolerance)
+                    Vector3d edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[0]);
+                    if (l < this.face[i].vertex.Length - 1)
                     {
-                        return tmp_dist;
+                        edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[l + 1]);
                     }
-                    if (tmp_dist < dist)
+                    Vector3d v = new Vector3d(this.face[i].Vertex[l], projection_point);
+                    if (edge.Cross(v).Dot(this.face[i].normal) < 0)
                     {
-                        dist = tmp_dist;
+                        // projection outside of face
+                        inside = false;
+                        break;
                     }
                 }
-
+                if (inside)
+                {
+                    return point_face_plane_dist;
+                }
             }
+
+            // test edges
+            double dist = double.PositiveInfinity;
+
+            for (int i = 0; i < this.numEdges; i++)
+            {
+                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                double tmp_dist = p.DistanceTo(s1);
+                if (tmp_dist < dist)
+                {
+                    dist = tmp_dist;
+                }
+            }
+
             return dist;
         }
 

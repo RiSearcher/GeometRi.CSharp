@@ -557,5 +557,78 @@ namespace GeometRi_Tests
             Assert.IsTrue(extrude.Center == cp.face[0].Center);
         }
 
+        [TestMethod]
+        public void PointDistanceTest_01()
+        {
+            // Point inside CP
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Point3d p  = new Point3d(0.1, 0.1, 0.1);
+
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+        }
+
+        [TestMethod]
+        public void PointDistanceTest_02()
+        {
+            // Point on face
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Point3d p = new Point3d(0.1, 0.1, 0.5);
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+
+            p = new Point3d(-0.1, 0.1, -0.5);
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+
+            p = new Point3d(-0.1, -0.5, -0.2);
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+        }
+
+        [TestMethod]
+        public void PointDistanceTest_03()
+        {
+            // Point on edge
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Point3d p = new Point3d(0.1, 0.5, 0.5);
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+
+            p = new Point3d(-0.1, -0.5, 0.5);
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+
+            p = new Point3d(-0.5, -0.5, 0.2);
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+        }
+
+        [TestMethod]
+        public void PointDistanceTest_04()
+        {
+            // Point in vertex
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Point3d p = new Point3d(0.5, -0.5, 0.5);
+            Assert.IsTrue(cp.DistanceTo(p) == 0);
+        }
+
+        [TestMethod]
+        public void PointDistanceTest_05()
+        {
+            // Point outside, projection to face
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Point3d p = new Point3d(0.6, -0.1, 0.1);
+            Assert.IsTrue(Abs(cp.DistanceTo(p) - 0.1) < GeometRi3D.DefaultTolerance);
+
+            p = new Point3d(0.1, -0.1, 0.6);
+            Assert.IsTrue(Abs(cp.DistanceTo(p) - 0.1) < GeometRi3D.DefaultTolerance);
+        }
+
+        [TestMethod]
+        public void PointDistanceTest_06()
+        {
+            // Point outside
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Point3d p = new Point3d(1.5, 1.5, 0.0);
+            Assert.IsTrue(Abs(cp.DistanceTo(p) - Sqrt(2.0)) < GeometRi3D.DefaultTolerance);
+
+            p = new Point3d(0.5, 1.5, -1.5);
+            Assert.IsTrue(Abs(cp.DistanceTo(p) - Sqrt(2.0)) < GeometRi3D.DefaultTolerance);
+        }
+
     }
 }
