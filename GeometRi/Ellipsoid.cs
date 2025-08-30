@@ -86,7 +86,7 @@ namespace GeometRi
         #region "Properties"
         public Point3d Center
         {
-            get { return _point.Copy(); }
+            get { return _point; }
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d SemiaxisA
         {
-            get { return _v1.Copy(); }
+            get { return _v1; }
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d SemiaxisB
         {
-            get { return _v2.Copy(); }
+            get { return _v2; }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d SemiaxisC
         {
-            get { return _v3.Copy(); }
+            get { return _v3; }
         }
 
         /// <summary>
@@ -836,7 +836,7 @@ namespace GeometRi
         {
 
             // Algorithm by Dr. Robert Nurnberg
-            // http://wwwf.imperial.ac.uk/~rn/distance2ellipse.pdf
+            // https://nurnberg.maths.unitn.it/distance2ellipse.pdf
 
             Coord3d local_coord = new Coord3d(this.Center, this._v1, this._v2);
             p = p.ConvertTo(local_coord);

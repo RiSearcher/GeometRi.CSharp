@@ -38,7 +38,7 @@ namespace GeometRi
         /// </summary>
         public Point3d Center
         {
-            get { return _point.Copy(); }
+            get { return _point; }
             set { _point = value.Copy(); }
         }
 
