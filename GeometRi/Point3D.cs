@@ -275,12 +275,22 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
+            Point3d closest_point;
+            return this.DistanceTo(s, out closest_point);
+        }
+
+        /// <summary>
+        /// Shortest distance from point to the segment
+        /// </summary>
+        public double DistanceTo(Segment3d s, out Point3d closest_point)
+        {
             // Segment S = P1 + t * (P2-P1)
             Vector3d dir = new Vector3d(s.P1, s.P2);
             double t0 = dir * new Vector3d(s.P1, this);
 
             if (t0 <= 0)
             {
+                closest_point = s.P1;
                 return this.DistanceTo(s.P1);
             }
 
@@ -290,15 +300,18 @@ namespace GeometRi
                 t0 = t0 / dir_sqr;
                 if (t0 >= 1)
                 {
+                    closest_point = s.P2;
                     return this.DistanceTo(s.P2);
                 }
                 else
                 {
-                    return this.DistanceTo(s.P1 + t0 * dir);
+                    closest_point = s.P1 + t0 * dir;
+                    return this.DistanceTo(closest_point);
                 }
             }
             else
             {
+                closest_point = s.P1;
                 return this.DistanceTo(s.P1);
             }
         }

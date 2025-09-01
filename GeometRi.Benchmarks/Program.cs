@@ -103,26 +103,26 @@ namespace GeometRi.Benchmarks
             //});
 
 
-            Random rnd = new Random();
-            List<Point3d> list = new List<Point3d>();
-            for (int i = 0; i < 300000; i++)
-            {
-                Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
-                Point3d origin = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
-                Coord3d coord = new Coord3d(origin, r.ToRotationMatrix.Column1, r.ToRotationMatrix.Column2);
-                list.Add(new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble(), coord));
-            }
+            //Random rnd = new Random();
+            //List<Point3d> list = new List<Point3d>();
+            //for (int i = 0; i < 300000; i++)
+            //{
+            //    Rotation r = new Rotation(new Vector3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()), rnd.NextDouble());
+            //    Point3d origin = new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble());
+            //    Coord3d coord = new Coord3d(origin, r.ToRotationMatrix.Column1, r.ToRotationMatrix.Column2);
+            //    list.Add(new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble(), coord));
+            //}
 
-            Profile("Test2", 5, () =>
-            {
-                foreach (Point3d p in list)
-                {
-                    Point3d p2 = p.ConvertToGlobal();
-                }
-            });
+            //Profile("Test2", 5, () =>
+            //{
+            //    foreach (Point3d p in list)
+            //    {
+            //        Point3d p2 = p.ConvertToGlobal();
+            //    }
+            //});
 
 
-
+            TestPointTriangleDistance();
 
             Console.ReadLine();
         }
@@ -155,6 +155,42 @@ namespace GeometRi.Benchmarks
                 Console.WriteLine("Out of memory!");
             }
 
+        }
+
+        static void TestPointTriangleDistance()
+        {
+            Random rnd = new Random();
+            List<Point3d> list = new List<Point3d>();
+            for (int i = 0; i < 1000000; i++)
+            {
+                list.Add(new Point3d(rnd.NextDouble(), rnd.NextDouble(), rnd.NextDouble()));
+            }
+            Triangle t = new Triangle(new Point3d(0.2, 0.1, 0.05), new Point3d(-0.2, 0.2, -0.1), new Point3d(0.03, -0.1, 0.1));
+
+            Profile("Test", 4, () =>
+            {
+                double dist = 0;
+                foreach (Point3d p in list)
+                {
+                    dist += t.DistanceTo(p);
+                }
+                Console.WriteLine(dist);
+            });
+
+
+            Profile("Test2", 4, () =>
+            {
+                double dist = 0;
+                foreach (Point3d p in list)
+                {
+                    dist += t.DistanceTo(p);
+                }
+                Console.WriteLine(dist);
+            });
+
+
+
+            Console.ReadLine();
         }
     }
 }

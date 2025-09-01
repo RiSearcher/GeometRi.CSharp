@@ -691,23 +691,36 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.Plane);
 
-            int code = _InPlanePointLocation(projection_point);
-
-            if (code >= 0)
+            // Check if projection point is outside
+            if (new Vector3d(_a, _b).Cross(new Vector3d(_a, projection_point)).Dot(this._normal) < 0)
             {
-                return p.DistanceTo(projection_point);
+                if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
+                {
+                    return Min(p.DistanceTo(new Segment3d(_a, _b)), p.DistanceTo(new Segment3d(_b, _c)));
+                }
+                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+                {
+                    return Min(p.DistanceTo(new Segment3d(_a, _b)), p.DistanceTo(new Segment3d(_c, _a)));
+                }
+                return p.DistanceTo(new Segment3d(_a, _b));
+            }
+            if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
+            {
+                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+                {
+                    return Min(p.DistanceTo(new Segment3d(_b, _c)), p.DistanceTo(new Segment3d(_c, _a)));
+                }
+                return p.DistanceTo(new Segment3d(_b, _c));
+            }
+            if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+            {
+                return p.DistanceTo(new Segment3d(_c, _a));
             }
 
-            Segment3d AB = new Segment3d(this._a, this._b);
-            Segment3d BC = new Segment3d(this._b, this._c);
-            Segment3d AC = new Segment3d(this._a, this._c);
-
-            double dist = p.DistanceTo(AB);
-            double dist2 = p.DistanceTo(BC);
-            double dist3 = p.DistanceTo(AC);
-
-            return Min(dist, Min(dist2, dist3));
+            // Projection point is inside
+            return p.DistanceTo(projection_point);
         }
+
 
         /// <summary>
         /// Shortest distance between triangle and point
