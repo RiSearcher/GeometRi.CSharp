@@ -271,31 +271,68 @@ namespace GeometRi
         }
 
         /// <summary>
-        /// Returns shortest distance from point to the segment
+        /// Shortest distance from point to the segment
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            Point3d projection = this.ProjectionTo(s.Line);
-            if (s._AxialPointLocation(projection) > 0)
+            // Segment S = P1 + t * (P2-P1)
+            Vector3d dir = new Vector3d(s.P1, s.P2);
+            double t0 = dir * new Vector3d(s.P1, this);
+
+            if (t0 <= 0)
             {
-                return this.DistanceTo(projection);
+                return this.DistanceTo(s.P1);
+            }
+
+            double dir_sqr = dir * dir;
+            if (dir_sqr > 0)
+            {
+                t0 = t0 / dir_sqr;
+                if (t0 >= 1)
+                {
+                    return this.DistanceTo(s.P2);
+                }
+                else
+                {
+                    return this.DistanceTo(s.P1 + t0 * dir);
+                }
             }
             else
             {
-                return Min(this.DistanceTo(s.P1), this.DistanceTo(s.P2));
+                return this.DistanceTo(s.P1);
             }
         }
 
+        /// <summary>
+        /// Squared distance from point to the segment
+        /// </summary>
         public double DistanceSquared(Segment3d s)
         {
-            Point3d projection = this.ProjectionTo(s.Line);
-            if (s._AxialPointLocation(projection) > 0)
+            // Segment S = P1 + t * (P2-P1)
+            Vector3d dir = new Vector3d(s.P1, s.P2);
+            double t0 = dir * new Vector3d(s.P1, this);
+
+            if (t0 <= 0)
             {
-                return this.DistanceSquared(projection);
+                return this.DistanceSquared(s.P1);
+            }
+
+            double dir_sqr = dir * dir;
+            if (dir_sqr > 0)
+            {
+                t0 = t0 / dir_sqr;
+                if (t0 >= 1)
+                {
+                    return this.DistanceSquared(s.P2);
+                }
+                else
+                {
+                    return this.DistanceSquared(s.P1 + t0 * dir);
+                }
             }
             else
             {
-                return Min(this.DistanceSquared(s.P1), this.DistanceSquared(s.P2));
+                return this.DistanceSquared(s.P1);
             }
         }
 
