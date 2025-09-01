@@ -689,38 +689,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Point3d p)
         {
-            Point3d projection_point = p.ProjectionTo(this.Plane);
-
-            // Check if projection point is outside
-            if (new Vector3d(_a, _b).Cross(new Vector3d(_a, projection_point)).Dot(this._normal) < 0)
-            {
-                if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
-                {
-                    return Min(p.DistanceTo(new Segment3d(_a, _b)), p.DistanceTo(new Segment3d(_b, _c)));
-                }
-                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
-                {
-                    return Min(p.DistanceTo(new Segment3d(_a, _b)), p.DistanceTo(new Segment3d(_c, _a)));
-                }
-                return p.DistanceTo(new Segment3d(_a, _b));
-            }
-            if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
-            {
-                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
-                {
-                    return Min(p.DistanceTo(new Segment3d(_b, _c)), p.DistanceTo(new Segment3d(_c, _a)));
-                }
-                return p.DistanceTo(new Segment3d(_b, _c));
-            }
-            if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
-            {
-                return p.DistanceTo(new Segment3d(_c, _a));
-            }
-
-            // Projection point is inside
-            return p.DistanceTo(projection_point);
+            return Sqrt(this.DistanceSquared(p));
         }
-
 
         /// <summary>
         /// Shortest distance between triangle and point
@@ -729,57 +699,99 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.Plane);
 
-            int code = _InPlanePointLocation(projection_point);
-
-            if (code >= 0)
+            // Check if projection point is outside
+            if (new Vector3d(_a, _b).Cross(new Vector3d(_a, projection_point)).Dot(this._normal) < 0)
             {
-                closest_point = projection_point;
-                return p.DistanceTo(projection_point);
+                if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
+                {
+                    double dist1 = p.DistanceTo(new Segment3d(_a, _b), out closest_point);
+                    double dist2 = p.DistanceTo(new Segment3d(_b, _c), out Point3d cp2);
+                    if (dist1 < dist2)
+                    {
+                        return dist1;
+                    }
+                    else
+                    {
+                        closest_point = cp2;
+                        return dist2;
+                    }
+                }
+                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+                {
+                    double dist1 = p.DistanceTo(new Segment3d(_a, _b), out closest_point);
+                    double dist2 = p.DistanceTo(new Segment3d(_c, _a), out Point3d cp2);
+                    if (dist1 < dist2)
+                    {
+                        return dist1;
+                    }
+                    else
+                    {
+                        closest_point = cp2;
+                        return dist2;
+                    }
+                }
+                return p.DistanceTo(new Segment3d(_a, _b), out closest_point);
+            }
+            if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
+            {
+                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+                {
+                    double dist1 = p.DistanceTo(new Segment3d(_b, _c), out closest_point);
+                    double dist2 = p.DistanceTo(new Segment3d(_c, _a), out Point3d cp2);
+                    if (dist1 < dist2)
+                    {
+                        return dist1;
+                    }
+                    else
+                    {
+                        closest_point = cp2;
+                        return dist2;
+                    }
+                }
+                return p.DistanceTo(new Segment3d(_b, _c), out closest_point);
+            }
+            if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+            {
+                return p.DistanceTo(new Segment3d(_c, _a), out closest_point);
             }
 
-            Segment3d AB = new Segment3d(this._a, this._b);
-            Segment3d BC = new Segment3d(this._b, this._c);
-            Segment3d AC = new Segment3d(this._a, this._c);
-
-            double dist = p.DistanceTo(AB);
-            Point3d tmp_closest_point = AB.ClosestPoint(p);
-            double dist2 = p.DistanceTo(BC);
-            if (dist2 < dist)
-            {
-                dist = dist2;
-                tmp_closest_point = BC.ClosestPoint(p);
-            }
-            dist2 = p.DistanceTo(AC);
-            if (dist2 < dist)
-            {
-                dist = dist2;
-                tmp_closest_point = AC.ClosestPoint(p);
-            }
-
-            closest_point = tmp_closest_point;
-            return dist;
+            // Projection point is inside
+            closest_point = projection_point;
+            return p.DistanceTo(projection_point);
         }
 
         public double DistanceSquared(Point3d p)
         {
             Point3d projection_point = p.ProjectionTo(this.Plane);
 
-            int code = _InPlanePointLocation(projection_point);
-
-            if (code >= 0)
+            // Check if projection point is outside
+            if (new Vector3d(_a, _b).Cross(new Vector3d(_a, projection_point)).Dot(this._normal) < 0)
             {
-                return p.DistanceSquared(projection_point);
+                if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
+                {
+                    return Min(p.DistanceSquared(new Segment3d(_a, _b)), p.DistanceSquared(new Segment3d(_b, _c)));
+                }
+                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+                {
+                    return Min(p.DistanceSquared(new Segment3d(_a, _b)), p.DistanceSquared(new Segment3d(_c, _a)));
+                }
+                return p.DistanceSquared(new Segment3d(_a, _b));
+            }
+            if (new Vector3d(_b, _c).Cross(new Vector3d(_b, projection_point)).Dot(this._normal) < 0)
+            {
+                if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+                {
+                    return Min(p.DistanceSquared(new Segment3d(_b, _c)), p.DistanceSquared(new Segment3d(_c, _a)));
+                }
+                return p.DistanceSquared(new Segment3d(_b, _c));
+            }
+            if (new Vector3d(_c, _a).Cross(new Vector3d(_c, projection_point)).Dot(this._normal) < 0)
+            {
+                return p.DistanceSquared(new Segment3d(_c, _a));
             }
 
-            Segment3d AB = new Segment3d(this._a, this._b);
-            Segment3d BC = new Segment3d(this._b, this._c);
-            Segment3d AC = new Segment3d(this._a, this._c);
-
-            double dist = p.DistanceSquared(AB);
-            double dist2 = p.DistanceSquared(BC);
-            double dist3 = p.DistanceSquared(AC);
-
-            return Min(dist, Min(dist2, dist3));
+            // Projection point is inside
+            return p.DistanceSquared(projection_point);
         }
 
         /// <summary>
@@ -787,34 +799,7 @@ namespace GeometRi
         /// </summary>
         public Point3d ClosestPoint(Point3d p)
         {
-            Point3d projection_point = p.ProjectionTo(this.Plane);
-
-            int code = _InPlanePointLocation(projection_point);
-
-            if (code >= 0)
-            {
-                return projection_point;
-            }
-
-            Segment3d AB = new Segment3d(this._a, this._b);
-            Segment3d BC = new Segment3d(this._b, this._c);
-            Segment3d AC = new Segment3d(this._a, this._c);
-
-            double dist = p.DistanceTo(AB);
-            Point3d closest_point = AB.ClosestPoint(p);
-            double dist2 = p.DistanceTo(BC);
-            if (dist2 < dist)
-            {
-                dist = dist2;
-                closest_point = BC.ClosestPoint(p);
-            }
-            dist2 = p.DistanceTo(AC);
-            if (dist2 < dist)
-            {
-                dist = dist2;
-                closest_point = AC.ClosestPoint(p);
-            }
-
+            this.DistanceTo(p, out Point3d closest_point);
             return closest_point;
         }
 
