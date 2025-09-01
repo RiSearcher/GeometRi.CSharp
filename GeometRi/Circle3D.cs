@@ -72,7 +72,7 @@ namespace GeometRi
         /// </summary>
         public Point3d Center
         {
-            get { return _point.Copy(); }
+            get { return _point; }
             set { _point = value.Copy(); }
         }
 
@@ -117,7 +117,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d Normal
         {
-            get { return _normal.Copy(); }
+            get { return _normal; }
             set { _normal = value.Copy(); }
         }
 
@@ -136,7 +136,7 @@ namespace GeometRi
         /// </summary>
         public double Area
         {
-            get { return PI * Math.Pow(_r, 2); }
+            get { return PI * _r * _r; }
         }
 
         /// <summary>

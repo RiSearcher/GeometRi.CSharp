@@ -53,17 +53,17 @@ namespace GeometRi
         #region "Properties"
         public Point3d Center
         {
-            get { return _point.Copy(); }
+            get { return _point; }
         }
 
         public Vector3d MajorSemiaxis
         {
-            get { return _v1.Copy(); }
+            get { return _v1; }
         }
 
         public Vector3d MinorSemiaxis
         {
-            get { return _v2.Copy(); }
+            get { return _v2; }
         }
 
         public Vector3d Normal
@@ -97,7 +97,7 @@ namespace GeometRi
         /// </summary>
         public double F
         {
-            get { return Sqrt(Math.Pow(_v1.Norm, 2) - Math.Pow(_v2.Norm, 2)); }
+            get { return Sqrt(_v1.NormSquared - _v2.NormSquared); }
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace GeometRi
         /// </summary>
         public double E
         {
-            get { return Sqrt(1 - Math.Pow(_v2.Norm, 2) / Math.Pow(_v1.Norm, 2)); }
+            get { return Sqrt(1 - _v2.NormSquared / _v1.NormSquared); }
         }
 
         public double Area

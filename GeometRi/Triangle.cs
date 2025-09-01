@@ -691,7 +691,7 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.Plane);
 
-            int code = _PointLocation(projection_point);
+            int code = _InPlanePointLocation(projection_point);
 
             if (code >= 0)
             {
@@ -716,7 +716,7 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.Plane);
 
-            int code = _PointLocation(projection_point);
+            int code = _InPlanePointLocation(projection_point);
 
             if (code >= 0)
             {
@@ -751,7 +751,7 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.Plane);
 
-            int code = _PointLocation(projection_point);
+            int code = _InPlanePointLocation(projection_point);
 
             if (code >= 0)
             {
@@ -776,7 +776,7 @@ namespace GeometRi
         {
             Point3d projection_point = p.ProjectionTo(this.Plane);
 
-            int code = _PointLocation(projection_point);
+            int code = _InPlanePointLocation(projection_point);
 
             if (code >= 0)
             {
@@ -1669,32 +1669,10 @@ namespace GeometRi
 
             if (GeometRi3D.UseAbsoluteTolerance)
             {
-                Plane3d s = new Plane3d(this._a, this.Normal);
-                Point3d proj = p.ProjectionTo(s);
+                Point3d proj = p.ProjectionTo(this.Plane);
                 if (GeometRi3D.AlmostEqual(p.DistanceTo(proj), 0))
                 {
-                    if (p.BelongsTo(new Segment3d(_a, _b)) || p.BelongsTo(new Segment3d(_a, _c)) || p.BelongsTo(new Segment3d(_c, _b)))
-                    {
-                        return 0; // Point is on boundary
-                    }
-                    else
-                    {
-
-                        double area = this.Area;
-
-                        double alpha = new Vector3d(proj, _b).Cross(new Vector3d(proj, _c)).Norm / (2 * area);
-                        double beta = new Vector3d(proj, _c).Cross(new Vector3d(proj, _a)).Norm / (2 * area);
-                        double gamma = new Vector3d(proj, _a).Cross(new Vector3d(proj, _b)).Norm / (2 * area);
-
-                        if (GeometRi3D.AlmostEqual(((alpha + beta + gamma) - 1.0) * (AB + BC + AC) / 3, 0.0))
-                        {
-                            return 1; // Point is strictly inside
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                    }
+                    return _InPlanePointLocation(proj);
                 }
                 else
                 {
@@ -1707,6 +1685,46 @@ namespace GeometRi
                 GeometRi3D.Tolerance = tol * (AB + BC + AC) / 3;
                 GeometRi3D.UseAbsoluteTolerance = true;
                 int result = this._PointLocation(p);
+                GeometRi3D.UseAbsoluteTolerance = false;
+                GeometRi3D.Tolerance = tol;
+                return result;
+            }
+        }
+
+        internal int _InPlanePointLocation(Point3d p)
+        {
+            // Point "p" should be located on triangles' plane !!!
+            if (GeometRi3D.UseAbsoluteTolerance)
+            {
+                if (p.BelongsTo(new Segment3d(_a, _b)) || p.BelongsTo(new Segment3d(_a, _c)) || p.BelongsTo(new Segment3d(_c, _b)))
+                {
+                    return 0; // Point is on boundary
+                }
+                else
+                {
+
+                    double area = this.Area;
+
+                    double alpha = new Vector3d(p, _b).Cross(new Vector3d(p, _c)).Norm / (2 * area);
+                    double beta = new Vector3d(p, _c).Cross(new Vector3d(p, _a)).Norm / (2 * area);
+                    double gamma = new Vector3d(p, _a).Cross(new Vector3d(p, _b)).Norm / (2 * area);
+
+                    if (GeometRi3D.AlmostEqual(((alpha + beta + gamma) - 1.0) * (AB + BC + AC) / 3, 0.0))
+                    {
+                        return 1; // Point is strictly inside
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+            else
+            {
+                double tol = GeometRi3D.Tolerance;
+                GeometRi3D.Tolerance = tol * (AB + BC + AC) / 3;
+                GeometRi3D.UseAbsoluteTolerance = true;
+                int result = this._InPlanePointLocation(p);
                 GeometRi3D.UseAbsoluteTolerance = false;
                 GeometRi3D.Tolerance = tol;
                 return result;

@@ -1,7 +1,7 @@
 # GeometRi
 ## Release notes
 
-### 1.5.0.1 (29/8/2025)
+### 1.5.0.2 (29/8/2025)
 * Added DistanceSquared() method for primitive objects.
 
 ### 1.5.0 (24/8/2025)
