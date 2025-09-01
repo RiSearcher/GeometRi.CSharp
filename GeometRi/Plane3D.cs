@@ -16,6 +16,8 @@ namespace GeometRi
         internal Vector3d _normal;
         private Coord3d _coord;
 
+        private double _a, _b, _c, _d;
+
         internal bool HasChanged => _point.HasChanged || _normal.HasChanged;
         private void CheckFields()
         {
@@ -29,6 +31,7 @@ namespace GeometRi
         }
         private void ClearCache()
         {
+            _coord = null;
         }
 
         #region "Constructors"
@@ -119,7 +122,7 @@ namespace GeometRi
         /// <returns></returns>
         public Point3d Point
         {
-            get { return _point.Copy(); }
+            get { return _point; }
             set { _point = value.Copy(); }
         }
 
@@ -129,7 +132,7 @@ namespace GeometRi
         /// <returns></returns>
         public Vector3d Normal
         {
-            get { return _normal.Copy(); }
+            get { return _normal; }
             set { _normal = value.Copy(); }
         }
 
@@ -141,26 +144,52 @@ namespace GeometRi
         /// <summary>
         /// Set reference coordinate system for general plane equation
         /// </summary>
-        public void SetCoord(Coord3d coord)
+        public void SetCoord(Coord3d coord = null)
         {
-            _coord = coord;
+            _coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            Vector3d nc = _normal.ConvertTo(_coord);
+            Point3d pc = _point.ConvertTo(_coord);
+            _a = nc.X;
+            _b = nc.Y;
+            _c = nc.Z;
+            _d = -nc.X * pc.X - nc.Y * pc.Y - nc.Z * pc.Z;
         }
 
         /// <summary>
         /// Coefficient A in the general plane equation
         /// </summary>
-        public double A => Normal.ConvertTo(_coord).X;
+        public double A
+        {
+            get
+            {
+                if (_coord == null) { SetCoord(); }
+                return _a;
+            }
+        }
 
         /// <summary>
         /// Coefficient B in the general plane equation
         /// </summary>
-        public double B => Normal.ConvertTo(_coord).Y;
-      
+        public double B
+        {
+            get
+            {
+                if (_coord == null) { SetCoord(); }
+                return _b;
+            }
+        }
 
         /// <summary>
         /// Coefficient C in the general plane equation
         /// </summary>
-        public double C => Normal.ConvertTo(_coord).Z;
+        public double C
+        {
+            get
+            {
+                if (_coord == null) { SetCoord(); }
+                return _c;
+            }
+        }
 
         /// <summary>
         /// Coefficient D in the general plane equation
@@ -169,11 +198,9 @@ namespace GeometRi
         {
             get
             {
-                    Point3d p = _point.ConvertTo(_coord);
-                    Vector3d v = _normal.ConvertTo(_coord);
-                    return -v.X * p.X - v.Y * p.Y - v.Z * p.Z;
-                }
-           
+                if (_coord == null) { SetCoord(); }
+                return _d;
+            }
         }
 
         /// <summary>
