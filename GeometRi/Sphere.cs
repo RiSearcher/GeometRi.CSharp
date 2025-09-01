@@ -127,14 +127,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Ray3d r)
         {
-            if (this._point.ProjectionTo(r.ToLine).BelongsTo(r))
-            {
-                return this.DistanceTo(r.ToLine);
-            }
-            else
-            {
-                return this.DistanceTo(r.Point);
-            }
+            double dist = _point.DistanceTo(r) - _r;
+            return dist < 0 ? 0 : dist;
         }
 
         /// <summary>
@@ -142,14 +136,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            if (this._point.ProjectionTo(s.Line).BelongsTo(s))
-            {
-                return this.DistanceTo(s.Line);
-            }
-            else
-            {
-                return Min(this.DistanceTo(s.P1), this.DistanceTo(s.P2));
-            }
+            double dist = _point.DistanceTo(s) - _r;
+            return dist < 0 ? 0 : dist;
         }
 
         /// <summary>

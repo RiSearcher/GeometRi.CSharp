@@ -248,9 +248,10 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Ray3d r)
         {
-            if (this.ProjectionTo(r.ToLine).BelongsTo(r))
+            double t = r.Direction * new Vector3d(r.Point, this);
+            if (t > 0)
             {
-                return this.DistanceTo(r.ToLine);
+                return this.DistanceTo(r.Point + t * r.Direction);
             }
             else
             {
@@ -260,9 +261,10 @@ namespace GeometRi
 
         public double DistanceSquared(Ray3d r)
         {
-            if (this.ProjectionTo(r.ToLine).BelongsTo(r))
+            double t = r.Direction * new Vector3d(r.Point, this);
+            if (t > 0)
             {
-                return this.DistanceSquared(r.ToLine);
+                return this.DistanceSquared(r.Point + t * r.Direction);
             }
             else
             {
