@@ -122,7 +122,7 @@ namespace GeometRi.Benchmarks
             //});
 
 
-            TestPointTriangleDistance();
+            TestSegmentTriangleDistance();
 
             Console.ReadLine();
         }
@@ -185,6 +185,35 @@ namespace GeometRi.Benchmarks
                 foreach (Point3d p in list)
                 {
                     dist += t.DistanceTo(p);
+                }
+                Console.WriteLine(dist);
+            });
+
+
+
+            Console.ReadLine();
+        }
+
+
+        static void TestSegmentTriangleDistance()
+        {
+            Random rnd = new Random();
+            List<Segment3d> list = new List<Segment3d>();
+            for (int i = 0; i < 500000; i++)
+            {
+                list.Add(new Segment3d(new Point3d(rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5),
+                                       new Point3d(rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5)));
+            }
+            Triangle t = new Triangle(new Point3d(0.2, 0.1, 0.05), new Point3d(-0.2, 0.2, -0.1), new Point3d(0.03, -0.1, 0.1));
+
+
+
+            Profile("Test", 4, () =>
+            {
+                double dist = 0;
+                foreach (Segment3d s in list)
+                {
+                    dist += t.DistanceTo(s);
                 }
                 Console.WriteLine(dist);
             });
