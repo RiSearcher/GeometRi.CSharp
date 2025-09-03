@@ -1321,6 +1321,134 @@ namespace GeometRi
         }
 
 
+        /// <summary>
+        /// Distance between polyhedron and segment
+        /// <para> The output points are valid only in case of non-intersecting objects.</para>
+        /// </summary>
+        /// <param name="c">Target polyhedron</param>
+        /// <param name="point_on_cp">Closest point on convex polyhedron</param>
+        /// <param name="point_on_segment">Closest point on segment</param>
+        public double DistanceToNew(Segment3d c, out Point3d point_on_cp, out Point3d point_on_segment)
+        {
+            // Using algorithm of separating axes
+
+            double dist = double.PositiveInfinity;
+            bool intersecting = true;
+            Point3d c1 = new Point3d();
+            Point3d c2 = new Point3d();
+            point_on_cp = c1;
+            point_on_segment = c2;
+
+            // Test faces of this CP for separation. Because of the counterclockwise ordering,
+            // the projection interval for this CP is (-inf, 0].
+            // Determine whether 'c' is on the positive side of the line
+            Point3d[] segment_points = { c.P1, c.P2 };
+            for (int i = 0; i < this.numFaces; i++)
+            {
+                Vector3d P = this.face[i].Vertex[0].ToVector;
+                Vector3d N = this.face[i].normal;
+                if (WhichSide(segment_points, P, N) > 0)
+                {
+                    // 'c' is entirely on the positive side of the line P + t * N
+                    // 'c' is entirely on the positive side of the line P + t * N
+                    // Calculate min projection distance to face's plane
+                    intersecting = false;
+                    double square_proj_dist = double.PositiveInfinity;
+                    Point3d best_proj_point = this.face[i].Vertex[0];
+                    Point3d target_point = this.face[i].Vertex[0];
+
+                    Plane3d plane = new Plane3d(this.face[i].Vertex[0], this.face[i].normal);
+                    foreach (Point3d point in segment_points)
+                    {
+                        Point3d projection = point.ProjectionTo(plane);
+                        double tmp_dist = projection.DistanceSquared(point);
+                        if (tmp_dist < square_proj_dist)
+                        {
+                            square_proj_dist = tmp_dist;
+                            best_proj_point = projection;
+                            target_point = point;
+                        }
+                    }
+                    // test if best projection of c.vertex is inside the face
+                    bool inside = true;
+                    for (int l = 0; l < this.face[i].vertex.Length; l++)
+                    {
+                        Vector3d edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[0]);
+                        if (l < this.face[i].vertex.Length - 1)
+                        {
+                            edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[l + 1]);
+                        }
+                        Vector3d v = new Vector3d(this.face[i].Vertex[l], best_proj_point);
+                        if (edge.Cross(v).Dot(this.face[i].normal) < 0)
+                        {
+                            // projection outside of face
+                            inside = false;
+                            break;
+                        }
+
+                    }
+                    if (inside)
+                    {
+                        double tmp_dist = Math.Sqrt(square_proj_dist);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            point_on_cp = best_proj_point;
+                            point_on_segment = target_point;
+                        }
+                    }
+                }
+            }
+
+            // Test cross products of segment and edges
+            for (int i = 0; i < this.numEdges; i++)
+            {
+                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
+                Vector3d P = this.edge[i].P1.ToVector;
+                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+
+                Vector3d D1 = new Vector3d(c.P1, c.P2);
+                Vector3d N = D0.Cross(D1);
+
+                if (N.X != 0 || N.Y != 0 || N.Z != 0)
+                {
+                    int side0 = WhichSide(this.vertex, P, N, 0);
+                    if (side0 == 0)
+                    {
+                        continue;
+                    }
+                    int side1 = WhichSide(segment_points, P, N, 0);
+                    if (side1 == 0)
+                    {
+                        continue;
+                    }
+
+                    if (side0 * side1 < 0)
+                    {
+                        // The projections of this CP and 'c' onto the line P + t * N are on opposite sides of the projection of P.
+                        intersecting = false;
+                        double tmp_dist = s1.DistanceTo(c, out c1, out c2);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            point_on_cp = c1;
+                            point_on_segment = c2;
+                        }
+                    }
+                }
+            }
+
+            if (intersecting)
+            {
+                return 0;
+            }
+            else
+            {
+                return dist;
+            }
+        }
+
+
         internal Point3d _get_common_point(ConvexPolyhedron cp)
         {
             // test edges of this cp

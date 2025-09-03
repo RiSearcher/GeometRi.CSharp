@@ -122,7 +122,7 @@ namespace GeometRi.Benchmarks
             //});
 
 
-            TestSegmentTriangleDistance();
+            TestSegmentPolyhedronDistance();
 
             Console.ReadLine();
         }
@@ -214,6 +214,54 @@ namespace GeometRi.Benchmarks
                 foreach (Segment3d s in list)
                 {
                     dist += t.DistanceTo(s);
+                }
+                Console.WriteLine(dist);
+            });
+
+
+
+            Console.ReadLine();
+        }
+
+        static void TestSegmentPolyhedronDistance()
+        {
+            Random rnd = new Random();
+            List<Segment3d> list = new List<Segment3d>();
+            for (int i = 0; i < 20000; i++)
+            {
+                list.Add(new Segment3d(new Point3d(rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5),
+                                       new Point3d(rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5)));
+            }
+            ConvexPolyhedron cp = ConvexPolyhedron.RhombicDodecahedron().Scale(0.1);
+
+
+
+            Profile("Test", 4, () =>
+            {
+                double dist = 0;
+                foreach (Segment3d s in list)
+                {
+                    dist += cp.DistanceTo(s);
+                }
+                Console.WriteLine(dist);
+            });
+
+            Profile("Test1", 4, () =>
+            {
+                double dist = 0;
+                foreach (Segment3d s in list)
+                {
+                    dist += cp.DistanceTo(s);
+                }
+                Console.WriteLine(dist);
+            });
+
+            Profile("Test2", 4, () =>
+            {
+                double dist = 0;
+                foreach (Segment3d s in list)
+                {
+                    dist += cp.DistanceToNew(s, out Point3d p1, out Point3d p2);
                 }
                 Console.WriteLine(dist);
             });

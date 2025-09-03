@@ -501,6 +501,7 @@ namespace GeometRi_Tests
             Assert.IsTrue(GeometRi3D.AlmostEqual(dist, 0));
         }
 
+        #region "Segment distance"
         [TestMethod]
         public void SegmentDistanceTest_01()
         {
@@ -509,6 +510,7 @@ namespace GeometRi_Tests
             Segment3d s = new Segment3d(new Point3d(0.1, 0.1, 0.1), new Point3d(0.2, 0.2, 0.2));
 
             Assert.IsTrue(cp.DistanceTo(s) == 0);
+            Assert.IsTrue(cp.DistanceToNew(s, out Point3d p1, out Point3d p2) == 0);
         }
 
         [TestMethod]
@@ -519,6 +521,7 @@ namespace GeometRi_Tests
             Segment3d s = new Segment3d(new Point3d(0.3, 0.3, 0.0), new Point3d(0.7, 0.7, -1));
 
             Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), 0));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceToNew(s, out Point3d p1, out Point3d p2), 0));
         }
 
         [TestMethod]
@@ -529,7 +532,20 @@ namespace GeometRi_Tests
             Segment3d s = new Segment3d(new Point3d(1, 0.3, 0.3), new Point3d(2, 0.3, 0.3));
 
             Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), 0.5));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceToNew(s, out Point3d p1, out Point3d p2), 0.5));
         }
+
+        [TestMethod]
+        public void SegmentDistanceTest_04()
+        {
+            // Segment outside of CP
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(new Box3d());
+            Segment3d s = new Segment3d(new Point3d(1, 1, 1), new Point3d(2, 2, 2));
+
+            Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceTo(s), Sqrt(3) * 0.5));
+            Assert.IsTrue(GeometRi3D.AlmostEqual(cp.DistanceToNew(s, out Point3d p1, out Point3d p2), Sqrt(3) * 0.5));
+        }
+        #endregion
 
         [TestMethod]
         public void CircleDistanceTest_01()
