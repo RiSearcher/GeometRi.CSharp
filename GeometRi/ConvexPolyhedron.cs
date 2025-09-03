@@ -1267,6 +1267,28 @@ namespace GeometRi
                 }
             }
 
+            if (! intersecting)
+            {
+                // Polyhedrons are not intersecting
+                // Compare edges distance
+                for (int i = 0; i < this.numEdges; i++)
+                {
+                    Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                    for (int j = 0; j < c.numEdges; j++)
+                    {
+                        Segment3d s2 = new Segment3d(c.vertex[c.edge[j].p1], c.vertex[c.edge[j].p2]);
+                        double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            point_on_this_cp = c1;
+                            point_on_target_cp = c2;
+                        }
+                    }
+                }
+                return dist;
+            }
+
             // Test cross products of pairs of edge directions
             // one edge direction from each polyhedron
 
