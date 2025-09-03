@@ -758,5 +758,58 @@ namespace GeometRi_Tests
 
         #endregion
 
+        #region "Triangle intersection"
+        [TestMethod]
+        public void TrianglePolyhedronIntersectionCheckTest_01()
+        {
+            // Triangle is inside
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Triangle t = new Triangle(new Point3d(0.1, 0.1, 0.1), new Point3d(0.5, 0.5, 0.5), new Point3d(0.1, 0.2, 0.3));
+            Assert.IsTrue(cp.Intersects(t));
+        }
+
+        [TestMethod]
+        public void TrianglePolyhedronIntersectionCheckTest_02()
+        {
+            // Triangle intersects face
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Triangle t = new Triangle(new Point3d(0.1, 0.1, 0.1), new Point3d(0.5, 0.5, 0.5), new Point3d(1.1, 0.2, 0.3));
+            Assert.IsTrue(cp.Intersects(t));
+        }
+
+        [TestMethod]
+        public void TrianglePolyhedronIntersectionCheckTest_03()
+        {
+            // Triangle intersects edge
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Triangle t = new Triangle(new Point3d(0.5, 0.5, 0.5), new Point3d(1.5, 1.5, 0.1), new Point3d(1.5, 1.5, 0.7));
+            Assert.IsTrue(cp.Intersects(t));
+        }
+
+        [TestMethod]
+        public void TrianglePolyhedronIntersectionCheckTest_04()
+        {
+            // Triangle touch edge
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Triangle t = new Triangle(new Point3d(1.0 - 1e-13, 1.0 - 1e-13, 0.5), new Point3d(1.5, 1.5, 0.7), new Point3d(1.5, 1.5, 0.1));
+            Assert.IsTrue(cp.Intersects(t));
+        }
+
+        [TestMethod]
+        public void TrianglePolyhedronIntersectionCheckTest_05()
+        {
+            // Triangle outside
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Triangle t = new Triangle(new Point3d(1.1, 1.1, 0.5), new Point3d(1.5, 1.5, 0.7), new Point3d(1.5, 1.5, 0.1));
+            Assert.IsFalse(cp.Intersects(t));
+        }
+
+        #endregion
+
     }
 }

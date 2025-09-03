@@ -1569,6 +1569,80 @@ namespace GeometRi
             return true;
         }
 
+        /// <summary>
+        /// Intersection check between polyhedron and triangle.
+        /// Behaviour for touching objects is undefined.
+        /// </summary>
+        public bool Intersects(Triangle t)
+        {
+            // Using algorithm of separating axes
+
+            // Test faces of triangle for separation.
+            Vector3d P = t.A.ToVector;
+            Vector3d N = t.Normal;
+            if (WhichSide(this.vertex, P, N) > 0)
+            {
+                // this CP is entirely on the positive side of the line P + t * N
+                return false;
+            }
+            N = -t.Normal;
+            if (WhichSide(this.vertex, P, N) > 0)
+            {
+                // this CP is entirely on the positive side of the line P + t * N
+                return false;
+            }
+
+            // Test faces of this CP for separation. Because of the counterclockwise ordering,
+            // the projection interval for this CP is (-inf, 0].
+            // Determine whether 't' is on the positive side of the line
+            Point3d[] triangle_points = { t.A, t.B, t.C };
+            for (int i = 0; i < this.numFaces; i++)
+            {
+                P = this.face[i].Vertex[0].ToVector;
+                N = this.face[i].normal;
+                if (WhichSide(triangle_points, P, N) > 0)
+                {
+                    // 't' is entirely on the positive side of the line P + t * N
+                    return false;
+                }
+            }
+
+            // Test cross products of edges
+            for (int i = 0; i < this.numEdges; i++)
+            {
+                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
+                P = this.edge[i].P1.ToVector;
+                for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
+                {
+                    Vector3d D1 = new Vector3d(triangle_points[j0], triangle_points[j1]);
+                    N = D0.Cross(D1);
+
+                    if (N.X != 0 || N.Y != 0 || N.Z != 0)
+                    {
+                        int side0 = WhichSide(this.vertex, P, N, 0);
+                        if (side0 == 0)
+                        {
+                            continue;
+                        }
+                        int side1 = WhichSide(triangle_points, P, N, 0);
+                        if (side1 == 0)
+                        {
+                            continue;
+                        }
+
+                        if (side0 * side1 < 0)
+                        {
+                            // The projections of this CP and 't' onto the line P + t * N are on opposite sides of the projection of P.
+                            return false;
+                        }
+                    }
+                }
+
+            }
+
+            return true;
+        }
+
         private int WhichSide(Point3d[] vertex, Vector3d P, Vector3d D, double tolerance = 0)
         {
             // The vertices are projected to the form P+t*D.

@@ -1490,6 +1490,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between polyhedron and triangle.
+        /// Behaviour for touching objects is undefined.
+        /// </summary>
+        public bool Intersects(ConvexPolyhedron c)
+        {
+            return c.Intersects(this);
+        }
+
+        /// <summary>
         /// Intersection check between triangle and sphere
         /// </summary>
         public bool Intersects(Sphere s)
