@@ -1121,9 +1121,7 @@ namespace GeometRi
         /// <param name="c">Target polyhedron</param>
         public double DistanceTo(ConvexPolyhedron c)
         {
-            Point3d c1 = new Point3d();
-            Point3d c2 = new Point3d();
-            return DistanceTo(c, out c1, out c2);
+            return DistanceTo(c, out Point3d c1, out Point3d c2);
         }
 
 
@@ -1344,13 +1342,13 @@ namespace GeometRi
 
 
         /// <summary>
-        /// Distance between polyhedron and segment
+        /// Distance from polyhedron to segment
         /// <para> The output points are valid only in case of non-intersecting objects.</para>
         /// </summary>
         /// <param name="c">Target polyhedron</param>
-        /// <param name="point_on_cp">Closest point on convex polyhedron</param>
+        /// <param name="point_on_polyhedron">Closest point on polyhedron</param>
         /// <param name="point_on_segment">Closest point on segment</param>
-        public double DistanceToNew(Segment3d c, out Point3d point_on_cp, out Point3d point_on_segment)
+        public double DistanceTo(Segment3d c, out Point3d point_on_polyhedron, out Point3d point_on_segment)
         {
             // Using algorithm of separating axes
 
@@ -1358,7 +1356,7 @@ namespace GeometRi
             bool intersecting = true;
             Point3d c1 = new Point3d();
             Point3d c2 = new Point3d();
-            point_on_cp = c1;
+            point_on_polyhedron = c1;
             point_on_segment = c2;
 
             // Test faces of this CP for separation. Because of the counterclockwise ordering,
@@ -1415,11 +1413,30 @@ namespace GeometRi
                         if (tmp_dist < dist)
                         {
                             dist = tmp_dist;
-                            point_on_cp = best_proj_point;
+                            point_on_polyhedron = best_proj_point;
                             point_on_segment = target_point;
+                            return dist;
                         }
                     }
                 }
+            }
+
+            if (!intersecting)
+            {
+                // Polyhedron and segment are not intersecting
+                // Compare edges distance
+                for (int i = 0; i < this.numEdges; i++)
+                {
+                    Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                    double tmp_dist = s1.DistanceTo(c, out c1, out c2);
+                    if (tmp_dist < dist)
+                    {
+                        dist = tmp_dist;
+                        point_on_polyhedron = c1;
+                        point_on_segment = c2;
+                    }
+                }
+                return dist;
             }
 
             // Test cross products of segment and edges
@@ -1434,12 +1451,12 @@ namespace GeometRi
 
                 if (N.X != 0 || N.Y != 0 || N.Z != 0)
                 {
-                    int side0 = WhichSide(this.vertex, P, N, 0);
+                    int side0 = WhichSide(this.vertex, P, N, 1e-16);
                     if (side0 == 0)
                     {
                         continue;
                     }
-                    int side1 = WhichSide(segment_points, P, N, 0);
+                    int side1 = WhichSide(segment_points, P, N, 1e-16);
                     if (side1 == 0)
                     {
                         continue;
@@ -1453,7 +1470,7 @@ namespace GeometRi
                         if (tmp_dist < dist)
                         {
                             dist = tmp_dist;
-                            point_on_cp = c1;
+                            point_on_polyhedron = c1;
                             point_on_segment = c2;
                         }
                     }
@@ -1470,6 +1487,13 @@ namespace GeometRi
             }
         }
 
+        /// <summary>
+        /// Distance from polyhedron to segment
+        /// </summary>
+        public double DistanceTo(Segment3d s)
+        {
+            return DistanceTo(s, out Point3d p1, out Point3d p2);
+        }
 
         internal Point3d _get_common_point(ConvexPolyhedron cp)
         {
@@ -1550,37 +1574,7 @@ namespace GeometRi
             return dist;
         }
 
-        /// <summary>
-        /// Distance from polyhedron to segment
-        /// </summary>
-        public double DistanceTo(Segment3d s)
-        {
-            if (s.P1.BelongsTo(this) || s.P2.BelongsTo(this))
-            {
-                return 0;
-            }
 
-            double dist = double.PositiveInfinity;
-
-            for (int i = 0; i < numFaces; i++)
-            {
-                for (int j = 0; j < face[i].vertex.Length - 2; j++)
-                {
-                    Triangle tmp = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
-                    double tmp_dist = s.DistanceTo(tmp);
-                    if (tmp_dist <= GeometRi3D.Tolerance) 
-                    { 
-                        return tmp_dist; 
-                    }
-                    if (tmp_dist < dist)
-                    {
-                        dist = tmp_dist;
-                    }
-                }
-
-            }
-            return dist;
-        }
 
         #endregion
 
