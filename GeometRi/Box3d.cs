@@ -103,7 +103,26 @@ namespace GeometRi
             _r = new Rotation(coord);
             _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
         }
-#endregion
+
+        /// <summary>
+        /// Initializes axis aligned box by two points.
+        /// </summary>
+        /// <param name="p_min">Minimum corner of the box</param>
+        /// <param name="p_max">Maximum corner of the box</param>
+        public Box3d(Point3d p_min, Point3d p_max)
+        {
+            _center = (p_min + p_max) / 2;
+            Vector3d v = new Vector3d(p_min, p_max).ConvertToGlobal();
+            _lx = v.X;
+            _ly = v.Y;
+            _lz = v.Z;
+            _v1 = new Vector3d(1, 0, 0);
+            _v2 = new Vector3d(0, 1, 0);
+            _v3 = new Vector3d(0, 0, 1);
+            _r = new Rotation();
+            _local_coord = new Coord3d(_center, _r.ConvertToGlobal().ToRotationMatrix.Transpose());
+        }
+        #endregion
 
         /// <summary>
         /// Creates copy of the object

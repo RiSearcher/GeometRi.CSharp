@@ -1513,6 +1513,62 @@ namespace GeometRi
         }
 
 
+        /// <summary>
+        /// Intersection check between polyhedron and segment.
+        /// Behaviour for touching objects is undefined.
+        /// </summary>
+        public bool Intersects(Segment3d c)
+        {
+            // Using algorithm of separating axes
+
+            // Test faces of this CP for separation. Because of the counterclockwise ordering,
+            // the projection interval for this CP is (-inf, 0].
+            // Determine whether 'c' is on the positive side of the line
+            Point3d[] segment_points = { c.P1, c.P2 };
+            for (int i = 0; i < this.numFaces; i++)
+            {
+                Vector3d P = this.face[i].Vertex[0].ToVector;
+                Vector3d N = this.face[i].normal;
+                if (WhichSide(segment_points, P, N) > 0)
+                {
+                    // 'c' is entirely on the positive side of the line P + t * N
+                    return false;
+                }
+            }
+
+            // Test cross products of segment and edges
+            for (int i = 0; i < this.numEdges; i++)
+            {
+                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
+                Vector3d P = this.edge[i].P1.ToVector;
+
+                Vector3d D1 = new Vector3d(c.P1, c.P2);
+                Vector3d N = D0.Cross(D1);
+
+                if (N.X != 0 || N.Y != 0 || N.Z != 0)
+                {
+                    int side0 = WhichSide(this.vertex, P, N, 0);
+                    if (side0 == 0)
+                    {
+                        continue;
+                    }
+                    int side1 = WhichSide(segment_points, P, N, 0);
+                    if (side1 == 0)
+                    {
+                        continue;
+                    }
+
+                    if (side0 * side1 < 0)
+                    {
+                        // The projections of this CP and 'c' onto the line P + t * N are on opposite sides of the projection of P.
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private int WhichSide(Point3d[] vertex, Vector3d P, Vector3d D, double tolerance = 0)
         {
             // The vertices are projected to the form P+t*D.

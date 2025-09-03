@@ -811,6 +811,15 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Intersection check between segment and polyhedron
+        /// Behaviour for touching objects is undefined.
+        /// </summary>
+        public bool Intersects(ConvexPolyhedron c)
+        {
+            return this.Intersects(c);
+        }
+
+        /// <summary>
         /// Get the orthogonal projection of a segment to the line.
         /// Return object of type 'Segment3d' or 'Point3d'
         /// </summary>

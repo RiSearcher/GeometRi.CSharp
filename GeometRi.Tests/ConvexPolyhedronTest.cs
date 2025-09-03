@@ -630,5 +630,133 @@ namespace GeometRi_Tests
             Assert.IsTrue(Abs(cp.DistanceTo(p) - Sqrt(2.0)) < GeometRi3D.DefaultTolerance);
         }
 
+        #region "Segment intersection"
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_01()
+        {
+            // Segment is inside
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(0.1, 0.1, 0.1), new Point3d(0.5, 0.5, 0.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_02()
+        {
+            // Segment intersects face
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, 0.5), new Point3d(1.5, 0.5, 0.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_03()
+        {
+            // Segment intersects edge
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, 0.5), new Point3d(1.5, 1.5, 0.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_04()
+        {
+            // Segment intersects vertex
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(0.5, 0.5, 0.5), new Point3d(1.5, 1.5, 1.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_05()
+        {
+            // Segment end touch face
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(1.0 - 1e-12, 0.5, 0.5), new Point3d(1.5, 0.5, 0.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_06()
+        {
+            // Segment end touch edge
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(1.0 - 1e-13, 1.0 - 1e-13, 0.5), new Point3d(1.5, 1.5, 0.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_07()
+        {
+            // Segment end touch vertex
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(1.0 - 1e-13, 1.0 - 1e-13, 1.0 - 1e-13), new Point3d(1.5, 1.5, 1.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_08()
+        {
+            // Segment lies on face
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(1.0 - 1e-16, 0.5, 0.5), new Point3d(1.0, 0.2, 0.2));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_09()
+        {
+            // Segment lies on edge
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            
+            // Undefined behaviour
+            Segment3d s = new Segment3d(new Point3d(1.0, 1.0, 0.5), new Point3d(1.0, 1.0, 0.8));
+            Assert.IsTrue(cp.Intersects(s));
+
+            s = new Segment3d(new Point3d(1.0, 1.0, 0.5), new Point3d(1.0, 1.0, 0.1));
+            Assert.IsFalse(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_10()
+        {
+            // Segment touch edge
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(2.0 - 1e-15, 0.0, 0.5), new Point3d(0.0, 2.0, 0.5));
+            Assert.IsTrue(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_11()
+        {
+            // Segment outside
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(2.0 , 0.0, 0.5), new Point3d(3.0, 2.0, 0.99));
+            Assert.IsFalse(cp.Intersects(s));
+        }
+
+        [TestMethod]
+        public void SegmentPolyhedronIntersectionCheckTest_12()
+        {
+            // Segment outside
+            Box3d box = new Box3d(new Point3d(0, 0, 0), new Point3d(1, 1, 1));
+            ConvexPolyhedron cp = ConvexPolyhedron.FromBox(box);
+            Segment3d s = new Segment3d(new Point3d(2.0, 2.0, 2.0), new Point3d(3.0, 2.0, 3.0));
+            Assert.IsFalse(cp.Intersects(s));
+        }
+
+        #endregion
+
     }
 }
