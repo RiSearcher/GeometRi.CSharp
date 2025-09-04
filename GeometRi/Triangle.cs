@@ -824,6 +824,25 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Distance from triangle to polyhedron
+        /// </summary>
+        /// <param name="c">Target polyhedron</param>
+        /// <param name="point_on_triangle">Closest point on triangle</param>
+        /// <param name="point_on_polyhedron">Closest point on polyhedron</param>
+        public double DistanceTo(ConvexPolyhedron c, out Point3d point_on_triangle, out Point3d point_on_polyhedron)
+        {
+            return c.DistanceTo(this, out point_on_polyhedron, out point_on_triangle);
+        }
+
+        /// <summary>
+        /// Distance from triangle to polyhedron
+        /// </summary>
+        public double DistanceTo(ConvexPolyhedron c)
+        {
+            return c.DistanceTo(this, out Point3d p1, out Point3d p2);
+        }
+
+        /// <summary>
         /// Distance between triangle and segment
         /// </summary>
         public double DistanceTo(Segment3d s)

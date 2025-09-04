@@ -263,6 +263,11 @@ namespace GeometRi
             return cp;
         }
 
+        public static ConvexPolyhedron Cube(Point3d p_min, Point3d p_max)
+        {
+            return FromBox(new Box3d(p_min, p_max));
+        }
+
         /// <summary>
         /// Create ConvexPolyhedron object from a Box3d object
         /// </summary>
@@ -1342,6 +1347,222 @@ namespace GeometRi
 
 
         /// <summary>
+        /// Distance from polyhedron to triangle
+        /// </summary>
+        public double DistanceTo(Triangle t)
+        {
+            return this.DistanceTo(t, out Point3d p1, out Point3d p2);
+        }
+
+        /// <summary>
+        /// Distance between polyhedron and tringle
+        /// <para> The output points are valid only in case of non-intersecting objects.</para>
+        /// </summary>
+        /// <param name="c">Target triangle</param>
+        /// <param name="point_on_polyhedron">Closest point on this convex polyhedron</param>
+        /// <param name="point_on_triangle">Closest point on target triangle</param>
+        public double DistanceTo(Triangle t, out Point3d point_on_polyhedron, out Point3d point_on_triangle)
+        {
+            // Using algorithm of separating axes
+
+            double dist = double.PositiveInfinity;
+            bool intersecting = true;
+            Point3d c1 = new Point3d();
+            Point3d c2 = new Point3d();
+            point_on_polyhedron = c1;
+            point_on_triangle = c2;
+
+            // Test faces of this CP for separation. Because of the counterclockwise ordering,
+            // the projection interval for this CP is (-inf, 0].
+            // Determine whether 'c' is on the positive side of the line
+            Point3d[] triangle_points = { t.A, t.B, t.C };
+            for (int i = 0; i < this.numFaces; i++)
+            {
+                Vector3d P = this.face[i].Vertex[0].ToVector;
+                Vector3d N = this.face[i].normal;
+                if (WhichSide(triangle_points, P, N) > 0)
+                {
+                    // 't' is entirely on the positive side of the line P + t * N
+                    // Calculate min projection distance to face's plane
+                    intersecting = false;
+                    double square_proj_dist = double.PositiveInfinity;
+                    Point3d best_proj_point = this.face[i].Vertex[0];
+                    Point3d target_point = this.face[i].Vertex[0];
+
+                    Plane3d plane = new Plane3d(this.face[i].Vertex[0], this.face[i].normal);
+                    foreach (Point3d point in triangle_points)
+                    {
+                        Point3d projection = point.ProjectionTo(plane);
+                        double tmp_dist = projection.DistanceSquared(point);
+                        if (tmp_dist < square_proj_dist)
+                        {
+                            square_proj_dist = tmp_dist;
+                            best_proj_point = projection;
+                            target_point = point;
+                        }
+                    }
+                    // test if best projection of c.vertex is inside the face
+                    bool inside = true;
+                    for (int l = 0; l < this.face[i].vertex.Length; l++)
+                    {
+                        Vector3d edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[0]);
+                        if (l < this.face[i].vertex.Length - 1)
+                        {
+                            edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[l + 1]);
+                        }
+                        Vector3d v = new Vector3d(this.face[i].Vertex[l], best_proj_point);
+                        if (edge.Cross(v).Dot(this.face[i].normal) < 0)
+                        {
+                            // projection outside of face
+                            inside = false;
+                            break;
+                        }
+
+                    }
+                    if (inside)
+                    {
+                        double tmp_dist = Math.Sqrt(square_proj_dist);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            point_on_polyhedron = best_proj_point;
+                            point_on_triangle = target_point;
+                            //return dist;
+                        }
+                    }
+                }
+            }
+
+            // Test faces of triangle for separation.
+            for (int i = -1; i < 2; i += 2)
+            {
+                Vector3d P = t.A.ToVector;
+                Vector3d N = i * t.Normal;
+                if (WhichSide(this.vertex, P, N) > 0)
+                {
+                    // this CP is entirely on the positive side of the line P + t * N
+                    // Calculate min projection distance to face's plane
+                    intersecting = false;
+                    double square_proj_dist = double.PositiveInfinity;
+                    Point3d best_proj_point = t.A;
+                    Point3d target_point = t.A;
+
+                    Plane3d plane = t.Plane;
+                    foreach (Point3d point in this.vertex)
+                    {
+                        Point3d projection = point.ProjectionTo(plane);
+                        double tmp_dist = projection.DistanceSquared(point);
+                        if (tmp_dist < square_proj_dist)
+                        {
+                            square_proj_dist = tmp_dist;
+                            best_proj_point = projection;
+                            target_point = point;
+                        }
+                    }
+                    // test if best projection of this.vertex is inside the face
+                    bool inside = true;
+                    for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
+                    {
+                        Vector3d edge = new Vector3d(triangle_points[j0], triangle_points[j1]);
+                        Vector3d v = new Vector3d(triangle_points[j0], best_proj_point);
+                        if (edge.Cross(v).Dot(plane.Normal) < 0)
+                        {
+                            // projection outside of face
+                            inside = false;
+                            break;
+                        }
+
+                    }
+                    if (inside)
+                    {
+                        double tmp_dist = Math.Sqrt(square_proj_dist);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            point_on_polyhedron = target_point;
+                            point_on_triangle = best_proj_point;
+                            //return dist;
+                        }
+                    }
+
+                }
+            }
+
+            if (!intersecting)
+            {
+                // Polyhedrons are not intersecting
+                // Compare edges distance
+                for (int i = 0; i < this.numEdges; i++)
+                {
+                    Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                    for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
+                    {
+                        Segment3d s2 = new Segment3d(triangle_points[j0], triangle_points[j1]);
+                        double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            point_on_polyhedron = c1;
+                            point_on_triangle = c2;
+                        }
+                    }
+                }
+                return dist;
+            }
+
+            // Test cross products of pairs of edge directions
+            // one edge direction from each polyhedron
+            for (int i = 0; i < this.numEdges; i++)
+            {
+                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
+                Vector3d P = this.edge[i].P1.ToVector;
+                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
+                {
+                    Vector3d D1 = new Vector3d(triangle_points[j0], triangle_points[j1]);
+                    Vector3d N = D0.Cross(D1);
+                    Segment3d s2 = new Segment3d(triangle_points[j0], triangle_points[j1]);
+
+                    if (N.X != 0 || N.Y != 0 || N.Z != 0)
+                    {
+                        int side0 = WhichSide(this.vertex, P, N, 1e-16);
+                        if (side0 == 0)
+                        {
+                            continue;
+                        }
+                        int side1 = WhichSide(triangle_points, P, N, 1e-16);
+                        if (side1 == 0)
+                        {
+                            continue;
+                        }
+
+                        if (side0 * side1 < 0)
+                        {
+                            // The projections of this CP and 'c' onto the line P + t * N are on opposite sides of the projection of P.
+                            intersecting = false;
+                            double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
+                            if (tmp_dist < dist)
+                            {
+                                dist = tmp_dist;
+                                point_on_polyhedron = c1;
+                                point_on_triangle = c2;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (intersecting)
+            {
+                return 0;
+            }
+            else
+            {
+                return dist;
+            }
+        }
+
+        /// <summary>
         /// Distance from polyhedron to segment
         /// <para> The output points are valid only in case of non-intersecting objects.</para>
         /// </summary>
@@ -1542,37 +1763,7 @@ namespace GeometRi
             return null;
         }
 
-        /// <summary>
-        /// Distance from polyhedron to triangle
-        /// </summary>
-        public double DistanceTo(Triangle t)
-        {
-            if (t.A.BelongsTo(this) || t.B.BelongsTo(this) || t.C.BelongsTo(this))
-            {
-                return 0;
-            }
 
-            double dist = double.PositiveInfinity;
-
-            for (int i = 0; i < numFaces; i++)
-            {
-                for (int j = 0; j < face[i].vertex.Length - 2; j++)
-                {
-                    Triangle tmp = new Triangle(face[i].Vertex[0], face[i].Vertex[j + 1], face[i].Vertex[j + 2]);
-                    double tmp_dist = t.DistanceTo(tmp);
-                    if (tmp_dist <= GeometRi3D.Tolerance)
-                    {
-                        return tmp_dist;
-                    }
-                    if (tmp_dist < dist)
-                    {
-                        dist = tmp_dist;
-                    }
-                }
-
-            }
-            return dist;
-        }
 
 
 

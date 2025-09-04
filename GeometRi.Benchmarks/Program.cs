@@ -122,7 +122,7 @@ namespace GeometRi.Benchmarks
             //});
 
 
-            TestSegmentPolyhedronDistance();
+            TestTrianglePolyhedronDistance();
 
             Console.ReadLine();
         }
@@ -245,6 +245,39 @@ namespace GeometRi.Benchmarks
                 }
                 Console.WriteLine(dist);
             });
+
+
+
+
+
+            Console.ReadLine();
+        }
+
+        static void TestTrianglePolyhedronDistance()
+        {
+            Random rnd = new Random();
+            List<Triangle> list = new List<Triangle>();
+            for (int i = 0; i < 9000; i++)
+            {
+                list.Add(new Triangle(new Point3d(rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5),
+                                      new Point3d(rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5),
+                                      new Point3d(rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5, rnd.NextDouble() - 0.5)));
+            }
+            ConvexPolyhedron cp = ConvexPolyhedron.RhombicDodecahedron().Scale(0.1);
+            //ConvexPolyhedron cp = ConvexPolyhedron.Cube(new Point3d(0.05, 0.15, 0.05), new Point3d(0.55, 0.75, 0.15));
+
+
+
+            Profile("Test", 4, () =>
+            {
+                double dist = 0;
+                foreach (Triangle t in list)
+                {
+                    dist += cp.DistanceTo(t);
+                }
+                Console.WriteLine(dist);
+            });
+
 
 
 
