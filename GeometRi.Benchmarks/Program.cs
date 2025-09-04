@@ -122,7 +122,7 @@ namespace GeometRi.Benchmarks
             //});
 
 
-            TestTrianglePolyhedronDistance();
+            TestSegmentPolyhedronDistance();
 
             Console.ReadLine();
         }
@@ -245,7 +245,6 @@ namespace GeometRi.Benchmarks
                 }
                 Console.WriteLine(dist);
             });
-
 
 
 

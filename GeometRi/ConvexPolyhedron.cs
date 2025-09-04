@@ -21,7 +21,6 @@ namespace GeometRi
         private AABB _aabb = null;
         private List<Segment3d> _list_e = null;
 
-
         /// <summary>
         /// Edge of a convex polyhedron.
         /// </summary>
@@ -886,18 +885,21 @@ namespace GeometRi
         {
             get
             {
-                if (_list_e == null)
+                lock (this)
                 {
-                    _list_e = new List<Segment3d> { };
-                    foreach (Edge e in edge)
+                    if (_list_e == null)
                     {
-                        _list_e.Add(new Segment3d(e.P1, e.P2));
+                        _list_e = new List<Segment3d> { };
+                        foreach (Edge e in edge)
+                        {
+                            _list_e.Add(new Segment3d(e.P1, e.P2));
+                        }
+                        return _list_e;
                     }
-                    return _list_e;
-                }
-                else
-                {
-                    return _list_e;
+                    else
+                    {
+                        return _list_e;
+                    }
                 }
             }
         }
@@ -1060,9 +1062,8 @@ namespace GeometRi
             // test edges
             double dist = double.PositiveInfinity;
 
-            for (int i = 0; i < this.numEdges; i++)
+            foreach (Segment3d s1 in ListOfEdges)
             {
-                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
                 double tmp_dist = p.DistanceTo(s1);
                 if (tmp_dist < dist)
                 {
@@ -1205,6 +1206,7 @@ namespace GeometRi
                             dist = tmp_dist;
                             point_on_this_cp = best_proj_point;
                             point_on_target_cp = target_point;
+                            return dist;
                         }
                     }
                 }
@@ -1264,6 +1266,7 @@ namespace GeometRi
                             dist = tmp_dist;
                             point_on_this_cp = target_point;
                             point_on_target_cp = best_proj_point;
+                            return dist;
                         }
                     }
 
@@ -1274,12 +1277,10 @@ namespace GeometRi
             {
                 // Polyhedrons are not intersecting
                 // Compare edges distance
-                for (int i = 0; i < this.numEdges; i++)
+                foreach (Segment3d s1 in ListOfEdges)
                 {
-                    Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
-                    for (int j = 0; j < c.numEdges; j++)
+                    foreach (Segment3d s2 in c.ListOfEdges)
                     {
-                        Segment3d s2 = new Segment3d(c.vertex[c.edge[j].p1], c.vertex[c.edge[j].p2]);
                         double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
                         if (tmp_dist < dist)
                         {
@@ -1295,16 +1296,14 @@ namespace GeometRi
             // Test cross products of pairs of edge directions
             // one edge direction from each polyhedron
 
-            for (int i = 0; i < this.numEdges; i++)
+            foreach (Segment3d s1 in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
-                Vector3d P = this.edge[i].P1.ToVector;
-                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
-                for (int j = 0; j < c.numEdges; j++)
+                Vector3d D0 = new Vector3d(s1.P1, s1.P2);
+                Vector3d P = s1.P1.ToVector;
+                foreach (Segment3d s2 in c.ListOfEdges)
                 {
-                    Vector3d D1 = new Vector3d(c.edge[j].P1, c.edge[j].P2);
+                    Vector3d D1 = new Vector3d(s2.P1, s2.P2);
                     Vector3d N = D0.Cross(D1);
-                    Segment3d s2 = new Segment3d(c.vertex[c.edge[j].p1], c.vertex[c.edge[j].p2]);
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
@@ -1427,7 +1426,7 @@ namespace GeometRi
                             dist = tmp_dist;
                             point_on_polyhedron = best_proj_point;
                             point_on_triangle = target_point;
-                            //return dist;
+                            return dist;
                         }
                     }
                 }
@@ -1481,7 +1480,7 @@ namespace GeometRi
                             dist = tmp_dist;
                             point_on_polyhedron = target_point;
                             point_on_triangle = best_proj_point;
-                            //return dist;
+                            return dist;
                         }
                     }
 
@@ -1492,9 +1491,8 @@ namespace GeometRi
             {
                 // Polyhedrons are not intersecting
                 // Compare edges distance
-                for (int i = 0; i < this.numEdges; i++)
+                foreach (Segment3d s1 in ListOfEdges)
                 {
-                    Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
                     for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
                     {
                         Segment3d s2 = new Segment3d(triangle_points[j0], triangle_points[j1]);
@@ -1512,16 +1510,14 @@ namespace GeometRi
 
             // Test cross products of pairs of edge directions
             // one edge direction from each polyhedron
-            for (int i = 0; i < this.numEdges; i++)
+            foreach (Segment3d s1 in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
-                Vector3d P = this.edge[i].P1.ToVector;
-                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                Vector3d D0 = new Vector3d(s1.P1, s1.P2);
+                Vector3d P = s1.P1.ToVector;
                 for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
                 {
                     Vector3d D1 = new Vector3d(triangle_points[j0], triangle_points[j1]);
                     Vector3d N = D0.Cross(D1);
-                    Segment3d s2 = new Segment3d(triangle_points[j0], triangle_points[j1]);
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
@@ -1540,6 +1536,7 @@ namespace GeometRi
                         {
                             // The projections of this CP and 'c' onto the line P + t * N are on opposite sides of the projection of P.
                             intersecting = false;
+                            Segment3d s2 = new Segment3d(triangle_points[j0], triangle_points[j1]);
                             double tmp_dist = s1.DistanceTo(s2, out c1, out c2);
                             if (tmp_dist < dist)
                             {
@@ -1646,10 +1643,9 @@ namespace GeometRi
             {
                 // Polyhedron and segment are not intersecting
                 // Compare edges distance
-                for (int i = 0; i < this.numEdges; i++)
+                foreach (Segment3d s in ListOfEdges)
                 {
-                    Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
-                    double tmp_dist = s1.DistanceTo(c, out c1, out c2);
+                    double tmp_dist = s.DistanceTo(c, out c1, out c2);
                     if (tmp_dist < dist)
                     {
                         dist = tmp_dist;
@@ -1661,11 +1657,10 @@ namespace GeometRi
             }
 
             // Test cross products of segment and edges
-            for (int i = 0; i < this.numEdges; i++)
+            foreach (Segment3d s in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
-                Vector3d P = this.edge[i].P1.ToVector;
-                Segment3d s1 = new Segment3d(this.vertex[this.edge[i].p1], this.vertex[this.edge[i].p2]);
+                Vector3d D0 = new Vector3d(s.P1, s.P2);
+                Vector3d P = s.P1.ToVector;
 
                 Vector3d D1 = new Vector3d(c.P1, c.P2);
                 Vector3d N = D0.Cross(D1);
@@ -1687,7 +1682,7 @@ namespace GeometRi
                     {
                         // The projections of this CP and 'c' onto the line P + t * N are on opposite sides of the projection of P.
                         intersecting = false;
-                        double tmp_dist = s1.DistanceTo(c, out c1, out c2);
+                        double tmp_dist = s.DistanceTo(c, out c1, out c2);
                         if (tmp_dist < dist)
                         {
                             dist = tmp_dist;
@@ -1943,10 +1938,10 @@ namespace GeometRi
             }
 
             // Test cross products of edges
-            for (int i = 0; i < this.numEdges; i++)
+            foreach (Segment3d s1 in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
-                P = this.edge[i].P1.ToVector;
+                Vector3d D0 = new Vector3d(s1.P1, s1.P2);
+                P = s1.P1.ToVector;
                 for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
                 {
                     Vector3d D1 = new Vector3d(triangle_points[j0], triangle_points[j1]);
