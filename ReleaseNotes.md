@@ -1,6 +1,11 @@
 # GeometRi
 ## Release notes
 
+### 1.5.0.4 (5/9/2025)
+* Optimizations of polyhedron distance calculations.
+* Intersection check of polyhedron, segment, and triangle.
+* Fixed polyhdron-polyhedron distance calculation.
+
 ### 1.5.0.3 (2/9/2025)
 * Optimizations of distance calculations for various objects.
 

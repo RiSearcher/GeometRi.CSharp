@@ -208,7 +208,7 @@ Represent a line segment in 3D space and is defined by two points.
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, line, ray, plane, circle, sphere, triangle, polyhedron or other segment
 * __IntersectionWith__ - intersection of segment with line, plane, ellipse, triangle, ellipsoid, sphere, circle, box or other segment
-* __Intersects__ - intersection check with circle
+* __Intersects__ - intersection check with circle and polyhedron
 * __ProjectionTo__ - orthogonal projection of segment to the line or plane
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -459,7 +459,7 @@ triangle properties: bisectors, meadians, altitudes, incenter, circumcenter, cen
 * __BoundingBox__ - Axis Aligned Bounding Box (AABB) in given coordinate system
 * __DistanceTo__ - shortest distance to point, segment, triangle and circle
 * __IntersectionWith__ - intersection of triangle with line, plane, ray or segment
-* __Intersects__ - intersection check with triangle, box, tetrahedron, sphere or circle
+* __Intersects__ - intersection check with triangle, box, tetrahedron, sphere, polyhedron or circle
 * __ProjectionTo__ - orthogonal projection of triangle to line
 * __IsParallelTo__ - check if two objects are parallel
 * __IsNotParallelTo__ - check if two objects are NOT parallel
@@ -511,7 +511,7 @@ Defines a convex polyhedron in 3D space with counterclockwise oriented faces (se
 * __BoundingBox__ - bounding box in given coordinate system
 * __AABB__ - Axis Aligned Bounding Box (AABB)
 * __DistanceTo__ - shortest distance to point, circle, sphere, segment, triangle, and polyhedron
-* __Intersects__ - intersection check with polyhedron and box
+* __Intersects__ - intersection check with polyhedron, segment, triangle and box
 * __IsInside__ - check if object is located inside given box
 * __Translate__ - translate polyhedron by vector
 * __Rotate__ - rotate polyhedron around origin or other point
