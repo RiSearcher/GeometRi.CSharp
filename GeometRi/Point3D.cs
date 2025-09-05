@@ -221,13 +221,13 @@ namespace GeometRi
         public double DistanceTo(Line3d l)
         {
             Vector3d v = new Vector3d(this, l.Point);
-            return v.Cross(l.Direction.Normalized).Norm;
+            return v.Cross(l.Direction).Norm;
         }
 
         public double DistanceSquared(Line3d l)
         {
             Vector3d v = new Vector3d(this, l.Point);
-            return v.Cross(l.Direction.Normalized).NormSquared;
+            return v.Cross(l.Direction).NormSquared;
         }
 
         /// <summary>
@@ -235,12 +235,13 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Plane3d s)
         {
-            return this.DistanceTo(this.ProjectionTo(s));
+            return Math.Abs(s._normal * new Vector3d(s._point, this));
         }
 
         public double DistanceSquared(Plane3d s)
         {
-            return DistanceSquared(this.ProjectionTo(s));
+            double dist = Math.Abs(s._normal * new Vector3d(s._point, this));
+            return dist * dist;
         }
 
         /// <summary>
