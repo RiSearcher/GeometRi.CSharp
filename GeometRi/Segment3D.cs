@@ -114,7 +114,7 @@ namespace GeometRi
         /// </summary>
         public Vector3d ToVector
         {
-            get { return Vector.Copy(); }
+            get { return new Vector3d(_p1, _p2); }
         }
 
     
