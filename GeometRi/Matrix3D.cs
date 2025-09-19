@@ -39,9 +39,12 @@ namespace GeometRi
         public Matrix3d(double[] row1, double[] row2, double[] row3)
         {
             val = new double[3, 3];
-            Row1 = new Vector3d(row1);
-            Row2 = new Vector3d(row2);
-            Row3 = new Vector3d(row3);
+            for (int i = 0; i <= 2; i++)
+            {
+                val[0, i] = row1[i];
+                val[1, i] = row2[i];
+                val[2, i] = row3[i];
+            }
         }
 
         public static Matrix3d Identity()

@@ -180,7 +180,7 @@ namespace GeometRi
         /// <returns></returns>
         public Point3d Origin
         {
-            get { return new Point3d(_origin.X, _origin.Y, _origin.Z); }
+            get { return _origin; }
             set { _origin = value.ConvertToGlobal(); }
         }
         /// <summary>
@@ -189,7 +189,7 @@ namespace GeometRi
         /// <returns></returns>
         public Matrix3d Axes
         {
-            get { return _axes.Copy(); }
+            get { return _axes; }
             set
             {
                 if (value.IsOrthogonal)

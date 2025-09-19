@@ -73,7 +73,7 @@ namespace GeometRi
         /// </summary>
         public Point3d Center
         {
-            get { return _center.Copy(); }
+            get { return _center; }
             set
             {
                 _center = value.Copy();
@@ -769,9 +769,9 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(AABB box)
         {
-            double dx = Abs(_center.X - box.Center.X) - 0.5 * (_lx + box._lx);
-            double dy = Abs(_center.Y - box.Center.Y) - 0.5 * (_ly + box._ly);
-            double dz = Abs(_center.Z - box.Center.Z) - 0.5 * (_lz + box._lz);
+            double dx = Abs(_center.X - box._center.X) - 0.5 * (_lx + box._lx);
+            double dy = Abs(_center.Y - box._center.Y) - 0.5 * (_ly + box._ly);
+            double dz = Abs(_center.Z - box._center.Z) - 0.5 * (_lz + box._lz);
             if (dx < 0) { dx = 0; }
             if (dy < 0) { dy = 0; }
             if (dz < 0) { dz = 0; }
