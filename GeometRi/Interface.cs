@@ -33,4 +33,17 @@ namespace GeometRi
         Box3d MinimumBoundingBox { get; }
         Sphere BoundingSphere { get; }
     }
+
+    /// <summary>
+    /// Interface for basic operations with points and vectors
+    /// </summary>
+    public interface IVector
+    {
+        //Coord3d Coord { get; }
+        double Dot(IVector v);
+        IVector Subtract(IVector v);
+        double X { get; }
+        double Y { get; }
+        double Z { get; }
+    }
 }
