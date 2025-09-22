@@ -1,6 +1,10 @@
 # GeometRi
 ## Release notes
 
+### 1.5.0.5 (22/9/2025)
+* Fixed null reference error in multi-threaded applications.
+* Small optimizations.
+
 ### 1.5.0.4 (5/9/2025)
 * Optimizations of polyhedron distance calculations.
 * Intersection check of polyhedron, segment, and triangle.

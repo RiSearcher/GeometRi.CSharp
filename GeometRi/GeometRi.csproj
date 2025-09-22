@@ -7,7 +7,7 @@
     <Description>GeometRi is a simple and lightweight 3D geometry library for .Net. Its main purpose is manipulations with basic geometrical primitives, such as point, line, plane, segment in 3D space: translation and rotation operations, distance calculation, intersections, orthogonal projections of one object into another, etc. The basic objects can be defined in global or in one of the local coordinate systems and converted form one coordinate system into another. Each object stores its reference coordinate system and all necessary transformations are performed implicitly when needed.
 
 Compatible with .Net Framework 2.0, .Net Standard 1.0, .Net Core 3.1 and .Net 5.</Description>
-    <Copyright>Copyright (c) 2017 Sergey Tarasov</Copyright>
+    <Copyright>Copyright (c) 2017-2025 Sergey Tarasov</Copyright>
     <AssemblyVersion>1.5.0.5</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Sergey Tarasov</Authors>
@@ -15,9 +15,8 @@ Compatible with .Net Framework 2.0, .Net Standard 1.0, .Net Core 3.1 and .Net 5.
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
     <Version>1.5.0.5</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes>Optimizations of polyhedron distance calculations.
-Intersection check of polyhedron, segment, and triangle.
-Fixed polyhedron-polyhedron distance calculation.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed null reference error in multi-threaded applications.
+Small optimizations.</PackageReleaseNotes>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
