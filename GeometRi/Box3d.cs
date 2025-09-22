@@ -661,10 +661,10 @@ namespace GeometRi
             // Smith's algorithm:
             // "An Efficient and Robust Ray–Box Intersection Algorithm"
             // Amy Williams, Steve Barrus, R. Keith Morley, Peter Shirley
-            // http://www.cs.utah.edu/~awilliam/box/box.pdf
+            // https://people.csail.mit.edu/amy/papers/box-jgt.pdf
 
             // Modified to allow tolerance based checks
-            
+
             // Relative tolerance ================================
             if (!GeometRi3D.UseAbsoluteTolerance)
             {

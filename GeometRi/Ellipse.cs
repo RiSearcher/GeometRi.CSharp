@@ -356,7 +356,7 @@ namespace GeometRi
                 {
                     // coplanar objects
                     // Find intersection of line and ellipse (2D)
-                    // Solution from: http://www.ambrsoft.com/TrigoCalc/Circles2/Ellipse/EllipseLine.htm
+                    // Solution from: https://www.ambrbit.com/TrigoCalc/Circles2/Ellipse/EllipseLine.htm
 
                     Coord3d local_coord = new Coord3d(this.Center, this._v1, this._v2);
                     Point3d p = l.Point.ConvertTo(local_coord);

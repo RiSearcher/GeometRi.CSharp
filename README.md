@@ -621,3 +621,19 @@ Rotation in 3D space defined in global or local reference frame (internally repr
 * __NotEqual__ - tolerance based unequality check
 * __Greater__ - tolerance based comparison
 * __Smaller__ - tolerance based comparison
+
+## Credits
+
+Some of the algorithms were ported from [Geometric Tools](https://www.geometrictools.com/) developed by David Eberly and available under the Boost license, available [here](https://www.geometrictools.com/Downloads/Downloads.html)
+
+Other algorithms were adapted from these sources:
+* Amy Williams, Steve Barrus, R. Keith Morley, Peter Shirley "An Efficient and Robust Ray–Box Intersection Algorithm" [PDF](https://people.csail.mit.edu/amy/papers/box-jgt.pdf)
+* Stephen B. Pope "Algorithms for Ellipsoids" [PDF](https://tcg.mae.cornell.edu/pubs/Pope_FDA_08.pdf)
+* [https://www.ambrbit.com/TrigoCalc/Circles2/Ellipse/EllipseLine.htm](https://www.ambrbit.com/TrigoCalc/Circles2/Ellipse/EllipseLine.htm)
+* Robert Nurnberg "Distance from a Point to an Ellipse/Ellipsoid" [PDF](https://nurnberg.maths.unitn.it/distance2ellipse.pdf)
+* Johannes Buchner [line - ellipsoid intersection](https://johannesbuchner.github.io/intersection/intersection_line_ellipsoid.html)
+* Peter Paul Klein "On the Ellipsoid and Plane Intersection Equation", Applied Mathematics, 2012, 3, 1634-1640 (DOI:10.4236/am.2012.311226)
+* Sebahattin Bektas "Intersection of an Ellipsoid and a Plane", International Journal of Research in Engineering and Applied Sciences, VOLUME 6, ISSUE 6 (June, 2016)
+* Wang, W., Wang, J., & Kim, M. S. (2001). An algebraic condition for the separation of two ellipsoids. Computer aided geometric design, 18(6), 531-539.
+* Dan Sunday [URL](http://geomalgorithms.com/a07-_distance.html)
+* Möller–Trumbore intersection algorithm [URL](https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm)
