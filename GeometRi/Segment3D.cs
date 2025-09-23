@@ -78,7 +78,7 @@ namespace GeometRi
                 CheckFields();
                 if (_center == null)
                 {
-                    _center = (_p1 + _p2) / 2;
+                    _center = _p1.Add(_p2, 0.5, 0.5);
                 }
                 return _center;
             }

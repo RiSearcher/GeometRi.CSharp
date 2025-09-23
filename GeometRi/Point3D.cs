@@ -146,56 +146,42 @@ namespace GeometRi
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);
-            Point3d tmp = this.Copy();
-            tmp.X += p.X;
-            tmp.Y += p.Y;
-            tmp.Z += p.Z;
-            return tmp;
+            return new Point3d(_x + p._x, _y + p._y, _z + p._z, _coord);
+        }
+        internal Point3d Add(Point3d p, double a, double b)
+        {
+            if ((this._coord != p._coord))
+                p = p.ConvertTo(this._coord);
+            return new Point3d(a * this.X + b * p.X, a * this.Y + b * p.Y, a * this.Z + b * p.Z, _coord);
         }
 
         public Point3d Add(Vector3d p)
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);
-            Point3d tmp = this.Copy();
-            tmp.X += p.X;
-            tmp.Y += p.Y;
-            tmp.Z += p.Z;
-            return tmp;
+            return new Point3d(_x + p.X, _y + p.Y, _z + p.Z, _coord);
         }
         public Point3d Subtract(Point3d p)
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);
-            Point3d tmp = this.Copy();
-            tmp.X -= p.X;
-            tmp.Y -= p.Y;
-            tmp.Z -= p.Z;
-            return tmp;
+            return new Point3d(_x - p._x, _y - p._y, _z - p._z, _coord);
         }
         internal Point3d Subtract(Point3d p, double a, double b)
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);
-            return new Point3d(a * this.X - b * p.X, a * this.Y - b * p.Y, a * this.Z - b * p.Z);
+            return new Point3d(a * this.X - b * p.X, a * this.Y - b * p.Y, a * this.Z - b * p.Z, _coord);
         }
         public Point3d Subtract(Vector3d p)
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);
-            Point3d tmp = this.Copy();
-            tmp.X -= p.X;
-            tmp.Y -= p.Y;
-            tmp.Z -= p.Z;
-            return tmp;
+            return new Point3d(_x - p.X, _y - p.Y, _z - p.Z, _coord);
         }
         public Point3d Scale(double a)
         {
-            Point3d tmp = this.Copy();
-            tmp.X *= a;
-            tmp.Y *= a;
-            tmp.Z *= a;
-            return tmp;
+            return new Point3d(a * _x, a * _y, a * _z, _coord);
         }
         internal double Dot(Point3d p)
         {
@@ -309,8 +295,10 @@ namespace GeometRi
         public double DistanceTo(Segment3d s, out Point3d closest_point)
         {
             // Segment S = P1 + t * (P2-P1)
-            Vector3d dir = new Vector3d(s.P1, s.P2);
-            double t0 = dir * new Vector3d(s.P1, this);
+            //Vector3d dir = new Vector3d(s.P1, s.P2);
+            //double t0 = dir * new Vector3d(s.P1, this);
+            Point3d dir = s.P2 - s.P1;
+            double t0 = dir.Dot(this - s.P1);
 
             if (t0 <= 0)
             {
@@ -318,7 +306,8 @@ namespace GeometRi
                 return this.DistanceTo(s.P1);
             }
 
-            double dir_sqr = dir * dir;
+            //double dir_sqr = dir * dir;
+            double dir_sqr = dir.Dot(dir);
             if (dir_sqr > 0)
             {
                 t0 = t0 / dir_sqr;
