@@ -73,7 +73,7 @@ namespace GeometRi
         public double X
         {
             get { return _x; }
-            set { _x = value; HasChanged = true; }
+            //set { _x = value; HasChanged = true; }
         }
         /// <summary>
         /// Y coordinate in reference coordinate system
@@ -81,7 +81,7 @@ namespace GeometRi
         public double Y
         {
             get { return _y; }
-            set { _y = value; HasChanged = true;}
+            //set { _y = value; HasChanged = true;}
         }
         /// <summary>
         /// Z coordinate in reference coordinate system
@@ -89,7 +89,7 @@ namespace GeometRi
         public double Z
         {
             get { return _z; }
-            set { _z = value; HasChanged = true;}
+            //set { _z = value; HasChanged = true;}
         }
 
         /// <summary>
@@ -285,8 +285,27 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            Point3d closest_point;
-            return this.DistanceTo(s, out closest_point);
+            //Point3d closest_point;
+            //return this.DistanceTo(s, out closest_point);
+
+            Point3d dir = s.P2 - s.P1;
+            double t0 = dir.Dot(this - s.P1);
+
+            if (t0 <= 0)
+            {
+                return this.DistanceTo(s.P1);
+            }
+
+            double dir_sqr = dir.Dot(dir);
+            t0 = t0 / dir_sqr;
+            if (t0 >= 1)
+            {
+                return this.DistanceTo(s.P2);
+            }
+            else
+            {
+                return this.DistanceTo(s.P1 + t0 * dir);
+            }
         }
 
         /// <summary>
@@ -308,25 +327,36 @@ namespace GeometRi
 
             //double dir_sqr = dir * dir;
             double dir_sqr = dir.Dot(dir);
-            if (dir_sqr > 0)
+            t0 = t0 / dir_sqr;
+            if (t0 >= 1)
             {
-                t0 = t0 / dir_sqr;
-                if (t0 >= 1)
-                {
-                    closest_point = s.P2;
-                    return this.DistanceTo(s.P2);
-                }
-                else
-                {
-                    closest_point = s.P1 + t0 * dir;
-                    return this.DistanceTo(closest_point);
-                }
+                closest_point = s.P2;
+                return this.DistanceTo(s.P2);
             }
             else
             {
-                closest_point = s.P1;
-                return this.DistanceTo(s.P1);
+                closest_point = s.P1 + t0 * dir;
+                return this.DistanceTo(closest_point);
             }
+            //if (dir_sqr > 0)
+            //{
+            //    t0 = t0 / dir_sqr;
+            //    if (t0 >= 1)
+            //    {
+            //        closest_point = s.P2;
+            //        return this.DistanceTo(s.P2);
+            //    }
+            //    else
+            //    {
+            //        closest_point = s.P1 + t0 * dir;
+            //        return this.DistanceTo(closest_point);
+            //    }
+            //}
+            //else
+            //{
+            //    closest_point = s.P1;
+            //    return this.DistanceTo(s.P1);
+            //}
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace GeometRi
         public double X
         {
             get { return _point.X; }
-            set { _point.X = value; }
+            //set { _point.X = value; }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace GeometRi
         public double Y
         {
             get { return _point.Y; }
-            set { _point.Y = value; }
+            //set { _point.Y = value; }
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace GeometRi
         public double Z
         {
             get { return _point.Z; }
-            set { _point.Z = value; }
+            //set { _point.Z = value; }
         }
 
         /// <summary>
