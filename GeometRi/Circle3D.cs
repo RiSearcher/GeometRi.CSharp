@@ -7,7 +7,7 @@ namespace GeometRi
     /// <summary>
     /// Circle in 3D space defined by center point, radius and normal vector.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Circle3d : FiniteObject, IPlanarObject, IFiniteObject

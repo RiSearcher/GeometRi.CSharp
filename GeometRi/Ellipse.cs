@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Ellipse in 3D space, defined by center point and two orthogonal vectors, major and minor semiaxes.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Ellipse : FiniteObject, IPlanarObject, IFiniteObject

@@ -7,7 +7,7 @@ namespace GeometRi
     /// <summary>
     /// Arbitrary oriented 3D box, can be degenerated with one or more dimensions equal 0.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Box3d : FiniteObject, IFiniteObject

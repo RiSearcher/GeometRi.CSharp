@@ -8,7 +8,7 @@ namespace GeometRi
     /// <summary>
     /// Convex polyhedron with counterclockwise oriented faces (seen from outside).
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class ConvexPolyhedron : FiniteObject, IFiniteObject
@@ -24,7 +24,7 @@ namespace GeometRi
         /// <summary>
         /// Edge of a convex polyhedron.
         /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
         public struct Edge
@@ -59,7 +59,7 @@ namespace GeometRi
             Point3d this[int index] { get; }
         }
 
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
         public struct Face : IVertex

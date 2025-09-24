@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Sphere object defined by center point and radius.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Sphere : FiniteObject, IFiniteObject

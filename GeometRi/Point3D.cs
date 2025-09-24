@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Point in 3D space defined in global or local reference frame.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Point3d
@@ -199,6 +199,23 @@ namespace GeometRi
             return new Point3d(x, y, z, _coord); ;
         }
 
+        internal (double x, double y, double z) _TSubtract(Point3d p)
+        {
+            if ((this._coord != p._coord))
+                p = p.ConvertTo(this._coord);
+            return (_x - p._x, _y - p._y, _z - p._z);
+        }
+
+        internal double Dot(double x, double y, double z)
+        {
+            return this.X * x + this.Y * y + this.Z * z;
+        }
+
+        internal Point3d _TAdd(ValueTuple<double, double, double> p)
+        {
+            return new Point3d(_x + p.Item1, _y + p.Item2, _z + p.Item3, _coord);
+        }
+
         #region "DistanceTo"
         /// <summary>
         /// Returns distance between two points
@@ -285,11 +302,13 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Segment3d s)
         {
-            //Point3d closest_point;
-            //return this.DistanceTo(s, out closest_point);
 
             Point3d dir = s.P2 - s.P1;
             double t0 = dir.Dot(this - s.P1);
+
+            //(double x1, double y1, double z1) = s.P2._TSubtract(s.P1);
+            //(double x2, double y2, double z2) = this._TSubtract(s.P1);
+            //double t0 = x1 * x2 + y1 * y2 + z1 * z2;
 
             if (t0 <= 0)
             {
@@ -297,6 +316,7 @@ namespace GeometRi
             }
 
             double dir_sqr = dir.Dot(dir);
+            //double dir_sqr = x1 * x1 + y1 * y1 + z1 * z1;
             t0 = t0 / dir_sqr;
             if (t0 >= 1)
             {
@@ -304,6 +324,8 @@ namespace GeometRi
             }
             else
             {
+                //Point3d p = s.P1._TAdd((t0 * x1, t0  *y1, t0 * z1));
+                //return this.DistanceTo(p);
                 return this.DistanceTo(s.P1 + t0 * dir);
             }
         }
@@ -338,25 +360,7 @@ namespace GeometRi
                 closest_point = s.P1 + t0 * dir;
                 return this.DistanceTo(closest_point);
             }
-            //if (dir_sqr > 0)
-            //{
-            //    t0 = t0 / dir_sqr;
-            //    if (t0 >= 1)
-            //    {
-            //        closest_point = s.P2;
-            //        return this.DistanceTo(s.P2);
-            //    }
-            //    else
-            //    {
-            //        closest_point = s.P1 + t0 * dir;
-            //        return this.DistanceTo(closest_point);
-            //    }
-            //}
-            //else
-            //{
-            //    closest_point = s.P1;
-            //    return this.DistanceTo(s.P1);
-            //}
+
         }
 
         /// <summary>
