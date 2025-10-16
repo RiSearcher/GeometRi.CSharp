@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Cartesian coordinate system defined by origin and transformation matrix (in row format).
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Coord3d

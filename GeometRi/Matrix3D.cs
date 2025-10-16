@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// General 3x3 matrix class.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Matrix3d

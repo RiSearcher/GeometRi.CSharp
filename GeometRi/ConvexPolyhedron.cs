@@ -8,7 +8,7 @@ namespace GeometRi
     /// <summary>
     /// Convex polyhedron with counterclockwise oriented faces (seen from outside).
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class ConvexPolyhedron : FiniteObject, IFiniteObject
@@ -24,7 +24,7 @@ namespace GeometRi
         /// <summary>
         /// Edge of a convex polyhedron.
         /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
         public struct Edge
@@ -59,7 +59,7 @@ namespace GeometRi
             Point3d this[int index] { get; }
         }
 
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
         public struct Face : IVertex
@@ -1127,7 +1127,195 @@ namespace GeometRi
         /// <param name="c">Target polyhedron</param>
         public double DistanceTo(ConvexPolyhedron c)
         {
-            return DistanceTo(c, out Point3d c1, out Point3d c2);
+            // Use "Method of Separating Axes" to test intersection combined with distance calculation
+
+            // Intersection of Convex Objects: The Method of Separating Axes
+            // David Eberly, Geometric Tools, Redmond WA 98052
+            // Creative Commons Attribution 4.0 International License
+
+            double dist = double.PositiveInfinity;
+            bool intersecting = true;
+
+            // Test faces of this CP for separation. Because of the counterclockwise ordering,
+            // the projection interval for this CP is (-inf, 0].
+            // Determine whether 'c' is on the positive side of the line
+            for (int i = 0; i < this.numFaces; i++)
+            {
+                Vector3d N = this.face[i].normal;
+                if (WhichSide(c.vertex, this.face[i].Vertex[0], N) > 0)
+                {
+                    // 'c' is entirely on the positive side of the line P + t * N
+                    // Calculate min projection distance to face's plane
+                    intersecting = false;
+                    double square_proj_dist = double.PositiveInfinity;
+                    Point3d best_proj_point = this.face[i].Vertex[0];
+                    Point3d target_point = this.face[i].Vertex[0];
+
+                    Plane3d plane = new Plane3d(this.face[i].Vertex[0], this.face[i].normal);
+                    foreach (Point3d point in c.vertex)
+                    {
+                        Point3d projection = point.ProjectionTo(plane);
+                        double tmp_dist = projection.DistanceSquared(point);
+                        if (tmp_dist < square_proj_dist)
+                        {
+                            square_proj_dist = tmp_dist;
+                            best_proj_point = projection;
+                            target_point = point;
+                        }
+                    }
+                    // test if best projection of c.vertex is inside the face
+                    bool inside = true;
+                    for (int l = 0; l < this.face[i].vertex.Length; l++)
+                    {
+                        Vector3d edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[0]);
+                        if (l < this.face[i].vertex.Length - 1)
+                        {
+                            edge = new Vector3d(this.face[i].Vertex[l], this.face[i].Vertex[l + 1]);
+                        }
+                        Vector3d v = new Vector3d(this.face[i].Vertex[l], best_proj_point);
+                        if (edge.Cross(v).Dot(this.face[i].normal) < 0)
+                        {
+                            // projection outside of face
+                            inside = false;
+                            break;
+                        }
+
+                    }
+                    if (inside)
+                    {
+                        double tmp_dist = Math.Sqrt(square_proj_dist);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            return dist;
+                        }
+                    }
+                }
+            }
+
+            // Test faces 'c' for separation. Because of the counterclockwise ordering,
+            // the projection interval for 'c' is (-inf, 0].
+            // Determine whether this CP is on the positive side of the line
+            for (int i = 0; i < c.numFaces; i++)
+            {
+                Vector3d N = c.face[i].normal;
+                if (WhichSide(this.vertex, c.face[i].Vertex[0], N) > 0)
+                {
+                    // this CP is entirely on the positive side of the line P + t * N
+                    // Calculate min projection distance to face's plane
+                    intersecting = false;
+                    double square_proj_dist = double.PositiveInfinity;
+                    Point3d best_proj_point = c.face[i].Vertex[0];
+                    Point3d target_point = c.face[i].Vertex[0];
+
+                    Plane3d plane = new Plane3d(c.face[i].Vertex[0], c.face[i].normal);
+                    foreach (Point3d point in this.vertex)
+                    {
+                        Point3d projection = point.ProjectionTo(plane);
+                        double tmp_dist = projection.DistanceSquared(point);
+                        if (tmp_dist < square_proj_dist)
+                        {
+                            square_proj_dist = tmp_dist;
+                            best_proj_point = projection;
+                            target_point = point;
+                        }
+                    }
+                    // test if best projection of this.vertex is inside the face
+                    bool inside = true;
+                    for (int l = 0; l < c.face[i].vertex.Length; l++)
+                    {
+                        Vector3d edge = new Vector3d(c.face[i].Vertex[l], c.face[i].Vertex[0]);
+                        if (l < c.face[i].vertex.Length - 1)
+                        {
+                            edge = new Vector3d(c.face[i].Vertex[l], c.face[i].Vertex[l + 1]);
+                        }
+                        Vector3d v = new Vector3d(c.face[i].Vertex[l], best_proj_point);
+                        if (edge.Cross(v).Dot(c.face[i].normal) < 0)
+                        {
+                            // projection outside of face
+                            inside = false;
+                            break;
+                        }
+
+                    }
+                    if (inside)
+                    {
+                        double tmp_dist = Math.Sqrt(square_proj_dist);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                            return dist;
+                        }
+                    }
+
+                }
+            }
+
+            if (!intersecting)
+            {
+                // Polyhedrons are not intersecting
+                // Compare edges distance
+                foreach (Segment3d s1 in ListOfEdges)
+                {
+                    foreach (Segment3d s2 in c.ListOfEdges)
+                    {
+                        double tmp_dist = s1.DistanceTo(s2);
+                        if (tmp_dist < dist)
+                        {
+                            dist = tmp_dist;
+                        }
+                    }
+                }
+                return dist;
+            }
+
+            // Test cross products of pairs of edge directions
+            // one edge direction from each polyhedron
+
+            foreach (Segment3d s1 in ListOfEdges)
+            {
+                Point3d D0 = s1.P2 - s1.P1;
+                foreach (Segment3d s2 in c.ListOfEdges)
+                {
+                    Point3d D1 = s2.P2 - s2.P1;
+                    Point3d N = D0.Cross(D1);
+
+                    if (N.X != 0 || N.Y != 0 || N.Z != 0)
+                    {
+                        int side0 = WhichSide(this.vertex, s1.P1, N, 1e-16);
+                        if (side0 == 0)
+                        {
+                            continue;
+                        }
+                        int side1 = WhichSide(c.vertex, s1.P1, N, 1e-16);
+                        if (side1 == 0)
+                        {
+                            continue;
+                        }
+
+                        if (side0 * side1 < 0)
+                        {
+                            // The projections of this CP and 'c' onto the line P + t * N are on opposite sides of the projection of P.
+                            intersecting = false;
+                            double tmp_dist = s1.DistanceTo(s2);
+                            if (tmp_dist < dist)
+                            {
+                                dist = tmp_dist;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (intersecting)
+            {
+                return 0;
+            }
+            else
+            {
+                return dist;
+            }
+
         }
 
 
@@ -1158,9 +1346,8 @@ namespace GeometRi
             // Determine whether 'c' is on the positive side of the line
             for (int i = 0; i < this.numFaces; i++)
             {
-                Vector3d P = this.face[i].Vertex[0].ToVector;
                 Vector3d N = this.face[i].normal;
-                if (WhichSide(c.vertex, P, N) > 0)
+                if (WhichSide(c.vertex, this.face[i].Vertex[0], N) > 0)
                 {
                     // 'c' is entirely on the positive side of the line P + t * N
                     // Calculate min projection distance to face's plane
@@ -1217,9 +1404,8 @@ namespace GeometRi
             // Determine whether this CP is on the positive side of the line
             for (int i = 0; i < c.numFaces; i++)
             {
-                Vector3d P = c.face[i].Vertex[0].ToVector;
                 Vector3d N = c.face[i].normal;
-                if (WhichSide(this.vertex, P, N) > 0)
+                if (WhichSide(this.vertex, c.face[i].Vertex[0], N) > 0)
                 {
                     // this CP is entirely on the positive side of the line P + t * N
                     // Calculate min projection distance to face's plane
@@ -1298,21 +1484,20 @@ namespace GeometRi
 
             foreach (Segment3d s1 in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(s1.P1, s1.P2);
-                Vector3d P = s1.P1.ToVector;
+                Point3d D0 = s1.P2 - s1.P1;
                 foreach (Segment3d s2 in c.ListOfEdges)
                 {
-                    Vector3d D1 = new Vector3d(s2.P1, s2.P2);
-                    Vector3d N = D0.Cross(D1);
+                    Point3d D1 = s2.P2 - s2.P1;
+                    Point3d N = D0.Cross(D1);
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
-                        int side0 = WhichSide(this.vertex, P, N, 1e-16);
+                        int side0 = WhichSide(this.vertex, s1.P1, N, 1e-16);
                         if (side0 == 0)
                         {
                             continue;
                         }
-                        int side1 = WhichSide(c.vertex, P, N, 1e-16);
+                        int side1 = WhichSide(c.vertex, s1.P1, N, 1e-16);
                         if (side1 == 0)
                         {
                             continue;
@@ -1357,7 +1542,7 @@ namespace GeometRi
         /// Distance between polyhedron and tringle
         /// <para> The output points are valid only in case of non-intersecting objects.</para>
         /// </summary>
-        /// <param name="c">Target triangle</param>
+        /// <param name="t">Target triangle</param>
         /// <param name="point_on_polyhedron">Closest point on this convex polyhedron</param>
         /// <param name="point_on_triangle">Closest point on target triangle</param>
         public double DistanceTo(Triangle t, out Point3d point_on_polyhedron, out Point3d point_on_triangle)
@@ -1377,9 +1562,8 @@ namespace GeometRi
             Point3d[] triangle_points = { t.A, t.B, t.C };
             for (int i = 0; i < this.numFaces; i++)
             {
-                Vector3d P = this.face[i].Vertex[0].ToVector;
                 Vector3d N = this.face[i].normal;
-                if (WhichSide(triangle_points, P, N) > 0)
+                if (WhichSide(triangle_points, this.face[i].Vertex[0], N) > 0)
                 {
                     // 't' is entirely on the positive side of the line P + t * N
                     // Calculate min projection distance to face's plane
@@ -1432,12 +1616,11 @@ namespace GeometRi
                 }
             }
 
-            // Test faces of triangle for separation.
+            // Test both faces of triangle for separation.
             for (int i = -1; i < 2; i += 2)
             {
-                Vector3d P = t.A.ToVector;
                 Vector3d N = i * t.Normal;
-                if (WhichSide(this.vertex, P, N) > 0)
+                if (WhichSide(this.vertex, t.A, N) > 0)
                 {
                     // this CP is entirely on the positive side of the line P + t * N
                     // Calculate min projection distance to face's plane
@@ -1512,21 +1695,20 @@ namespace GeometRi
             // one edge direction from each polyhedron
             foreach (Segment3d s1 in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(s1.P1, s1.P2);
-                Vector3d P = s1.P1.ToVector;
+                Point3d D0 = s1.P2 - s1.P1;
                 for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
                 {
-                    Vector3d D1 = new Vector3d(triangle_points[j0], triangle_points[j1]);
-                    Vector3d N = D0.Cross(D1);
+                    Point3d D1 = triangle_points[j1] - triangle_points[j0];
+                    Point3d N = D0.Cross(D1);
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
-                        int side0 = WhichSide(this.vertex, P, N, 1e-16);
+                        int side0 = WhichSide(this.vertex, s1.P1, N, 1e-16);
                         if (side0 == 0)
                         {
                             continue;
                         }
-                        int side1 = WhichSide(triangle_points, P, N, 1e-16);
+                        int side1 = WhichSide(triangle_points, s1.P1, N, 1e-16);
                         if (side1 == 0)
                         {
                             continue;
@@ -1583,11 +1765,9 @@ namespace GeometRi
             Point3d[] segment_points = { c.P1, c.P2 };
             for (int i = 0; i < this.numFaces; i++)
             {
-                Vector3d P = this.face[i].Vertex[0].ToVector;
                 Vector3d N = this.face[i].normal;
-                if (WhichSide(segment_points, P, N) > 0)
+                if (WhichSide(segment_points, this.face[i].Vertex[0], N) > 0)
                 {
-                    // 'c' is entirely on the positive side of the line P + t * N
                     // 'c' is entirely on the positive side of the line P + t * N
                     // Calculate min projection distance to face's plane
                     intersecting = false;
@@ -1659,20 +1839,18 @@ namespace GeometRi
             // Test cross products of segment and edges
             foreach (Segment3d s in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(s.P1, s.P2);
-                Vector3d P = s.P1.ToVector;
-
-                Vector3d D1 = new Vector3d(c.P1, c.P2);
-                Vector3d N = D0.Cross(D1);
+                Point3d D0 = s.P2 - s.P1;
+                Point3d D1 = c.P2 - c.P1;
+                Point3d N = D0.Cross(D1);
 
                 if (N.X != 0 || N.Y != 0 || N.Z != 0)
                 {
-                    int side0 = WhichSide(this.vertex, P, N, 1e-16);
+                    int side0 = WhichSide(this.vertex, s.P1, N, 1e-16);
                     if (side0 == 0)
                     {
                         continue;
                     }
-                    int side1 = WhichSide(segment_points, P, N, 1e-16);
+                    int side1 = WhichSide(segment_points, s.P1, N, 1e-16);
                     if (side1 == 0)
                     {
                         continue;
@@ -1783,9 +1961,7 @@ namespace GeometRi
             // Determine whether 'c' is on the positive side of the line
             for (int i = 0; i < this.numFaces; i++)
             {
-                Vector3d P = this.face[i].Vertex[0].ToVector;
-                Vector3d N = this.face[i].normal;
-                if (WhichSide(c.vertex, P, N) > 0)
+                if (WhichSide(c.vertex, this.face[i].Vertex[0], this.face[i].normal) > 0)
                 {
                     // 'c' is entirely on the positive side of the line P + t * N
                     return false;
@@ -1797,9 +1973,7 @@ namespace GeometRi
             // Determine whether this CP is on the positive side of the line
             for (int i = 0; i < c.numFaces; i++)
             {
-                Vector3d P = c.face[i].Vertex[0].ToVector;
-                Vector3d N = c.face[i].normal;
-                if (WhichSide(this.vertex, P, N) > 0)
+                if (WhichSide(this.vertex, c.face[i].Vertex[0], c.face[i].normal) > 0)
                 {
                     // this CP is entirely on the positive side of the line P + t * N
                     return false;
@@ -1810,21 +1984,20 @@ namespace GeometRi
             // one edge direction from each polyhedron
             for (int i = 0; i < this.numEdges; i++)
             {
-                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
-                Vector3d P = this.edge[i].P1.ToVector;
+                Point3d D0 = this.edge[i].P2 - this.edge[i].P1;
                 for (int j = 0; j < c.numEdges; j++)
                 {
-                    Vector3d D1 = new Vector3d(c.edge[j].P1, c.edge[j].P2);
-                    Vector3d N = D0.Cross(D1);
+                    Point3d D1 = c.edge[j].P2 - c.edge[j].P1;
+                    Point3d N = D0.Cross(D1);
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
-                        int side0 = WhichSide(this.vertex, P, N, 1e-16);
+                        int side0 = WhichSide(this.vertex, this.edge[i].P1, N, 1e-16);
                         if (side0 == 0)
                         {
                             continue;
                         }
-                        int side1 = WhichSide(c.vertex, P, N, 1e-16);
+                        int side1 = WhichSide(c.vertex, this.edge[i].P1, N, 1e-16);
                         if (side1 == 0)
                         {
                             continue;
@@ -1857,9 +2030,7 @@ namespace GeometRi
             Point3d[] segment_points = { c.P1, c.P2 };
             for (int i = 0; i < this.numFaces; i++)
             {
-                Vector3d P = this.face[i].Vertex[0].ToVector;
-                Vector3d N = this.face[i].normal;
-                if (WhichSide(segment_points, P, N) > 0)
+                if (WhichSide(segment_points, this.face[i].Vertex[0], this.face[i].normal) > 0)
                 {
                     // 'c' is entirely on the positive side of the line P + t * N
                     return false;
@@ -1869,20 +2040,18 @@ namespace GeometRi
             // Test cross products of segment and edges
             for (int i = 0; i < this.numEdges; i++)
             {
-                Vector3d D0 = new Vector3d(this.edge[i].P1, this.edge[i].P2);
-                Vector3d P = this.edge[i].P1.ToVector;
-
-                Vector3d D1 = new Vector3d(c.P1, c.P2);
-                Vector3d N = D0.Cross(D1);
+                Point3d D0 = this.edge[i].P2 - this.edge[i].P1;
+                Point3d D1 = c.P2 - c.P1;
+                Point3d N = D0.Cross(D1);
 
                 if (N.X != 0 || N.Y != 0 || N.Z != 0)
                 {
-                    int side0 = WhichSide(this.vertex, P, N, 0);
+                    int side0 = WhichSide(this.vertex, this.edge[i].P1, N, 1e-16);
                     if (side0 == 0)
                     {
                         continue;
                     }
-                    int side1 = WhichSide(segment_points, P, N, 0);
+                    int side1 = WhichSide(segment_points, this.edge[i].P1, N, 1e-16);
                     if (side1 == 0)
                     {
                         continue;
@@ -1908,15 +2077,12 @@ namespace GeometRi
             // Using algorithm of separating axes
 
             // Test faces of triangle for separation.
-            Vector3d P = t.A.ToVector;
-            Vector3d N = t.Normal;
-            if (WhichSide(this.vertex, P, N) > 0)
+            if (WhichSide(this.vertex, t.A, t.Normal) > 0)
             {
                 // this CP is entirely on the positive side of the line P + t * N
                 return false;
             }
-            N = -t.Normal;
-            if (WhichSide(this.vertex, P, N) > 0)
+            if (WhichSide(this.vertex, t.A, -t.Normal) > 0)
             {
                 // this CP is entirely on the positive side of the line P + t * N
                 return false;
@@ -1928,9 +2094,7 @@ namespace GeometRi
             Point3d[] triangle_points = { t.A, t.B, t.C };
             for (int i = 0; i < this.numFaces; i++)
             {
-                P = this.face[i].Vertex[0].ToVector;
-                N = this.face[i].normal;
-                if (WhichSide(triangle_points, P, N) > 0)
+                if (WhichSide(triangle_points, this.face[i].Vertex[0], this.face[i].normal) > 0)
                 {
                     // 't' is entirely on the positive side of the line P + t * N
                     return false;
@@ -1940,21 +2104,20 @@ namespace GeometRi
             // Test cross products of edges
             foreach (Segment3d s1 in ListOfEdges)
             {
-                Vector3d D0 = new Vector3d(s1.P1, s1.P2);
-                P = s1.P1.ToVector;
+                Point3d D0 = s1.P2 - s1.P1;
                 for (int j0 = 2, j1 = 0; j1 < 3; j0 = j1++)
                 {
-                    Vector3d D1 = new Vector3d(triangle_points[j0], triangle_points[j1]);
-                    N = D0.Cross(D1);
+                    Point3d D1 = triangle_points[j1] - triangle_points[j0];
+                    Point3d N = D0.Cross(D1);
 
                     if (N.X != 0 || N.Y != 0 || N.Z != 0)
                     {
-                        int side0 = WhichSide(this.vertex, P, N, 0);
+                        int side0 = WhichSide(this.vertex, s1.P1, N, 1e-16);
                         if (side0 == 0)
                         {
                             continue;
                         }
-                        int side1 = WhichSide(triangle_points, P, N, 0);
+                        int side1 = WhichSide(triangle_points, s1.P1, N, 1e-16);
                         if (side1 == 0)
                         {
                             continue;
@@ -1990,14 +2153,99 @@ namespace GeometRi
                 if (t > tolerance)
                 {
                     positive++;
+                    if (negative > 0) return 0;
                 }
                 else if (t < -tolerance)
                 {
                     negative++;
+                    if (positive > 0) return 0;
                 }
-                if (positive > 0 && negative > 0)
+            }
+
+            return positive > 0 ? 1 : -1;
+        }
+
+        private int WhichSide(Point3d[] vertex, Point3d P, Point3d D, double tolerance = 0)
+        {
+            // The vertices are projected to the form P+t*D.
+            // The return value is:
+            //     +1 - if all t>0
+            //     -1 - if all t<0
+            //      0 - otherwise, in which case the line/plane splits the polygon/polyhedron projection
+
+            int positive = 0, negative = 0;
+
+            for (int i = 0; i < vertex.Length; i++)
+            {
+                // Project vertex onto the line
+                double t = D.Dot(vertex[i] - P);
+                if (t > tolerance)
                 {
-                    return 0;
+                    positive++;
+                    if (negative > 0) return 0;
+                }
+                else if (t < -tolerance)
+                {
+                    negative++;
+                    if (positive > 0) return 0;
+                }
+            }
+
+            return positive > 0 ? 1 : -1;
+        }
+
+        private int WhichSide(Point3d[] vertex, Point3d P, Vector3d D, double tolerance = 0)
+        {
+            // The vertices are projected to the form P+t*D.
+            // The return value is:
+            //     +1 - if all t>0
+            //     -1 - if all t<0
+            //      0 - otherwise, in which case the line/plane splits the polygon/polyhedron projection
+
+            int positive = 0, negative = 0;
+
+            for (int i = 0; i < vertex.Length; i++)
+            {
+                // Project vertex onto the line
+                double t = D.Dot(vertex[i] - P);
+                if (t > tolerance)
+                {
+                    positive++;
+                    if (negative > 0) return 0;
+                }
+                else if (t < -tolerance)
+                {
+                    negative++;
+                    if (positive > 0) return 0;
+                }
+            }
+
+            return positive > 0 ? 1 : -1;
+        }
+
+        private int WhichSide(IVector[] vertex, IVector P, IVector D, double tolerance = 0)
+        {
+            // The vertices are projected to the form P+t*D.
+            // The return value is:
+            //     +1 - if all t>0
+            //     -1 - if all t<0
+            //      0 - otherwise, in which case the line/plane splits the polygon/polyhedron projection
+
+            int positive = 0, negative = 0;
+
+            for (int i = 0; i < vertex.Length; i++)
+            {
+                // Project vertex onto the line
+                double t = D.Dot(vertex[i].Subtract(P));
+                if (t > tolerance)
+                {
+                    positive++;
+                    if (negative > 0) return 0;
+                }
+                else if (t < -tolerance)
+                {
+                    negative++;
+                    if (positive > 0) return 0;
                 }
             }
 

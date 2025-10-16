@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Line segment in 3D space defined by two end points.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Segment3d : LinearFiniteObject, ILinearObject, IFiniteObject
@@ -20,17 +20,7 @@ namespace GeometRi
         private Vector3d _vector;
         private Line3d _line;
         private Ray3d _ray;
-        private bool HasChanged => _p1.HasChanged || _p2.HasChanged;
-        private void CheckFields()
-        {
-            if (HasChanged)
-            {
-                _p1 = _p1.Copy();
-                _p2 = _p2.Copy();
 
-                ClearCache();
-            }
-        }
         private void ClearCache()
         {
             _center = null;
@@ -75,10 +65,10 @@ namespace GeometRi
         {
             get
             {
-                CheckFields();
+                //CheckFields();
                 if (_center == null)
                 {
-                    _center = (_p1 + _p2) / 2;
+                    _center = _p1.Add(_p2, 0.5, 0.5);
                 }
                 return _center;
             }
@@ -87,7 +77,7 @@ namespace GeometRi
         public double Length
         {
             get {
-                CheckFields();
+                //CheckFields();
                 if (_length == null)
                 {
                     _length = _p1.DistanceTo(_p2);
@@ -100,7 +90,7 @@ namespace GeometRi
            {
                get
                {
-                   CheckFields();
+                   //CheckFields();
                    if (_vector == null)
                    {
                        _vector = new Vector3d(_p1, _p2);
@@ -122,7 +112,7 @@ namespace GeometRi
         {
             get
             {
-                CheckFields();
+                //CheckFields();
                 if (_ray == null)
                 {
                     _ray = new Ray3d(_p1, new Vector3d(_p1, _p2));
@@ -142,7 +132,7 @@ namespace GeometRi
         {
             get
             {
-                CheckFields();
+                //CheckFields();
                 if (_line == null)
                 {
                     _line = new Line3d(_p1, _p2);
@@ -165,7 +155,7 @@ namespace GeometRi
         public Vector3d Direction
         {
             get {
-                CheckFields();
+                //CheckFields();
                 if (_dir == null)
                 {
                     _dir = Vector.Normalized;
@@ -342,8 +332,11 @@ namespace GeometRi
         {
             double p1, p2;
             double dist = _DistanceTo(s, out p1, out p2);
-            point_on_this_segment = this.P1.Translate(p1 * this.ToVector);
-            point_on_target_segment = s.P1.Translate(p2 * s.ToVector);
+            //point_on_this_segment = this.P1.Translate(p1 * this.ToVector);
+            //point_on_target_segment = s.P1.Translate(p2 * s.ToVector);
+            point_on_this_segment = this.P1 + p1 * (this.P2 - this.P1);
+            point_on_target_segment = s.P1 + p2 * (s.P2 - s.P1);
+
             return dist;
         }
         internal double _DistanceTo(Segment3d s, out double p1, out double p2)
@@ -355,15 +348,25 @@ namespace GeometRi
             double small = GeometRi3D.Tolerance;
 
 
-            Vector3d u = this.ToVector;
-            Vector3d v = s.ToVector;
-            Vector3d w = new Vector3d(s.P1, this.P1);
+            //Vector3d u = this.ToVector;
+            //Vector3d v = s.ToVector;
+            //Vector3d w = new Vector3d(s.P1, this.P1);
 
-            double a = u * u;
-            double b = u * v;
-            double c = v * v;
-            double d = u * w;
-            double e = v * w;
+            //double a = u * u;
+            //double b = u * v;
+            //double c = v * v;
+            //double d = u * w;
+            //double e = v * w;
+
+            Point3d u = this.P2 - this.P1;
+            Point3d v = s.P2 - s.P1;
+            Point3d w = this.P1 - s.P1;
+
+            double a = u.Dot(u);
+            double b = u.Dot(v);
+            double c = v.Dot(v);
+            double d = u.Dot(w);
+            double e = v.Dot(w);
 
             double DD = a * c - b * b;
             double sc = 0;
@@ -448,13 +451,15 @@ namespace GeometRi
             tc = Abs(tN) < small ? 0.0 : tN / tD;
 
             // get the difference of the two closest points
-            Vector3d dP = w + (sc * u) - (tc * v);
+            //Vector3d dP = w + (sc * u) - (tc * v);
+            Point3d dP = w + u.Subtract(v, sc, tc);
             // =  S1(sc) - S2(tc)
 
             p1 = sc;
             p2 = tc;
 
-            return dP.Norm;
+            //return dP.Norm;
+            return Sqrt(dP.X * dP.X + dP.Y * dP.Y + dP.Z * dP.Z);
 
         }
 

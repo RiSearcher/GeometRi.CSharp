@@ -7,7 +7,7 @@ namespace GeometRi
     /// <summary>
     /// Axis aligned 3D box, can be degenerated with one or more dimensions equal 0. Defined only in Global CS.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class AABB : FiniteObject, IFiniteObject

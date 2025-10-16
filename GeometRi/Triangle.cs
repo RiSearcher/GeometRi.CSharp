@@ -7,7 +7,7 @@ namespace GeometRi
     /// <summary>
     /// Triangle in 3D space defined by three points.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Triangle : PlanarFiniteObject, IPlanarObject

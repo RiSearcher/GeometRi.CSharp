@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Ellipsoid object defined by center point and three mutually orthogonal vectors.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Ellipsoid : FiniteObject, IFiniteObject

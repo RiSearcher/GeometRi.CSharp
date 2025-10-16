@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Infinite line  in 3D space and defined by any point lying on the line and a direction vector.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Line3d : ILinearObject

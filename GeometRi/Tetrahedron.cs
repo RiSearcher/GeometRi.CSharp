@@ -8,7 +8,7 @@ namespace GeometRi
     /// <summary>
     /// Tetrahedron in 3D space defined by four points.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Tetrahedron : FiniteObject, IFiniteObject

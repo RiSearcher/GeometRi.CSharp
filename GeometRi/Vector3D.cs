@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Vector in 3D space defined in global or local reference frame.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Vector3d : ILinearObject
@@ -43,10 +43,7 @@ namespace GeometRi
         /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Vector3d(Coord3d coord = null)
         {
-            this.val = new double[3];
-            this.val[0] = 0.0;
-            this.val[1] = 0.0;
-            this.val[2] = 0.0;
+            this.val = new double[3] { 0, 0, 0 };
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
@@ -56,10 +53,7 @@ namespace GeometRi
         /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Vector3d(double X, double Y, double Z, Coord3d coord = null)
         {
-            this.val = new double[3];
-            this.val[0] = X;
-            this.val[1] = Y;
-            this.val[2] = Z;
+            this.val = new double[3] { X, Y, Z };
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
         }
 
@@ -68,12 +62,17 @@ namespace GeometRi
         /// </summary>
         public Vector3d(Point3d p, Coord3d coord = null)
         {
-            p = p.ConvertTo(coord);
-            this.val = new double[3];
-            this.val[0] = p.X;
-            this.val[1] = p.Y;
-            this.val[2] = p.Z;
             _coord = (coord == null) ? Coord3d.GlobalCS : coord;
+            if (p.Coord == _coord)
+            {
+                this.val = new double[3] { p.X, p.Y, p.Z };
+            }
+            else
+            {
+
+            }
+            Point3d _p = p.ConvertTo(coord);
+            this.val = new double[3] { _p.X, _p.Y, _p.Z };
         }
 
         /// <summary>
@@ -98,8 +97,8 @@ namespace GeometRi
         /// <param name="coord">Reference coordinate system (default - Coord3d.GlobalCS).</param>
         public Vector3d(double[] a, Coord3d coord = null)
         {
-            if (a.GetUpperBound(0) < 2)
-                throw new Exception("Vector3d: Array size mismatch");
+            //if (a.GetUpperBound(0) < 2)
+            //    throw new Exception("Vector3d: Array size mismatch");
             this.val = new double[3];
             this.val[0] = a[0];
             this.val[1] = a[1];
@@ -149,7 +148,7 @@ namespace GeometRi
         public double X
         {
             get { return val[0]; }
-            set { val[0] = value; HasChanged = true; }
+            //set { val[0] = value; HasChanged = true; }
         }
 
         /// <summary>
@@ -158,7 +157,7 @@ namespace GeometRi
         public double Y
         {
             get { return val[1]; }
-            set { val[1] = value;  HasChanged = true;}
+            //set { val[1] = value;  HasChanged = true;}
         }
 
         /// <summary>
@@ -167,7 +166,7 @@ namespace GeometRi
         public double Z
         {
             get { return val[2]; }
-            set { val[2] = value;  HasChanged = true;}
+            //set { val[2] = value;  HasChanged = true;}
         }
 
         /// <summary>
@@ -372,19 +371,21 @@ namespace GeometRi
         {
             if ((this._coord != v._coord))
                 v = v.ConvertTo(this._coord);
-            Vector3d tmp = this.Copy();
-            tmp[0] -= v.X;
-            tmp[1] -= v.Y;
-            tmp[2] -= v.Z;
-            return tmp;
+            //Vector3d tmp = this.Copy();
+            //tmp[0] -= v.X;
+            //tmp[1] -= v.Y;
+            //tmp[2] -= v.Z;
+            //return tmp;
+            return new Vector3d(this.X - v.X, this.Y - v.Y, this.Z - v.Z, _coord);
         }
         public Vector3d Mult(double a)
         {
-            Vector3d tmp = this.Copy();
-            tmp[0] *= a;
-            tmp[1] *= a;
-            tmp[2] *= a;
-            return tmp;
+            //Vector3d tmp = this.Copy();
+            //tmp[0] *= a;
+            //tmp[1] *= a;
+            //tmp[2] *= a;
+            //return tmp;
+            return new Vector3d(this.X * a, this.Y * a, this.Z * a, _coord);
         }
 
         /// <summary>
@@ -396,6 +397,21 @@ namespace GeometRi
                 v = v.ConvertTo(this._coord);
             return this.val[0] * v.val[0] + this.val[1] * v.val[1] + this.val[2] * v.val[2];
         }
+        internal double Dot(Point3d v)
+        {
+            if ((this._coord != v._coord))
+                v = v.ConvertTo(this._coord);
+            return this.val[0] * v.X + this.val[1] * v.Y + this.val[2] * v.Z;
+        }
+
+        //public IVector Subtract(IVector v)
+        //{
+        //    return new Point3d(this.X - v.X, this.Y - v.Y, this.Z - v.Z, _coord);
+        //}
+        //public double Dot(IVector v)
+        //{
+        //    return this.X * v.X + this.Y * v.Y + this.Z * v.Z;
+        //}
 
         /// <summary>
         /// Cross product of two vectors

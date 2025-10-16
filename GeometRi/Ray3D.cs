@@ -6,7 +6,7 @@ namespace GeometRi
     /// <summary>
     /// Ray in 3D space defined by point and direction vector.
     /// </summary>
-#if NET20
+#if NET20_OR_GREATER
     [Serializable]
 #endif
     public class Ray3d : ILinearObject
