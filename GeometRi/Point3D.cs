@@ -179,11 +179,23 @@ namespace GeometRi
                 p = p.ConvertTo(this._coord);
             return new Point3d(_x - p.X, _y - p.Y, _z - p.Z, _coord);
         }
+        internal Point3d Subtract(Vector3d v, double a)
+        {
+            if ((this._coord != v._coord))
+                v = v.ConvertTo(this._coord);
+            return new Point3d(_x - a * v.X, _y - a * v.Y, _z - a * v.Z, _coord);
+        }
         public Point3d Scale(double a)
         {
             return new Point3d(a * _x, a * _y, a * _z, _coord);
         }
         internal double Dot(Point3d p)
+        {
+            if ((this._coord != p._coord))
+                p = p.ConvertTo(this._coord);
+            return this.X * p.X + this.Y * p.Y + this.Z * p.Z;
+        }
+        internal double Dot(Vector3d p)
         {
             if ((this._coord != p._coord))
                 p = p.ConvertTo(this._coord);

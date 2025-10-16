@@ -324,9 +324,9 @@ namespace GeometRi
             else
             {
                 // Intersection point
-                this.SetCoord(r1.Coord);
-                r1 = r1 - ((r1 * n2) + this.D) / (s1 * n2) * s1;
-                return r1.ToPoint;
+
+                double d = (this._point - l.Point).Dot(this._normal) / (this._normal * l.Direction);
+                return l.Point.Translate(d * l.Direction);
             }
         }
 

@@ -322,12 +322,10 @@ namespace GeometRi
         /// </summary>
         public Point3d ParametricForm(double t)
         {
-
             // Get two orthogonal coplanar vectors
             Vector3d v1 = _r * _normal.OrthogonalVector.Normalized;
             Vector3d v2 = _r * (_normal.Cross(v1)).Normalized;
-            return _point + v1.ToPoint * Cos(t) + v2.ToPoint * Sin(t);
-
+            return _point + v1 * Cos(t) + v2 * Sin(t);
         }
 
         #region "DistanceMethods"
@@ -336,8 +334,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Plane3d s)
         {
-            double center_distance = this._point.DistanceTo(s);
-            double sin_angle = this._normal.Cross(s._normal).Norm / this._normal.Norm / s._normal.Norm;
+            double center_distance = Math.Abs((this._point - s._point).Dot(s._normal));
+            double sin_angle = this._normal.Cross(s._normal).Norm;
             double delta = Abs(this.R * sin_angle);
 
             if (delta < center_distance)
@@ -391,8 +389,8 @@ namespace GeometRi
         /// </summary>
         public double DistanceTo(Point3d p)
         {
-            Vector3d delta = new Vector3d(this._point, p);
-            Point3d Q = p - (this._normal * delta) * this._normal;
+            Point3d delta = p - this._point;
+            Point3d Q = p.Subtract(this._normal, delta.Dot(this._normal));
             double dist = this._point.DistanceTo(Q);
             if (dist < this._r)
             {
@@ -410,8 +408,8 @@ namespace GeometRi
         /// </summary>
         public Point3d ClosestPoint(Point3d p)
         {
-            Vector3d delta = new Vector3d(this._point, p);
-            Point3d Q = p - (this._normal * delta) * this._normal;
+            Point3d delta = p - this._point;
+            Point3d Q = p.Subtract(this._normal, delta.Dot(this._normal));
             double dist = this._point.DistanceTo(Q);
             if (dist < this._r)
             {
@@ -1757,28 +1755,31 @@ namespace GeometRi
             }
             else
             {
-                Line3d l = (Line3d)s.IntersectionWith(new Plane3d(this._point, this._normal));
-                Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
-                Point3d p = l.Point.ConvertTo(local_coord);
 
-                if (GeometRi3D.Greater(Abs(p.Y), this.R))
+                Vector3d v1 = this._normal.Cross(s.Normal);
+                Vector3d v2 = this._normal.Cross(v1);
+                Line3d l = new Line3d(this._point, v2);
+                Point3d intersection_point = (Point3d)l.IntersectionWith(s);
+
+                double dist = intersection_point.DistanceTo(this.Center);
+
+                if (Abs(R - dist) <= GeometRi3D.DefaultTolerance)
                 {
-                    return null;
+                    // Point
+                    return intersection_point;
                 }
-                else if (GeometRi3D.AlmostEqual(p.Y, this.R))
+                else if (R - dist > 0)
                 {
-                    return new Point3d(0, this.R, 0, local_coord);
-                }
-                else if (GeometRi3D.AlmostEqual(p.Y, -this.R))
-                {
-                    return new Point3d(0, -this.R, 0, local_coord);
+                    // Segment
+                    double half_length = Sqrt(R * R - dist * dist);
+                    v1 = v1.Normalized;
+                    Point3d p1 = intersection_point.Translate(half_length * v1);
+                    Point3d p2 = intersection_point.Translate(-half_length * v1);
+                    return new Segment3d(p1, p2);
                 }
                 else
                 {
-                    double d = Sqrt(this.R * this.R - p.Y * p.Y);
-                    Point3d p1 = new Point3d(-d, p.Y, 0, local_coord);
-                    Point3d p2 = new Point3d(d, p.Y, 0, local_coord);
-                    return new Segment3d(p1, p2);
+                    return null;
                 }
             }
 
