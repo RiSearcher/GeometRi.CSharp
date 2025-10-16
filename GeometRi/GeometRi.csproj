@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net20;netcoreapp3.1;net5.0</TargetFrameworks>
     <RootNamespace>GeometRi</RootNamespace>
     <AssemblyName>GeometRi</AssemblyName>
     <Description>GeometRi is a simple and lightweight 3D geometry library for .Net. Its main purpose is manipulations with basic geometrical primitives, such as point, line, plane, segment in 3D space: translation and rotation operations, distance calculation, intersections, orthogonal projections of one object into another, etc. The basic objects can be defined in global or in one of the local coordinate systems and converted form one coordinate system into another. Each object stores its reference coordinate system and all necessary transformations are performed implicitly when needed.

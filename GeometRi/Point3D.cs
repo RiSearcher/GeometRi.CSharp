@@ -199,22 +199,22 @@ namespace GeometRi
             return new Point3d(x, y, z, _coord); ;
         }
 
-        internal (double x, double y, double z) _TSubtract(Point3d p)
-        {
-            if ((this._coord != p._coord))
-                p = p.ConvertTo(this._coord);
-            return (_x - p._x, _y - p._y, _z - p._z);
-        }
+        //internal (double x, double y, double z) _TSubtract(Point3d p)
+        //{
+        //    if ((this._coord != p._coord))
+        //        p = p.ConvertTo(this._coord);
+        //    return (_x - p._x, _y - p._y, _z - p._z);
+        //}
 
-        internal double Dot(double x, double y, double z)
-        {
-            return this.X * x + this.Y * y + this.Z * z;
-        }
+        //internal double Dot(double x, double y, double z)
+        //{
+        //    return this.X * x + this.Y * y + this.Z * z;
+        //}
 
-        internal Point3d _TAdd(ValueTuple<double, double, double> p)
-        {
-            return new Point3d(_x + p.Item1, _y + p.Item2, _z + p.Item3, _coord);
-        }
+        //internal Point3d _TAdd(ValueTuple<double, double, double> p)
+        //{
+        //    return new Point3d(_x + p.Item1, _y + p.Item2, _z + p.Item3, _coord);
+        //}
 
         #region "DistanceTo"
         /// <summary>
