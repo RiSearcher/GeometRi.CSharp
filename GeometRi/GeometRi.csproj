@@ -15,7 +15,8 @@ Compatible with .Net Framework 2.0, .Net Standard 2.0, .Net Core 3.1 and .Net 5.
     <PackageProjectUrl>https://github.com/RiSearcher/GeometRi.CSharp</PackageProjectUrl>
     <Version>1.5.0.7</Version>
     <PackageTags>computational geometry math 3D</PackageTags>
-    <PackageReleaseNotes>Optimizations of polyhedron distance/intersection calculations.</PackageReleaseNotes>
+    <PackageReleaseNotes>Optimization of polyhedron distance/intersection calculations.
+Optimization of circle distance calculations.</PackageReleaseNotes>
     <PackageLicenseUrl></PackageLicenseUrl>
     <RepositoryUrl>https://github.com/RiSearcher/GeometRi.CSharp</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>

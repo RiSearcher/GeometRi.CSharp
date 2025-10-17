@@ -73,7 +73,7 @@ namespace GeometRi
         public double X
         {
             get { return _x; }
-            //set { _x = value; HasChanged = true; }
+            set { _x = value; HasChanged = true; }
         }
         /// <summary>
         /// Y coordinate in reference coordinate system
@@ -81,7 +81,7 @@ namespace GeometRi
         public double Y
         {
             get { return _y; }
-            //set { _y = value; HasChanged = true;}
+            set { _y = value; HasChanged = true;}
         }
         /// <summary>
         /// Z coordinate in reference coordinate system
@@ -89,7 +89,7 @@ namespace GeometRi
         public double Z
         {
             get { return _z; }
-            //set { _z = value; HasChanged = true;}
+            set { _z = value; HasChanged = true;}
         }
 
         /// <summary>
