@@ -132,6 +132,14 @@ namespace GeometRi
             }
         }
 
+        public double Xmin { get { return _center.X - _lx / 2; } }
+        public double Xmax { get { return _center.X + _lx / 2; } }
+        public double Ymin { get { return _center.Y - _ly / 2; } }
+        public double Ymax { get { return _center.Y + _ly / 2; } }
+        public double Zmin { get { return _center.Z - _lz / 2; } }
+        public double Zmax { get { return _center.Z + _lz / 2; } }
+
+
         /// <summary>
         /// Orientation of the first dimension of the box.
         /// </summary>
@@ -479,6 +487,20 @@ namespace GeometRi
                 if (t.Y < miny) { miny = t.Y; }
                 if (t.Z < minz) { minz = t.Z; }
             }
+
+            return new AABB(new Point3d(0.5 * (maxx + minx), 0.5 * (maxy + miny), 0.5 * (maxz + minz)), maxx - minx, maxy - miny, maxz - minz);
+        }
+
+        /// <summary>
+        /// Return union of two AABBs>
+        public static AABB Union(AABB box1, AABB box2)
+        {
+            double maxx = Max(box1.Xmax, box2.Xmax);
+            double maxy = Max(box1.Ymax, box2.Ymax);
+            double maxz = Max(box1.Zmax, box2.Zmax);
+            double minx = Min(box1.Xmin, box2.Xmin);
+            double miny = Min(box1.Ymin, box2.Ymin);
+            double minz = Min(box1.Zmin, box2.Zmin);
 
             return new AABB(new Point3d(0.5 * (maxx + minx), 0.5 * (maxy + miny), 0.5 * (maxz + minz)), maxx - minx, maxy - miny, maxz - minz);
         }
