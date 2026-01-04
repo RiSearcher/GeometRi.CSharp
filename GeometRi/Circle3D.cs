@@ -1,6 +1,7 @@
 ﻿using System;
-using static System.Math;
 using System.Collections.Generic;
+using System.Drawing;
+using static System.Math;
 
 namespace GeometRi
 {
@@ -608,7 +609,6 @@ namespace GeometRi
         }
 
 
-        [Obsolete]
         /// <summary>
         /// Check if distance between two circles is greater than threshold
         /// </summary>
@@ -656,11 +656,14 @@ namespace GeometRi
             else
             {
                 // Check 3D intersection
-                Vector3d v = new Vector3d(this._point, c._point);
-                double this_norm = this._normal.Norm;
-                double c_norm = c._normal.Norm;
+                //Vector3d v = new Vector3d(this._point, c._point);
+                Point3d v = c._point - this._point;
+                //double this_norm = this._normal.Norm;
+                //double c_norm = c._normal.Norm;
+                double this_norm = 1;
+                double c_norm = 1;
 
-                double cos_angle1 = this._normal * v / this_norm / d;
+                double cos_angle1 = v.Dot(this._normal) / this_norm / d;
                 double delta1 = Abs(d * cos_angle1);
 
                 double sin_angle2 = this._normal.Cross(c._normal).Norm / this_norm / c_norm;
@@ -668,7 +671,7 @@ namespace GeometRi
 
                 if (delta1 > delta2 + threshold) return true;
 
-                cos_angle1 = c._normal * v / c_norm / d;
+                cos_angle1 = v.Dot(c._normal) / c_norm / d;
                 delta1 = Abs(d * cos_angle1);
                 delta2 = Abs(c.R * sin_angle2);
 
@@ -1373,7 +1376,8 @@ namespace GeometRi
             if (d > this.R + c.R + GeometRi3D.Tolerance)
                 return false;
 
-            if (this._normal.IsParallelTo(c._normal))
+            //this._normal.IsParallelTo(c._normal)
+            if (GeometRi3D.AlmostEqual(this._normal * c._normal, 1.0))
             {
                 if (this._point.BelongsTo(new Plane3d(c._point, c._normal)))
                 {
@@ -1416,22 +1420,101 @@ namespace GeometRi
 
 
 
-                Plane3d plane_this = new Plane3d(this._point, this._normal);
+                return _circle_circle_intersection_check_2(c);
 
-                Line3d l = (Line3d)plane_this.IntersectionWith(new Plane3d(c._point, c._normal));
-                Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
-                Point3d p = l.Point.ConvertTo(local_coord);
+            }
 
-                if (GeometRi3D.Greater(Abs(p.Y), this.R))
+        }
+
+        private bool _circle_circle_intersection_check_2(Circle3d c)
+        {
+            Segment3d segm;
+            double dist;
+
+            Object obj = this.IntersectionWith(c.ToPlane);
+            if (obj == null) return false;
+            if (obj != null && obj.GetType() == typeof(Point3d))
+            {
+                Point3d point = (Point3d)obj;
+                dist = c.Center.DistanceTo(point);
+            }
+            else
+            {
+                segm = (Segment3d)obj;
+                dist = c.Center.DistanceTo(segm);
+            }
+
+            if (dist <= c.R + GeometRi3D.Tolerance)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private bool _circle_circle_intersection_check(Circle3d c)
+        {
+            Plane3d plane_this = new Plane3d(this._point, this._normal);
+
+            Line3d l = (Line3d)plane_this.IntersectionWith(new Plane3d(c._point, c._normal));
+            Coord3d local_coord = new Coord3d(this._point, l.Direction, this._normal.Cross(l.Direction));
+            Point3d p = l.Point.ConvertTo(local_coord);
+
+            if (GeometRi3D.Greater(Abs(p.Y), this.R))
+            {
+                // No intersection
+                return false;
+            }
+            else if (GeometRi3D.AlmostEqual(Abs(p.Y), this.R))
+            {
+                // Intersection in one point
+                Point3d pp = new Point3d(0, p.Y, 0, local_coord);
+                if (pp.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance)
                 {
-                    // No intersection
+                    return true;
+                }
+                else
+                {
                     return false;
                 }
-                else if (GeometRi3D.AlmostEqual(Abs(p.Y), this.R))
+            }
+            else
+            {
+                double dd = Sqrt(this.R * this.R - p.Y * p.Y);
+                Point3d p1 = new Point3d(-dd, p.Y, 0, local_coord);
+                Point3d p2 = new Point3d(dd, p.Y, 0, local_coord);
+
+                // check if at least one point is outside circle "c"
+                if (p1.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance) return true;
+
+                // Now check if segment (p1,p2) intrsects circle "c"
+                // Use local coord with center in c.Point and X-axis aligned with segment
+                local_coord = new Coord3d(c._point, l.Direction, c._normal.Cross(l.Direction));
+                p1 = p1.ConvertTo(local_coord);
+                p2 = p2.ConvertTo(local_coord);
+
+                // use parametric form
+                // x=t*x1+(1-t)x2
+                // y=t*y1+(1-t)y2
+                // and take into account that y1=y2, x0=y0=0
+                double aa = (p1.X - p2.X) * (p1.X - p2.X);
+                double bb = 2 * p2.X * (p1.X - p2.X);
+                double cc = p2.X * p2.X + p2.Y * p2.Y - c.R * c.R;
+                double discr = bb * bb - 4 * aa * cc;
+
+                if (discr < 0)
                 {
-                    // Intersection in one point
-                    Point3d pp = new Point3d(0, p.Y, 0, local_coord);
-                    if (pp.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance)
+                    return false;
+                }
+                else
+                {
+                    discr = Sqrt(discr);
+                    double t1 = (-bb + discr) / (2 * aa);
+                    double t2 = (-bb - discr) / (2 * aa);
+                    if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
                     {
                         return true;
                     }
@@ -1440,52 +1523,7 @@ namespace GeometRi
                         return false;
                     }
                 }
-                else
-                {
-                    double dd = Sqrt(this.R * this.R - p.Y * p.Y);
-                    Point3d p1 = new Point3d(-dd, p.Y, 0, local_coord);
-                    Point3d p2 = new Point3d(dd, p.Y, 0, local_coord);
-
-                    // check if at least one point is outside circle "c"
-                    if (p1.DistanceTo(c._point) <= c.R + GeometRi3D.Tolerance) return true;
-
-                    // Now check if segment (p1,p2) intrsects circle "c"
-                    // Use local coord with center in c.Point and X-axis aligned with segment
-                    local_coord = new Coord3d(c._point, l.Direction, c._normal.Cross(l.Direction));
-                    p1 = p1.ConvertTo(local_coord);
-                    p2 = p2.ConvertTo(local_coord);
-
-                    // use parametric form
-                    // x=t*x1+(1-t)x2
-                    // y=t*y1+(1-t)y2
-                    // and take into account that y1=y2, x0=y0=0
-                    double aa = (p1.X - p2.X) * (p1.X - p2.X);
-                    double bb = 2 * p2.X * (p1.X - p2.X);
-                    double cc = p2.X * p2.X + p2.Y * p2.Y - c.R * c.R;
-                    double discr = bb * bb - 4 * aa * cc;
-
-                    if (discr < 0)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        discr = Sqrt(discr);
-                        double t1 = (-bb + discr) / (2 * aa);
-                        double t2 = (-bb - discr) / (2 * aa);
-                        if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1))
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                }
-
             }
-
         }
 
 
