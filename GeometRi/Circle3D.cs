@@ -423,6 +423,17 @@ namespace GeometRi
         }
 
         /// <summary>
+        /// Point on circle (excluding interior points) closest to target point "p".
+        /// </summary>
+        public Point3d ClosestPointOnBoundary(Point3d p)
+        {
+            Point3d delta = p - this._point;
+            Point3d Q = p.Subtract(this._normal, delta.Dot(this._normal));
+            double dist = this._point.DistanceTo(Q);
+            return this._point + this._r / dist * (Q - this._point);
+        }
+
+        /// <summary>
         /// Shortest distance between two circles (including interior points) (approximate solution)
         /// <para> Default tolerance for numerical solution: GeometRi3D.DefaultTolerance.</para>
         /// </summary>
@@ -440,7 +451,7 @@ namespace GeometRi
         public double DistanceTo(Circle3d c, double tolerance)
         {
             double dist;
-            if (this._normal.IsParallelTo(c._normal))
+            if (GeometRi3D.AlmostEqual(this._normal * c._normal, 1.0))
             {
                 Point3d projection = c._point.ProjectionTo(this.ToPlane);
                 dist = projection.DistanceTo(this._point);
@@ -521,7 +532,7 @@ namespace GeometRi
         public double DistanceTo(Circle3d c, out Point3d p1, out Point3d p2, double tolerance)
         {
             double dist;
-            if (this._normal.IsParallelTo(c._normal))
+            if (GeometRi3D.AlmostEqual(this._normal * c._normal, 1.0))
             {
                 Point3d projection = c._point.ProjectionTo(this.ToPlane);
                 dist = projection.DistanceTo(this._point);
@@ -633,7 +644,7 @@ namespace GeometRi
             if (d > this.R + c.R + GeometRi3D.Tolerance + threshold)
                 return true;
 
-            if (this._normal.IsParallelTo(c._normal))
+            if (GeometRi3D.AlmostEqual(this._normal * c._normal, 1.0))
             {
                 if (this._point.BelongsTo(new Plane3d(c._point, c._normal)))
                 {
@@ -683,6 +694,33 @@ namespace GeometRi
         }
 
         private double _distance_circle_to_circle(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2, double tol)
+        {
+            double dist_prev = double.PositiveInfinity;
+            int max_iter = 100;
+            p1 = c1.ClosestPointOnBoundary(c2.Center);
+            p2 = c2.ClosestPointOnBoundary(p1);
+            double dist = p1.DistanceTo(p2);
+
+            int iter = 0;
+            while (iter < max_iter)
+            {
+                dist_prev = dist;
+                p1 = c1.ClosestPointOnBoundary(p2);
+                p2 = c2.ClosestPointOnBoundary(p1);
+                dist = p1.DistanceTo(p2);
+
+                if (Math.Abs(dist - dist_prev) < tol)
+                {
+                    return dist;
+                }
+
+                iter++;
+            }
+            return dist;
+
+        }
+
+        private double _distance_circle_to_circle_old(Circle3d c1, Circle3d c2, out Point3d p1, out Point3d p2, double tol)
         // Use quadratic interpolation to find closest point on one circle to other
         // p1 and p2 - closest points on both circles
         {

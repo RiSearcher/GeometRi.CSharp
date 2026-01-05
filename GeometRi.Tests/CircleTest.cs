@@ -336,6 +336,17 @@ namespace GeometRi_Tests
         }
 
         [TestMethod()]
+        public void CircleDistanceToCircleTest_02()
+        {
+            Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
+            Circle3d c2 = new Circle3d(new Point3d(6, 20, 0), 19.9, new Vector3d(1, 0, 0));
+            double dist1 = c1.DistanceTo(c2);
+            double dist2 = (new Point3d(6, 0.1, 0)).DistanceTo(c1);
+            Assert.IsTrue(GeometRi3D.AlmostEqual(dist1, dist2));
+
+        }
+
+        [TestMethod()]
         public void CircleDistanceToCircleGreaterTest()
         {
             Circle3d c1 = new Circle3d(new Point3d(0, 0, 0), 5, new Vector3d(0, 0, 1));
