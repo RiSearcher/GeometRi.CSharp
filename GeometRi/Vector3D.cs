@@ -252,7 +252,7 @@ namespace GeometRi
             if ((this._coord != v._coord))
                 v = v.ConvertTo(this._coord);
 
-            return GeometRi3D.AlmostEqual(this.Normalized.Cross(v.Normalized).Norm, 0.0);        
+            return GeometRi3D.AlmostEqual(this.Normalized.Dot(v.Normalized), 1.0);        
         }
 
         /// <summary>

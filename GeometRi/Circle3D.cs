@@ -367,10 +367,11 @@ namespace GeometRi
 
             Vector3d v1 = this._normal.Cross(p.Normal);
             Vector3d v2 = this._normal.Cross(v1);
-            Line3d l = new Line3d(this._point, v2);
-            Point3d intersection_point = (Point3d)l.IntersectionWith(p);
 
-            if (intersection_point.DistanceTo(this) <= GeometRi3D.DefaultTolerance)
+            double d = (p._point - this._point).Dot(p._normal) / (p._normal * v2);
+            Point3d intersection_point = this._point.Translate(d * v2);
+
+            if (intersection_point.DistanceTo(this.Center) <= this.R)
             {
                 point_on_circle = intersection_point;
                 point_on_plane = intersection_point;
@@ -378,10 +379,15 @@ namespace GeometRi
             }
             else
             {
-                v1 = new Vector3d(this._point, intersection_point).Normalized;
-                point_on_circle = this._point.Translate(this.R * v1);
+                point_on_circle = this._point.Translate(this.R * v2.Normalized);
                 point_on_plane = point_on_circle.ProjectionTo(p);
                 return point_on_circle.DistanceTo(point_on_plane);
+
+                //Point3d delta = point_on_circle - p._point;
+                //double dist = delta.Dot(p._normal);
+                //point_on_plane = point_on_circle - dist * p._normal;
+                //return dist;
+
             }
         }
 
@@ -471,8 +477,8 @@ namespace GeometRi
             GeometRi3D.Tolerance = GeometRi3D.DefaultTolerance;
             GeometRi3D.UseAbsoluteTolerance = true;
 
-            object obj = this.IntersectionWith(c);
-            if (obj != null)
+            //object obj = this.IntersectionWith(c);
+            if (_circle_circle_intersection_check_2(c))
             {
                 // Restore initial state
                 GeometRi3D.UseAbsoluteTolerance = mode;
@@ -688,7 +694,7 @@ namespace GeometRi
 
                 if (delta1 > delta2 + threshold) return true;
 
-                return this.DistanceTo(c, out Point3d p1, out Point3d p2, tolerance) > threshold;
+                return this.DistanceTo(c, tolerance) > threshold;
 
             }
         }

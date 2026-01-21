@@ -305,7 +305,6 @@ namespace GeometRi
         /// </summary>
         public object IntersectionWith(Line3d l)
         {
-            Vector3d r1 = new Vector3d(l.Point);
             Vector3d s1 = l.Direction;
             Vector3d n2 = this.Normal;
             if (s1.IsOrthogonalTo(n2))
