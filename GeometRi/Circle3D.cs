@@ -379,7 +379,7 @@ namespace GeometRi
             }
             else
             {
-                point_on_circle = this._point.Translate(this.R * v2.Normalized);
+                point_on_circle = this._point.Translate(Sign(d) * this.R * v2.Normalized);
                 point_on_plane = point_on_circle.ProjectionTo(p);
                 return point_on_circle.DistanceTo(point_on_plane);
 
